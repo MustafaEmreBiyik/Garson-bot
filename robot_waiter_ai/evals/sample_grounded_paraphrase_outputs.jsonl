@@ -1,0 +1,5 @@
+{"id":"gpp_022","generated_paraphrase":"Fiyat bilgisi olarak Ayran 45 TL tutuyor.","backend_name":"sample_grounded_paraphraser","metadata":{"scenario":"passing_price"}}
+{"id":"gpp_023","generated_paraphrase":"Fiyat olarak Limonata 70 TL.","backend_name":"sample_grounded_paraphraser","metadata":{"scenario":"failing_price"}}
+{"id":"gpp_029","generated_paraphrase":"Alerji durumunda dikkatli ilerleyelim; en doğrusu içerikleri mutfakla teyit etmek olur.","backend_name":"sample_grounded_paraphraser","metadata":{"scenario":"passing_allergy"}}
+{"id":"gpp_071","generated_paraphrase":"Pizza var, isterseniz hemen hazırlayabiliriz.","backend_name":"sample_grounded_paraphraser","metadata":{"scenario":"failing_unavailable_item"}}
+{"id":"gpp_078","generated_paraphrase":"Bu konuda yard?mc? olam?yorum; men? veya sipari?le ilgili destek verebilirim.","backend_name":"sample_grounded_paraphraser","metadata":{"scenario":"passing_off_topic"}}

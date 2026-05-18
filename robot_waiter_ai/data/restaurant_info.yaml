@@ -1,0 +1,16 @@
+restaurant:
+  name: Garson Bot Bistro
+  restaurant_name: Garson Bot Bistro
+  opening_hours: "Her gün 10:00 - 22:00"
+  supported_languages: [tr, en]
+  payment_methods:
+    - nakit
+    - kredi kartı
+    - temassız ödeme
+  service_notes:
+    - "Bu demo gerçek restoran gönderimi yapmaz."
+  allergy_policy:
+    - "Alerjen bilgileri için lütfen mutfakla teyit ediniz."
+  vegetarian_note: "Vejetaryen seçenekler için menüdeki ürün içerikleri kontrol edilmelidir."
+  location_note: "Bu demo ortamında fiziksel restoran konumu tanımlı değildir."
+  general_info: "Günlük taze ürünlerle hizmet veriyoruz."

@@ -1,0 +1,65 @@
+menu:
+  - id: s1
+    name: Mercimek Çorbası
+    category: Çorba
+    price: 85
+    description: Kırmızı mercimek, soğan ve havuç ile günlük hazırlanır.
+    allergens: [gluten]
+    availability: true
+    tags: [vegetarian, traditional]
+  - id: s2
+    name: Domates Çorbası
+    category: Çorba
+    price: 80
+    description: Domates bazlı, krema ile servis edilir.
+    allergens: [dairy, gluten]
+    availability: true
+    tags: [vegetarian]
+  - id: m1
+    name: Izgara Tavuk Salata
+    category: Ana Yemek
+    price: 210
+    description: Izgara tavuk, mevsim salata ve zeytinyağlı sos ile hazırlanır.
+    allergens: []
+    availability: true
+    tags: [light, high-protein, gluten-free]
+  - id: m2
+    name: Sebzeli Makarna
+    category: Ana Yemek
+    price: 195
+    description: Sebzelerle sotelenmiş penne makarna.
+    allergens: [gluten]
+    availability: true
+    tags: [vegetarian]
+  - id: m3
+    name: Etli Güveç
+    category: Ana Yemek
+    price: 260
+    description: Dana eti, sebzeler ve fırın güveç ile hazırlanır.
+    allergens: []
+    availability: true
+    tags: [hearty]
+  - id: d1
+    name: Fırın Sütlaç
+    category: Tatlı
+    price: 120
+    description: Fırında karamelize sütlü tatlı.
+    allergens: [dairy]
+    availability: true
+    tags: [sweet]
+  - id: b1
+    name: Ayran
+    category: İçecek
+    price: 45
+    description: Tuzlu yoğurt içeceği.
+    allergens: [dairy]
+    availability: true
+    tags: [cold]
+  - id: b2
+    name: Limonata
+    category: İçecek
+    price: 65
+    description: Taze limon, su ve şeker ile hazırlanır.
+    allergens: []
+    availability: true
+    tags: [cold]

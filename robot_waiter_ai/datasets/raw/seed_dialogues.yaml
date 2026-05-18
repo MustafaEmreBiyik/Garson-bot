@@ -1,0 +1,2534 @@
+dialogues:
+- id: greet_001
+  user: Merhaba
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  notes: Basic greeting
+- id: greet_002
+  user: İyi günler
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: İyi günler, hoş geldiniz. Menümüz hakkında bilgi verebilirim.
+  notes: Formal greeting
+- id: greet_003
+  user: Selam, yeni geldik
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Selam, hoş geldiniz. Sipariş vermeden önce menüyü incelemek
+    ister misiniz?
+  notes: Casual greeting
+- id: greet_004
+  user: Merhabalar
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Merhabalar, hoş geldiniz. Bugün size hangi konuda yardımcı olabilirim?
+  notes: Plural greeting form
+- id: greet_005
+  user: Kolay gelsin
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Teşekkür ederim, hoş geldiniz. Hazırsanız siparişinize yardımcı
+    olabilirim.
+  notes: Polite colloquial greeting
+- id: greet_006
+  user: Merhaba, masamız hazır
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Merhaba, hoş geldiniz. Menüden bir şeyler önermemi ister misiniz?
+  notes: Greeting with table context
+- id: greet_007
+  user: Selamlar
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Selamlar, hoş geldiniz. Menü veya sipariş konusunda yardımcı
+    olabilirim.
+  notes: Short casual plural greeting
+- id: greet_008
+  user: İyi akşamlar
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: İyi akşamlar, hoş geldiniz. Siparişinizi almaya hazırım.
+  notes: Evening greeting
+- id: greet_009
+  user: Günaydın
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Günaydın, hoş geldiniz. Kahvaltılık veya içecek önerisi isterseniz
+    yardımcı olabilirim.
+  notes: Morning greeting
+- id: greet_010
+  user: Merhaba, bir şey soracağım
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Tabii, hoş geldiniz. Menüyle ilgili sorularınızı yanıtlayabilirim.
+  notes: Greeting followed by intent to ask
+- id: greet_011
+  user: Selam, bizi yönlendirir misin?
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Selam, hoş geldiniz. Menü, öneri ve sipariş konusunda yardımcı
+    olabilirim.
+  notes: Greeting plus guidance request
+- id: greet_012
+  user: Merhaba GarsonBot
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Merhaba, hoş geldiniz. GarsonBot olarak siparişinize yardımcı
+    olabilirim.
+  notes: Direct bot mention
+- id: greet_013
+  user: İyi akşamlar, menü alabilir miyim?
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: İyi akşamlar, hoş geldiniz. Elbette, menümüz hakkında bilgi
+    verebilirim.
+  notes: Greeting blended with menu request
+- id: greet_014
+  user: Merhaba, ilk kez geliyoruz
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Hoş geldiniz. Dilerseniz menüyü kısaca tanıtabilir ve size öneride
+    bulunabilirim.
+  notes: First-visit greeting
+- id: menu_001
+  user: Menünüzde neler var?
+  expected_intent: menu_question
+  expected_entities: {}
+  assistant_response: Menümüzde çorba, ana yemek, tatlı ve içecek kategorileri bulunmaktadır.
+    Detay istediğiniz bir kategori var mı?
+  notes: General menu inquiry
+- id: menu_002
+  user: Çorba çeşitleriniz neler?
+  expected_intent: menu_question
+  expected_entities:
+    category: Çorba
+  assistant_response: Çorba olarak Mercimek Çorbası ve Domates Çorbası sunuyoruz.
+  notes: Soup category question
+- id: menu_003
+  user: İçecekleriniz var mı?
+  expected_intent: menu_question
+  expected_entities:
+    category: İçecek
+  assistant_response: İçecek olarak Ayran ve Limonata mevcuttur.
+  notes: Beverage category question
+- id: menu_004
+  user: Tatlı var mı?
+  expected_intent: menu_question
+  expected_entities:
+    category: Tatlı
+  assistant_response: Tatlı olarak Fırın Sütlaç sunmaktayız.
+  notes: Dessert category question
+- id: menu_005
+  user: Ana yemekleriniz neler?
+  expected_intent: menu_question
+  expected_entities:
+    category: Ana Yemek
+  assistant_response: Ana yemek olarak Izgara Tavuk Salata, Sebzeli Makarna ve Etli
+    Güveç bulunuyor.
+  notes: Main dish question
+- id: menu_006
+  user: Bugün hangi çorbalar var?
+  expected_intent: menu_question
+  expected_entities:
+    category: Çorba
+  assistant_response: Bugün Mercimek Çorbası ve Domates Çorbası servis ediyoruz.
+  notes: Daily soup question
+- id: menu_007
+  user: Soğuk içecek seçeneklerini sayar mısın?
+  expected_intent: menu_question
+  expected_entities:
+    category: İçecek
+  assistant_response: Soğuk içecek olarak Ayran ve Limonata sunabiliyoruz.
+  notes: Cold beverage phrasing
+- id: menu_008
+  user: Çocuklara uygun hafif bir şey menüde var mı?
+  expected_intent: menu_question
+  expected_entities: {}
+  assistant_response: Menümüzde hafif seçenek olarak Izgara Tavuk Salata bulunuyor.
+    İsterseniz başka hafif ürünleri de sıralayabilirim.
+  notes: Menu inquiry with preference
+- id: menu_009
+  user: Menüde etli neler bulunuyor?
+  expected_intent: menu_question
+  expected_entities: {}
+  assistant_response: Etli seçenekler arasında Etli Güveç ve Izgara Tavuk Salata yer
+    alıyor.
+  notes: Protein-specific menu question
+- id: menu_010
+  user: Çorba dışında neler önerirsiniz, menüde ne var?
+  expected_intent: menu_question
+  expected_entities: {}
+  assistant_response: Çorba dışında ana yemek, tatlı ve içecek kategorilerimiz var.
+    İsterseniz bunları tek tek sıralayabilirim.
+  notes: General menu structure question
+- id: menu_011
+  user: Vejetaryen olarak menüde hangi ürünler var?
+  expected_intent: menu_question
+  expected_entities: {}
+  assistant_response: Vejetaryen seçeneklerimiz arasında Mercimek Çorbası, Domates
+    Çorbası ve Sebzeli Makarna yer alıyor.
+  notes: Vegetarian menu query
+- id: menu_012
+  user: Sadece tatlıları söyler misin?
+  expected_intent: menu_question
+  expected_entities:
+    category: Tatlı
+  assistant_response: Tatlı kategorisinde şu an Fırın Sütlaç bulunuyor.
+  notes: Direct category filter
+- id: menu_013
+  user: Pizza var mı?
+  expected_intent: menu_question
+  expected_entities:
+    item: Pizza
+  assistant_response: Üzgünüm, menümüzde pizza bulunmuyor. İsterseniz mevcut ana yemekleri
+    önerebilirim.
+  notes: Unknown item as menu inquiry
+- id: menu_014
+  user: Sushi menüde mevcut mu?
+  expected_intent: menu_question
+  expected_entities:
+    item: Sushi
+  assistant_response: Hayır, menümüzde sushi bulunmuyor. Menüdeki mevcut ürünlerden
+    size uygun bir seçenek önerebilirim.
+  notes: Unknown item with formal phrasing
+- id: rec_001
+  user: Ne önerirsiniz?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Genel öneri olarak Mercimek Çorbası ve Etli Güveç sunabilirim.
+  notes: General recommendation
+- id: rec_002
+  user: Hafif bir şey tavsiye eder misiniz?
+  expected_intent: recommendation
+  expected_entities:
+    tag: light
+  assistant_response: Hafif bir seçenek isterseniz Izgara Tavuk Salata iyi bir tercih
+    olabilir.
+  notes: Light meal recommendation
+- id: rec_003
+  user: Vejetaryen seçeneğiniz var mı?
+  expected_intent: recommendation
+  expected_entities:
+    tag: vegetarian
+  assistant_response: Vejetaryen olarak Mercimek Çorbası, Domates Çorbası ve Sebzeli
+    Makarna önerebilirim.
+  notes: Vegetarian recommendation
+- id: rec_004
+  user: En popüler yemeğiniz hangisi?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: En çok tercih edilen seçeneklerimizden biri Etli Güveçtir.
+  notes: Popularity recommendation
+- id: rec_005
+  user: Doyurucu bir şey arıyorum
+  expected_intent: recommendation
+  expected_entities:
+    tag: hearty
+  assistant_response: Doyurucu bir seçenek olarak Etli Güveç önerebilirim.
+  notes: Hearty recommendation
+- id: rec_006
+  user: Soğuk içecek tavsiyeniz var mı?
+  expected_intent: recommendation
+  expected_entities:
+    category: İçecek
+  assistant_response: Soğuk içecek olarak Ayran veya Limonata tercih edebilirsiniz.
+  notes: Cold beverage recommendation
+- id: rec_007
+  user: Akşam için ne iyi gider?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Akşam için başlangıçta Mercimek Çorbası, ana yemekte ise Etli
+    Güveç iyi bir tercih olabilir.
+  notes: Time-of-day recommendation
+- id: rec_008
+  user: Yanına içecek de önerir misin?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Yemeklerin yanında Ayran veya Limonata tercih edebilirsiniz.
+  notes: Pairing recommendation
+- id: rec_009
+  user: Misafirim için risksiz ne önerirsin?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Genel olarak Izgara Tavuk Salata ve Mercimek Çorbası güvenli
+    başlangıç seçenekleri olabilir. Alerji durumu varsa ayrıca teyit etmemiz gerekir.
+  notes: Cautious recommendation
+- id: rec_010
+  user: Çorba mı makarna mı alsam?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Daha hafif bir başlangıç isterseniz Mercimek Çorbası, daha doyurucu
+    bir tercih isterseniz Sebzeli Makarna uygun olabilir.
+  notes: Comparison recommendation
+- id: rec_011
+  user: Tatlı önerebilir misiniz?
+  expected_intent: recommendation
+  expected_entities:
+    category: Tatlı
+  assistant_response: Tatlı olarak Fırın Sütlaç önerebilirim.
+  notes: Dessert recommendation
+- id: rec_012
+  user: Et yemiyorum, ne önerirsiniz?
+  expected_intent: recommendation
+  expected_entities:
+    tag: vegetarian
+  assistant_response: Et tüketmiyorsanız Sebzeli Makarna veya Domates Çorbası iyi
+    seçeneklerdir.
+  notes: No-meat recommendation
+- id: rec_013
+  user: Fiyat performans olarak ne önerirsiniz?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Fiyat performans açısından Mercimek Çorbası ve Ayran birlikte
+    dengeli bir tercih olabilir.
+  notes: Value recommendation
+- id: rec_014
+  user: İlk defa geliyorum, ne denemeliyim?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: İlk deneme için Mercimek Çorbası ile başlayıp Etli Güveç tercih
+    edebilirsiniz.
+  notes: First-visit recommendation
+- id: price_001
+  user: Mercimek çorbasının fiyatı nedir?
+  expected_intent: price_question
+  expected_entities:
+    item: Mercimek Çorbası
+  assistant_response: Mercimek Çorbası 85 TL'dir.
+  notes: Specific item price
+- id: price_002
+  user: Ayran kaç lira?
+  expected_intent: price_question
+  expected_entities:
+    item: Ayran
+  assistant_response: Ayran 45 TL'dir.
+  notes: Colloquial price phrasing
+- id: price_003
+  user: Etli güveç ne kadar?
+  expected_intent: price_question
+  expected_entities:
+    item: Etli Güveç
+  assistant_response: Etli Güveç 260 TL'dir.
+  notes: Main dish price question
+- id: price_004
+  user: Sebzeli makarna fiyatını öğrenebilir miyim?
+  expected_intent: price_question
+  expected_entities:
+    item: Sebzeli Makarna
+  assistant_response: Sebzeli Makarna 195 TL'dir.
+  notes: Formal price request
+- id: price_005
+  user: Limonata kaç TL?
+  expected_intent: price_question
+  expected_entities:
+    item: Limonata
+  assistant_response: Limonata 65 TL'dir.
+  notes: Short beverage price
+- id: price_006
+  user: Fırın sütlaç pahalı mı, fiyatı ne?
+  expected_intent: price_question
+  expected_entities:
+    item: Fırın Sütlaç
+  assistant_response: Fırın Sütlaç 120 TL'dir.
+  notes: Price with opinion wording
+- id: price_007
+  user: Izgara tavuk salata ne kadar tutuyor?
+  expected_intent: price_question
+  expected_entities:
+    item: Izgara Tavuk Salata
+  assistant_response: Izgara Tavuk Salata 210 TL'dir.
+  notes: Alternative price phrasing
+- id: price_008
+  user: Domates çorbası kaç para?
+  expected_intent: price_question
+  expected_entities:
+    item: Domates Çorbası
+  assistant_response: Domates Çorbası 80 TL'dir.
+  notes: Colloquial wording
+- id: price_009
+  user: En ucuz içecek hangisi?
+  expected_intent: price_question
+  expected_entities:
+    category: İçecek
+  assistant_response: İçecekler arasında en uygun fiyatlı seçenek Ayran'dır ve 45
+    TL'dir.
+  notes: Comparative price question
+- id: price_010
+  user: Tatlınızın fiyatı nedir?
+  expected_intent: price_question
+  expected_entities:
+    category: Tatlı
+  assistant_response: Tatlı olarak sunduğumuz Fırın Sütlaç 120 TL'dir.
+  notes: Category-to-item price question
+- id: price_011
+  user: Mercimek çorbası ile ayran birlikte ne kadar?
+  expected_intent: price_question
+  expected_entities:
+    items:
+    - Mercimek Çorbası
+    - Ayran
+  assistant_response: Mercimek Çorbası ile Ayran birlikte 130 TL tutar.
+  notes: Two-item total estimate
+- id: price_012
+  user: Çorbalar hangi fiyat aralığında?
+  expected_intent: price_question
+  expected_entities:
+    category: Çorba
+  assistant_response: Çorbalarımız 80 TL ile 85 TL arasındadır.
+  notes: Category price range
+- id: price_013
+  user: Etli Güveç mi daha pahalı, Sebzeli Makarna mı?
+  expected_intent: price_question
+  expected_entities:
+    items:
+    - Etli Güveç
+    - Sebzeli Makarna
+  assistant_response: Etli Güveç 260 TL, Sebzeli Makarna ise 195 TL'dir. Daha pahalı
+    olan Etli Güveçtir.
+  notes: Price comparison
+- id: price_014
+  user: Bir ayran ve bir limonata toplam kaç tutar?
+  expected_intent: price_question
+  expected_entities:
+    items:
+    - Ayran
+    - Limonata
+  assistant_response: Bir Ayran ve bir Limonata toplam 110 TL tutar.
+  notes: Drink pair total
+- id: allergen_001
+  user: Süt ürünlerine alerjim var, ne yiyebilirim?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: dairy
+  assistant_response: Süt ürünü içermeyen seçenekler arasında Izgara Tavuk Salata,
+    Etli Güveç ve Limonata bulunur. Sipariş öncesi mutfakla teyit etmemiz gerekir.
+  notes: Dairy allergy with caution
+- id: allergen_002
+  user: Glutensiz yemek var mı?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: gluten
+  assistant_response: Gluten içermeyen seçenekler arasında Izgara Tavuk Salata yer
+    alır. Çapraz bulaşma riski için lütfen mutfak teyidi alalım.
+  notes: Gluten-free request
+- id: allergen_003
+  user: Fırın sütlaçta ne var içinde?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Fırın Sütlaç
+  assistant_response: Fırın Sütlaç süt ürünü içerir. Süt alerjiniz veya intoleransınız
+    varsa dikkatli olmanızı öneririm.
+  notes: Item-specific allergen question
+- id: allergen_004
+  user: Laktozsuz bir şey önerebilir misiniz?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: dairy
+  assistant_response: Laktoz içermeme ihtimali yüksek seçenekler arasında Izgara Tavuk
+    Salata ve Etli Güveç bulunur. Yine de mutfakla teyit etmeden kesin konuşamam.
+  notes: Lactose-free phrasing
+- id: allergen_005
+  user: Ayranda süt var mı?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Ayran
+  assistant_response: Ayran süt ürünü içerir. Süt alerjiniz varsa tercih etmemenizi
+    ve personelle teyit etmenizi öneririm.
+  notes: Beverage allergen question
+- id: allergen_006
+  user: Kuruyemiş alerjim var, tatlı güvenli mi?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: kuruyemiş
+  assistant_response: Kuruyemiş açısından kesin güvenlik bilgisi veremem. Tatlı siparişi
+    öncesi mutfakla teyit etmemiz en doğrusu olur.
+  notes: Unknown allergen caution
+- id: allergen_007
+  user: Sebzeli makarnada gluten bulunur mu?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Sebzeli Makarna
+  assistant_response: Sebzeli Makarna gluten içerir. Gluten hassasiyetiniz varsa farklı
+    bir seçenek düşünmeliyiz.
+  notes: Pasta gluten question
+- id: allergen_008
+  user: Çapraz bulaşma riski var mı?
+  expected_intent: allergen_question
+  expected_entities:
+    risk: cross_contamination
+  assistant_response: Çapraz bulaşma konusunda kesin garanti veremem. Bu nedenle mutfakla
+    teyit etmek gerekir.
+  notes: General safety risk question
+- id: allergen_009
+  user: Domates çorbası süt içeriyor mu?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Domates Çorbası
+  assistant_response: Domates Çorbası süt ürünü içerebilir. Alerjiniz varsa siparişten
+    önce mutlaka teyit edelim.
+  notes: Soup dairy question
+- id: allergen_010
+  user: Alerjim var, en risksiz seçenek hangisi?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: unknown
+  assistant_response: Alerji durumunda kesin güvenli ürün söylemek doğru olmaz. İçerikleri
+    tek tek kontrol edip mutfakla teyit ederek ilerlemeliyiz.
+  notes: General allergy caution
+- id: allergen_011
+  user: Etli Güveçte un kullanılıyor mu?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Etli Güveç
+  assistant_response: Etli Güveç için kesin içerik teyidini mutfaktan almamız gerekir.
+    Gluten hassasiyetiniz varsa özellikle kontrol etmeliyiz.
+  notes: Ingredient uncertainty question
+- id: allergen_012
+  user: Yoğurt tüketemiyorum, ne içebilirim?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: dairy
+  assistant_response: Yoğurt tüketemiyorsanız Ayran uygun olmayacaktır. Limonata daha
+    güvenli bir alternatif olabilir, yine de teyit edelim.
+  notes: Dairy-sensitive beverage guidance
+- id: allergen_013
+  user: Mercimek çorbası glutensiz mi?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Mercimek Çorbası
+  assistant_response: Mercimek Çorbası için gluten durumu konusunda mutfak teyidi
+    almamız gerekir. Kesin güvenli demem doğru olmaz.
+  notes: Cautious soup gluten response
+- id: allergen_014
+  user: Sade ve alerji açısından daha kontrollü bir şey var mı?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: unknown
+  assistant_response: Alerji durumlarında en doğru yaklaşım içerikleri tek tek teyit
+    etmektir. Görece sade seçenekler için Izgara Tavuk Salata ve Limonata değerlendirilebilir.
+  notes: Broad safety request
+- id: add_001
+  user: 2 Ayran istiyorum
+  expected_intent: add_item
+  expected_entities:
+    item: Ayran
+    quantity: 2
+  assistant_response: 2 Ayran siparişinize eklendi. Başka bir isteğiniz var mı?
+  notes: Numeric quantity before item
+- id: add_002
+  user: Bir mercimek çorbası ekle
+  expected_intent: add_item
+  expected_entities:
+    item: Mercimek Çorbası
+    quantity: 1
+  assistant_response: 1 Mercimek Çorbası siparişinize eklendi. Başka bir isteğiniz
+    var mı?
+  notes: Word quantity before item
+- id: add_003
+  user: Ayran alabilir miyim 3 tane
+  expected_intent: add_item
+  expected_entities:
+    item: Ayran
+    quantity: 3
+  assistant_response: 3 Ayran siparişinize eklendi. Başka bir isteğiniz var mı?
+  notes: Quantity after item
+- id: add_004
+  user: Siparişime sebzeli makarna ekle
+  expected_intent: add_item
+  expected_entities:
+    item: Sebzeli Makarna
+    quantity: 1
+  assistant_response: 1 Sebzeli Makarna siparişinize eklendi. Başka bir isteğiniz
+    var mı?
+  notes: Order phrasing with siparişime
+- id: add_005
+  user: İki limonata istiyorum
+  expected_intent: add_item
+  expected_entities:
+    item: Limonata
+    quantity: 2
+  assistant_response: 2 Limonata siparişinize eklendi. Başka bir isteğiniz var mı?
+  notes: Word quantity two
+- id: add_006
+  user: Bir Türk kahvesi alayım
+  expected_intent: add_item
+  expected_entities:
+    item: Türk kahvesi
+    quantity: 1
+  assistant_response: Üzgünüm, menümüzde Türk kahvesi bulunmuyor. İsterseniz mevcut
+    içeceklerden birini önerebilirim.
+  notes: Unknown beverage request
+- id: add_007
+  user: Etli Güveç istiyorum
+  expected_intent: add_item
+  expected_entities:
+    item: Etli Güveç
+    quantity: 1
+  assistant_response: 1 Etli Güveç siparişinize eklendi. Başka bir isteğiniz var mı?
+  notes: Default quantity one
+- id: add_008
+  user: Bir domates çorbası alabilir miyim?
+  expected_intent: add_item
+  expected_entities:
+    item: Domates Çorbası
+    quantity: 1
+  assistant_response: 1 Domates Çorbası siparişinize eklendi. Başka bir isteğiniz
+    var mı?
+  notes: Polite add request
+- id: add_009
+  user: Limonatadan 4 tane ekler misin?
+  expected_intent: add_item
+  expected_entities:
+    item: Limonata
+    quantity: 4
+  assistant_response: 4 Limonata siparişinize eklendi. Başka bir isteğiniz var mı?
+  notes: Plural add request
+- id: add_010
+  user: Bir Fırın Sütlaç da istiyorum
+  expected_intent: add_item
+  expected_entities:
+    item: Fırın Sütlaç
+    quantity: 1
+  assistant_response: 1 Fırın Sütlaç siparişinize eklendi. Başka bir isteğiniz var
+    mı?
+  notes: Dessert add request
+- id: add_011
+  user: Masaya bir ayran gönder
+  expected_intent: add_item
+  expected_entities:
+    item: Ayran
+    quantity: 1
+  assistant_response: 1 Ayran siparişinize eklendi. Başka bir isteğiniz var mı?
+  notes: Imperative add request
+- id: add_012
+  user: Üç mercimek çorbası alalım
+  expected_intent: add_item
+  expected_entities:
+    item: Mercimek Çorbası
+    quantity: 3
+  assistant_response: 3 Mercimek Çorbası siparişinize eklendi. Başka bir isteğiniz
+    var mı?
+  notes: Plural group order
+- id: add_013
+  user: Bana iki ayran ve bir limonata ekle
+  expected_intent: add_item
+  expected_entities:
+    items:
+    - Ayran
+    - Limonata
+  assistant_response: İki Ayran ve bir Limonata siparişinize eklendi. Başka bir isteğiniz
+    var mı?
+  notes: Multiple-item add request
+- id: add_014
+  user: Hamburger istiyorum
+  expected_intent: add_item
+  expected_entities:
+    item: Hamburger
+    quantity: 1
+  assistant_response: Üzgünüm, menümüzde hamburger bulunmuyor. İsterseniz mevcut ana
+    yemeklerden birini önerebilirim.
+  notes: Unknown main dish request
+- id: remove_001
+  user: Ayranı çıkar
+  expected_intent: remove_item
+  expected_entities:
+    item: Ayran
+  assistant_response: Ayran siparişinizden çıkarıldı.
+  notes: Direct remove command
+- id: remove_002
+  user: Mercimek çorbasını iptal et
+  expected_intent: remove_item
+  expected_entities:
+    item: Mercimek Çorbası
+  assistant_response: Mercimek Çorbası siparişinizden çıkarıldı.
+  notes: Cancel verb usage
+- id: remove_003
+  user: Limonatayı sil
+  expected_intent: remove_item
+  expected_entities:
+    item: Limonata
+  assistant_response: Limonata siparişinizden çıkarıldı.
+  notes: Sil verb usage
+- id: remove_004
+  user: Tatlıyı iptal edelim
+  expected_intent: remove_item
+  expected_entities:
+    item: Fırın Sütlaç
+  assistant_response: Tatlı siparişinizden çıkarıldı.
+  notes: Category-level colloquial remove
+- id: remove_005
+  user: Biraz önce eklediğim ayranı kaldırır mısın?
+  expected_intent: remove_item
+  expected_entities:
+    item: Ayran
+  assistant_response: Ayran siparişinizden çıkarıldı.
+  notes: Soft remove phrasing
+- id: remove_006
+  user: Etli Güveç olmasın
+  expected_intent: remove_item
+  expected_entities:
+    item: Etli Güveç
+  assistant_response: Etli Güveç siparişinizden çıkarıldı.
+  notes: Negative preference remove
+- id: remove_007
+  user: Sebzeli makarnayı çıkaralım
+  expected_intent: remove_item
+  expected_entities:
+    item: Sebzeli Makarna
+  assistant_response: Sebzeli Makarna siparişinizden çıkarıldı.
+  notes: Group remove phrasing
+- id: remove_008
+  user: Domates çorbasını siparişten sil
+  expected_intent: remove_item
+  expected_entities:
+    item: Domates Çorbası
+  assistant_response: Domates Çorbası siparişinizden çıkarıldı.
+  notes: Explicit order removal
+- id: remove_009
+  user: İçecekleri iptal et
+  expected_intent: remove_item
+  expected_entities:
+    category: İçecek
+  assistant_response: Siparişteki içecekleri çıkarmak için hangi ürünü kaldırmamı
+    istediğinizi netleştirebilir misiniz?
+  notes: Ambiguous category removal
+- id: remove_010
+  user: Bir limonatayı çıkar
+  expected_intent: remove_item
+  expected_entities:
+    item: Limonata
+  assistant_response: Limonata siparişinizden çıkarıldı.
+  notes: Quantity implied remove
+- id: remove_011
+  user: Ayran istemiyorum artık
+  expected_intent: remove_item
+  expected_entities:
+    item: Ayran
+  assistant_response: Ayran siparişinizden çıkarıldı.
+  notes: Preference reversal
+- id: remove_012
+  user: Sütlacı iptal eder misiniz?
+  expected_intent: remove_item
+  expected_entities:
+    item: Fırın Sütlaç
+  assistant_response: Fırın Sütlaç siparişinizden çıkarıldı.
+  notes: Formal remove request
+- id: remove_013
+  user: Çorbayı siparişten düş
+  expected_intent: remove_item
+  expected_entities:
+    category: Çorba
+  assistant_response: Hangi çorbayı çıkarmamı istediğinizi belirtir misiniz?
+  notes: Ambiguous soup removal
+- id: remove_014
+  user: Eklediğim makarna kalsın istemiyorum
+  expected_intent: remove_item
+  expected_entities:
+    item: Sebzeli Makarna
+  assistant_response: Sebzeli Makarna siparişinizden çıkarıldı.
+  notes: Longer natural remove phrasing
+- id: clear_001
+  user: Siparişi temizle
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. İsterseniz yeniden başlayabiliriz.
+  notes: Direct clear
+- id: clear_002
+  user: Her şeyi iptal et
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Tüm siparişiniz iptal edildi. Yeni bir sipariş oluşturmak isterseniz
+    yardımcı olabilirim.
+  notes: Informal clear phrasing
+- id: clear_003
+  user: Bütün siparişi sil
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Tüm siparişiniz silindi. İsterseniz yeniden ürün ekleyebilirsiniz.
+  notes: Sil wording
+- id: clear_004
+  user: Siparişi baştan alalım
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Mevcut siparişi temizledim. Baştan ilerleyebiliriz.
+  notes: Restart phrasing
+- id: clear_005
+  user: Şimdilik hepsini kaldır
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Tüm ürünleri siparişten kaldırdım. İsterseniz sonra yeniden
+    ekleyebiliriz.
+  notes: Temporary clear request
+- id: clear_006
+  user: Siparişi komple iptal etmek istiyorum
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişinizin tamamını iptal ettim. Başka bir konuda yardımcı
+    olabilir miyim?
+  notes: Formal clear request
+- id: clear_007
+  user: Listeyi sıfırla
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Sipariş listenizi sıfırladım. Yeni sipariş oluşturmaya başlayabiliriz.
+  notes: Alternative clear wording
+- id: clear_008
+  user: Bunların hepsini siler misin?
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Elbette, siparişinizin tamamını temizledim.
+  notes: Polite full-clear request
+- id: clear_009
+  user: Tüm siparişi kapat
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Mevcut siparişi kapattım ve içeriğini temizledim.
+  notes: Close phrasing
+- id: clear_010
+  user: Şu anki siparişi iptal ediyoruz
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Şu anki siparişi iptal ettim. Dilerseniz yeni bir sipariş oluşturabiliriz.
+  notes: Plural clear phrasing
+- id: clear_011
+  user: Tamam, her şeyi baştan yapalım
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişinizi temizledim. Baştan devam edebiliriz.
+  notes: Restart with agreement
+- id: clear_012
+  user: Bunları istemiyorum, siparişi temizle
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişinizdeki tüm ürünleri kaldırdım.
+  notes: Preference-based clear
+- id: clear_013
+  user: Tüm ürünleri çıkar
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Tüm ürünleri siparişten çıkardım.
+  notes: Products phrasing
+- id: clear_014
+  user: Siparişi tamamen kaldırır mısın?
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişi tamamen kaldırdım. İsterseniz yeniden ürün ekleyebiliriz.
+  notes: Formal full removal
+- id: summary_001
+  user: Siparişim ne?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Mevcut siparişinizi özetleyebilirim. Ürünleri ve toplam tutarı
+    paylaşayım.
+  notes: Direct summary request
+- id: summary_002
+  user: Siparişi özetle
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Elbette, siparişinizdeki ürünleri ve toplam fiyatı özetliyorum.
+  notes: Command-style summary
+- id: summary_003
+  user: Toplam ne kadar tutar?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Siparişinizin toplam tutarını hesaplayıp özetleyebilirim.
+  notes: Total price inquiry
+- id: summary_004
+  user: Bir daha sayar mısın?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Tabii, mevcut siparişinizi tekrar özetleyeyim.
+  notes: Repeat summary request
+- id: summary_005
+  user: Listede neler var?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Sipariş listenizde hangi ürünlerin olduğunu özetleyebilirim.
+  notes: Order list phrasing
+- id: summary_006
+  user: Şu anki siparişi göster
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Şu anki siparişinizi ürünler ve toplam tutarla birlikte gösterebilirim.
+  notes: Show current order
+- id: summary_007
+  user: Toplamı çıkarır mısın?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Toplam tutarı sipariş özetiyle birlikte paylaşabilirim.
+  notes: Compute total phrasing
+- id: summary_008
+  user: Neler ekledik?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Eklediğiniz ürünleri ve toplamı özetleyebilirim.
+  notes: Plural natural phrasing
+- id: summary_009
+  user: Son sipariş durumunu söyle
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Siparişinizdeki son durumu ürün listesi ve toplam fiyatla paylaşayım.
+  notes: Status phrasing
+- id: summary_010
+  user: Siparişi son kez kontrol edelim
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Elbette, siparişinizi kontrol etmek için özetliyorum.
+  notes: Pre-confirmation summary
+- id: summary_011
+  user: Fiyatıyla birlikte tekrar söyler misin?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Siparişinizi fiyatlarıyla birlikte yeniden özetleyebilirim.
+  notes: Summary with price emphasis
+- id: summary_012
+  user: Ne sipariş vermiştik?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Verdiğiniz siparişi ürün ve toplam bilgisiyle hatırlatayım.
+  notes: Past-tense phrasing
+- id: summary_013
+  user: Önce bir özet alayım
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Tabii, mevcut siparişinizi kısa bir özet halinde paylaşayım.
+  notes: Pre-check summary
+- id: summary_014
+  user: Siparişin son halini göster
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Siparişinizin son halini ürünler ve toplam tutarla birlikte
+    gösterebilirim.
+  notes: Final state summary
+- id: confirm_001
+  user: Evet, onayla
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Bu aşama demo amaçlıdır; gerçek restoran
+    gönderimi yapılmaz.
+  notes: Direct confirmation
+- id: confirm_002
+  user: Tamam, siparişimi ver
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi demo ortamında onaylıyorum. Gerçek sisteme gönderim
+    yapılmamaktadır.
+  notes: Confirmation with ver phrasing
+- id: confirm_003
+  user: Onaylıyorum
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Bu onay yalnızca MVP/demo akışı içindir.
+  notes: Short confirm phrase
+- id: confirm_004
+  user: Siparişi onayla
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişi onaylıyorum ve özetini koruyorum. Bu işlem gerçek restoran
+    gönderimi değildir.
+  notes: Imperative confirm
+- id: confirm_005
+  user: Bu sipariş doğru
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi doğru kabul edip onaylıyorum. Ancak bu sadece demo
+    onayıdır.
+  notes: Correctness confirmation
+- id: confirm_006
+  user: Evet doğru
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Teşekkür ederim, siparişinizi onaylıyorum. Bu yalnızca demo
+    amaçlı bir onaydır.
+  notes: Short correctness approval
+- id: confirm_007
+  user: Siparişi geçebilirsin
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Not olarak, bu sistem gerçek mutfağa
+    iletim yapmaz.
+  notes: Proceed phrasing
+- id: confirm_008
+  user: Tamamdır, onaylıyorum
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi demo kapsamında onaylıyorum ve özetini koruyorum.
+  notes: Casual agreement
+- id: confirm_009
+  user: Hepsi doğru, onay ver
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Bu onay gerçek restoran sistemine
+    gönderilmez.
+  notes: Approval with all-correct phrasing
+- id: confirm_010
+  user: Siparişi bu şekilde kabul ediyorum
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi bu haliyle onaylıyorum. Yalnızca MVP/demo akışı
+    içinde ilerliyoruz.
+  notes: Formal acceptance
+- id: confirm_011
+  user: Tamam, bu hali kalsın
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişi mevcut haliyle onaylıyorum. Bu aşama demo onayıdır.
+  notes: Keep as-is phrasing
+- id: confirm_012
+  user: Gönder gitsin
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum; ancak bu demo sisteminde gerçek gönderim
+    yapılmaz.
+  notes: Casual submit phrasing
+- id: confirm_013
+  user: Hazırsa onaylayalım
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Elbette, siparişi onaylıyorum. Bu işlem yalnızca gösterim amaçlıdır.
+  notes: Inclusive phrasing
+- id: confirm_014
+  user: Siparişi kapatabiliriz
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişi onaylıyorum ve demo akışında kapatıyorum. Gerçek sipariş
+    iletimi yapılmamaktadır.
+  notes: Close order phrasing
+- id: offtopic_001
+  user: Bana bir fıkra anlat
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Üzgünüm, yalnızca restoran ve menü konularında yardımcı olabilirim.
+  notes: Joke request
+- id: offtopic_002
+  user: Hava durumu nasıl?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamam. Menü veya siparişle ilgili bir soru
+    sorabilirsiniz.
+  notes: Weather question
+- id: offtopic_003
+  user: Yakında sinema var mı?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Yakındaki yerler hakkında bilgi veremem. Menü veya sipariş konusunda
+    yardımcı olabilirim.
+  notes: Nearby place question
+- id: offtopic_004
+  user: Telefonumu şarj eder misin?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. İsterseniz sipariş veya menü
+    hakkında destek verebilirim.
+  notes: Non-menu service request
+- id: offtopic_005
+  user: Bugün maç kaçta başlıyor?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Maç saatleri hakkında bilgi vermiyorum. Restoran içeriğiyle
+    ilgili sorularınızı yanıtlayabilirim.
+  notes: Sports question
+- id: offtopic_006
+  user: Bana yol tarifi yap
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Yol tarifi veremem. Menü, sipariş ve öneriler konusunda yardımcı
+    olabilirim.
+  notes: Navigation request out of scope
+- id: offtopic_007
+  user: Borsa hakkında ne düşünüyorsun?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konu görev alanım dışında. İsterseniz menüdeki ürünler hakkında
+    konuşabiliriz.
+  notes: Finance question
+- id: offtopic_008
+  user: Bir şiir yazar mısın?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Şiir yazma konusunda yardımcı olamıyorum. Restoran ve sipariş
+    akışında size destek verebilirim.
+  notes: Poem request
+- id: offtopic_009
+  user: Takvimime not düş
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Takvim işlemleri yapmıyorum. Siparişinizi yönetmek için buradayım.
+  notes: Calendar action request
+- id: offtopic_010
+  user: Wi-Fi şifresi nedir?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Wi-Fi bilgisi paylaşamıyorum. Menü veya sipariş konusunda yardımcı
+    olabilirim.
+  notes: Venue detail outside scope
+- id: offtopic_011
+  user: Bana hesap makinesi gibi işlem yap
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Genel hesap makinesi işlevi sunmuyorum. Ancak sipariş toplamı
+    konusunda yardımcı olabilirim.
+  notes: Calculator request
+- id: offtopic_012
+  user: Şarkı önerir misin?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Müzik önerisi veremem. İsterseniz yemek veya içecek önerisi
+    sunabilirim.
+  notes: Music request
+- id: offtopic_013
+  user: Bana kısa bir haber özeti ver
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Haber özeti paylaşmıyorum. Restoran menüsü ve siparişler hakkında
+    yardımcı olabilirim.
+  notes: News request
+- id: offtopic_014
+  user: Bilgisayarımı yeniden başlat
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu tür bir işlem yapamam. Menü ve sipariş akışı içinde size
+    destek olabilirim.
+  notes: Technical device request
+- id: greet_015
+  user: Merhaba, sipariş vermek istiyorum
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Merhaba, hoş geldiniz. Hazırsanız siparişinizi almaya başlayabilirim.
+  notes: Greeting toward ordering
+- id: greet_016
+  user: Selam, menüye bakacağız
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Selam, hoş geldiniz. Menü kategorilerini isterseniz hemen paylaşabilirim.
+  notes: Greeting plus menu intent
+- id: greet_017
+  user: İyi akşamlar, iki kişiyiz
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: İyi akşamlar, hoş geldiniz. İki kişilik siparişiniz için yardımcı
+    olabilirim.
+  notes: Greeting with party size
+- id: greet_018
+  user: Merhaba usta
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Merhaba, hoş geldiniz. Menü ve sipariş konusunda yardımcı olabilirim.
+  notes: Casual respectful greeting
+- id: greet_019
+  user: Selamlar, hızlıca bir şey soracağım
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Selamlar, hoş geldiniz. Sorunuzu alabilirim; menü ve sipariş
+    konularında yardımcı olabilirim.
+  notes: Fast question greeting
+- id: greet_020
+  user: Kolay gelsin, siparişe başlayalım
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Teşekkür ederim, hoş geldiniz. Siparişe başlayabiliriz.
+  notes: Greeting with start-order phrasing
+- id: greet_021
+  user: Merhaba, bugün neler önerirsiniz diye soracaktım
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Merhaba, hoş geldiniz. Öneri paylaşmamı isterseniz memnuniyetle
+    yardımcı olurum.
+  notes: Greeting before recommendation
+- id: greet_022
+  user: Selam, aç geldik
+  expected_intent: greeting
+  expected_entities: {}
+  assistant_response: Selam, hoş geldiniz. Dilerseniz doyurucu seçenekler önerebilirim.
+  notes: Casual hungry greeting
+- id: menu_015
+  user: Menü kategorilerini sıralar mısın?
+  expected_intent: menu_question
+  expected_entities: {}
+  assistant_response: Kategori bilgisi olarak çorba, ana yemek, tatlı ve içecek seçeneklerimiz
+    bulunuyor.
+  notes: Explicit category listing
+- id: menu_016
+  user: İçecek kategorisinde neler var?
+  expected_intent: menu_question
+  expected_entities:
+    category: İçecek
+  assistant_response: İçecek kategorisinde Ayran ve Limonata bulunuyor.
+  notes: Drink category with category keyword
+- id: menu_017
+  user: Tatlı kategorinizde ne mevcut?
+  expected_intent: menu_question
+  expected_entities:
+    category: Tatlı
+  assistant_response: Tatlı kategorisinde Fırın Sütlaç bulunuyor.
+  notes: Dessert category phrasing
+- id: menu_018
+  user: Ana yemek kategorisini açar mısın?
+  expected_intent: menu_question
+  expected_entities:
+    category: Ana Yemek
+  assistant_response: Ana yemek kategorisinde Izgara Tavuk Salata, Sebzeli Makarna
+    ve Etli Güveç var.
+  notes: Main category wording
+- id: menu_019
+  user: Mercimek çorbayı menüde görüyor muyum?
+  expected_intent: menu_question
+  expected_entities:
+    item: Mercimek Çorbası
+  assistant_response: Evet, Mercimek Çorbası menümüzde mevcut.
+  notes: Specific available item check
+- id: menu_020
+  user: Ayranı menüde bulabiliyor muyuz?
+  expected_intent: menu_question
+  expected_entities:
+    item: Ayran
+  assistant_response: Evet, Ayran menümüzde mevcut içeceklerden biridir.
+  notes: Available drink existence
+- id: menu_021
+  user: Kahve tarafında ne var?
+  expected_intent: menu_question
+  expected_entities:
+    category: İçecek
+  assistant_response: İçecek kategorimizde şu anda Ayran ve Limonata var; kahve bulunmuyor.
+  notes: Category question with unavailable subitem
+- id: menu_022
+  user: Çorba kategorisinde en az iki seçenek var mı?
+  expected_intent: menu_question
+  expected_entities:
+    category: Çorba
+  assistant_response: 'Çorba kategorisinde iki seçenek var: Mercimek Çorbası ve Domates
+    Çorbası.'
+  notes: Soup count question
+- id: menu_023
+  user: Menüde hafif ana yemek hangisi?
+  expected_intent: menu_question
+  expected_entities:
+    category: Ana Yemek
+  assistant_response: Ana yemek kategorisinde daha hafif seçenek olarak Izgara Tavuk
+    Salata öne çıkar.
+  notes: Category question with preference
+- id: menu_024
+  user: Kategori bazında kısaca menüyü özetler misin?
+  expected_intent: menu_question
+  expected_entities: {}
+  assistant_response: Kategori özeti olarak çorba, ana yemek, tatlı ve içecek başlıklarımız
+    bulunuyor.
+  notes: Menu summary with category word
+- id: rec_015
+  user: Bir başlangıç önerisi alabilir miyim?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Öneri olarak başlangıç için Mercimek Çorbası düşünebilirsiniz.
+  notes: Starter recommendation
+- id: rec_016
+  user: Kategori bazlı öneri verir misin?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Kategori bazlı Öneri olarak çorba için Mercimek Çorbası, ana
+    yemek için Etli Güveç söyleyebilirim.
+  notes: Recommendation with category wording
+- id: rec_017
+  user: Daha ekonomik bir öneri istiyorum
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Öneri olarak daha ekonomik tarafta Mercimek Çorbası ve Ayran
+    iyi bir eşleşme olur.
+  notes: Budget recommendation
+- id: rec_018
+  user: Etli bir öneri yapar mısın?
+  expected_intent: recommendation
+  expected_entities:
+    tag: hearty
+  assistant_response: Öneri olarak etli seçenek isteyenlere Etli Güveç uygun olur.
+  notes: Hearty recommendation
+- id: rec_019
+  user: Çorba kategorisinden ne önerirsin?
+  expected_intent: recommendation
+  expected_entities:
+    category: Çorba
+  assistant_response: 'Kategori olarak çorba tarafında Öneri: Mercimek Çorbası.'
+  notes: Soup category recommendation
+- id: rec_020
+  user: Tatlı önerin ne olur?
+  expected_intent: recommendation
+  expected_entities:
+    category: Tatlı
+  assistant_response: Öneri olarak tatlı kategorisinde Fırın Sütlaç sunabilirim.
+  notes: Dessert recommendation
+- id: rec_021
+  user: İçecek olarak ne iyi gider?
+  expected_intent: recommendation
+  expected_entities:
+    category: İçecek
+  assistant_response: Öneri olarak içecek kategorisinde Ayran veya Limonata tercih
+    edebilirsiniz.
+  notes: Drink recommendation
+- id: rec_022
+  user: Bir arkadaşım için risksiz bir şey öner
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Öneri olarak daha risksiz seçenekler arasında Izgara Tavuk Salata
+    öne çıkar; alerji varsa yine de teyit etmeliyiz.
+  notes: Safer recommendation
+- id: rec_023
+  user: Vejetaryen biri için öneriniz nedir?
+  expected_intent: recommendation
+  expected_entities:
+    tag: vegetarian
+  assistant_response: Öneri olarak vejetaryen tarafta Sebzeli Makarna veya Mercimek
+    Çorbası uygun olur.
+  notes: Vegetarian recommendation
+- id: rec_024
+  user: Ağır olmayan ama doyurucu bir öneri yap
+  expected_intent: recommendation
+  expected_entities:
+    tag: light
+  assistant_response: Öneri olarak hafif ama doyurucu tarafta Izgara Tavuk Salata
+    uygun olabilir.
+  notes: Light but filling recommendation
+- id: rec_025
+  user: Kategori söyleyip öneri verir misin?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: 'Kategori ve Öneri olarak: çorba için Mercimek Çorbası, ana
+    yemek için Sebzeli Makarna önerebilirim.'
+  notes: Category and recommendation
+- id: rec_026
+  user: Domates çorbası mı mercimek mi önerirsin?
+  expected_intent: recommendation
+  expected_entities:
+    category: Çorba
+  assistant_response: Öneri olarak daha klasik tercih isteyenlere Mercimek Çorbası,
+    daha farklı tat isteyenlere Domates Çorbası uygun olur.
+  notes: Soup comparison
+- id: rec_027
+  user: Yemeğin yanına içecek öner
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Öneri olarak yemeklerin yanına Ayran iyi gider, daha ferah bir
+    seçenek isterseniz Limonata da tercih edebilirsiniz.
+  notes: Pairing recommendation
+- id: rec_028
+  user: Akşam için kategori kategori öneri sun
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Kategori önerisi olarak çorba için Mercimek Çorbası, ana yemek
+    için Etli Güveç, içecek için Ayran diyebilirim.
+  notes: Multi-category recommendation
+- id: rec_029
+  user: Sebzeli bir öneri verir misiniz?
+  expected_intent: recommendation
+  expected_entities:
+    tag: vegetarian
+  assistant_response: Öneri olarak sebzeli tarafta Sebzeli Makarna uygun olur.
+  notes: Vegetable-focused recommendation
+- id: rec_030
+  user: Misafire sunmalık öneri nedir?
+  expected_intent: recommendation
+  expected_entities: {}
+  assistant_response: Öneri olarak misafire sunmak için Mercimek Çorbası ile Etli
+    Güveç dengeli bir seçim olur.
+  notes: Guest recommendation
+- id: price_015
+  user: Limonata kaç TL oldu şimdi?
+  expected_intent: price_question
+  expected_entities:
+    item: Limonata
+  assistant_response: 'Fiyat bilgisi: Limonata 65 TL.'
+  notes: Exact TL wording
+- id: price_016
+  user: Ayranı tekrar fiyatıyla söyler misin?
+  expected_intent: price_question
+  expected_entities:
+    item: Ayran
+  assistant_response: 'Fiyat bilgisi: Ayran 45 TL.'
+  notes: Repeat drink price
+- id: price_017
+  user: Mercimek çorbayı kaç TL'den veriyorsunuz?
+  expected_intent: price_question
+  expected_entities:
+    item: Mercimek Çorbası
+  assistant_response: 'Fiyat bilgisi: Mercimek Çorbası 85 TL.'
+  notes: Soup TL phrasing
+- id: price_018
+  user: Domates çorbası kaç TL?
+  expected_intent: price_question
+  expected_entities:
+    item: Domates Çorbası
+  assistant_response: 'Fiyat bilgisi: Domates Çorbası 80 TL.'
+  notes: Second soup price
+- id: price_019
+  user: Sebzeli makarna için fiyat nedir?
+  expected_intent: price_question
+  expected_entities:
+    item: Sebzeli Makarna
+  assistant_response: 'Fiyat bilgisi: Sebzeli Makarna 195 TL.'
+  notes: Pasta price
+- id: price_020
+  user: Etli güveci kaça satıyorsunuz?
+  expected_intent: price_question
+  expected_entities:
+    item: Etli Güveç
+  assistant_response: 'Fiyat bilgisi: Etli Güveç 260 TL.'
+  notes: Main dish price wording
+- id: price_021
+  user: Izgara tavuk salata kaç TL oluyor?
+  expected_intent: price_question
+  expected_entities:
+    item: Izgara Tavuk Salata
+  assistant_response: 'Fiyat bilgisi: Izgara Tavuk Salata 210 TL.'
+  notes: Salad price wording
+- id: price_022
+  user: Fırın sütlaç için fiyat bilgisi verir misiniz?
+  expected_intent: price_question
+  expected_entities:
+    item: Fırın Sütlaç
+  assistant_response: 'Fiyat bilgisi: Fırın Sütlaç 120 TL.'
+  notes: Dessert price formal
+- id: price_023
+  user: Bir ayranla bir limonata toplam kaç TL eder?
+  expected_intent: price_question
+  expected_entities:
+    items:
+    - Ayran
+    - Limonata
+  assistant_response: 'Toplam fiyat bilgisi: bir Ayran ve bir Limonata 110 TL eder.'
+  notes: Drink pair total with TL
+- id: price_024
+  user: Bir mercimek çorbası ve bir ayran kaç TL tutar?
+  expected_intent: price_question
+  expected_entities:
+    items:
+    - Mercimek Çorbası
+    - Ayran
+  assistant_response: 'Toplam fiyat bilgisi: bir Mercimek Çorbası ve bir Ayran 130
+    TL tutar.'
+  notes: Soup plus drink total
+- id: price_025
+  user: İçecek kategorisinde fiyatlar nasıl?
+  expected_intent: price_question
+  expected_entities:
+    category: İçecek
+  assistant_response: İçecek kategorisinde fiyatlar 45 TL ile 65 TL arasındadır.
+  notes: Category price range
+- id: price_026
+  user: Çorba kategorisindeki fiyatları söyler misin?
+  expected_intent: price_question
+  expected_entities:
+    category: Çorba
+  assistant_response: Çorba kategorisinde Mercimek Çorbası 85 TL, Domates Çorbası
+    80 TL'dir.
+  notes: Category itemized prices
+- id: price_027
+  user: En pahalı ana yemek kaç TL?
+  expected_intent: price_question
+  expected_entities:
+    category: Ana Yemek
+  assistant_response: Ana yemek kategorisinde en yüksek fiyatlı seçenek Etli Güveçtir
+    ve 260 TL'dir.
+  notes: Highest price question
+- id: price_028
+  user: En uygun tatlı kaç TL?
+  expected_intent: price_question
+  expected_entities:
+    category: Tatlı
+  assistant_response: Tatlı kategorisinde mevcut seçenek Fırın Sütlaçtır ve 120 TL'dir.
+  notes: Dessert price question
+- id: price_029
+  user: Ayran mı limonata mı daha uygun fiyatlı?
+  expected_intent: price_question
+  expected_entities:
+    items:
+    - Ayran
+    - Limonata
+  assistant_response: 'Fiyat karşılaştırması: Ayran 45 TL, Limonata 65 TL''dir. Daha
+    uygun fiyatlı olan Ayran''dır.'
+  notes: Comparison with TL
+- id: price_030
+  user: İki ayran kaç TL tutar?
+  expected_intent: price_question
+  expected_entities:
+    item: Ayran
+    quantity: 2
+  assistant_response: 'Toplam fiyat bilgisi: iki Ayran 90 TL tutar.'
+  notes: Quantity total
+- id: price_031
+  user: Üç limonata kaç TL yapar?
+  expected_intent: price_question
+  expected_entities:
+    item: Limonata
+    quantity: 3
+  assistant_response: 'Toplam fiyat bilgisi: üç Limonata 195 TL yapar.'
+  notes: Multiple quantity total
+- id: price_032
+  user: Ana yemeklerde 200 TL üstü ne var?
+  expected_intent: price_question
+  expected_entities:
+    category: Ana Yemek
+  assistant_response: Fiyat bilgisi olarak 200 TL üstünde Izgara Tavuk Salata 210
+    TL ve Etli Güveç 260 TL bulunuyor.
+  notes: Filtered price question
+- id: allergen_015
+  user: Süt alerjim var, güvenli bir içecek var mı?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: dairy
+  assistant_response: Alerji durumu nedeniyle kesin güvenli demem doğru olmaz; süt
+    alerjisi için Limonata daha uygun görünüyor ama yine de mutfakla teyit etmeliyiz.
+  notes: Dairy allergy drink
+- id: allergen_016
+  user: Yoğurt ürünleri bana dokunuyor, ne önerirsiniz?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: dairy
+  assistant_response: Alerji veya hassasiyet durumunda Ayran uygun değildir; Izgara
+    Tavuk Salata ya da Limonata düşünülebilir, ancak önce teyit etmeliyiz.
+  notes: Dairy sensitivity
+- id: allergen_017
+  user: Gluten alerjim var, çorba içebilir miyim?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: gluten
+  assistant_response: Alerji konusunda dikkatli olmalıyız; çorbalar için içerik ve
+    çapraz bulaşma durumunu mutfakla teyit etmeden net güvence veremem.
+  notes: Gluten allergy soup
+- id: allergen_018
+  user: Fırın sütlaç alerji açısından riskli mi?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Fırın Sütlaç
+  assistant_response: Alerji açısından Fırın Sütlaç süt ürünü içerir; siparişten önce
+    bu bilgiyi tekrar teyit etmemiz gerekir.
+  notes: Dessert allergen
+- id: allergen_019
+  user: Domates çorbasında süt olabilir mi?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Domates Çorbası
+  assistant_response: Alerji riski için Domates Çorbasında süt ürünü bulunabilir;
+    mutfaktan teyit almadan kesin konuşmayalım.
+  notes: Tomato soup dairy
+- id: allergen_020
+  user: Mercimek çorbası gluten içeriyor mu?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Mercimek Çorbası
+  assistant_response: Alerji açısından Mercimek Çorbası için gluten bilgisini dikkate
+    almak gerekir; servis öncesi tekrar teyit edelim.
+  notes: Mercimek gluten caution
+- id: allergen_021
+  user: Etli güveçte un veya süt var mı?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Etli Güveç
+  assistant_response: Alerji durumu varsa Etli Güveç için hazırlanış bilgisini mutfakla
+    teyit etmemiz en güvenli yaklaşım olur.
+  notes: Cooking-process allergen
+- id: allergen_022
+  user: Limonata alerji açısından daha güvenli mi?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Limonata
+  assistant_response: Alerji açısından Limonata daha sade bir seçenek gibi görünür,
+    ama kişisel alerji durumunuz için yine de teyit öneririm.
+  notes: Safer beverage with teyit
+- id: allergen_023
+  user: Çapraz bulaşma beni endişelendiriyor
+  expected_intent: allergen_question
+  expected_entities:
+    risk: cross_contamination
+  assistant_response: Alerji ve çapraz bulaşma konusunda kesin garanti veremem; bu
+    nedenle mutfakla teyit etmemiz gerekir.
+  notes: Cross contamination
+- id: allergen_024
+  user: Glutensiz olduğundan emin misiniz?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: gluten
+  assistant_response: Alerji açısından kesin emin olduğumu söylemem doğru olmaz; glutensiz
+    uygunluk için mutfaktan teyit almalıyız.
+  notes: Need verification
+- id: allergen_025
+  user: Süt ürünü olmayan tatlı var mı?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: dairy
+  assistant_response: Alerji durumu için mevcut tatlı seçeneğimiz Fırın Sütlaç uygun
+    değildir; başka kategoriye yönelmeden önce ihtiyacınızı teyit edelim.
+  notes: No safe dessert
+- id: allergen_026
+  user: Makarna gluten alerjisi için uygun mu?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Sebzeli Makarna
+  assistant_response: Alerji açısından Sebzeli Makarna gluten içerir; bu nedenle uygun
+    değildir ve başka seçenekleri teyit ederek değerlendirelim.
+  notes: Pasta unsuitable
+- id: allergen_027
+  user: Ayranda alerjen var mı?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Ayran
+  assistant_response: Alerji açısından Ayran süt ürünü içerir; tüketmeden önce bu
+    bilgiyi teyit ederek ilerlemenizi öneririm.
+  notes: Ayran dairy
+- id: allergen_028
+  user: Tavuk salata alerji açısından rahat mı?
+  expected_intent: allergen_question
+  expected_entities:
+    item: Izgara Tavuk Salata
+  assistant_response: Alerji açısından Izgara Tavuk Salata daha sade görünür, ancak
+    mutfak hazırlığını teyit etmeden kesin güvenli diyemem.
+  notes: Salad caution
+- id: allergen_029
+  user: Kuruyemiş alerjim varsa ne yapalım?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: kuruyemiş
+  assistant_response: Alerji durumunuz için menüde net kuruyemiş güvence bilgisi sunamam;
+    siparişten önce mutlaka teyit edelim.
+  notes: Nut allergy caution
+- id: allergen_030
+  user: Alerjim var, önce neyi netleştirmeliyiz?
+  expected_intent: allergen_question
+  expected_entities:
+    allergen: general
+  assistant_response: Alerji durumunda önce ilgili ürünü ve hazırlık koşullarını netleştirip
+    mutfakla teyit etmemiz gerekir.
+  notes: General allergy process
+- id: add_015
+  user: 2 ayran ekler misin?
+  expected_intent: add_item
+  expected_entities:
+    item: Ayran
+    quantity: 2
+  assistant_response: 'Ekledim: 2 Ayran. Başka bir isteğiniz varsa söyleyebilirsiniz.'
+  notes: Exact Ekledim phrasing
+- id: add_016
+  user: Bir mercimek çorbası yaz
+  expected_intent: add_item
+  expected_entities:
+    item: Mercimek Çorbası
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Mercimek Çorbası. İsterseniz başka ürün de ekleyebilirim.'
+  notes: Short add phrasing
+- id: add_017
+  user: Limonatayı da ekle
+  expected_intent: add_item
+  expected_entities:
+    item: Limonata
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Limonata. Siparişinizi sürdürmek isterseniz devam
+    edebiliriz.'
+  notes: Add with suffix
+- id: add_018
+  user: Etli güveçten bir porsiyon alayım
+  expected_intent: add_item
+  expected_entities:
+    item: Etli Güveç
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Etli Güveç. Yanına içecek de isterseniz yardımcı
+    olabilirim.'
+  notes: Portion phrasing
+- id: add_019
+  user: Sebzeli makarnayı iki tane ekleyin
+  expected_intent: add_item
+  expected_entities:
+    item: Sebzeli Makarna
+    quantity: 2
+  assistant_response: 'Ekledim: 2 Sebzeli Makarna. Başka ürün eklemek ister misiniz?'
+  notes: Formal plural add
+- id: add_020
+  user: Ayranı 3 yapalım
+  expected_intent: add_item
+  expected_entities:
+    item: Ayran
+    quantity: 3
+  assistant_response: 'Ekledim: 3 Ayran olacak şekilde siparişinizi güncelledim.'
+  notes: Quantity adjustment style
+- id: add_021
+  user: Bir domates çorbası da olsun
+  expected_intent: add_item
+  expected_entities:
+    item: Domates Çorbası
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Domates Çorbası. Siparişiniz ilerliyor.'
+  notes: Natural add phrasing
+- id: add_022
+  user: Fırın sütlaç ekle
+  expected_intent: add_item
+  expected_entities:
+    item: Fırın Sütlaç
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Fırın Sütlaç. Tatlı dışında başka bir isteğiniz
+    var mı?'
+  notes: Dessert add
+- id: add_023
+  user: Izgara tavuk salatayı siparişe at
+  expected_intent: add_item
+  expected_entities:
+    item: Izgara Tavuk Salata
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Izgara Tavuk Salata. İsterseniz özeti birazdan paylaşabilirim.'
+  notes: Casual add phrasing
+- id: add_024
+  user: İki limonata ekleyelim
+  expected_intent: add_item
+  expected_entities:
+    item: Limonata
+    quantity: 2
+  assistant_response: 'Ekledim: 2 Limonata. Başka ürün de ekleyebilirim.'
+  notes: Plural inclusive add
+- id: add_025
+  user: Mercimek çorbayı da yazabilir misin?
+  expected_intent: add_item
+  expected_entities:
+    item: Mercimek Çorbası
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Mercimek Çorbası. Dilerseniz devam edelim.'
+  notes: Polite add request
+- id: add_026
+  user: Bir ayran daha ekle
+  expected_intent: add_item
+  expected_entities:
+    item: Ayran
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Ayran daha. Güncel siparişinizi isterseniz sonra
+    özetleyebilirim.'
+  notes: Additional item phrasing
+- id: add_027
+  user: Etli güveci de listeye al
+  expected_intent: add_item
+  expected_entities:
+    item: Etli Güveç
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Etli Güveç. Yanına başlangıç isterseniz önerebilirim.'
+  notes: List phrasing
+- id: add_028
+  user: Çorbadan bir tane mercimek ekleyelim
+  expected_intent: add_item
+  expected_entities:
+    item: Mercimek Çorbası
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Mercimek Çorbası. Siparişinize işlendi.'
+  notes: Category then item
+- id: add_029
+  user: Bir sütlaç, bir de limonata ekle
+  expected_intent: add_item
+  expected_entities:
+    items:
+    - Fırın Sütlaç
+    - Limonata
+  assistant_response: 'Ekledim: 1 Fırın Sütlaç ve 1 Limonata. Başka bir isteğiniz
+    var mı?'
+  notes: Two-item add
+- id: add_030
+  user: Önce bir ayran ekleyelim
+  expected_intent: add_item
+  expected_entities:
+    item: Ayran
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Ayran. Sonraki ürünü de alabilirim.'
+  notes: Sequential add
+- id: add_031
+  user: İki tane etli güveç istiyoruz
+  expected_intent: add_item
+  expected_entities:
+    item: Etli Güveç
+    quantity: 2
+  assistant_response: 'Ekledim: 2 Etli Güveç. Başka ürün ister misiniz?'
+  notes: Plural customer add
+- id: add_032
+  user: Domates çorbayı bir adet geç
+  expected_intent: add_item
+  expected_entities:
+    item: Domates Çorbası
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Domates Çorbası. Siparişiniz güncellendi.'
+  notes: One unit phrasing
+- id: add_033
+  user: Sebzeli makarna da eklenebilir
+  expected_intent: add_item
+  expected_entities:
+    item: Sebzeli Makarna
+    quantity: 1
+  assistant_response: 'Ekledim: 1 Sebzeli Makarna. İsterseniz başka bir öneri de sunabilirim.'
+  notes: Soft add phrasing
+- id: add_034
+  user: Ayranı, çorbayı ve limonatayı ekle
+  expected_intent: add_item
+  expected_entities:
+    items:
+    - Ayran
+    - Mercimek Çorbası
+    - Limonata
+  assistant_response: 'Ekledim: 1 Ayran, 1 Mercimek Çorbası ve 1 Limonata. Siparişinize
+    işlendi.'
+  notes: Three-item add
+- id: remove_015
+  user: Ayranı çıkarır mısın?
+  expected_intent: remove_item
+  expected_entities:
+    item: Ayran
+  assistant_response: 'Çıkardım: Ayran siparişinizden kaldırıldı.'
+  notes: Exact Çıkardım phrasing
+- id: remove_016
+  user: Mercimek çorbayı çıkar
+  expected_intent: remove_item
+  expected_entities:
+    item: Mercimek Çorbası
+  assistant_response: 'Çıkardım: Mercimek Çorbası siparişinizden kaldırıldı.'
+  notes: Soup remove
+- id: remove_017
+  user: Limonatayı siparişten al
+  expected_intent: remove_item
+  expected_entities:
+    item: Limonata
+  assistant_response: 'Çıkardım: Limonata siparişinizden kaldırıldı.'
+  notes: Drink remove phrasing
+- id: remove_018
+  user: Etli güveç olmasın
+  expected_intent: remove_item
+  expected_entities:
+    item: Etli Güveç
+  assistant_response: 'Çıkardım: Etli Güveç siparişinizden kaldırıldı.'
+  notes: Negative preference remove
+- id: remove_019
+  user: Sebzeli makarnayı iptal edelim
+  expected_intent: remove_item
+  expected_entities:
+    item: Sebzeli Makarna
+  assistant_response: 'Çıkardım: Sebzeli Makarna siparişinizden kaldırıldı.'
+  notes: Inclusive remove
+- id: remove_020
+  user: Tatlıyı çıkar
+  expected_intent: remove_item
+  expected_entities:
+    item: Fırın Sütlaç
+  assistant_response: 'Çıkardım: Fırın Sütlaç siparişinizden kaldırıldı.'
+  notes: Dessert remove
+- id: remove_021
+  user: Bir ayranı eksilt
+  expected_intent: remove_item
+  expected_entities:
+    item: Ayran
+    quantity: 1
+  assistant_response: 'Çıkardım: 1 Ayran siparişinizden düşürüldü.'
+  notes: Quantity reduce
+- id: remove_022
+  user: Domates çorbasını çıkaralım
+  expected_intent: remove_item
+  expected_entities:
+    item: Domates Çorbası
+  assistant_response: 'Çıkardım: Domates Çorbası siparişinizden kaldırıldı.'
+  notes: Soup remove inclusive
+- id: remove_023
+  user: Sütlacı listeden sil
+  expected_intent: remove_item
+  expected_entities:
+    item: Fırın Sütlaç
+  assistant_response: 'Çıkardım: Fırın Sütlaç siparişinizden kaldırıldı.'
+  notes: List removal
+- id: remove_024
+  user: Izgara tavuk salatayı çıkarır mısın?
+  expected_intent: remove_item
+  expected_entities:
+    item: Izgara Tavuk Salata
+  assistant_response: 'Çıkardım: Izgara Tavuk Salata siparişinizden kaldırıldı.'
+  notes: Salad removal
+- id: remove_025
+  user: Ayranı istemiyoruz
+  expected_intent: remove_item
+  expected_entities:
+    item: Ayran
+  assistant_response: 'Çıkardım: Ayran siparişinizden kaldırıldı.'
+  notes: Plural preference reversal
+- id: remove_026
+  user: Bir limonatayı çıkar
+  expected_intent: remove_item
+  expected_entities:
+    item: Limonata
+    quantity: 1
+  assistant_response: 'Çıkardım: 1 Limonata siparişinizden düşürüldü.'
+  notes: Single quantity remove
+- id: remove_027
+  user: Mercimek çorbası kalsın istemiyorum
+  expected_intent: remove_item
+  expected_entities:
+    item: Mercimek Çorbası
+  assistant_response: 'Çıkardım: Mercimek Çorbası siparişinizden kaldırıldı.'
+  notes: Longer remove phrasing
+- id: remove_028
+  user: Etli güveci siparişten düş
+  expected_intent: remove_item
+  expected_entities:
+    item: Etli Güveç
+  assistant_response: 'Çıkardım: Etli Güveç siparişinizden kaldırıldı.'
+  notes: Drop phrasing
+- id: remove_029
+  user: Limonatayı da siler misiniz?
+  expected_intent: remove_item
+  expected_entities:
+    item: Limonata
+  assistant_response: 'Çıkardım: Limonata siparişinizden kaldırıldı.'
+  notes: Formal remove request
+- id: remove_030
+  user: Ayranı listeden çıkaralım
+  expected_intent: remove_item
+  expected_entities:
+    item: Ayran
+  assistant_response: 'Çıkardım: Ayran siparişinizden kaldırıldı.'
+  notes: List remove inclusive
+- id: remove_031
+  user: Bir sütlaç vardı, onu çıkar
+  expected_intent: remove_item
+  expected_entities:
+    item: Fırın Sütlaç
+  assistant_response: 'Çıkardım: Fırın Sütlaç siparişinizden kaldırıldı.'
+  notes: Reference-based remove
+- id: remove_032
+  user: Çorbayı kaldırır mısın, mercimeği istemiyorum
+  expected_intent: remove_item
+  expected_entities:
+    item: Mercimek Çorbası
+  assistant_response: 'Çıkardım: Mercimek Çorbası siparişinizden kaldırıldı.'
+  notes: Clarified remove
+- id: remove_033
+  user: Sebzeli makarnayı siparişte tutmayalım
+  expected_intent: remove_item
+  expected_entities:
+    item: Sebzeli Makarna
+  assistant_response: 'Çıkardım: Sebzeli Makarna siparişinizden kaldırıldı.'
+  notes: Natural longer remove
+- id: remove_034
+  user: Ayranı ve limonatayı çıkar
+  expected_intent: remove_item
+  expected_entities:
+    items:
+    - Ayran
+    - Limonata
+  assistant_response: 'Çıkardım: Ayran ve Limonata siparişinizden kaldırıldı.'
+  notes: Two-item removal
+- id: clear_015
+  user: Siparişi tamamen temizle
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. İsterseniz yeni bir sipariş oluşturabiliriz.
+  notes: Exact clean wording
+- id: clear_016
+  user: Her şeyi sıfırla
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Baştan başlayabiliriz.
+  notes: Reset phrasing
+- id: clear_017
+  user: Tüm siparişi kaldır
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Yeni ürün eklemek isterseniz hazırım.
+  notes: Full order remove
+- id: clear_018
+  user: Listeyi boşalt
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Liste artık boş görünüyor.
+  notes: Empty list phrasing
+- id: clear_019
+  user: Hepsini temizleyelim
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Sonraki adımda yeniden ürün ekleyebiliriz.
+  notes: Inclusive clean
+- id: clear_020
+  user: Siparişi sıfırlamak istiyorum
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Baştan ilerleyebiliriz.
+  notes: Formal reset
+- id: clear_021
+  user: Tamam, mevcut siparişi kapat ve temizle
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Yeni siparişe hazırız.
+  notes: Close and clean
+- id: clear_022
+  user: Bütün ürünleri sil
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. İçerik tamamen kaldırıldı.
+  notes: Delete all items
+- id: clear_023
+  user: Siparişi boş hale getir
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Şu anda listede ürün kalmadı.
+  notes: Empty state wording
+- id: clear_024
+  user: Her şeyi iptal edip baştan alalım
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Baştan ilerlemek için yeni ürün ekleyebilirsiniz.
+  notes: Restart intent
+- id: clear_025
+  user: Siparişi başa sar
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Yeniden oluşturabiliriz.
+  notes: Colloquial restart
+- id: clear_026
+  user: Tüm listeyi temizler misin?
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. İsterseniz menüden tekrar seçim yapabilirsiniz.
+  notes: Polite clear request
+- id: clear_027
+  user: Şu anki sipariş kalsın istemiyorum
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Yeni bir sipariş oluşturabiliriz.
+  notes: Preference-based clear
+- id: clear_028
+  user: Komple temizle
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Tamamen sıfırlandı.
+  notes: Very short clear
+- id: clear_029
+  user: Siparişi boşaltalım
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Artık aktif ürün görünmüyor.
+  notes: Empty order phrasing
+- id: clear_030
+  user: Mevcut siparişi silip yeniden başlayalım
+  expected_intent: clear_order
+  expected_entities: {}
+  assistant_response: Siparişiniz temizlendi. Yeniden başlamak için hazırım.
+  notes: Restart clean
+- id: summary_015
+  user: Siparişin toplamını söyler misin?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Sipariş özetinde ürünler ve Toplam tutar yer alır. Bu bilgi
+    MVP/demo amaçlıdır.
+  notes: Summary with Toplam and MVP/demo
+- id: summary_016
+  user: Güncel siparişi toplamla birlikte göster
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Siparişinizi ürünlerle birlikte özetleyebilirim; Toplam tutar
+    da paylaşılır. Bu özet MVP/demo amaçlıdır.
+  notes: Current order summary
+- id: summary_017
+  user: Toplamı ve listeyi tekrar ver
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Sipariş özetinde ürün listesi ve Toplam fiyat yer alır. Bu akış
+    MVP/demo amaçlıdır.
+  notes: Repeat summary
+- id: summary_018
+  user: Siparişte ne var ve toplam nedir?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Siparişinizi özetlerken ürünleri ve Toplam tutarı paylaşırım.
+    Bu çıktı MVP/demo amaçlıdır.
+  notes: What and total
+- id: summary_019
+  user: Siparişin son özetini alayım
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Son sipariş özetinde ürünler ile Toplam bilgi bulunur. Bu gösterim
+    MVP/demo amaçlıdır.
+  notes: Final summary phrasing
+- id: summary_020
+  user: Önce sipariş özetini ver
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Sipariş özetinde ürünler ve Toplam tutar paylaşılır. Bu adım
+    MVP/demo amaçlıdır.
+  notes: Pre-confirmation summary
+- id: summary_021
+  user: Ne eklediğimizi toplamla birlikte yaz
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Eklenen ürünleri ve Toplam tutarı özetleyebilirim. Bu özet MVP/demo
+    amaçlıdır.
+  notes: Added items summary
+- id: summary_022
+  user: Sipariş listesini fiyatıyla göster
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Sipariş listesi ürünler ve Toplam fiyat ile paylaşılır. Bu çıktı
+    MVP/demo amaçlıdır.
+  notes: Price-inclusive summary
+- id: summary_023
+  user: Özet ve toplam rica edeceğim
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Sipariş özetinde Toplam tutar bilgisi yer alır. Bu akış MVP/demo
+    amaçlıdır.
+  notes: Formal summary request
+- id: summary_024
+  user: Siparişi kontrol etmeden önce özetle
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Kontrol için siparişinizi özetleyebilirim; Toplam tutar da görünür.
+    Bu süreç MVP/demo amaçlıdır.
+  notes: Check before confirm
+- id: summary_025
+  user: Aktif sipariş yoksa ne dersin?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce menüden ürün
+    ekleyin, ardından özeti paylaşayım.
+  notes: Empty order summary
+- id: summary_026
+  user: Henüz bir şey eklemediysem özet ne olur?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce siparişe ürün
+    eklemelisiniz.
+  notes: No items yet summary
+- id: summary_027
+  user: Boş siparişi özetle
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce menüden ürün
+    seçelim.
+  notes: Explicit empty summary
+- id: summary_028
+  user: Sipariş yoksa önce ne yapmalıyım?
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce ürün ekleyin,
+    sonra siparişi özetleyeyim.
+  notes: Instruction on empty order
+- id: summary_029
+  user: Toplamı görmek istiyorum ama daha ekleme yapmadım
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce siparişe ürün
+    eklemelisiniz.
+  notes: Empty order with total desire
+- id: summary_030
+  user: Bir özet alalım ama listem boş olabilir
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce menüden ürün
+    ekleyelim.
+  notes: Maybe-empty summary
+- id: summary_031
+  user: Toplam ve ürünleri tablo gibi söyle
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Sipariş özetinde ürünler ve Toplam tutar yer alır. Bu bilgi
+    MVP/demo amaçlıdır.
+  notes: Table-style summary
+- id: summary_032
+  user: Siparişi son kez fiyatıyla özetle
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Son özet içinde ürünler ve Toplam fiyat paylaşılır. Bu aşama
+    MVP/demo amaçlıdır.
+  notes: Last summary
+- id: summary_033
+  user: Siparişin final toplamını görelim
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Final sipariş özetinde Toplam tutar görünür. Bu çıktı MVP/demo
+    amaçlıdır.
+  notes: Final total wording
+- id: summary_034
+  user: Özet geç ve toplamı belirt
+  expected_intent: summarize_order
+  expected_entities: {}
+  assistant_response: Sipariş özetinde ürünler ile Toplam tutar belirtilir. Bu özet
+    MVP/demo amaçlıdır.
+  notes: Short summary request
+- id: confirm_015
+  user: Siparişi onaylıyorum, devam et
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Toplam bilgisi korunur. Bu adım MVP/demo
+    amaçlıdır.
+  notes: Confirmation with Toplam and MVP/demo
+- id: confirm_016
+  user: Tamamdır, siparişi kapatalım
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Toplam tutar bilgisi saklanır ve bu
+    işlem MVP/demo amaçlıdır.
+  notes: Close order confirmation
+- id: confirm_017
+  user: Bunu onay olarak kabul et
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Bu onay MVP/demo amaçlıdır ve Toplam
+    bilgisi dikkate alınır.
+  notes: Formal confirmation
+- id: confirm_018
+  user: Sipariş geçilsin
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Toplam bilgisiyle birlikte bu süreç
+    MVP/demo olarak ilerler.
+  notes: Proceed order
+- id: confirm_019
+  user: Her şey tamam, onay ver
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Toplam tutar görünür durumda kalır.
+    Bu akış MVP/demo amaçlıdır.
+  notes: All correct confirm
+- id: confirm_020
+  user: Sipariş tamam, gönder
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Bu işlem MVP/demo amaçlıdır; Toplam
+    bilgisi korunur.
+  notes: Send wording
+- id: confirm_021
+  user: Bu haliyle siparişi kabul ediyorum
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Toplam tutar bilgisi bu MVP/demo akışında
+    saklanır.
+  notes: Accept as-is
+- id: confirm_022
+  user: Onaya geçelim
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Toplam tutar bilgisiyle birlikte bu
+    adım MVP/demo amaçlıdır.
+  notes: Move to confirmation
+- id: confirm_023
+  user: Evet, sipariş doğru, onayla
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Toplam tutar bilgisi korunur ve bu
+    süreç MVP/demo amaçlıdır.
+  notes: Correct order confirm
+- id: confirm_024
+  user: Şimdi onay verelim
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Siparişinizi onaylıyorum. Bu aşama MVP/demo amaçlıdır ve Toplam
+    bilgisi kullanılabilir durumda kalır.
+  notes: Inclusive confirm
+- id: confirm_025
+  user: Aktif siparişim yoksa onay ne der?
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce menüden ürün
+    eklemelisiniz.
+  notes: Empty order confirm
+- id: confirm_026
+  user: Henüz bir şey eklemedim ama onaylamak istiyorum
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce siparişe ürün
+    ekleyin.
+  notes: No items confirm
+- id: confirm_027
+  user: Boş siparişi onayla
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce menüden ürün
+    seçmeniz gerekir.
+  notes: Explicit empty confirm
+- id: confirm_028
+  user: Önce ürün eklemeden onay verebilir miyim?
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce ürün eklemelisiniz.
+  notes: Instructional empty confirm
+- id: confirm_029
+  user: Siparişim yok ama onaylamak istiyorum
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce sipariş oluşturmalıyız.
+  notes: No active order confirm
+- id: confirm_030
+  user: Listem boşsa onay ne olur?
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce menüden ürün
+    ekleyelim.
+  notes: Empty list confirm
+- id: confirm_031
+  user: Doğrudan onaya geçmek istiyorum
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce siparişe ürün
+    eklemelisiniz.
+  notes: Skip to confirm
+- id: confirm_032
+  user: Önce sipariş olmadan onay ver
+  expected_intent: confirm_order
+  expected_entities: {}
+  assistant_response: Şu anda aktif bir siparişiniz görünmüyor. Önce ürün ekleyin,
+    sonra onaylayayım.
+  notes: Confirm before order
+- id: offtopic_015
+  user: Bana günün haberlerini anlat
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Menü ve sipariş konularında destek
+    sunabilirim.
+  notes: News request refusal
+- id: offtopic_016
+  user: Bir film önerisi yap
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Film önerisi konusunda yardımcı olamıyorum. İsterseniz yemek
+    veya içecek önerisi paylaşabilirim.
+  notes: Movie request refusal
+- id: offtopic_017
+  user: Telefonumu bulmama yardım et
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Menü ve sipariş akışında destek
+    verebilirim.
+  notes: Lost phone refusal
+- id: offtopic_018
+  user: Bana taksi çağır
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Taksi çağırma konusunda yardımcı olamıyorum. Restoran menüsü
+    ve siparişler için buradayım.
+  notes: Taxi request refusal
+- id: offtopic_019
+  user: Kripto hakkında ne düşünüyorsun?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Menü veya sipariş konusunda soru
+    sorabilirsiniz.
+  notes: Crypto request refusal
+- id: offtopic_020
+  user: Bana İngilizce dersi ver
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Restoranla ilgili konularda destek
+    olabilirim.
+  notes: Language lesson refusal
+- id: offtopic_021
+  user: Masa oyunları öner
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Yemek ve içecek önerilerinde
+    yardımcı olabilirim.
+  notes: Board game refusal
+- id: offtopic_022
+  user: Bilgisayarıma format at
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Menü ve sipariş akışında size
+    destek verebilirim.
+  notes: Tech support refusal
+- id: offtopic_023
+  user: Yakındaki otelleri say
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Restoran içeriğiyle ilgili soruları
+    yanıtlayabilirim.
+  notes: Nearby hotel refusal
+- id: offtopic_024
+  user: Bir motivasyon konuşması yap
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Ancak menü ve sipariş konusunda
+    yardımcı olabilirim.
+  notes: Motivation speech refusal
+- id: offtopic_025
+  user: Bana matematik sorusu çöz
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Sipariş toplamı veya menü sorularında
+    destek verebilirim.
+  notes: Math refusal
+- id: offtopic_026
+  user: Şarkı söyler misin?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. İsterseniz menüdeki ürünler hakkında
+    bilgi verebilirim.
+  notes: Sing request refusal
+- id: offtopic_027
+  user: Borsada ne almalıyım?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Restoran ve sipariş alanında
+    yardımcı olabilirim.
+  notes: Stock advice refusal
+- id: offtopic_028
+  user: Bugün dışarıda trafik nasıl?
+  expected_intent: off_topic
+  expected_entities: {}
+  assistant_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili bir
+    konuda destek sunabilirim.
+  notes: Traffic refusal
+- id: unavail_001
+  user: Pizza ekler misin?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Pizza
+    quantity: 1
+  assistant_response: Üzgünüm, menümüzde Pizza bulunmuyor. İsterseniz mevcut ana yemeklerden
+    birini önerebilirim.
+  notes: Unavailable add request pizza
+- id: unavail_002
+  user: Hamburger var mı?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Hamburger
+  assistant_response: Üzgünüm, menümüzde Hamburger bulunmuyor. Mevcut seçenekleri
+    paylaşabilirim.
+  notes: Unavailable menu inquiry hamburger
+- id: unavail_003
+  user: Sushi istiyorum
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Sushi
+    quantity: 1
+  assistant_response: Üzgünüm, menümüzde Sushi bulunmuyor. İsterseniz mevcut ürünlerden
+    seçim yapabiliriz.
+  notes: Unavailable direct order sushi
+- id: unavail_004
+  user: Kola ekle
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Kola
+    quantity: 1
+  assistant_response: Üzgünüm, menümüzde Kola bulunmuyor. İçecek olarak Ayran veya
+    Limonata sunabilirim.
+  notes: Unavailable drink kola
+- id: unavail_005
+  user: Tavuk burger alabilir miyim?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Tavuk Burger
+    quantity: 1
+  assistant_response: Üzgünüm, menümüzde Tavuk Burger bulunmuyor. Ana yemeklerden
+    uygun bir alternatif önerebilirim.
+  notes: Unavailable burger variant
+- id: unavail_006
+  user: Patates kızartması menüde var mı?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Patates Kızartması
+  assistant_response: Üzgünüm, menümüzde Patates Kızartması bulunmuyor. İsterseniz
+    mevcut ürünleri paylaşayım.
+  notes: Unavailable side dish
+- id: unavail_007
+  user: Pizza kaç TL?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Pizza
+  assistant_response: Pizza için fiyat veremem çünkü menümüzde Pizza bulunmuyor.
+  notes: Unavailable price question
+- id: unavail_008
+  user: Hamburgeri siparişe yaz
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Hamburger
+    quantity: 1
+  assistant_response: Hamburgeri ekleyemem çünkü menümüzde Hamburger bulunmuyor.
+  notes: Unavailable add imperative
+- id: unavail_009
+  user: Sushi önerir misin?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Sushi
+  assistant_response: Sushi öneremem çünkü menümüzde Sushi bulunmuyor. İsterseniz
+    mevcut seçeneklerden öneri sunayım.
+  notes: Unavailable recommendation target
+- id: unavail_010
+  user: Kola var mı yok mu?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Kola
+  assistant_response: Şu anda menümüzde Kola bulunmuyor. İçecek olarak Ayran ve Limonata
+    mevcut.
+  notes: Unavailable availability check
+- id: unavail_011
+  user: Patates kızartması da ekleyelim
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Patates Kızartması
+    quantity: 1
+  assistant_response: Patates Kızartmasını ekleyemem; menümüzde bu ürün bulunmuyor.
+  notes: Unavailable side add
+- id: unavail_012
+  user: Hamburger fiyatı nedir?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Hamburger
+  assistant_response: Hamburger için fiyat bilgisi veremem çünkü menümüzde bu ürün
+    yer almıyor.
+  notes: Unavailable hamburger price
+- id: unavail_013
+  user: Bir pizza ve bir kola istiyorum
+  expected_intent: unavailable_item
+  expected_entities:
+    items:
+    - Pizza
+    - Kola
+  assistant_response: Üzgünüm, menümüzde Pizza ve Kola bulunmuyor. Mevcut ürünlerden
+    alternatif önerebilirim.
+  notes: Unavailable multiple items
+- id: unavail_014
+  user: Sushi menüye gelir mi? Şimdilik var mı?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Sushi
+  assistant_response: Şu anda menümüzde Sushi bulunmuyor. Mevcut ürünler arasından
+    seçim yapabiliriz.
+  notes: Unavailable present-time check
+- id: unavail_015
+  user: Tavuk burger kaç para?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Tavuk Burger
+  assistant_response: Tavuk Burger için fiyat veremem çünkü menümüzde bu ürün bulunmuyor.
+  notes: Unavailable burger price
+- id: unavail_016
+  user: Patates kızartması öneriniz var mı?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Patates Kızartması
+  assistant_response: Patates Kızartması menümüzde olmadığı için onu öneremem. İsterseniz
+    mevcut kategorilerden öneri sunabilirim.
+  notes: Unavailable recommendation
+- id: unavail_017
+  user: Kola yerine ne var?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Kola
+  assistant_response: Menümüzde Kola bulunmuyor. İçecek alternatifi olarak Ayran veya
+    Limonata seçebilirsiniz.
+  notes: Unavailable with alternatives
+- id: unavail_018
+  user: Hamburger yoksa ben ne alayım?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Hamburger
+  assistant_response: Hamburger menümüzde bulunmuyor. İsterseniz Etli Güveç, Sebzeli
+    Makarna veya Izgara Tavuk Salata önerebilirim.
+  notes: Unavailable with main dish alternatives
+- id: unavail_019
+  user: Pizza bulunmuyorsa hangi kategoriye bakayım?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Pizza
+  assistant_response: Pizza menümüzde bulunmuyor. Ana yemek kategorisindeki mevcut
+    seçeneklere birlikte bakabiliriz.
+  notes: Unavailable with category redirect
+- id: unavail_020
+  user: Sushi yerine menüden benzer ne önerirsin?
+  expected_intent: unavailable_item
+  expected_entities:
+    item: Sushi
+  assistant_response: Sushi menümüzde bulunmuyor. Mevcut ürünlerden daha uygun bir
+    öneri için ana yemek kategorisine yönlendirebilirim.
+  notes: Unavailable redirect suggestion

@@ -1,0 +1,2812 @@
+examples:
+- id: gpp_001
+  user_message: Merhaba
+  intent: greeting
+  canonical_response: Merhaba, ho? geldiniz. Size nas?l yard?mc? olabilirim?
+  safe_paraphrase: Merhaba, ho? geldiniz. Bug?n size nas?l yard?mc? olabilirim?
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Simple greeting paraphrase.
+- id: gpp_002
+  user_message: Selam
+  intent: greeting
+  canonical_response: Merhaba, ho? geldiniz. Size nas?l yard?mc? olabilirim?
+  safe_paraphrase: Merhaba, ho? geldiniz. Men? veya sipari? konusunda yard?mc? olabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Greeting with menu scope mention.
+- id: gpp_003
+  user_message: ?yi g?nler
+  intent: greeting
+  canonical_response: Merhaba, ho? geldiniz. Size nas?l yard?mc? olabilirim?
+  safe_paraphrase: Merhaba, ho? geldiniz. Sipari? vermek isterseniz yard?mc? olabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Formal greeting paraphrase.
+- id: gpp_004
+  user_message: Merhaba garson robot
+  intent: greeting
+  canonical_response: Merhaba, ho? geldiniz. Size nas?l yard?mc? olabilirim?
+  safe_paraphrase: Merhaba, ho? geldiniz. ?sterseniz men?den ba?layabiliriz.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Greeting with next-step hint.
+- id: gpp_005
+  user_message: Selamlar
+  intent: greeting
+  canonical_response: Merhaba, ho? geldiniz. Size nas?l yard?mc? olabilirim?
+  safe_paraphrase: Merhaba, ho? geldiniz. Bug?n ne almak istersiniz?
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Casual greeting paraphrase.
+- id: gpp_006
+  user_message: Merhaba, men?ye bakaca??m
+  intent: greeting
+  canonical_response: Merhaba, ho? geldiniz. Size nas?l yard?mc? olabilirim?
+  safe_paraphrase: Merhaba, ho? geldiniz. Haz?rsan?z men? konusunda yard?mc? olabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Greeting plus readiness hint.
+- id: gpp_007
+  user_message: Ho? bulduk
+  intent: greeting
+  canonical_response: Merhaba, ho? geldiniz. Size nas?l yard?mc? olabilirim?
+  safe_paraphrase: Merhaba, ho? geldiniz. Sipari? veya men? sorular?n?z? alabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Greeting with options.
+- id: gpp_008
+  user_message: Men?de neler var?
+  intent: menu_question
+  canonical_response: 'Kategoriler: ?orba, Ana Yemek, Tatl?, ??ecek.'
+  safe_paraphrase: Kategoriler olarak ?orba, Ana Yemek, Tatl? ve ??ecek sunuyoruz.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Category listing paraphrase.
+- id: gpp_009
+  user_message: Hangi kategoriler var?
+  intent: menu_question
+  canonical_response: 'Kategoriler: ?orba, Ana Yemek, Tatl?, ??ecek.'
+  safe_paraphrase: Kategoriler b?l?m?m?zde ?orba, Ana Yemek, Tatl? ve ??ecek yer al?yor.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Alternative category wording.
+- id: gpp_010
+  user_message: Men? kategorilerini s?yler misin?
+  intent: menu_question
+  canonical_response: 'Kategoriler: ?orba, Ana Yemek, Tatl?, ??ecek.'
+  safe_paraphrase: 'Kategoriler: ?orba, Ana Yemek, Tatl? ve ??ecek.'
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Compact category response.
+- id: gpp_011
+  user_message: Men?y? ?zetler misin?
+  intent: menu_question
+  canonical_response: 'Kategoriler: ?orba, Ana Yemek, Tatl?, ??ecek.'
+  safe_paraphrase: Kategoriler taraf?nda ?orba, Ana Yemek, Tatl? ve ??ecek se?eneklerimiz bulunuyor.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Summary style response.
+- id: gpp_012
+  user_message: Neler servis ediyorsunuz?
+  intent: menu_question
+  canonical_response: 'Kategoriler: ?orba, Ana Yemek, Tatl?, ??ecek.'
+  safe_paraphrase: Kategoriler aras?nda ?orba, Ana Yemek, Tatl? ve ??ecek bulunuyor.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Service-oriented phrasing.
+- id: gpp_013
+  user_message: B?l?mler neler?
+  intent: menu_question
+  canonical_response: 'Kategoriler: ?orba, Ana Yemek, Tatl?, ??ecek.'
+  safe_paraphrase: Kategoriler listemizde ?orba, Ana Yemek, Tatl? ve ??ecek var.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Short category answer.
+- id: gpp_014
+  user_message: Men? ba?l?klar? neler?
+  intent: menu_question
+  canonical_response: 'Kategoriler: ?orba, Ana Yemek, Tatl?, ??ecek.'
+  safe_paraphrase: Kategoriler olarak ?orba, Ana Yemek, Tatl? ve ??ecek sunuyoruz.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Repeated but natural variant.
+- id: gpp_015
+  user_message: Ne ?nerirsiniz?
+  intent: recommendation
+  canonical_response: '?neri: Mercimek ?orbas? ve Etli G?ve? deneyebilirsiniz.'
+  safe_paraphrase: ?neri olarak Mercimek ?orbas? ile Etli G?ve? iyi bir se?im olabilir.
+  must_preserve_terms:
+  - ?neri
+  - Mercimek ?orbas?
+  - Etli G?ve?
+  must_not_introduce: []
+  notes: General recommendation.
+- id: gpp_016
+  user_message: Hafif bir ?ey ?nerir misin?
+  intent: recommendation
+  canonical_response: '?neri: Izgara Tavuk Salata deneyebilirsiniz.'
+  safe_paraphrase: ?neri olarak daha hafif bir se?enek isterseniz Izgara Tavuk Salata tercih edebilirsiniz.
+  must_preserve_terms:
+  - ?neri
+  - Izgara Tavuk Salata
+  must_not_introduce: []
+  notes: Light meal recommendation.
+- id: gpp_017
+  user_message: Vejetaryen ?neri var m??
+  intent: recommendation
+  canonical_response: '?neri: Sebzeli Makarna deneyebilirsiniz.'
+  safe_paraphrase: ?neri olarak vejetaryen tercihte Sebzeli Makarna uygun olur.
+  must_preserve_terms:
+  - ?neri
+  - Sebzeli Makarna
+  must_not_introduce: []
+  notes: Vegetarian recommendation.
+- id: gpp_018
+  user_message: Tatl? i?in ne tavsiye edersin?
+  intent: recommendation
+  canonical_response: '?neri: F?r?n S?tla? deneyebilirsiniz.'
+  safe_paraphrase: ?neri olarak tatl?da F?r?n S?tla? d???nebilirsiniz.
+  must_preserve_terms:
+  - ?neri
+  - F?r?n S?tla?
+  must_not_introduce: []
+  notes: Dessert recommendation.
+- id: gpp_019
+  user_message: ?orba ?nerin nedir?
+  intent: recommendation
+  canonical_response: '?neri: Mercimek ?orbas? deneyebilirsiniz.'
+  safe_paraphrase: ?neri olarak ?orba taraf?nda Mercimek ?orbas? tercih edebilirsiniz.
+  must_preserve_terms:
+  - ?neri
+  - Mercimek ?orbas?
+  must_not_introduce: []
+  notes: Soup recommendation.
+- id: gpp_020
+  user_message: ??ecek ?nerisi verir misin?
+  intent: recommendation
+  canonical_response: '?neri: Limonata deneyebilirsiniz.'
+  safe_paraphrase: ?neri olarak i?ecekten Limonata alabilirsiniz.
+  must_preserve_terms:
+  - ?neri
+  - Limonata
+  must_not_introduce: []
+  notes: Drink recommendation.
+- id: gpp_021
+  user_message: Geleneksel bir ?ey s?yler misin?
+  intent: recommendation
+  canonical_response: '?neri: Mercimek ?orbas? ve Etli G?ve? deneyebilirsiniz.'
+  safe_paraphrase: ?neri olarak daha geleneksel bir se?im i?in Mercimek ?orbas? ile Etli G?ve? uygun olur.
+  must_preserve_terms:
+  - ?neri
+  - Mercimek ?orbas?
+  - Etli G?ve?
+  must_not_introduce: []
+  notes: Traditional combination recommendation.
+- id: gpp_022
+  user_message: Ayran?n fiyat? nedir?
+  intent: price_question
+  canonical_response: 'Fiyat: Ayran 45 TL.'
+  safe_paraphrase: Fiyat bilgisi olarak Ayran 45 TL tutuyor.
+  must_preserve_terms:
+  - Fiyat
+  - Ayran
+  - '45'
+  - TL
+  must_not_introduce: []
+  notes: Exact Ayran price.
+- id: gpp_023
+  user_message: Limonata ka? TL?
+  intent: price_question
+  canonical_response: 'Fiyat: Limonata 65 TL.'
+  safe_paraphrase: Fiyat olarak Limonata 65 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Limonata
+  - '65'
+  - TL
+  must_not_introduce: []
+  notes: Exact Limonata price.
+- id: gpp_024
+  user_message: Mercimek ?orbas? ne kadar?
+  intent: price_question
+  canonical_response: 'Fiyat: Mercimek ?orbas? 85 TL.'
+  safe_paraphrase: 'Fiyat bilgisi: Mercimek ?orbas? 85 TL.'
+  must_preserve_terms:
+  - Fiyat
+  - Mercimek ?orbas?
+  - '85'
+  - TL
+  must_not_introduce: []
+  notes: Exact soup price.
+- id: gpp_025
+  user_message: Domates ?orbas? fiyat? nedir?
+  intent: price_question
+  canonical_response: 'Fiyat: Domates ?orbas? 80 TL.'
+  safe_paraphrase: Fiyat olarak Domates ?orbas? 80 TL g?r?n?yor.
+  must_preserve_terms:
+  - Fiyat
+  - Domates ?orbas?
+  - '80'
+  - TL
+  must_not_introduce: []
+  notes: Exact tomato soup price.
+- id: gpp_026
+  user_message: Izgara Tavuk Salata ka? para?
+  intent: price_question
+  canonical_response: 'Fiyat: Izgara Tavuk Salata 210 TL.'
+  safe_paraphrase: Fiyat bilgisine g?re Izgara Tavuk Salata 210 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Izgara Tavuk Salata
+  - '210'
+  - TL
+  must_not_introduce: []
+  notes: Exact salad price.
+- id: gpp_027
+  user_message: Sebzeli Makarna ne kadar?
+  intent: price_question
+  canonical_response: 'Fiyat: Sebzeli Makarna 195 TL.'
+  safe_paraphrase: Fiyat olarak Sebzeli Makarna 195 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Sebzeli Makarna
+  - '195'
+  - TL
+  must_not_introduce: []
+  notes: Exact pasta price.
+- id: gpp_028
+  user_message: Etli G?ve? fiyat? ka??
+  intent: price_question
+  canonical_response: 'Fiyat: Etli G?ve? 260 TL.'
+  safe_paraphrase: Fiyat bilgisi Etli G?ve? i?in 260 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Etli G?ve?
+  - '260'
+  - TL
+  must_not_introduce: []
+  notes: Exact stew price.
+- id: gpp_029
+  user_message: S?t alerjim var
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olal?m. L?tfen i?erikleri mutfakla teyit edelim.
+  safe_paraphrase: Alerji durumunda dikkatli ilerleyelim; en do?rusu i?erikleri mutfakla teyit etmek olur.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle g?venli
+  - hi? sorun yok
+  notes: Milk allergy caution.
+- id: gpp_030
+  user_message: Glutensiz se?enek var m??
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olal?m. Uygunlu?u mutfakla teyit edelim.
+  safe_paraphrase: Alerji hassasiyeti varsa uygunlu?u mutfakla teyit ederek ilerleyelim.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle g?venli
+  - hi? sorun yok
+  notes: Gluten caution.
+- id: gpp_031
+  user_message: Laktozsuz bir ?ey laz?m
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olal?m. ??erikleri mutfakla teyit edelim.
+  safe_paraphrase: Alerji a??s?ndan g?venli se?im i?in i?erikleri mutfakla teyit edelim.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle g?venli
+  - hi? sorun yok
+  notes: Lactose caution.
+- id: gpp_032
+  user_message: Alerjim var, neye dikkat etmeliyim?
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olal?m. Sipari?ten ?nce mutfakla teyit edelim.
+  safe_paraphrase: Alerji s?z konusuysa sipari? ?ncesinde mutlaka mutfakla teyit edelim.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle g?venli
+  - hi? sorun yok
+  notes: General allergy caution.
+- id: gpp_033
+  user_message: S?t ?r?n? yememeliyim
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olal?m. ??erikleri mutfakla teyit edelim.
+  safe_paraphrase: Alerji nedeniyle i?erikleri kontrol edip mutfakla teyit etmek en g?venlisi olur.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle g?venli
+  - hi? sorun yok
+  notes: Avoid dairy caution.
+- id: gpp_034
+  user_message: Gluten hassasiyetim var
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olal?m. Uygunlu?u mutfakla teyit edelim.
+  safe_paraphrase: Alerji hassasiyeti varsa men? uygunlu?unu mutfakla teyit edelim.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle g?venli
+  - hi? sorun yok
+  notes: Gluten sensitivity caution.
+- id: gpp_035
+  user_message: Alerjen bilgisi verir misin?
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olal?m. En do?ru bilgi i?in mutfakla teyit edelim.
+  safe_paraphrase: Alerji i?in en g?venli yakla??m, bilgiyi mutfakla teyit ederek ilerlemektir.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle g?venli
+  - hi? sorun yok
+  notes: Allergen info caution.
+- id: gpp_036
+  user_message: 2 Ayran istiyorum
+  intent: add_item
+  canonical_response: 'Ekledim: 2 x Ayran.'
+  safe_paraphrase: 'Ekledim: 2 x Ayran sipari?inize eklendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '2'
+  - Ayran
+  must_not_introduce: []
+  notes: Add two ayrans.
+- id: gpp_037
+  user_message: Bir mercimek ?orbas? ekle
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Mercimek ?orbas?.'
+  safe_paraphrase: 'Ekledim: 1 x Mercimek ?orbas? sipari?inize al?nd?.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Mercimek ?orbas?
+  must_not_introduce: []
+  notes: Add one soup.
+- id: gpp_038
+  user_message: Ayrandan iki tane alay?m
+  intent: add_item
+  canonical_response: 'Ekledim: 2 x Ayran.'
+  safe_paraphrase: 'Ekledim: 2 x Ayran sipari?inizde g?r?n?yor.'
+  must_preserve_terms:
+  - Ekledim
+  - '2'
+  - Ayran
+  must_not_introduce: []
+  notes: Quantity-after phrasing.
+- id: gpp_039
+  user_message: Izgara Tavuk Salata ekler misin?
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Izgara Tavuk Salata.'
+  safe_paraphrase: 'Ekledim: 1 x Izgara Tavuk Salata sipari?inize i?lendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Izgara Tavuk Salata
+  must_not_introduce: []
+  notes: Add main dish.
+- id: gpp_040
+  user_message: Bir limonata istiyorum
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Limonata.'
+  safe_paraphrase: 'Ekledim: 1 x Limonata sipari?inize eklendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Limonata
+  must_not_introduce: []
+  notes: Add drink.
+- id: gpp_041
+  user_message: Etli g?veci ekle
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Etli G?ve?.'
+  safe_paraphrase: 'Ekledim: 1 x Etli G?ve? sipari? listenize eklendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Etli G?ve?
+  must_not_introduce: []
+  notes: Add stew.
+- id: gpp_042
+  user_message: Bir f?r?n s?tla? alabilir miyim?
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x F?r?n S?tla?.'
+  safe_paraphrase: 'Ekledim: 1 x F?r?n S?tla? sipari?e eklendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - F?r?n S?tla?
+  must_not_introduce: []
+  notes: Add dessert.
+- id: gpp_043
+  user_message: Ayran? ??kar
+  intent: remove_item
+  canonical_response: '??kard?m: Ayran.'
+  safe_paraphrase: '??kard?m: Ayran sipari?inizden kald?r?ld?.'
+  must_preserve_terms:
+  - ??kard?m
+  - Ayran
+  must_not_introduce: []
+  notes: Remove Ayran.
+- id: gpp_044
+  user_message: Mercimek ?orbas?n? sil
+  intent: remove_item
+  canonical_response: '??kard?m: Mercimek ?orbas?.'
+  safe_paraphrase: '??kard?m: Mercimek ?orbas? listeden ??kar?ld?.'
+  must_preserve_terms:
+  - ??kard?m
+  - Mercimek ?orbas?
+  must_not_introduce: []
+  notes: Remove soup.
+- id: gpp_045
+  user_message: Limonatay? iptal et
+  intent: remove_item
+  canonical_response: '??kard?m: Limonata.'
+  safe_paraphrase: '??kard?m: Limonata sipari?inizden ??kar?ld?.'
+  must_preserve_terms:
+  - ??kard?m
+  - Limonata
+  must_not_introduce: []
+  notes: Remove drink.
+- id: gpp_046
+  user_message: Etli g?veci ??kar?r m?s?n?
+  intent: remove_item
+  canonical_response: '??kard?m: Etli G?ve?.'
+  safe_paraphrase: '??kard?m: Etli G?ve? sipari?ten kald?r?ld?.'
+  must_preserve_terms:
+  - ??kard?m
+  - Etli G?ve?
+  must_not_introduce: []
+  notes: Remove stew.
+- id: gpp_047
+  user_message: Sebzeli makarnay? sil
+  intent: remove_item
+  canonical_response: '??kard?m: Sebzeli Makarna.'
+  safe_paraphrase: '??kard?m: Sebzeli Makarna sipari?inizden ??kar?ld?.'
+  must_preserve_terms:
+  - ??kard?m
+  - Sebzeli Makarna
+  must_not_introduce: []
+  notes: Remove pasta.
+- id: gpp_048
+  user_message: F?r?n s?tlac? iptal et
+  intent: remove_item
+  canonical_response: '??kard?m: F?r?n S?tla?.'
+  safe_paraphrase: '??kard?m: F?r?n S?tla? listeden kald?r?ld?.'
+  must_preserve_terms:
+  - ??kard?m
+  - F?r?n S?tla?
+  must_not_introduce: []
+  notes: Remove dessert.
+- id: gpp_049
+  user_message: Domates ?orbay? ??kar
+  intent: remove_item
+  canonical_response: '??kard?m: Domates ?orbas?.'
+  safe_paraphrase: '??kard?m: Domates ?orbas? sipari?ten ??kar?ld?.'
+  must_preserve_terms:
+  - ??kard?m
+  - Domates ?orbas?
+  must_not_introduce: []
+  notes: Remove tomato soup.
+- id: gpp_050
+  user_message: Sipari?i temizle
+  intent: clear_order
+  canonical_response: Sipari?iniz temizlendi.
+  safe_paraphrase: Sipari?iniz temizlendi; ?u anda aktif ?r?n g?r?nm?yor.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Clear order paraphrase.
+- id: gpp_051
+  user_message: Hepsini sil
+  intent: clear_order
+  canonical_response: Sipari?iniz temizlendi.
+  safe_paraphrase: Sipari?iniz temizlendi; ?u anda aktif ?r?n g?r?nm?yor.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Clear order paraphrase.
+- id: gpp_052
+  user_message: T?m sipari?i iptal et
+  intent: clear_order
+  canonical_response: Sipari?iniz temizlendi.
+  safe_paraphrase: Sipari?iniz temizlendi; ?u anda aktif ?r?n g?r?nm?yor.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Clear order paraphrase.
+- id: gpp_053
+  user_message: Sipari?i s?f?rla
+  intent: clear_order
+  canonical_response: Sipari?iniz temizlendi.
+  safe_paraphrase: Sipari?iniz temizlendi; ?u anda aktif ?r?n g?r?nm?yor.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Clear order paraphrase.
+- id: gpp_054
+  user_message: Sepeti bo?alt
+  intent: clear_order
+  canonical_response: Sipari?iniz temizlendi.
+  safe_paraphrase: Sipari?iniz temizlendi; ?u anda aktif ?r?n g?r?nm?yor.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Clear order paraphrase.
+- id: gpp_055
+  user_message: Hepsini kald?r
+  intent: clear_order
+  canonical_response: Sipari?iniz temizlendi.
+  safe_paraphrase: Sipari?iniz temizlendi; ?u anda aktif ?r?n g?r?nm?yor.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Clear order paraphrase.
+- id: gpp_056
+  user_message: Sipari?i tamamen temizle
+  intent: clear_order
+  canonical_response: Sipari?iniz temizlendi.
+  safe_paraphrase: Sipari?iniz temizlendi; ?u anda aktif ?r?n g?r?nm?yor.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Clear order paraphrase.
+- id: gpp_057
+  user_message: Sipari?imi ?zetle
+  intent: summarize_order
+  canonical_response: '1 x Ayran = 45 TL
+
+    Toplam: 45 TL.'
+  safe_paraphrase: 'Sipari? ?zeti: 1 x Ayran = 45 TL. Toplam: 45 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Ayran
+  - '45'
+  must_not_introduce: []
+  notes: Order summary paraphrase.
+- id: gpp_058
+  user_message: Sipari?im ne?
+  intent: summarize_order
+  canonical_response: '2 x Ayran = 90 TL
+
+    Toplam: 90 TL.'
+  safe_paraphrase: 'Sipari?inizde 2 x Ayran var; Toplam: 90 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Ayran
+  - '90'
+  must_not_introduce: []
+  notes: Order summary paraphrase.
+- id: gpp_059
+  user_message: Toplam? s?yler misin?
+  intent: summarize_order
+  canonical_response: '1 x Mercimek ?orbas? = 85 TL
+
+    Toplam: 85 TL.'
+  safe_paraphrase: 'Sipari? ?zeti olarak 1 x Mercimek ?orbas? bulunuyor; Toplam: 85 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Mercimek ?orbas?
+  - '85'
+  must_not_introduce: []
+  notes: Order summary paraphrase.
+- id: gpp_060
+  user_message: ?zet alay?m
+  intent: summarize_order
+  canonical_response: '1 x Limonata = 65 TL
+
+    Toplam: 65 TL.'
+  safe_paraphrase: '?zetle 1 x Limonata sipari?iniz var ve Toplam: 65 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Limonata
+  - '65'
+  must_not_introduce: []
+  notes: Order summary paraphrase.
+- id: gpp_061
+  user_message: Sipari? toplam?m nedir?
+  intent: summarize_order
+  canonical_response: '1 x Etli G?ve? = 260 TL
+
+    Toplam: 260 TL.'
+  safe_paraphrase: 'Sipari?inizde 1 x Etli G?ve? var; Toplam: 260 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Etli G?ve?
+  - '260'
+  must_not_introduce: []
+  notes: Order summary paraphrase.
+- id: gpp_062
+  user_message: Neler ekli?
+  intent: summarize_order
+  canonical_response: '1 x F?r?n S?tla? = 120 TL
+
+    Toplam: 120 TL.'
+  safe_paraphrase: 'Sipari?te 1 x F?r?n S?tla? g?r?n?yor; Toplam: 120 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - F?r?n S?tla?
+  - '120'
+  must_not_introduce: []
+  notes: Order summary paraphrase.
+- id: gpp_063
+  user_message: Sipari?i listele
+  intent: summarize_order
+  canonical_response: '1 x Izgara Tavuk Salata = 210 TL
+
+    Toplam: 210 TL.'
+  safe_paraphrase: 'Sipari? ?zeti: 1 x Izgara Tavuk Salata bulunuyor; Toplam: 210 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Izgara Tavuk Salata
+  - '210'
+  must_not_introduce: []
+  notes: Order summary paraphrase.
+- id: gpp_064
+  user_message: Sipari?i onayl?yorum
+  intent: confirm_order
+  canonical_response: 'Sipari?iniz onayland?. Toplam: 45 TL. Not: Bu yaln?zca MVP/demo onay?d?r.'
+  safe_paraphrase: 'Sipari?inizi onayl?yorum. Toplam: 45 TL ve bu i?lem yaln?zca MVP/demo ama?l?d?r.'
+  must_preserve_terms:
+  - Toplam
+  - '45'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Demo confirmation paraphrase.
+- id: gpp_065
+  user_message: Evet, onayl?yorum
+  intent: confirm_order
+  canonical_response: 'Sipari?iniz onayland?. Toplam: 90 TL. Not: Bu yaln?zca MVP/demo onay?d?r.'
+  safe_paraphrase: 'Sipari?inizi onayl?yorum; Toplam: 90 TL. Bu yaln?zca MVP/demo onay?d?r.'
+  must_preserve_terms:
+  - Toplam
+  - '90'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Demo confirmation paraphrase.
+- id: gpp_066
+  user_message: Tamam, sipari?i ver
+  intent: confirm_order
+  canonical_response: 'Sipari?iniz onayland?. Toplam: 85 TL. Not: Bu yaln?zca MVP/demo onay?d?r.'
+  safe_paraphrase: 'Sipari? onay?n?z al?nd?. Toplam: 85 TL ve bu yaln?zca MVP/demo onay?d?r.'
+  must_preserve_terms:
+  - Toplam
+  - '85'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Demo confirmation paraphrase.
+- id: gpp_067
+  user_message: Bu sipari? do?ru
+  intent: confirm_order
+  canonical_response: 'Sipari?iniz onayland?. Toplam: 65 TL. Not: Bu yaln?zca MVP/demo onay?d?r.'
+  safe_paraphrase: 'Sipari?inizi do?rulad?m. Toplam: 65 TL; i?lem yaln?zca MVP/demo kapsam?ndad?r.'
+  must_preserve_terms:
+  - Toplam
+  - '65'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Demo confirmation paraphrase.
+- id: gpp_068
+  user_message: Onay veriyorum
+  intent: confirm_order
+  canonical_response: 'Sipari?iniz onayland?. Toplam: 260 TL. Not: Bu yaln?zca MVP/demo onay?d?r.'
+  safe_paraphrase: 'Sipari? onay? tamam. Toplam: 260 TL ve bu yaln?zca MVP/demo onay?d?r.'
+  must_preserve_terms:
+  - Toplam
+  - '260'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Demo confirmation paraphrase.
+- id: gpp_069
+  user_message: Sipari?i onayla
+  intent: confirm_order
+  canonical_response: 'Sipari?iniz onayland?. Toplam: 120 TL. Not: Bu yaln?zca MVP/demo onay?d?r.'
+  safe_paraphrase: 'Sipari?inizi onayl?yorum. Toplam: 120 TL; bu yaln?zca MVP/demo onay?d?r.'
+  must_preserve_terms:
+  - Toplam
+  - '120'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Demo confirmation paraphrase.
+- id: gpp_070
+  user_message: Evet, do?ru
+  intent: confirm_order
+  canonical_response: 'Sipari?iniz onayland?. Toplam: 210 TL. Not: Bu yaln?zca MVP/demo onay?d?r.'
+  safe_paraphrase: 'Sipari?i onayl?yorum. Toplam: 210 TL ve not olarak bu yaln?zca MVP/demo onay?d?r.'
+  must_preserve_terms:
+  - Toplam
+  - '210'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Demo confirmation paraphrase.
+- id: gpp_071
+  user_message: Pizza var m??
+  intent: unavailable_item
+  canonical_response: Pizza men?m?zde bulunmuyor.
+  safe_paraphrase: Pizza men?m?zde bulunmuyor; isterseniz mevcut se?eneklerden ?neri sunabilirim.
+  must_preserve_terms:
+  - Pizza
+  - bulunmuyor
+  must_not_introduce:
+  - Pizza var
+  - Pizza mevcut
+  - eklendi
+  - fiyat?
+  notes: Unsupported item refusal.
+- id: gpp_072
+  user_message: Hamburger istiyorum
+  intent: unavailable_item
+  canonical_response: Hamburger men?m?zde bulunmuyor.
+  safe_paraphrase: Hamburger men?m?zde bulunmuyor; dilerseniz men?den ba?ka bir se?enek ?nerebilirim.
+  must_preserve_terms:
+  - Hamburger
+  - bulunmuyor
+  must_not_introduce:
+  - Hamburger var
+  - Hamburger mevcut
+  - eklendi
+  - fiyat?
+  notes: Unsupported item refusal.
+- id: gpp_073
+  user_message: Sushi sat?yor musunuz?
+  intent: unavailable_item
+  canonical_response: Sushi men?m?zde bulunmuyor.
+  safe_paraphrase: Sushi men?m?zde bulunmuyor; uygun bir alternatif ?nerebilirim.
+  must_preserve_terms:
+  - Sushi
+  - bulunmuyor
+  must_not_introduce:
+  - Sushi var
+  - Sushi mevcut
+  - eklendi
+  - fiyat?
+  notes: Unsupported item refusal.
+- id: gpp_074
+  user_message: Kola var m??
+  intent: unavailable_item
+  canonical_response: Kola men?m?zde bulunmuyor.
+  safe_paraphrase: Kola men?m?zde bulunmuyor; i?ecek kategorisinden ba?ka bir ?neri sunabilirim.
+  must_preserve_terms:
+  - Kola
+  - bulunmuyor
+  must_not_introduce:
+  - Kola var
+  - Kola mevcut
+  - eklendi
+  - fiyat?
+  notes: Unsupported item refusal.
+- id: gpp_075
+  user_message: Tavuk burger alay?m
+  intent: unavailable_item
+  canonical_response: Tavuk Burger men?m?zde bulunmuyor.
+  safe_paraphrase: Tavuk Burger men?m?zde bulunmuyor; isterseniz Ana Yemek kategorisinden alternatif payla?abilirim.
+  must_preserve_terms:
+  - Tavuk Burger
+  - bulunmuyor
+  must_not_introduce:
+  - Tavuk Burger var
+  - Tavuk Burger mevcut
+  - eklendi
+  - fiyat?
+  notes: Unsupported item refusal.
+- id: gpp_076
+  user_message: Patates k?zartmas? var m??
+  intent: unavailable_item
+  canonical_response: Patates K?zartmas? men?m?zde bulunmuyor.
+  safe_paraphrase: Patates K?zartmas? men?m?zde bulunmuyor; men?deki di?er ?r?nlerden se?im yapabilirsiniz.
+  must_preserve_terms:
+  - Patates K?zartmas?
+  - bulunmuyor
+  must_not_introduce:
+  - Patates K?zartmas? var
+  - Patates K?zartmas? mevcut
+  - eklendi
+  - fiyat?
+  notes: Unsupported item refusal.
+- id: gpp_077
+  user_message: Pizza ekle
+  intent: unavailable_item
+  canonical_response: Pizza men?m?zde bulunmuyor.
+  safe_paraphrase: Pizza men?m?zde bulunmuyor; sipari?e ekleyemem ama ba?ka bir ?r?n ?nerebilirim.
+  must_preserve_terms:
+  - Pizza
+  - bulunmuyor
+  must_not_introduce:
+  - Pizza var
+  - Pizza mevcut
+  - eklendi
+  - fiyat?
+  notes: Unsupported item refusal.
+- id: gpp_078
+  user_message: Bana bir ?iir yazar m?s?n?
+  intent: off_topic
+  canonical_response: Bu konuda yard?mc? olam?yorum. Men? veya sipari?le ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yard?mc? olam?yorum; men? veya sipari?le ilgili destek verebilirim.
+  must_preserve_terms:
+  - yard?mc? olam?yorum
+  must_not_introduce:
+  - ?iir yazd?m
+  - i?te bir ?iir
+  notes: Out-of-scope refusal.
+- id: gpp_079
+  user_message: Hava bug?n nas?l?
+  intent: off_topic
+  canonical_response: Bu konuda yard?mc? olam?yorum. Men? veya sipari?le ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yard?mc? olam?yorum; restoran men?s? ve sipari?ler konusunda destek olabilirim.
+  must_preserve_terms:
+  - yard?mc? olam?yorum
+  must_not_introduce:
+  - hava durumu
+  notes: Out-of-scope refusal.
+- id: gpp_080
+  user_message: Bana matematik sorusu ??z
+  intent: off_topic
+  canonical_response: Bu konuda yard?mc? olam?yorum. Men? veya sipari?le ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yard?mc? olam?yorum; isterseniz men? veya sipari? hakk?nda yard?mc? olabilirim.
+  must_preserve_terms:
+  - yard?mc? olam?yorum
+  must_not_introduce:
+  - ??z?m? ?u
+  notes: Out-of-scope refusal.
+- id: gpp_081
+  user_message: ?ark? s?z? yazar m?s?n?
+  intent: off_topic
+  canonical_response: Bu konuda yard?mc? olam?yorum. Men? veya sipari?le ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yard?mc? olam?yorum; yaln?zca restoran kapsam?ndaki sorulara yard?mc? olabilirim.
+  must_preserve_terms:
+  - yard?mc? olam?yorum
+  must_not_introduce:
+  - ?ark? s?z?
+  notes: Out-of-scope refusal.
+- id: gpp_082
+  user_message: Bana hikaye anlat
+  intent: off_topic
+  canonical_response: Bu konuda yard?mc? olam?yorum. Men? veya sipari?le ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yard?mc? olam?yorum; men? ve sipari? i?lemleriyle ilgili destek sunabilirim.
+  must_preserve_terms:
+  - yard?mc? olam?yorum
+  must_not_introduce:
+  - hikaye anlatay?m
+  notes: Out-of-scope refusal.
+- id: gpp_083
+  user_message: Kod yazar m?s?n?
+  intent: off_topic
+  canonical_response: Bu konuda yard?mc? olam?yorum. Men? veya sipari?le ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yard?mc? olam?yorum; restoran sipari?leri ve men? i?in yard?mc? olabilirim.
+  must_preserve_terms:
+  - yard?mc? olam?yorum
+  must_not_introduce:
+  - kod ?rne?i
+  notes: Out-of-scope refusal.
+- id: gpp_084
+  user_message: F?kra anlat?r m?s?n?
+  intent: off_topic
+  canonical_response: Bu konuda yard?mc? olam?yorum. Men? veya sipari?le ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yard?mc? olam?yorum; men? ve sipari?le ilgili sorular? yan?tlayabilirim.
+  must_preserve_terms:
+  - yard?mc? olam?yorum
+  must_not_introduce:
+  - f?kra
+  notes: Out-of-scope refusal.
+- id: gpp_085
+  user_message: Merhaba, iyi akşamlar
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Bu akşam size nasıl yardımcı olabilirim?
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Evening greeting.
+- id: gpp_086
+  user_message: Selam, menüye göz atacağım
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Menüyle ilgili yardımcı olabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Menu browsing greeting.
+- id: gpp_087
+  user_message: İyi akşamlar garson robot
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Sipariş vermek isterseniz hazırım.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Formal evening greeting.
+- id: gpp_088
+  user_message: Kolay gelsin
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Menü veya sipariş konusunda destek sunabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Polite greeting.
+- id: gpp_089
+  user_message: Merhaba, önce içeceklere bakacağım
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. İsterseniz içeceklerden başlayabiliriz.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Greeting with drink direction.
+- id: gpp_090
+  user_message: Selam robot
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Bugün size nasıl yardımcı olabilirim?
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Casual robot greeting.
+- id: gpp_091
+  user_message: Merhaba, sipariş vermeden önce sorum var
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Sorularınızı memnuniyetle yanıtlayabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Question-first greeting.
+- id: gpp_092
+  user_message: İyi günler, menü müsait mi?
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Menü ve siparişler için yardımcı olabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Formal greeting about menu.
+- id: gpp_093
+  user_message: Selamün aleyküm
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Sipariş oluşturmak isterseniz destek olabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Respectful greeting.
+- id: gpp_094
+  user_message: Merhaba, bugün neler önerirsiniz diye soracağım
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Hazırsanız öneriler de paylaşabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Greeting leading to recommendation.
+- id: gpp_095
+  user_message: Merhaba, hızlıca sipariş vereceğim
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Hazırsanız siparişinizi alabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Fast-order greeting.
+- id: gpp_096
+  user_message: Selamlar, bir şey danışacağım
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Danışmak istediğiniz konuda yardımcı olabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Consultation greeting.
+- id: gpp_097
+  user_message: Merhaba, tatlılara bakacağım
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Tatlılar dahil menüde yardımcı olabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Dessert-oriented greeting.
+- id: gpp_098
+  user_message: İyi akşamlar, müsaitseniz başlayalım
+  intent: greeting
+  canonical_response: Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?
+  safe_paraphrase: Merhaba, hoş geldiniz. Müsaitim, sipariş veya menü için yardımcı olabilirim.
+  must_preserve_terms:
+  - Merhaba
+  must_not_introduce: []
+  notes: Ready-to-start greeting.
+- id: gpp_099
+  user_message: Menüde hangi kategoriler bulunuyor?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler doğrultusunda Çorba, Ana Yemek, Tatlı ve İçecek seçeneklerimiz var.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Formal category request.
+- id: gpp_100
+  user_message: Menü başlıklarını paylaşır mısın?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler listemizde Çorba, Ana Yemek, Tatlı ve İçecek yer alıyor.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Category headings request.
+- id: gpp_101
+  user_message: Neleri servis ediyorsunuz, kısaca söyler misin?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler tarafında Çorba, Ana Yemek, Tatlı ve İçecek sunuyoruz.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Brief service summary.
+- id: gpp_102
+  user_message: Bölümleriniz neler?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler arasında Çorba, Ana Yemek, Tatlı ve İçecek bulunuyor.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Short category listing.
+- id: gpp_103
+  user_message: Menü kategorilerini tekrar eder misin?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler olarak Çorba, Ana Yemek, Tatlı ve İçecek mevcut.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Repeat category listing.
+- id: gpp_104
+  user_message: Ne tür seçenekler var?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler düzeyinde Çorba, Ana Yemek, Tatlı ve İçecek seçenekleri sunuyoruz.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Types of options.
+- id: gpp_105
+  user_message: Çorba dışında başka hangi kategoriler var?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler içinde Çorba, Ana Yemek, Tatlı ve İçecek yer alıyor.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Category comparison.
+- id: gpp_106
+  user_message: Bana menünün ana bölümlerini söyle
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler başlığında Çorba, Ana Yemek, Tatlı ve İçecek bulunuyor.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Main menu sections.
+- id: gpp_107
+  user_message: Hangi ana kategoriler mevcut?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler olarak Çorba, Ana Yemek, Tatlı ve İçecek servis ediyoruz.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Main categories question.
+- id: gpp_108
+  user_message: Menü yapınızı özetler misiniz?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler bazında Çorba, Ana Yemek, Tatlı ve İçecek sunuyoruz.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Formal menu structure summary.
+- id: gpp_109
+  user_message: Yemek türleri neler?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler arasında Çorba, Ana Yemek, Tatlı ve İçecek seçenekleri var.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Food type question.
+- id: gpp_110
+  user_message: Ne çeşit bölümler var?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler listesinde Çorba, Ana Yemek, Tatlı ve İçecek görünüyor.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Different sections.
+- id: gpp_111
+  user_message: Menüyü kategorilere göre açıklar mısın?
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler üzerinden Çorba, Ana Yemek, Tatlı ve İçecek sunabiliyoruz.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Explain by category.
+- id: gpp_112
+  user_message: Önce kategorileri öğrenmek istiyorum
+  intent: menu_question
+  canonical_response: 'Kategoriler: Çorba, Ana Yemek, Tatlı, İçecek.'
+  safe_paraphrase: Kategoriler olarak Çorba, Ana Yemek, Tatlı ve İçecek paylaşabilirim.
+  must_preserve_terms:
+  - Kategoriler
+  must_not_introduce: []
+  notes: Wants categories first.
+- id: gpp_113
+  user_message: Ev yemeği gibi bir şey önerir misin?
+  intent: recommendation
+  canonical_response: 'Öneri: Mercimek Çorbası ve Etli Güveç deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak ev yemeği hissi için Mercimek Çorbası ile Etli Güveç iyi gider.
+  must_preserve_terms:
+  - Öneri
+  - Mercimek Çorbası
+  - Etli Güveç
+  must_not_introduce: []
+  notes: Home-style recommendation.
+- id: gpp_114
+  user_message: Daha hafif ne alabilirim?
+  intent: recommendation
+  canonical_response: 'Öneri: Izgara Tavuk Salata deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak hafif bir tercih isterseniz Izgara Tavuk Salata uygun olur.
+  must_preserve_terms:
+  - Öneri
+  - Izgara Tavuk Salata
+  must_not_introduce: []
+  notes: Light option recommendation.
+- id: gpp_115
+  user_message: Vejetaryen bir öneri alabilir miyim?
+  intent: recommendation
+  canonical_response: 'Öneri: Sebzeli Makarna deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak vejetaryen seçimde Sebzeli Makarna düşünebilirsiniz.
+  must_preserve_terms:
+  - Öneri
+  - Sebzeli Makarna
+  must_not_introduce: []
+  notes: Vegetarian recommendation.
+- id: gpp_116
+  user_message: Tatlı için net bir tavsiyen var mı?
+  intent: recommendation
+  canonical_response: 'Öneri: Fırın Sütlaç deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak tatlı tarafında Fırın Sütlaç öne çıkıyor.
+  must_preserve_terms:
+  - Öneri
+  - Fırın Sütlaç
+  must_not_introduce: []
+  notes: Dessert focus recommendation.
+- id: gpp_117
+  user_message: İçecek olarak ne önerirsin?
+  intent: recommendation
+  canonical_response: 'Öneri: Limonata deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak içeceklerde Limonata tercih edebilirsiniz.
+  must_preserve_terms:
+  - Öneri
+  - Limonata
+  must_not_introduce: []
+  notes: Drink recommendation.
+- id: gpp_118
+  user_message: Çorbalardan hangisini önerirsin?
+  intent: recommendation
+  canonical_response: 'Öneri: Mercimek Çorbası deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak çorba kategorisinde Mercimek Çorbası iyi bir seçimdir.
+  must_preserve_terms:
+  - Öneri
+  - Mercimek Çorbası
+  must_not_introduce: []
+  notes: Soup recommendation.
+- id: gpp_119
+  user_message: Doyurucu bir şey tavsiye eder misin?
+  intent: recommendation
+  canonical_response: 'Öneri: Etli Güveç deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak daha doyurucu bir seçim için Etli Güveç alabilirsiniz.
+  must_preserve_terms:
+  - Öneri
+  - Etli Güveç
+  must_not_introduce: []
+  notes: Hearty recommendation.
+- id: gpp_120
+  user_message: Soğuk bir içecek önerisi rica ediyorum
+  intent: recommendation
+  canonical_response: 'Öneri: Ayran deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak soğuk içeceklerde Ayran uygun olur.
+  must_preserve_terms:
+  - Öneri
+  - Ayran
+  must_not_introduce: []
+  notes: Cold drink recommendation.
+- id: gpp_121
+  user_message: Salata tarzı ne tavsiye edersin?
+  intent: recommendation
+  canonical_response: 'Öneri: Izgara Tavuk Salata deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak salata tarafında Izgara Tavuk Salata tercih edebilirsiniz.
+  must_preserve_terms:
+  - Öneri
+  - Izgara Tavuk Salata
+  must_not_introduce: []
+  notes: Salad recommendation.
+- id: gpp_122
+  user_message: Makarna yemek istersem ne önerirsin?
+  intent: recommendation
+  canonical_response: 'Öneri: Sebzeli Makarna deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak makarna isterseniz Sebzeli Makarna iyi gider.
+  must_preserve_terms:
+  - Öneri
+  - Sebzeli Makarna
+  must_not_introduce: []
+  notes: Pasta recommendation.
+- id: gpp_123
+  user_message: Misafirime klasik bir öneri sunmak istiyorum
+  intent: recommendation
+  canonical_response: 'Öneri: Mercimek Çorbası ve Etli Güveç deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak klasik bir eşleşmede Mercimek Çorbası ile Etli Güveç sunabilirsiniz.
+  must_preserve_terms:
+  - Öneri
+  - Mercimek Çorbası
+  - Etli Güveç
+  must_not_introduce: []
+  notes: Classic pairing recommendation.
+- id: gpp_124
+  user_message: Serinletici bir öneri ver
+  intent: recommendation
+  canonical_response: 'Öneri: Limonata deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak ferah bir seçenek için Limonata alabilirsiniz.
+  must_preserve_terms:
+  - Öneri
+  - Limonata
+  must_not_introduce: []
+  notes: Refreshing recommendation.
+- id: gpp_125
+  user_message: Tatlıda hafif olanı önerir misin?
+  intent: recommendation
+  canonical_response: 'Öneri: Fırın Sütlaç deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak tatlıda daha dengeli bir seçim için Fırın Sütlaç düşünebilirsiniz.
+  must_preserve_terms:
+  - Öneri
+  - Fırın Sütlaç
+  must_not_introduce: []
+  notes: Balanced dessert recommendation.
+- id: gpp_126
+  user_message: Protein ağırlıklı bir şey öner
+  intent: recommendation
+  canonical_response: 'Öneri: Izgara Tavuk Salata deneyebilirsiniz.'
+  safe_paraphrase: Öneri olarak protein ağırlıklı tercih için Izgara Tavuk Salata uygun olur.
+  must_preserve_terms:
+  - Öneri
+  - Izgara Tavuk Salata
+  must_not_introduce: []
+  notes: Protein-focused recommendation.
+- id: gpp_127
+  user_message: Ayran kaç para?
+  intent: price_question
+  canonical_response: 'Fiyat: Ayran 45 TL.'
+  safe_paraphrase: Fiyat olarak Ayran 45 TL görünüyor.
+  must_preserve_terms:
+  - Fiyat
+  - Ayran
+  - '45'
+  - TL
+  must_not_introduce: []
+  notes: Ayran price variant.
+- id: gpp_128
+  user_message: Ayranın ücreti nedir?
+  intent: price_question
+  canonical_response: 'Fiyat: Ayran 45 TL.'
+  safe_paraphrase: Fiyat bilgisine göre Ayran 45 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Ayran
+  - '45'
+  - TL
+  must_not_introduce: []
+  notes: Ayran fee wording.
+- id: gpp_129
+  user_message: Limonata ne kadar tutuyor?
+  intent: price_question
+  canonical_response: 'Fiyat: Limonata 65 TL.'
+  safe_paraphrase: Fiyat bilgisi Limonata için 65 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Limonata
+  - '65'
+  - TL
+  must_not_introduce: []
+  notes: Limonata cost wording.
+- id: gpp_130
+  user_message: Limonatanın fiyatını söyler misin?
+  intent: price_question
+  canonical_response: 'Fiyat: Limonata 65 TL.'
+  safe_paraphrase: Fiyat olarak Limonata 65 TL olarak geçiyor.
+  must_preserve_terms:
+  - Fiyat
+  - Limonata
+  - '65'
+  - TL
+  must_not_introduce: []
+  notes: Limonata formal price.
+- id: gpp_131
+  user_message: Mercimek Çorbası kaç lira?
+  intent: price_question
+  canonical_response: 'Fiyat: Mercimek Çorbası 85 TL.'
+  safe_paraphrase: Fiyat olarak Mercimek Çorbası 85 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Mercimek Çorbası
+  - '85'
+  - TL
+  must_not_introduce: []
+  notes: Mercimek price variant.
+- id: gpp_132
+  user_message: Domates Çorbası kaç TL?
+  intent: price_question
+  canonical_response: 'Fiyat: Domates Çorbası 80 TL.'
+  safe_paraphrase: Fiyat bilgisi olarak Domates Çorbası 80 TL görünüyor.
+  must_preserve_terms:
+  - Fiyat
+  - Domates Çorbası
+  - '80'
+  - TL
+  must_not_introduce: []
+  notes: Domates price variant.
+- id: gpp_133
+  user_message: Izgara Tavuk Salata fiyatı ne kadar?
+  intent: price_question
+  canonical_response: 'Fiyat: Izgara Tavuk Salata 210 TL.'
+  safe_paraphrase: Fiyat olarak Izgara Tavuk Salata 210 TL tutuyor.
+  must_preserve_terms:
+  - Fiyat
+  - Izgara Tavuk Salata
+  - '210'
+  - TL
+  must_not_introduce: []
+  notes: Salad price variant.
+- id: gpp_134
+  user_message: Sebzeli Makarna kaç liradır?
+  intent: price_question
+  canonical_response: 'Fiyat: Sebzeli Makarna 195 TL.'
+  safe_paraphrase: Fiyat bilgisine göre Sebzeli Makarna 195 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Sebzeli Makarna
+  - '195'
+  - TL
+  must_not_introduce: []
+  notes: Pasta price variant.
+- id: gpp_135
+  user_message: Etli Güveç ne kadar?
+  intent: price_question
+  canonical_response: 'Fiyat: Etli Güveç 260 TL.'
+  safe_paraphrase: Fiyat olarak Etli Güveç 260 TL görünüyor.
+  must_preserve_terms:
+  - Fiyat
+  - Etli Güveç
+  - '260'
+  - TL
+  must_not_introduce: []
+  notes: Stew price variant.
+- id: gpp_136
+  user_message: Fırın Sütlaç kaç TL?
+  intent: price_question
+  canonical_response: 'Fiyat: Fırın Sütlaç 120 TL.'
+  safe_paraphrase: Fiyat bilgisi Fırın Sütlaç için 120 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Fırın Sütlaç
+  - '120'
+  - TL
+  must_not_introduce: []
+  notes: Dessert price variant.
+- id: gpp_137
+  user_message: Mercimek çorbasının ücretini paylaşır mısın?
+  intent: price_question
+  canonical_response: 'Fiyat: Mercimek Çorbası 85 TL.'
+  safe_paraphrase: Fiyat olarak Mercimek Çorbası 85 TL söyleyebilirim.
+  must_preserve_terms:
+  - Fiyat
+  - Mercimek Çorbası
+  - '85'
+  - TL
+  must_not_introduce: []
+  notes: Formal soup price.
+- id: gpp_138
+  user_message: Izgara Tavuk Salata kaç para ediyor?
+  intent: price_question
+  canonical_response: 'Fiyat: Izgara Tavuk Salata 210 TL.'
+  safe_paraphrase: Fiyat bilgisi olarak Izgara Tavuk Salata 210 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Izgara Tavuk Salata
+  - '210'
+  - TL
+  must_not_introduce: []
+  notes: Alternative salad price wording.
+- id: gpp_139
+  user_message: Fırın Sütlaç fiyatı nedir?
+  intent: price_question
+  canonical_response: 'Fiyat: Fırın Sütlaç 120 TL.'
+  safe_paraphrase: Fiyat olarak Fırın Sütlaç 120 TL görünüyor.
+  must_preserve_terms:
+  - Fiyat
+  - Fırın Sütlaç
+  - '120'
+  - TL
+  must_not_introduce: []
+  notes: Dessert price wording.
+- id: gpp_140
+  user_message: Etli Güvecin ücreti kaç TL?
+  intent: price_question
+  canonical_response: 'Fiyat: Etli Güveç 260 TL.'
+  safe_paraphrase: Fiyat bilgisine göre Etli Güveç 260 TL.
+  must_preserve_terms:
+  - Fiyat
+  - Etli Güveç
+  - '260'
+  - TL
+  must_not_introduce: []
+  notes: Stew fee wording.
+- id: gpp_141
+  user_message: Fındık alerjim var
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Lütfen içerikleri mutfakla teyit edelim.
+  safe_paraphrase: Alerji durumunda en güvenli yol, içerikleri mutfakla teyit ederek ilerlemektir.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Hazelnut allergy caution.
+- id: gpp_142
+  user_message: Cevize karşı alerjim bulunuyor
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. İçerikleri mutfakla teyit edelim.
+  safe_paraphrase: Alerji söz konusuysa içerikleri mutfakla teyit ederek karar verelim.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Walnut allergy caution.
+- id: gpp_143
+  user_message: Yumurta tüketemiyorum
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Uygunluğu mutfakla teyit edelim.
+  safe_paraphrase: Alerji ihtimali varsa uygunluğu mutfakla teyit etmemiz en doğrusu olur.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Egg allergy caution.
+- id: gpp_144
+  user_message: Et yemiyorum, içerikleri teyit eder misiniz?
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Uygunluğu mutfakla teyit edelim.
+  safe_paraphrase: Alerji veya hassasiyet varsa uygunluğu mutfakla teyit ederek ilerleyelim.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Meat sensitivity caution.
+- id: gpp_145
+  user_message: Tavukla ilgili hassasiyetim var
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. İçerikleri mutfakla teyit edelim.
+  safe_paraphrase: Alerji tarafında riski azaltmak için içerikleri mutfakla teyit edelim.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Chicken sensitivity caution.
+- id: gpp_146
+  user_message: Sütte sorun yaşıyorum, ne önerirsiniz?
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Uygunluğu mutfakla teyit edelim.
+  safe_paraphrase: Alerji durumunda uygunluğu mutfakla teyit etmeden net bir yönlendirme yapmayalım.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Milk sensitivity caution.
+- id: gpp_147
+  user_message: Gluten alerjim olabilir
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Lütfen içerikleri mutfakla teyit edelim.
+  safe_paraphrase: Alerji ihtimalinde içerikleri mutfakla teyit etmek en güvenli adım olur.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Possible gluten allergy caution.
+- id: gpp_148
+  user_message: Fındık veya ceviz var mı, riskli miyim?
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Uygunluğu mutfakla teyit edelim.
+  safe_paraphrase: Alerji açısından en doğru yaklaşım, uygunluğu mutfakla teyit etmektir.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Nut risk caution.
+- id: gpp_149
+  user_message: Yumurta alerjim için güvenli seçenek var mı?
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Uygunluğu mutfakla teyit edelim.
+  safe_paraphrase: Alerji varsa güvenli seçim için uygunluğu mutfakla teyit ederek ilerleyelim.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Egg safe option caution.
+- id: gpp_150
+  user_message: Süt ürünlerinden kaçınmam gerekiyor
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. İçerikleri mutfakla teyit edelim.
+  safe_paraphrase: Alerji nedeniyle içerikleri mutfakla teyit ederek sipariş vermek daha güvenli olur.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Avoid dairy caution.
+- id: gpp_151
+  user_message: Glutene dikkat etmem gerekiyor
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Uygunluğu mutfakla teyit edelim.
+  safe_paraphrase: Alerji hassasiyeti varsa uygunluğu mutfakla teyit etmeliyiz.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Gluten caution variant.
+- id: gpp_152
+  user_message: Cevizle temas benim için sorun olabilir
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Lütfen içerikleri mutfakla teyit edelim.
+  safe_paraphrase: Alerji riskinde içerikleri mutfakla teyit ederek ilerlemek en güvenlisi olur.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Walnut contact caution.
+- id: gpp_153
+  user_message: Alerjim nedeniyle hangi ürün güvenli olur?
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. En doğru bilgi için mutfakla teyit edelim.
+  safe_paraphrase: Alerji söz konusu olduğunda en doğru bilgi için mutfakla teyit etmeliyiz.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: General safe product caution.
+- id: gpp_154
+  user_message: Tavuk yememem gerekiyor, buna göre bakar mısınız?
+  intent: allergen_question
+  canonical_response: Alerji konusunda dikkatli olalım. Uygunluğu mutfakla teyit edelim.
+  safe_paraphrase: Alerji veya hassasiyet varsa uygunluğu mutfakla teyit ederek seçim yapalım.
+  must_preserve_terms:
+  - Alerji
+  - teyit
+  must_not_introduce:
+  - kesinlikle güvenli
+  - hiç sorun yok
+  notes: Chicken avoidance caution.
+- id: gpp_155
+  user_message: 3 Ayran ekler misin?
+  intent: add_item
+  canonical_response: 'Ekledim: 3 x Ayran.'
+  safe_paraphrase: 'Ekledim: 3 x Ayran siparişinize işlendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '3'
+  - Ayran
+  must_not_introduce: []
+  notes: Add three ayrans.
+- id: gpp_156
+  user_message: Bir Domates Çorbası ekle
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Domates Çorbası.'
+  safe_paraphrase: 'Ekledim: 1 x Domates Çorbası siparişinize eklendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Domates Çorbası
+  must_not_introduce: []
+  notes: Add one tomato soup.
+- id: gpp_157
+  user_message: 2 Limonata alalım
+  intent: add_item
+  canonical_response: 'Ekledim: 2 x Limonata.'
+  safe_paraphrase: 'Ekledim: 2 x Limonata sipariş listenize alındı.'
+  must_preserve_terms:
+  - Ekledim
+  - '2'
+  - Limonata
+  must_not_introduce: []
+  notes: Add two lemonades.
+- id: gpp_158
+  user_message: Sebzeli Makarnadan bir tane ekle
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Sebzeli Makarna.'
+  safe_paraphrase: 'Ekledim: 1 x Sebzeli Makarna siparişe işlendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Sebzeli Makarna
+  must_not_introduce: []
+  notes: Add one pasta.
+- id: gpp_159
+  user_message: İki mercimek çorbası istiyorum
+  intent: add_item
+  canonical_response: 'Ekledim: 2 x Mercimek Çorbası.'
+  safe_paraphrase: 'Ekledim: 2 x Mercimek Çorbası siparişinizde görünüyor.'
+  must_preserve_terms:
+  - Ekledim
+  - '2'
+  - Mercimek Çorbası
+  must_not_introduce: []
+  notes: Add two soups.
+- id: gpp_160
+  user_message: Bir Etli Güveç daha ekler misiniz?
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Etli Güveç.'
+  safe_paraphrase: 'Ekledim: 1 x Etli Güveç siparişinize dahil edildi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Etli Güveç
+  must_not_introduce: []
+  notes: Add one stew politely.
+- id: gpp_161
+  user_message: Bir Ayran daha yaz
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Ayran.'
+  safe_paraphrase: 'Ekledim: 1 x Ayran siparişe eklendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Ayran
+  must_not_introduce: []
+  notes: Add one more ayran.
+- id: gpp_162
+  user_message: 2 Fırın Sütlaç ekle
+  intent: add_item
+  canonical_response: 'Ekledim: 2 x Fırın Sütlaç.'
+  safe_paraphrase: 'Ekledim: 2 x Fırın Sütlaç sipariş listenize eklendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '2'
+  - Fırın Sütlaç
+  must_not_introduce: []
+  notes: Add two desserts.
+- id: gpp_163
+  user_message: Izgara Tavuk Salatadan iki tane alayım
+  intent: add_item
+  canonical_response: 'Ekledim: 2 x Izgara Tavuk Salata.'
+  safe_paraphrase: 'Ekledim: 2 x Izgara Tavuk Salata siparişinizde yer aldı.'
+  must_preserve_terms:
+  - Ekledim
+  - '2'
+  - Izgara Tavuk Salata
+  must_not_introduce: []
+  notes: Add two salads.
+- id: gpp_164
+  user_message: Bir limonata daha ekleyelim
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Limonata.'
+  safe_paraphrase: 'Ekledim: 1 x Limonata siparişinize işlendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Limonata
+  must_not_introduce: []
+  notes: Add another lemonade.
+- id: gpp_165
+  user_message: Mercimek Çorbası ve bir Ayran ekle
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Mercimek Çorbası, 1 x Ayran.'
+  safe_paraphrase: 'Ekledim: 1 x Mercimek Çorbası ve 1 x Ayran siparişinize eklendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Mercimek Çorbası
+  - Ayran
+  must_not_introduce: []
+  notes: Add soup and drink.
+- id: gpp_166
+  user_message: Bir Domates Çorbası ile bir Ayran istiyorum
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Domates Çorbası, 1 x Ayran.'
+  safe_paraphrase: 'Ekledim: 1 x Domates Çorbası ve 1 x Ayran siparişe alındı.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Domates Çorbası
+  - Ayran
+  must_not_introduce: []
+  notes: Add tomato soup and ayran.
+- id: gpp_167
+  user_message: 2 Sebzeli Makarna ekler misin?
+  intent: add_item
+  canonical_response: 'Ekledim: 2 x Sebzeli Makarna.'
+  safe_paraphrase: 'Ekledim: 2 x Sebzeli Makarna siparişinize eklendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '2'
+  - Sebzeli Makarna
+  must_not_introduce: []
+  notes: Add two pasta.
+- id: gpp_168
+  user_message: Bir Fırın Sütlaç ve bir Limonata alacağım
+  intent: add_item
+  canonical_response: 'Ekledim: 1 x Fırın Sütlaç, 1 x Limonata.'
+  safe_paraphrase: 'Ekledim: 1 x Fırın Sütlaç ile 1 x Limonata siparişinize işlendi.'
+  must_preserve_terms:
+  - Ekledim
+  - '1'
+  - Fırın Sütlaç
+  - Limonata
+  must_not_introduce: []
+  notes: Add dessert and drink.
+- id: gpp_169
+  user_message: 2 Ayrandan birini çıkar
+  intent: remove_item
+  canonical_response: 'Çıkardım: 1 x Ayran.'
+  safe_paraphrase: 'Çıkardım: 1 x Ayran siparişinizden düşüldü.'
+  must_preserve_terms:
+  - Çıkardım
+  - '1'
+  - Ayran
+  must_not_introduce: []
+  notes: Remove one Ayran from two.
+- id: gpp_170
+  user_message: Domates Çorbasını çıkarır mısın?
+  intent: remove_item
+  canonical_response: 'Çıkardım: Domates Çorbası.'
+  safe_paraphrase: 'Çıkardım: Domates Çorbası siparişten kaldırıldı.'
+  must_preserve_terms:
+  - Çıkardım
+  - Domates Çorbası
+  must_not_introduce: []
+  notes: Remove tomato soup.
+- id: gpp_171
+  user_message: Limonatayı sil lütfen
+  intent: remove_item
+  canonical_response: 'Çıkardım: Limonata.'
+  safe_paraphrase: 'Çıkardım: Limonata sipariş listenizden çıkarıldı.'
+  must_preserve_terms:
+  - Çıkardım
+  - Limonata
+  must_not_introduce: []
+  notes: Remove lemonade politely.
+- id: gpp_172
+  user_message: Sebzeli Makarnayı iptal edelim
+  intent: remove_item
+  canonical_response: 'Çıkardım: Sebzeli Makarna.'
+  safe_paraphrase: 'Çıkardım: Sebzeli Makarna siparişinizden kaldırıldı.'
+  must_preserve_terms:
+  - Çıkardım
+  - Sebzeli Makarna
+  must_not_introduce: []
+  notes: Remove pasta.
+- id: gpp_173
+  user_message: Mercimek Çorbasını siparişten al
+  intent: remove_item
+  canonical_response: 'Çıkardım: Mercimek Çorbası.'
+  safe_paraphrase: 'Çıkardım: Mercimek Çorbası listeden düşürüldü.'
+  must_preserve_terms:
+  - Çıkardım
+  - Mercimek Çorbası
+  must_not_introduce: []
+  notes: Remove lentil soup.
+- id: gpp_174
+  user_message: Etli Güveç kalsın istemiyorum, çıkar
+  intent: remove_item
+  canonical_response: 'Çıkardım: Etli Güveç.'
+  safe_paraphrase: 'Çıkardım: Etli Güveç siparişinizden çıkarıldı.'
+  must_preserve_terms:
+  - Çıkardım
+  - Etli Güveç
+  must_not_introduce: []
+  notes: Remove stew.
+- id: gpp_175
+  user_message: Ayranı kaldır
+  intent: remove_item
+  canonical_response: 'Çıkardım: Ayran.'
+  safe_paraphrase: 'Çıkardım: Ayran siparişinizden kaldırıldı.'
+  must_preserve_terms:
+  - Çıkardım
+  - Ayran
+  must_not_introduce: []
+  notes: Remove ayran.
+- id: gpp_176
+  user_message: Fırın Sütlacı iptal et
+  intent: remove_item
+  canonical_response: 'Çıkardım: Fırın Sütlaç.'
+  safe_paraphrase: 'Çıkardım: Fırın Sütlaç sipariş listenizden alındı.'
+  must_preserve_terms:
+  - Çıkardım
+  - Fırın Sütlaç
+  must_not_introduce: []
+  notes: Remove dessert.
+- id: gpp_177
+  user_message: Izgara Tavuk Salatayı sil
+  intent: remove_item
+  canonical_response: 'Çıkardım: Izgara Tavuk Salata.'
+  safe_paraphrase: 'Çıkardım: Izgara Tavuk Salata siparişinizden düştü.'
+  must_preserve_terms:
+  - Çıkardım
+  - Izgara Tavuk Salata
+  must_not_introduce: []
+  notes: Remove salad.
+- id: gpp_178
+  user_message: Bir Ayranı geri al
+  intent: remove_item
+  canonical_response: 'Çıkardım: 1 x Ayran.'
+  safe_paraphrase: 'Çıkardım: 1 x Ayran siparişinizden geri alındı.'
+  must_preserve_terms:
+  - Çıkardım
+  - '1'
+  - Ayran
+  must_not_introduce: []
+  notes: Undo one ayran.
+- id: gpp_179
+  user_message: Domates Çorbasını ve Ayranı çıkar
+  intent: remove_item
+  canonical_response: 'Çıkardım: Domates Çorbası, Ayran.'
+  safe_paraphrase: 'Çıkardım: Domates Çorbası ile Ayran sipariş listenizden kaldırıldı.'
+  must_preserve_terms:
+  - Çıkardım
+  - Domates Çorbası
+  - Ayran
+  must_not_introduce: []
+  notes: Remove soup and drink.
+- id: gpp_180
+  user_message: Bir Fırın Sütlaç eksilt
+  intent: remove_item
+  canonical_response: 'Çıkardım: 1 x Fırın Sütlaç.'
+  safe_paraphrase: 'Çıkardım: 1 x Fırın Sütlaç siparişinizden eksiltildi.'
+  must_preserve_terms:
+  - Çıkardım
+  - '1'
+  - Fırın Sütlaç
+  must_not_introduce: []
+  notes: Decrease dessert quantity.
+- id: gpp_181
+  user_message: Mercimek Çorbasını siparişten sil lütfen
+  intent: remove_item
+  canonical_response: 'Çıkardım: Mercimek Çorbası.'
+  safe_paraphrase: 'Çıkardım: Mercimek Çorbası siparişten çıkarıldı.'
+  must_preserve_terms:
+  - Çıkardım
+  - Mercimek Çorbası
+  must_not_introduce: []
+  notes: Polite remove soup.
+- id: gpp_182
+  user_message: Limonata ile Ayranı çıkarabilir misin?
+  intent: remove_item
+  canonical_response: 'Çıkardım: Limonata, Ayran.'
+  safe_paraphrase: 'Çıkardım: Limonata ve Ayran siparişinizden kaldırıldı.'
+  must_preserve_terms:
+  - Çıkardım
+  - Limonata
+  - Ayran
+  must_not_introduce: []
+  notes: Remove two drinks.
+- id: gpp_183
+  user_message: Siparişi baştan alalım, hepsini temizle
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; isterseniz yeni bir sipariş oluşturabiliriz.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Reset order completely.
+- id: gpp_184
+  user_message: Tüm seçtiklerimi kaldır
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; şu anda açık ürün görünmüyor.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Remove all selections.
+- id: gpp_185
+  user_message: Siparişi tamamen iptal et
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; dilerseniz yeniden başlayabiliriz.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Cancel whole order.
+- id: gpp_186
+  user_message: Hepsini sıfırla lütfen
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi ve sipariş listesi boşaltıldı.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Reset politely.
+- id: gpp_187
+  user_message: Sepeti boşaltabilir misin?
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; aktif sipariş kalmadı.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Empty basket wording.
+- id: gpp_188
+  user_message: Şimdilik siparişi kapat, hepsini sil
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; isterseniz daha sonra yeniden ekleme yapabiliriz.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Close and clear order.
+- id: gpp_189
+  user_message: Listede ne varsa kaldır
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; listede ürün bırakılmadı.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Clear whatever is in list.
+- id: gpp_190
+  user_message: Siparişi bozup yeniden kuracağım, temizle
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; yeniden düzenleme için hazırız.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Rebuild order.
+- id: gpp_191
+  user_message: Mevcut siparişi silin
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; mevcut sipariş kaydı sıfırlandı.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Formal clear order.
+- id: gpp_192
+  user_message: Siparişimin tamamını kaldırın lütfen
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; şu anda ürün görünmüyor.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Formal remove all.
+- id: gpp_193
+  user_message: Her şeyi iptal etmek istiyorum
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; yeni seçimler için başlayabiliriz.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Cancel everything.
+- id: gpp_194
+  user_message: Tüm siparişi silip yeniden başlayacağım
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; yeniden başlamak için uygun durumdayız.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Restart order.
+- id: gpp_195
+  user_message: Sepeti sıfırla
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi ve sepet boşaltıldı.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Reset basket.
+- id: gpp_196
+  user_message: Aktif siparişi temizleyebilir misin?
+  intent: clear_order
+  canonical_response: Siparişiniz temizlendi.
+  safe_paraphrase: Siparişiniz temizlendi; aktif sipariş bırakılmadı.
+  must_preserve_terms:
+  - temizlendi
+  must_not_introduce: []
+  notes: Clear active order.
+- id: gpp_197
+  user_message: Siparişi ayrıntılı göster
+  intent: summarize_order
+  canonical_response: '1 x Ayran = 45 TL
+
+
+    Toplam: 45 TL.'
+  safe_paraphrase: 'Sipariş ayrıntısında 1 x Ayran görünüyor; Toplam: 45 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Ayran
+  - '45'
+  must_not_introduce: []
+  notes: Detailed ayran summary.
+- id: gpp_198
+  user_message: Şu anki toplamı ver
+  intent: summarize_order
+  canonical_response: '1 x Limonata = 65 TL
+
+
+    Toplam: 65 TL.'
+  safe_paraphrase: 'Şu anda 1 x Limonata var ve Toplam: 65 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Limonata
+  - '65'
+  must_not_introduce: []
+  notes: Single lemonade summary.
+- id: gpp_199
+  user_message: Sipariş dökümünü paylaşır mısın?
+  intent: summarize_order
+  canonical_response: '1 x Mercimek Çorbası = 85 TL
+
+
+    Toplam: 85 TL.'
+  safe_paraphrase: 'Sipariş dökümünde 1 x Mercimek Çorbası yer alıyor; Toplam: 85 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Mercimek Çorbası
+  - '85'
+  must_not_introduce: []
+  notes: Detailed soup summary.
+- id: gpp_200
+  user_message: Toplamı ve ürünü söyle
+  intent: summarize_order
+  canonical_response: '1 x Fırın Sütlaç = 120 TL
+
+
+    Toplam: 120 TL.'
+  safe_paraphrase: 'Siparişte 1 x Fırın Sütlaç bulunuyor; Toplam: 120 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Fırın Sütlaç
+  - '120'
+  must_not_introduce: []
+  notes: Dessert summary.
+- id: gpp_201
+  user_message: Siparişimde neler var, toplam kaç?
+  intent: summarize_order
+  canonical_response: '1 x Izgara Tavuk Salata = 210 TL
+
+
+    Toplam: 210 TL.'
+  safe_paraphrase: 'Siparişinizde 1 x Izgara Tavuk Salata var; Toplam: 210 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Izgara Tavuk Salata
+  - '210'
+  must_not_introduce: []
+  notes: Salad summary.
+- id: gpp_202
+  user_message: Bir özet geç
+  intent: summarize_order
+  canonical_response: '1 x Sebzeli Makarna = 195 TL
+
+
+    Toplam: 195 TL.'
+  safe_paraphrase: 'Özet olarak 1 x Sebzeli Makarna görünüyor ve Toplam: 195 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Sebzeli Makarna
+  - '195'
+  must_not_introduce: []
+  notes: Pasta summary.
+- id: gpp_203
+  user_message: Sipariş listesini okuyabilir misin?
+  intent: summarize_order
+  canonical_response: '1 x Etli Güveç = 260 TL
+
+
+    Toplam: 260 TL.'
+  safe_paraphrase: 'Sipariş listenizde 1 x Etli Güveç yer alıyor; Toplam: 260 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Etli Güveç
+  - '260'
+  must_not_introduce: []
+  notes: Stew summary.
+- id: gpp_204
+  user_message: İçecek toplamımı çıkar
+  intent: summarize_order
+  canonical_response: '2 x Ayran = 90 TL
+
+
+    Toplam: 90 TL.'
+  safe_paraphrase: 'İçecek tarafında 2 x Ayran var; Toplam: 90 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Ayran
+  - '90'
+  must_not_introduce: []
+  notes: Two ayran total.
+- id: gpp_205
+  user_message: Tatlı siparişimi özetle
+  intent: summarize_order
+  canonical_response: '2 x Fırın Sütlaç = 240 TL
+
+
+    Toplam: 240 TL.'
+  safe_paraphrase: 'Tatlı siparişinizde 2 x Fırın Sütlaç bulunuyor; Toplam: 240 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Fırın Sütlaç
+  - '240'
+  must_not_introduce: []
+  notes: Two dessert total.
+- id: gpp_206
+  user_message: Çorba siparişimi kontrol et
+  intent: summarize_order
+  canonical_response: '2 x Mercimek Çorbası = 170 TL
+
+
+    Toplam: 170 TL.'
+  safe_paraphrase: 'Çorba siparişinizde 2 x Mercimek Çorbası görünüyor; Toplam: 170 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Mercimek Çorbası
+  - '170'
+  must_not_introduce: []
+  notes: Two soup total.
+- id: gpp_207
+  user_message: İki kalemlik siparişi özetler misin?
+  intent: summarize_order
+  canonical_response: '1 x Ayran = 45 TL
+
+    1 x Limonata = 65 TL
+
+
+    Toplam: 110 TL.'
+  safe_paraphrase: 'Siparişte 1 x Ayran ve 1 x Limonata var; Toplam: 110 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Ayran
+  - Limonata
+  - '110'
+  must_not_introduce: []
+  notes: Two-item drink summary.
+- id: gpp_208
+  user_message: Ana yemekle içeceği birlikte özetle
+  intent: summarize_order
+  canonical_response: '1 x Izgara Tavuk Salata = 210 TL
+
+    1 x Ayran = 45 TL
+
+
+    Toplam: 255 TL.'
+  safe_paraphrase: 'Siparişinizde 1 x Izgara Tavuk Salata ile 1 x Ayran yer alıyor; Toplam: 255 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Izgara Tavuk Salata
+  - Ayran
+  - '255'
+  must_not_introduce: []
+  notes: Meal plus drink summary.
+- id: gpp_209
+  user_message: Makarna ve limonata toplamını söyle
+  intent: summarize_order
+  canonical_response: '1 x Sebzeli Makarna = 195 TL
+
+    1 x Limonata = 65 TL
+
+
+    Toplam: 260 TL.'
+  safe_paraphrase: 'Siparişte 1 x Sebzeli Makarna ve 1 x Limonata bulunuyor; Toplam: 260 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Sebzeli Makarna
+  - Limonata
+  - '260'
+  must_not_introduce: []
+  notes: Pasta plus drink summary.
+- id: gpp_210
+  user_message: Çorba ile tatlının toplamını ver
+  intent: summarize_order
+  canonical_response: '1 x Domates Çorbası = 80 TL
+
+    1 x Fırın Sütlaç = 120 TL
+
+
+    Toplam: 200 TL.'
+  safe_paraphrase: 'Sipariş özetinde 1 x Domates Çorbası ve 1 x Fırın Sütlaç görünüyor; Toplam: 200 TL.'
+  must_preserve_terms:
+  - Toplam
+  - TL
+  - Domates Çorbası
+  - Fırın Sütlaç
+  - '200'
+  must_not_introduce: []
+  notes: Soup plus dessert summary.
+- id: gpp_211
+  user_message: Siparişi tamamla
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 110 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişinizi onaylıyorum. Toplam: 110 TL ve bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '110'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm two-drink order.
+- id: gpp_212
+  user_message: Bunu onaylıyorum
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 255 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Sipariş onayınız alındı. Toplam: 255 TL; işlem yalnızca MVP/demo kapsamındadır.'
+  must_preserve_terms:
+  - Toplam
+  - '255'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm meal plus drink.
+- id: gpp_213
+  user_message: Evet, siparişim doğru
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 240 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişi doğruluyorum. Toplam: 240 TL ve bu sadece MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '240'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm dessert order.
+- id: gpp_214
+  user_message: Bu siparişi geçelim
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 170 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişinizi onaylıyorum; Toplam: 170 TL. Bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '170'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm two soups.
+- id: gpp_215
+  user_message: Siparişi kaydet
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 200 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Sipariş kaydınız alındı. Toplam: 200 TL ve not olarak bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '200'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm soup and dessert.
+- id: gpp_216
+  user_message: Tamam, bunu gönder
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 260 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişi onaylıyorum. Toplam: 260 TL; bu işlem yalnızca MVP/demo içindir.'
+  must_preserve_terms:
+  - Toplam
+  - '260'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm 260 total.
+- id: gpp_217
+  user_message: Onayım var
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 195 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Onayınızı aldım. Toplam: 195 TL ve bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '195'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm pasta total.
+- id: gpp_218
+  user_message: Lütfen siparişi onayla
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 210 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişi onaylıyorum. Toplam: 210 TL ve bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '210'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm salad total.
+- id: gpp_219
+  user_message: Devam edelim, doğru görünüyor
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 85 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişi doğru kabul ediyorum. Toplam: 85 TL; işlem yalnızca MVP/demo kapsamındadır.'
+  must_preserve_terms:
+  - Toplam
+  - '85'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm soup total.
+- id: gpp_220
+  user_message: Siparişi kesinleştirelim
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 120 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişinizi kesinleştiriyorum. Toplam: 120 TL ve bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '120'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm dessert total.
+- id: gpp_221
+  user_message: Aynen, bunu alıyorum
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 65 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişiniz için onay veriyorum. Toplam: 65 TL; bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '65'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm lemonade total.
+- id: gpp_222
+  user_message: Bu haliyle uygun, onayla
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 45 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişi bu haliyle onaylıyorum. Toplam: 45 TL ve bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '45'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm ayran total.
+- id: gpp_223
+  user_message: Evet, bu siparişi kabul ediyorum
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 90 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Siparişi kabul ediyorum. Toplam: 90 TL; not olarak bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '90'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Confirm two ayrans.
+- id: gpp_224
+  user_message: Uygunsa bunu onaylayalım
+  intent: confirm_order
+  canonical_response: 'Siparişiniz onaylandı. Toplam: 255 TL. Not: Bu yalnızca MVP/demo onayıdır.'
+  safe_paraphrase: 'Onayı veriyorum. Toplam: 255 TL ve bu yalnızca MVP/demo onayıdır.'
+  must_preserve_terms:
+  - Toplam
+  - '255'
+  - TL
+  - MVP/demo
+  must_not_introduce: []
+  notes: Alternate 255 confirm.
+- id: gpp_225
+  user_message: Pizza sipariş etmek istiyorum
+  intent: unavailable_item
+  canonical_response: Pizza menümüzde bulunmuyor.
+  safe_paraphrase: Pizza menümüzde bulunmuyor; isterseniz menüden başka bir seçenek önerebilirim.
+  must_preserve_terms:
+  - Pizza
+  - bulunmuyor
+  must_not_introduce:
+  - Pizza var
+  - Pizza mevcut
+  - eklendi
+  - fiyatı
+  notes: Pizza order refusal.
+- id: gpp_226
+  user_message: Hamburger var mı diye soracaktım
+  intent: unavailable_item
+  canonical_response: Hamburger menümüzde bulunmuyor.
+  safe_paraphrase: Hamburger menümüzde bulunmuyor; dilerseniz mevcut ürünlerden alternatif paylaşabilirim.
+  must_preserve_terms:
+  - Hamburger
+  - bulunmuyor
+  must_not_introduce:
+  - Hamburger var
+  - Hamburger mevcut
+  - eklendi
+  - fiyatı
+  notes: Hamburger availability refusal.
+- id: gpp_227
+  user_message: Sushi siparişi verebilir miyim?
+  intent: unavailable_item
+  canonical_response: Sushi menümüzde bulunmuyor.
+  safe_paraphrase: Sushi menümüzde bulunmuyor; uygun bir alternatif önerebilirim.
+  must_preserve_terms:
+  - Sushi
+  - bulunmuyor
+  must_not_introduce:
+  - Sushi var
+  - Sushi mevcut
+  - eklendi
+  - fiyatı
+  notes: Sushi order refusal.
+- id: gpp_228
+  user_message: Kola ekler misin?
+  intent: unavailable_item
+  canonical_response: Kola menümüzde bulunmuyor.
+  safe_paraphrase: Kola menümüzde bulunmuyor; içecek kategorisinden başka bir seçim yapabilirsiniz.
+  must_preserve_terms:
+  - Kola
+  - bulunmuyor
+  must_not_introduce:
+  - Kola var
+  - Kola mevcut
+  - eklendi
+  - fiyatı
+  notes: Kola add refusal.
+- id: gpp_229
+  user_message: Tavuk burger menüde var mı?
+  intent: unavailable_item
+  canonical_response: Tavuk Burger menümüzde bulunmuyor.
+  safe_paraphrase: Tavuk Burger menümüzde bulunmuyor; Ana Yemek kategorisinden farklı bir öneri sunabilirim.
+  must_preserve_terms:
+  - Tavuk Burger
+  - bulunmuyor
+  must_not_introduce:
+  - Tavuk Burger var
+  - Tavuk Burger mevcut
+  - eklendi
+  - fiyatı
+  notes: Tavuk burger availability refusal.
+- id: gpp_230
+  user_message: Patates kızartması almak istiyorum
+  intent: unavailable_item
+  canonical_response: Patates Kızartması menümüzde bulunmuyor.
+  safe_paraphrase: Patates Kızartması menümüzde bulunmuyor; menüdeki diğer ürünleri paylaşabilirim.
+  must_preserve_terms:
+  - Patates Kızartması
+  - bulunmuyor
+  must_not_introduce:
+  - Patates Kızartması var
+  - Patates Kızartması mevcut
+  - eklendi
+  - fiyatı
+  notes: Fries order refusal.
+- id: gpp_231
+  user_message: Pizza mevcut mu?
+  intent: unavailable_item
+  canonical_response: Pizza menümüzde bulunmuyor.
+  safe_paraphrase: Pizza menümüzde bulunmuyor; mevcut kategorilerden seçim yapabilirsiniz.
+  must_preserve_terms:
+  - Pizza
+  - bulunmuyor
+  must_not_introduce:
+  - Pizza var
+  - Pizza mevcut
+  - eklendi
+  - fiyatı
+  notes: Pizza availability wording.
+- id: gpp_232
+  user_message: Hamburger siparişe eklenir mi?
+  intent: unavailable_item
+  canonical_response: Hamburger menümüzde bulunmuyor.
+  safe_paraphrase: Hamburger menümüzde bulunmuyor; siparişe ekleyemem ama alternatif önerebilirim.
+  must_preserve_terms:
+  - Hamburger
+  - bulunmuyor
+  must_not_introduce:
+  - Hamburger var
+  - Hamburger mevcut
+  - eklendi
+  - fiyatı
+  notes: Hamburger add wording.
+- id: gpp_233
+  user_message: Sushi menünüzde yer alıyor mu?
+  intent: unavailable_item
+  canonical_response: Sushi menümüzde bulunmuyor.
+  safe_paraphrase: Sushi menümüzde bulunmuyor; başka bir ürün seçebilirsiniz.
+  must_preserve_terms:
+  - Sushi
+  - bulunmuyor
+  must_not_introduce:
+  - Sushi var
+  - Sushi mevcut
+  - eklendi
+  - fiyatı
+  notes: Sushi formal refusal.
+- id: gpp_234
+  user_message: Kola siparişi açabilir misin?
+  intent: unavailable_item
+  canonical_response: Kola menümüzde bulunmuyor.
+  safe_paraphrase: Kola menümüzde bulunmuyor; isterseniz Ayran veya Limonata düşünebilirsiniz.
+  must_preserve_terms:
+  - Kola
+  - bulunmuyor
+  must_not_introduce:
+  - Kola var
+  - Kola mevcut
+  - eklendi
+  - fiyatı
+  notes: Kola with alternatives refusal.
+- id: gpp_235
+  user_message: Tavuk burger ekleyelim
+  intent: unavailable_item
+  canonical_response: Tavuk Burger menümüzde bulunmuyor.
+  safe_paraphrase: Tavuk Burger menümüzde bulunmuyor; siparişe eklenemiyor.
+  must_preserve_terms:
+  - Tavuk Burger
+  - bulunmuyor
+  must_not_introduce:
+  - Tavuk Burger var
+  - Tavuk Burger mevcut
+  - eklendi
+  - fiyatı
+  notes: Tavuk burger add refusal.
+- id: gpp_236
+  user_message: Patates kızartması var diyebilir miyiz?
+  intent: unavailable_item
+  canonical_response: Patates Kızartması menümüzde bulunmuyor.
+  safe_paraphrase: Patates Kızartması menümüzde bulunmuyor; şu an mevcut değil.
+  must_preserve_terms:
+  - Patates Kızartması
+  - bulunmuyor
+  must_not_introduce:
+  - Patates Kızartması var
+  - Patates Kızartması mevcut
+  - eklendi
+  - fiyatı
+  notes: Fries not available wording.
+- id: gpp_237
+  user_message: Pizza fiyatını öğrenebilir miyim?
+  intent: unavailable_item
+  canonical_response: Pizza menümüzde bulunmuyor.
+  safe_paraphrase: Pizza menümüzde bulunmuyor; bu yüzden fiyat bilgisi veremem.
+  must_preserve_terms:
+  - Pizza
+  - bulunmuyor
+  must_not_introduce:
+  - Pizza var
+  - Pizza mevcut
+  - eklendi
+  - fiyatı
+  notes: Pizza price refusal.
+- id: gpp_238
+  user_message: Hamburger için fiyat var mı?
+  intent: unavailable_item
+  canonical_response: Hamburger menümüzde bulunmuyor.
+  safe_paraphrase: Hamburger menümüzde bulunmuyor; bu ürün için fiyat paylaşamıyorum.
+  must_preserve_terms:
+  - Hamburger
+  - bulunmuyor
+  must_not_introduce:
+  - Hamburger var
+  - Hamburger mevcut
+  - eklendi
+  - fiyatı
+  notes: Hamburger price refusal.
+- id: gpp_239
+  user_message: Bana hava durumunu söyler misin?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; menü ve siparişle ilgili destek sunabilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - hava durumu
+  notes: Weather refusal.
+- id: gpp_240
+  user_message: Politika hakkında ne düşünüyorsun?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; restoran kapsamındaki sorular için yardımcı olabilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - politik
+  notes: Politics refusal.
+- id: gpp_241
+  user_message: Ödevimi çözer misin?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; menü veya sipariş hakkında destek verebilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - ödev çözümü
+  notes: Homework refusal.
+- id: gpp_242
+  user_message: Python kodu yazar mısın?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; yalnızca restoran menüsü ve siparişleri için destek sağlayabilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - kod örneği
+  notes: Coding refusal.
+- id: gpp_243
+  user_message: Bir şiir daha yazar mısın?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; menü ve sipariş dışında içerik üretemem.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - şiir yazdım
+  notes: Poem refusal variant.
+- id: gpp_244
+  user_message: Bugün ekonomi nasıl gidiyor?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; isterseniz menü veya sipariş üzerine konuşabiliriz.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - ekonomi
+  notes: Economy refusal.
+- id: gpp_245
+  user_message: Bir fıkra anlatır mısın?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; restoranla ilgili sorular için buradayım.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - fıkra
+  notes: Joke refusal.
+- id: gpp_246
+  user_message: Bana hikâye uydur
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; sipariş ve menü konularında yardımcı olabilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - hikaye anlatayım
+  notes: Story refusal.
+- id: gpp_247
+  user_message: Seçim sonuçlarını yorumlar mısın?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; restoran kapsamındaki sorulara odaklanabilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - seçim yorumu
+  notes: Election refusal.
+- id: gpp_248
+  user_message: Matematik problemi çözebilir misin?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; menü ve siparişlerde destek sunabilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - çözüm şu
+  notes: Math refusal variant.
+- id: gpp_249
+  user_message: Kod incelemesi yapar mısın?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; restoran siparişleri konusunda yardımcı olabilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - kod incelemesi
+  notes: Code review refusal.
+- id: gpp_250
+  user_message: Dünya haberlerini anlat
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; menü veya sipariş konusunda destek verebilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - dünya haberleri
+  notes: News refusal.
+- id: gpp_251
+  user_message: Benim için mail yazar mısın?
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; yalnızca restoran içi taleplerde yardımcı olabilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - mail taslağı
+  notes: Email refusal.
+- id: gpp_252
+  user_message: Bir oyun önerisi ver
+  intent: off_topic
+  canonical_response: Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?
+  safe_paraphrase: Bu konuda yardımcı olamıyorum; menü ve siparişle ilgili ihtiyaçlarınızda yardımcı olabilirim.
+  must_preserve_terms:
+  - yardımcı olamıyorum
+  must_not_introduce:
+  - oyun önerisi
+  notes: Game recommendation refusal.

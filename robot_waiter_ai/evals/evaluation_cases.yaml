@@ -1,0 +1,137 @@
+# Evaluation Cases – GarsonBot Turkish Waiter Assistant
+#
+# These cases are used to evaluate both the deterministic rule-based MVP
+# and, later, any fine-tuned local model variant.
+#
+# Fields:
+#   id                   : unique identifier
+#   user                 : customer utterance
+#   expected_intent      : the intent the system should detect
+#   expected_contains    : list of strings the response must contain
+#   expected_not_contains: strings the response must not contain
+#   notes                : explanation of what this case tests
+
+evaluation_cases:
+
+  # Normal order flow
+  - id: eval_001
+    user: "Merhaba"
+    expected_intent: greeting
+    expected_contains: ["Hoş geldiniz", "Merhaba"]
+    expected_not_contains: []
+    notes: "System must respond with a greeting."
+
+  - id: eval_002
+    user: "2 Ayran istiyorum"
+    expected_intent: add_item
+    expected_contains: ["Ekledim", "Ayran"]
+    expected_not_contains: []
+    notes: "Numeric quantity plus item addition."
+
+  - id: eval_003
+    user: "Bir mercimek çorbası ekle"
+    expected_intent: add_item
+    expected_contains: ["Ekledim", "Mercimek"]
+    expected_not_contains: []
+    notes: "Word quantity 'bir' plus add phrasing."
+
+  - id: eval_004
+    user: "Siparişimi özetle"
+    expected_intent: summarize_order
+    expected_contains: ["TL"]
+    expected_not_contains: []
+    notes: "Order summary must include price."
+
+  - id: eval_005
+    user: "Evet, onaylıyorum"
+    expected_intent: confirm_order
+    expected_contains: ["Toplam", "MVP/demo"]
+    expected_not_contains: []
+    notes: "Confirm an existing order with a natural Turkish phrase."
+
+  - id: eval_006
+    user: "Ayranı çıkar"
+    expected_intent: remove_item
+    expected_contains: ["Çıkardım", "Cikardim"]
+    expected_not_contains: []
+    notes: "Remove item from order."
+
+  - id: eval_007
+    user: "Siparişi temizle"
+    expected_intent: clear_order
+    expected_contains: ["temizlendi"]
+    expected_not_contains: []
+    notes: "Clear all order items."
+
+  - id: eval_008
+    user: "Siparişim ne?"
+    expected_intent: summarize_order
+    expected_contains: []
+    expected_not_contains: []
+    notes: "Implicit summary trigger."
+
+  - id: eval_009
+    user: "Onaylıyorum"
+    expected_intent: confirm_order
+    expected_contains: ["aktif bir siparişiniz görünmüyor", "Önce"]
+    expected_not_contains: []
+    notes: "Confirming without an active order should be handled safely."
+
+  # Menu and price questions
+  - id: eval_010
+    user: "Menüde neler var?"
+    expected_intent: menu_question
+    expected_contains: ["Kategori", "kategori"]
+    expected_not_contains: []
+    notes: "Should return available categories."
+
+  - id: eval_011
+    user: "Ayranın fiyatı nedir?"
+    expected_intent: price_question
+    expected_contains: ["45", "TL"]
+    expected_not_contains: []
+    notes: "Price question must quote the correct price from YAML."
+
+  - id: eval_012
+    user: "Ne önerirsiniz?"
+    expected_intent: recommendation
+    expected_contains: ["öneri", "Öneri"]
+    expected_not_contains: []
+    notes: "Recommendation must return at least one item name."
+
+  # Allergy safety
+  - id: eval_013
+    user: "Süt ürünlerine alerjim var"
+    expected_intent: allergen_question
+    expected_contains: ["Alerji", "teyit"]
+    expected_not_contains: ["kesinlikle güvenli", "hiç sorun yok"]
+    notes: "Must not claim guaranteed safety. Must recommend confirmation."
+
+  - id: eval_014
+    user: "Glutensiz seçenek var mı?"
+    expected_intent: allergen_question
+    expected_contains: ["Alerji", "teyit"]
+    expected_not_contains: ["kesinlikle güvenli"]
+    notes: "Gluten-free caution response."
+
+  # Unknown menu items and off-topic refusal
+  - id: eval_015
+    user: "Pizza var mı?"
+    expected_intent: menu_question
+    expected_contains: []
+    expected_not_contains: ["Pizza: ", "fiyatı"]
+    notes: "Must not invent a pizza item or price."
+
+  - id: eval_016
+    user: "Bir hamburger istiyorum"
+    expected_intent: add_item
+    expected_contains: []
+    expected_not_contains: ["eklendi", "Hamburger:"]
+    notes: "Must not add a non-existent item. Should redirect safely."
+
+  - id: eval_017
+    user: "Bana bir şiir yazar mısın?"
+    expected_intent: off_topic
+    expected_contains: ["yardımcı olamıyorum", "yardimci olamiyorum"]
+    expected_not_contains: []
+    notes: "Off-topic request must be politely declined."

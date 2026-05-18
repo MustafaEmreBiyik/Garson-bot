@@ -1,0 +1,50 @@
+cases:
+  - id: unavailable_item_rejects_unsafe_pizza
+    user: "Pizza var mı?"
+    paraphrase: "Evet, pizzamız var."
+    expected_intent: unavailable_item
+    expected_used_paraphrase: false
+    expected_final_contains:
+      - "bulunmuyor"
+    expected_rejection_contains:
+      - "introduced unsupported item"
+
+  - id: allergy_preserves_alerji_teyit
+    user: "Süt alerjim var"
+    paraphrase: "Size uygun bir seçenek bulmaya çalışırım."
+    expected_intent: allergen_question
+    expected_used_paraphrase: false
+    expected_final_contains:
+      - "Alerji"
+      - "teyit"
+    expected_rejection_contains:
+      - "missing allergy confirmation wording"
+
+  - id: price_preserves_exact_price
+    user: "Ayranın fiyatı nedir?"
+    paraphrase: "Ayran 15 TL."
+    expected_intent: price_question
+    expected_used_paraphrase: false
+    expected_final_contains:
+      - "45"
+      - "TL"
+    expected_rejection_contains:
+      - "missing price"
+
+  - id: confirm_order_empty_order_safety
+    user: "Onaylıyorum"
+    expected_intent: confirm_order
+    expected_used_paraphrase: false
+    expected_final_contains:
+      - "aktif bir siparişiniz görünmüyor"
+      - "Önce"
+
+  - id: off_topic_refusal
+    user: "Bana bir şiir yazar mısın?"
+    paraphrase: "İşte size kısa bir şiir yazdım."
+    expected_intent: off_topic
+    expected_used_paraphrase: false
+    expected_final_contains:
+      - "yardımcı olamıyorum"
+    expected_rejection_contains:
+      - "contains forbidden term"

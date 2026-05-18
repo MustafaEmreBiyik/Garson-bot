@@ -1,0 +1,120 @@
+# Sprint Log
+
+- [x] Sprint 0: Documentation and architecture foundation
+- [x] Sprint 1: Menu data and restaurant persona
+- [x] Sprint 2: Text-based dialogue manager
+  - [x] Task: Deterministic dialogue strengthening
+- [x] Sprint 3: Order state management
+- [x] Sprint 4: CLI demo baseline
+  - [x] Task: Text-based MVP demo works
+- [x] Sprint 4B: Training and dataset foundation
+  - [x] Task: Seed dialogue dataset
+  - [x] Task: `dataset_builder.py` for YAML -> JSONL conversion
+  - [x] Task: `dataset_validator.py` for seed dataset validation
+  - [x] Task: `evaluation_cases.yaml` benchmark definitions
+  - [x] Task: Unit tests for training modules
+- [x] Sprint 4C: Automated evaluation baseline
+  - [x] Task: `eval_runner.py` to execute benchmark cases against the deterministic `DialogueManager`
+  - [x] Task: CLI pass/fail report with totals and failure reasons
+  - [x] Task: Unit tests for evaluation runner
+- [x] Sprint 4D: Turkish UTF-8 cleanup
+  - [x] Task: User-facing runtime text cleanup
+  - [x] Task: Repository-wide documentation and dataset text cleanup
+- [x] Sprint 4E: Deterministic confirm_order support
+  - [x] Task: Runtime confirm_order path
+  - [x] Task: Confirm-order evaluation coverage
+- [x] Sprint 4F: Seed dataset expansion
+  - [x] Task: Raw Turkish seed dataset expanded from 38 to 154 examples
+  - [x] Task: Balanced multi-intent phrasing coverage for future fine-tuning
+  - [x] Task: Processed train/valid JSONL regenerated from expanded seed data
+- [x] Sprint 5: Fine-tuning experiment planning
+  - [x] Task: `fine_tuning_plan.md` added
+  - [x] Task: `training_config.example.yaml` added
+  - [x] Task: Training/docs architecture updated for planning stage
+- [x] Sprint 5B: Inference interface abstraction
+  - [x] Task: `inference/base.py` request/response/backend contract
+  - [x] Task: `inference/deterministic_adapter.py` for the current baseline
+  - [x] Task: `eval_runner.py` updated to evaluate through the backend abstraction
+- [x] Sprint 6: Training interface and config-backed skeleton implementation
+  - [x] Task: `train_lora.py` dry-run skeleton
+  - [x] Task: training config validation for future LoRA/QLoRA runs
+  - [x] Task: tests for config loading and dry-run success path
+- [x] Sprint 6B: Generated-output evaluation adapter
+  - [x] Task: `generated_output_adapter.py` for JSONL response scoring
+  - [x] Task: sample generated-output file for benchmark experiments
+  - [x] Task: tests for matching, missing outputs, and invalid records
+- [x] Sprint 6C: Base-model shortlist planning
+  - [x] Task: `model_shortlist.md` for first LoRA/QLoRA candidate selection
+  - [x] Task: conservative recommendation centered on Qwen3 small dense models
+  - [x] Task: documentation updates for training and architecture planning
+- [x] Sprint 6D: Colab-first notebook planning
+  - [x] Task: Markdown-first notebook plan for `Qwen/Qwen3-0.6B`
+  - [x] Task: Colab training checklist for first smoke-test execution
+  - [x] Task: training and architecture docs updated for Google Colab as the first approved training environment
+- [x] Sprint 6E: Executable Colab notebook template
+  - [x] Task: `colab_qwen3_0_6b_lora_smoke_test.ipynb` added
+  - [x] Task: notebook validation script added
+  - [x] Task: notebook docs and checklist updated for executable Colab workflow
+- [x] Sprint 6F: Post-smoke-test dataset strengthening
+  - [x] Task: Raw Turkish seed dataset expanded from 154 to 350 examples
+  - [x] Task: Failure-targeted coverage added for benchmark keyword and response-style gaps
+  - [x] Task: `unavailable_item` intent added for unsupported menu requests such as pizza and hamburger
+  - [x] Task: Processed train/valid JSONL regenerated with a deterministic shuffled split
+- [x] Sprint 6G: Smoke-test result analysis and grounded-generation planning
+  - [x] Task: `Qwen/Qwen3-0.6B` and `Qwen/Qwen3-1.7B` benchmark results documented honestly
+  - [x] Task: grounded-generation architecture plan added for deterministic menu/order/safety control
+  - [x] Task: architecture and model-planning docs updated to defer 4B escalation until grounding is prototyped
+- [x] Sprint 6H: Structured grounded-result schema design
+  - [x] Task: `inference/structured_result.py` added for action/menu/order/safety grounding
+  - [x] Task: helper validation and paraphrase-safety checks added without runtime integration
+  - [x] Task: schema tests added for item, price, allergy, off-topic, unavailable-item, and MVP/demo preservation
+- [x] Sprint 6I: Grounded-result builder prototype
+  - [x] Task: `inference/grounded_result_builder.py` added as a non-invasive bridge from deterministic flow to `GroundedResult`
+  - [x] Task: builder tests added for greeting, add-item, price, allergy, unavailable-item, off-topic, and confirm-order cases
+  - [x] Task: architecture and grounded-generation docs updated without changing runtime behavior
+- [x] Sprint 6J: Grounded response formatting and fallback prototype
+  - [x] Task: `inference/grounded_response_formatter.py` added for canonical fallback and safe paraphrase acceptance
+  - [x] Task: formatter tests added for missing terms, allergy wording, price preservation, unsupported items, off-topic refusal, and MVP/demo checks
+  - [x] Task: docs updated for the non-invasive formatting/validation layer
+- [x] Sprint 6K: End-to-end grounded demo utility
+  - [x] Task: `inference/grounded_demo.py` added for manual JSON inspection of the grounded path
+  - [x] Task: demo tests added for unsafe unsupported-item paraphrases, greeting acceptance, allergy rejection, and price rejection
+  - [x] Task: architecture and grounded-generation docs updated without changing runtime behavior
+- [x] Sprint 6L: Grounded demo regression fixtures
+  - [x] Task: `inference/grounded_demo_regression_cases.yaml` added for core grounded fixture cases
+  - [x] Task: regression test added to validate unavailable-item, allergy, price, confirm-order, and off-topic grounded outputs
+  - [x] Task: docs updated to explain what the grounded regression fixtures protect
+- [x] Sprint 6M: Grounded paraphrase dataset foundation
+  - [x] Task: `grounded_paraphrase_seed.yaml` added as a separate menu-grounded paraphrase dataset
+  - [x] Task: validator and builder added for preserve-term / forbidden-term constrained paraphrase data
+  - [x] Task: dataset tests and docs updated without changing runtime behavior
+- [x] Sprint 6N: Grounded paraphrase format-contract regression tests
+  - [x] Task: raw YAML and built JSONL contract checks added for the grounded paraphrase dataset
+  - [x] Task: sample intent coverage and critical safety wording locked with tests
+  - [x] Task: training docs updated to mention the new regression protection
+- [x] Sprint 6O: Grounded paraphrase output scorer
+  - [x] Task: `evals/grounded_paraphrase_output_scorer.py` added for saved paraphrase-output scoring
+  - [x] Task: sample grounded paraphrase outputs JSONL added with pass/fail examples
+  - [x] Task: scorer tests added for invalid records, missing outputs, preserve-term failures, forbidden-term failures, and pass-rate reporting
+- [x] Sprint 6P: Validation-only grounded paraphrase reference export
+  - [x] Task: `training/export_grounded_paraphrase_valid_reference.py` added to export the held-out grounded paraphrase split as scorer-ready JSONL
+  - [x] Task: scorer updated to accept `--reference` with JSONL or YAML while keeping default full-seed behavior
+  - [x] Task: export and scorer tests added for valid-only alignment and backward compatibility
+- [x] Sprint 6Q: Validation-only grounded paraphrase sample outputs
+  - [x] Task: `evals/sample_grounded_paraphrase_valid_outputs.jsonl` added with one record for every valid reference id
+  - [x] Task: validation-reference scorer tests added for full 12/12 matching, zero missing outputs, and one intentional failure
+  - [x] Task: training docs updated to show the held-out sample scoring command
+- [x] Sprint 6R: Grounded paraphrase output template export
+  - [x] Task: `training/export_grounded_paraphrase_output_template.py` added to export empty scorer-ready output templates for the held-out valid split
+  - [x] Task: `evals/grounded_paraphrase_valid_output_template.jsonl` added with placeholder backend name and fill instructions
+  - [x] Task: tests added to ensure empty template outputs are matched, non-missing, non-invalid, and scored as failures
+- [x] Sprint 6S: Grounded paraphrase dataset expansion
+  - [x] Task: grounded paraphrase seed dataset expanded from 84 to 252 examples
+  - [x] Task: intent coverage balanced to 21 examples per grounded intent with stronger allergy, unavailable-item, price, order, and off-topic variations
+  - [x] Task: held-out valid reference and template pipeline updated to follow the larger deterministic split
+- [x] Sprint 6T: Grounded paraphraser Colab notebook preparation
+  - [x] Task: Markdown plan added for the grounded paraphraser smoke-test objective
+  - [x] Task: executable Colab notebook template added for grounded paraphraser training and held-out generation
+  - [x] Task: notebook validator and docs updated for the separate grounded paraphraser workflow
+- [ ] Sprint 7: First approved smoke-test fine-tuning run
+- [ ] Sprint 8: Jetson deployment preparation

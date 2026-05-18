@@ -1,0 +1,501 @@
+row_index,split,category,source_conversation_id,source_turn_index,user,assistant
+0,train,clear_order_item,dlg-22baae4e-6abe-474c-ac98-2a2c09dc735c,5,Bir köfte alabilir miyim?,1 adet köfte istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+1,train,clear_order_item,dlg-10be1bdd-6b4f-4b0f-94f3-10ec3a3b6f89,10,3 ayran istiyorum.,Tabii. 3 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+2,train,remove_or_change_order,dlg-115273a2-deac-4cbc-9964-7ec6e6602c9e,5,künefeyi çıkarır mısın?,Tabii. Künefeyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+3,train,side_drink_extra_request,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,8,Yemeğin yanına 1 ayran alabilir miyim?,Tabii. 1 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+4,train,add_more_quantity,dlg-2b8717eb-d3c0-4fae-8450-3b65eec5e9e7,5,4 soda daha.,4 adet soda daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+5,train,clear_order_item,dlg-2373863a-38dd-4892-8dc0-e987513e11d8,6,Bir künefe alabilir miyim?,1 adet künefe istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+6,train,remove_or_change_order,dlg-2d299c31-17bd-41fd-bac2-c6e3bf9f2890,5,"makarnayı istemiyorum, çıkaralım.",Tabii. Makarnayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+7,train,remove_or_change_order,dlg-3273d2fd-49f3-4c76-84be-0a02cb3f3b5b,13,Lütfen çayı iptal edelim.,Tabii. Çayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+8,train,order_clarification,dlg-9d57fac8-d59c-4d7a-bbc9-1f0e877711e8,3,Soğuk içecek için seçenek söyler misiniz?,Soğuk içecek seçenekleri için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+9,train,remove_or_change_order,dlg-1f4bf36a-2881-4db3-834f-8b55e502e300,5,pilavı siparişten çıkarabilir misiniz?,Tabii. Pilavı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+10,train,add_more_quantity,dlg-01765acc-b2cf-46b9-8961-7f259645b414,7,1 su daha.,1 adet su daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+11,train,remove_or_change_order,dlg-348be5f2-7dc1-4f94-916f-338e3e559c76,9,Lütfen salatayı iptal edelim.,Tabii. Salatayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+12,train,polite_thanks_closing,dlg-0685c410-3ff3-4ca7-ba16-0c5171de3933,9,"Sağ olun, yeterli.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+13,train,confirm_or_close_order,dlg-09f9b8d3-9154-475f-b73d-9d6d4349e23f,5,Eklemek istediğim başka bir şey yok.,Tamam. Başka bir isteğiniz olmadığını anladım.
+14,train,clear_order_item,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,11,1 limonata istiyorum.,Tabii. 1 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+15,train,add_more_quantity,dlg-2bd6c73d-f75f-4a59-8596-398e9b0859e9,3,4 mercimek çorbası daha.,Tabii. 4 adet mercimek çorbası daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+16,train,clear_order_item,dlg-2d8e64ca-b9bd-4ffd-91ff-a85e36cfef0e,6,Üç çay alabilir miyim?,3 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+17,train,confirm_or_close_order,dlg-0685c410-3ff3-4ca7-ba16-0c5171de3933,5,Siparişi bu haliyle onaylıyorum.,Tamam. Siparişi onaylamak istediğinizi anladım.
+18,train,order_clarification,dlg-bdc46fbc-2be6-455b-8c90-8230a71e894b,7,Bir soğuk içecek istiyorum.,Hangi soğuk içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+19,train,clear_order_item,dlg-0d3ecb86-e098-40b6-bd74-69d3f7bc9c76,5,2 köfte istiyorum.,2 adet köfte istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+20,train,clear_order_item,dlg-2460eea6-d042-4483-8349-29310bd4b89e,7,İki su alabilir miyim?,2 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+21,train,side_drink_extra_request,dlg-0b6045c5-c1e7-47d5-999f-3829b454f884,2,Yemeğin yanına 2 çay alabilir miyim?,2 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+22,train,clear_order_item,dlg-2ecd8d99-07d4-41a3-86bb-40db13dae2ec,3,Üç ezogelin çorbası alabilir miyim?,3 adet ezogelin çorbası istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+23,train,confirm_or_close_order,dlg-09cccabc-a782-4d4a-b85a-220bad47cca9,9,Bu sipariş yeterli.,Tamam. Başka bir isteğiniz olmadığını anladım.
+24,train,side_drink_extra_request,dlg-0bef419d-8baa-4fe9-a238-cb56f93c8cc7,5,Bir de 2 çay olsun.,2 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+25,train,remove_or_change_order,dlg-24db57c8-af45-4b24-b117-6d60b5417808,13,"suyu istemiyorum, çıkaralım.",Tabii. Suyu siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+26,train,confirm_or_close_order,dlg-0a2187ca-7e7e-4f03-8c42-bc6235d35477,6,Şu an başka isteğim yok.,Tamam. Başka bir isteğiniz olmadığını anladım.
+27,train,clear_order_item,dlg-0adc24d6-bfa2-478e-80d1-5605779803a4,4,2 salata istiyorum.,2 adet salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+28,train,add_more_quantity,dlg-0354e60a-4747-408a-9d1b-6c981d4d579f,6,1 kahve daha.,1 adet kahve daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+29,train,remove_or_change_order,dlg-3273d2fd-49f3-4c76-84be-0a02cb3f3b5b,15,Lütfen kahveyi iptal edelim.,Tabii. Kahveyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+30,train,clear_order_item,dlg-1e84b109-2218-472e-877f-8ae112a08dd2,6,Bir ayran alabilir miyim?,Tabii. 1 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+31,train,clear_order_item,dlg-09cccabc-a782-4d4a-b85a-220bad47cca9,5,2 soda istiyorum.,2 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+32,train,clear_order_item,dlg-082d002c-82b7-4aa7-82fe-e19394fc7ea3,1,2 ayran istiyorum.,Tabii. 2 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+33,train,confirm_or_close_order,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,13,Onaylıyorum.,Tamam. Siparişi onaylamak istediğinizi anladım.
+34,train,clear_order_item,dlg-1b21a56a-66be-4586-9560-427bd537f2d6,11,4 tavuk şiş istiyorum.,4 adet tavuk şiş istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+35,train,remove_or_change_order,dlg-252078cf-2674-4577-b6f2-dea85348d727,9,"çayı istemiyorum, çıkaralım.",Tabii. Çayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+36,train,add_more_quantity,dlg-0d4b50d3-9db7-449d-856c-1061ce25b225,6,2 kahve daha.,2 adet kahve daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+37,train,confirm_or_close_order,dlg-0d81af4c-88f1-48ba-91db-f85f7b1c7f02,4,Bu kadar alacağım.,Tamam. Başka bir isteğiniz olmadığını anladım.
+38,train,confirm_or_close_order,dlg-0c7b4e1f-eeb6-4036-9d93-3ebbee1d6253,11,Benim için bu kadar.,Tamam. Başka bir isteğiniz olmadığını anladım.
+39,train,clear_order_item,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,6,1 su istiyorum.,1 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+40,train,clear_order_item,dlg-283321ca-20f3-49f1-a4f8-3aea84a36b43,5,İki tavuk şiş alabilir miyim?,2 adet tavuk şiş istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+41,train,clear_order_item,dlg-25e5b89b-d234-4513-9c40-1d3a142f4084,5,İki salata alabilir miyim?,2 adet salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+42,train,remove_or_change_order,dlg-0f909662-6a8d-451d-9fe7-66ceac817cc2,7,baklavayı çıkarır mısın?,Tabii. Baklavayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+43,train,confirm_or_close_order,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,21,"Tamam, onaylayabilirsiniz.",Tamam. Siparişi onaylamak istediğinizi anladım.
+44,train,side_drink_extra_request,dlg-0354e60a-4747-408a-9d1b-6c981d4d579f,6,Bir de 1 su olsun.,1 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+45,train,clear_order_item,dlg-025a1022-3f81-4266-b4a9-da0b7deb3d24,3,1 soda istiyorum.,1 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+46,train,add_more_quantity,dlg-061066f5-b9d3-4537-9d77-a94233473558,6,1 mercimek çorbası daha.,Tabii. 1 adet mercimek çorbası daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+47,train,clear_order_item,dlg-15f8db6a-85dd-47a8-b477-6034b2d4f088,3,3 makarna istiyorum.,3 adet makarna istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+48,train,side_drink_extra_request,dlg-1b4d1b2b-0aed-4dd4-b6c7-8341559825aa,4,Son olarak baklava ekleyelim.,baklava istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+49,train,remove_or_change_order,dlg-082d002c-82b7-4aa7-82fe-e19394fc7ea3,5,pilavı çıkarır mısın?,Tabii. Pilavı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+50,train,remove_or_change_order,dlg-31ef6a50-2fff-4c34-9e1d-2bfeb3e93305,10,Lütfen suyu iptal edelim.,Tabii. Suyu siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+51,train,confirm_or_close_order,dlg-0c66117b-8113-4f69-9592-528c4c4d9e37,9,Bu siparişle bitirelim.,Tamam. Başka bir isteğiniz olmadığını anladım.
+52,train,confirm_or_close_order,dlg-0adc24d6-bfa2-478e-80d1-5605779803a4,8,"Yeterli, başka istemiyorum.",Tamam. Başka bir isteğiniz olmadığını anladım.
+53,train,order_clarification,dlg-bf5457d1-a86a-4bcd-817d-1aa3eda8b7dc,4,Bir sıcak içecek istiyorum.,Hangi sıcak içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+54,train,confirm_or_close_order,dlg-0a2187ca-7e7e-4f03-8c42-bc6235d35477,10,"Tamam, bu kadar olsun.",Tamam. Başka bir isteğiniz olmadığını anladım.
+55,train,remove_or_change_order,dlg-1f8539d4-68e5-40b1-bc55-2a56dca1856a,13,makarnayı siparişten çıkarabilir misiniz?,Tabii. Makarnayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+56,train,add_more_quantity,dlg-0d81af4c-88f1-48ba-91db-f85f7b1c7f02,2,2 soda daha.,2 adet soda daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+57,train,clear_order_item,dlg-15e47b61-038f-4b7e-ac78-8b1a0f76772e,14,3 pilav istiyorum.,3 adet pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+58,train,side_drink_extra_request,dlg-1b0c2229-6434-4e4f-a003-c613ef507912,2,Bir de patates kızartması alabilir miyim?,patates kızartması istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+59,train,order_clarification,dlg-bf5457d1-a86a-4bcd-817d-1aa3eda8b7dc,4,Tatlı olarak ne önerirsiniz?,Tatlı tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+60,train,remove_or_change_order,dlg-07a5eb77-8852-41f7-a885-bf6c2c9404d1,17,ezogelin çorbasını çıkarır mısın?,Tabii. Ezogelin çorbasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+61,train,confirm_or_close_order,dlg-0d3ecb86-e098-40b6-bd74-69d3f7bc9c76,10,Siparişi böyle bırakalım.,Tamam. Başka bir isteğiniz olmadığını anladım.
+62,train,confirm_or_close_order,dlg-0d81af4c-88f1-48ba-91db-f85f7b1c7f02,2,"Evet, bu kadar yeter.",Tamam. Başka bir isteğiniz olmadığını anladım.
+63,train,add_more_quantity,dlg-0923d68b-08ce-4992-85d5-3933c7deddc8,10,1 tavuk şiş daha.,1 adet tavuk şiş daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+64,train,remove_or_change_order,dlg-2373863a-38dd-4892-8dc0-e987513e11d8,8,sütlacı siparişten çıkarabilir misiniz?,Tabii. Sütlacı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+65,train,confirm_or_close_order,dlg-072b3156-9fab-408c-b5da-0c22c2721724,7,Bu listeyi onaylıyorum.,Tamam. Siparişi onaylamak istediğinizi anladım.
+66,train,confirm_or_close_order,dlg-0354e60a-4747-408a-9d1b-6c981d4d579f,10,Böyle onaylayalım.,Tamam. Siparişi onaylamak istediğinizi anladım.
+67,train,add_more_quantity,dlg-33c14bf0-585f-4071-8547-2a97474cb6ba,6,Bir kahve daha alabilir miyim?,1 adet kahve daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+68,train,add_more_quantity,dlg-0d3ecb86-e098-40b6-bd74-69d3f7bc9c76,5,2 çay daha.,2 adet çay daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+69,train,remove_or_change_order,dlg-1b2a9551-5b42-453f-a82c-35c148cbff67,7,mercimek çorbasını siparişten çıkarabilir misiniz?,Tabii. Mercimek çorbasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+70,train,clear_order_item,dlg-1844d373-b934-45fa-b512-d8bdaaa68d7d,5,4 ayran istiyorum.,Tabii. 4 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+71,train,confirm_or_close_order,dlg-0adc24d6-bfa2-478e-80d1-5605779803a4,7,Siparişim bu kadar.,Tamam. Başka bir isteğiniz olmadığını anladım.
+72,train,clear_order_item,dlg-2b8717eb-d3c0-4fae-8450-3b65eec5e9e7,5,Üç ayran alabilir miyim?,Tabii. 3 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+73,train,side_drink_extra_request,dlg-185d3005-5216-442a-b398-abff73713f79,4,Bir de pilav alabilir miyim?,pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+74,train,order_clarification,dlg-78bb8466-5c92-425d-98f7-65a6f03a5730,5,Siparişe bir sos eklemek istiyorum.,Hangi sos istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+75,train,remove_or_change_order,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,15,kahveyi çıkarır mısın?,Tabii. Kahveyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+76,train,confirm_or_close_order,dlg-06af4900-e9c9-4526-9621-7f4c102cf662,11,"Bu hali uygun, onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+77,train,clear_order_item,dlg-1439800b-4407-430a-bbb5-18a921e1f921,5,3 ezogelin çorbası istiyorum.,3 adet ezogelin çorbası istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+78,train,clear_order_item,dlg-110874f6-515b-4f86-bd46-74cbc377ea10,4,3 su istiyorum.,3 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+79,train,add_more_quantity,dlg-38e09630-55d3-408d-9281-fcf572a242c7,12,Bir ezogelin çorbası daha alabilir miyim?,1 adet ezogelin çorbası daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+80,train,add_more_quantity,dlg-1860e83e-b218-47a8-9c21-b7e0307e8628,4,3 limonata daha.,Tabii. 3 adet limonata daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+81,train,confirm_or_close_order,dlg-0923d68b-08ce-4992-85d5-3933c7deddc8,12,Benden bu kadar.,Tamam. Başka bir isteğiniz olmadığını anladım.
+82,train,order_clarification,dlg-d728d947-0090-4e0d-80dc-21e355a196a2,4,Çorba olarak ne önerirsiniz?,Çorba tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+83,train,clear_order_item,dlg-110874f6-515b-4f86-bd46-74cbc377ea10,3,3 limonata istiyorum.,Tabii. 3 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+84,train,confirm_or_close_order,dlg-061066f5-b9d3-4537-9d77-a94233473558,9,"Aynen, onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+85,train,polite_thanks_closing,dlg-025a1022-3f81-4266-b4a9-da0b7deb3d24,7,"Teşekkürler, şimdilik bu kadar.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+86,train,order_clarification,dlg-e67cbb51-2e6a-479d-896f-e34db7f729dd,9,Tatlı alabilir miyim?,Hangi tatlı istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+87,train,clear_order_item,dlg-0460c70c-34cb-43c5-affb-952f7365be73,4,1 salata istiyorum.,1 adet salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+88,train,order_clarification,dlg-7d0a150f-d7d9-40a5-aec2-e53c1069511c,9,Bir yan ürün istiyorum.,Hangi yan ürün istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+89,train,clear_order_item,dlg-15f8db6a-85dd-47a8-b477-6034b2d4f088,4,3 tavuk şiş istiyorum.,3 adet tavuk şiş istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+90,train,side_drink_extra_request,dlg-0c66117b-8113-4f69-9592-528c4c4d9e37,3,Yemeğin yanına 2 kahve alabilir miyim?,2 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+91,train,clear_order_item,dlg-259895a5-cadf-4564-9d88-5a7038cf8a2f,5,İki mercimek çorbası alabilir miyim?,Tabii. 2 adet mercimek çorbası istediğinizi anladım. Başka bir isteğiniz var mı?
+92,train,add_more_quantity,dlg-185d3005-5216-442a-b398-abff73713f79,4,3 ayran daha.,Tabii. 3 adet ayran daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+93,train,side_drink_extra_request,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,12,Bir de 1 ayran olsun.,Tabii. 1 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+94,train,add_more_quantity,dlg-2f4545bb-5115-4df1-8cfe-4720476bf002,12,4 tavuk şiş daha.,4 adet tavuk şiş daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+95,train,add_more_quantity,dlg-2460eea6-d042-4483-8349-29310bd4b89e,13,3 sütlaç daha.,Tabii. 3 adet sütlaç daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+96,train,clear_order_item,dlg-1e84b109-2218-472e-877f-8ae112a08dd2,4,4 künefe istiyorum.,4 adet künefe istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+97,train,add_more_quantity,dlg-1a98170b-36fc-46dc-9313-e119ec4c6b69,5,3 su daha.,3 adet su daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+98,train,confirm_or_close_order,dlg-0f3cb363-5f4f-4d15-b7de-b526ec34e526,7,Ek olarak bir şey yok.,Tamam. Başka bir isteğiniz olmadığını anladım.
+99,train,clear_order_item,dlg-072b3156-9fab-408c-b5da-0c22c2721724,3,1 köfte istiyorum.,1 adet köfte istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+100,train,clear_order_item,dlg-1ae1917c-7c88-4207-9f79-93e7da8f6cd3,10,4 ezogelin çorbası istiyorum.,4 adet ezogelin çorbası istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+101,train,polite_thanks_closing,dlg-01765acc-b2cf-46b9-8961-7f259645b414,12,"Tamamdır, teşekkür ederim.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+102,train,order_clarification,dlg-9d57fac8-d59c-4d7a-bbc9-1f0e877711e8,3,Bir salata istiyorum.,Hangi salata istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+103,train,add_more_quantity,dlg-0999a44a-d59d-4644-a297-b8196a1b2e65,3,1 kebap daha.,1 adet kebap daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+104,train,polite_thanks_closing,dlg-061066f5-b9d3-4537-9d77-a94233473558,9,"Teşekkürler, başka bir isteğim kalmadı.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+105,train,clear_order_item,dlg-0bb76f70-aa2a-4ec3-9b38-a784af270063,2,2 tavuk şiş istiyorum.,2 adet tavuk şiş istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+106,train,add_more_quantity,dlg-32f5c93b-b547-48e7-aff2-0439e4436d67,5,Bir ayran daha alabilir miyim?,Tabii. 1 adet ayran daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+107,train,remove_or_change_order,dlg-329820ec-f25c-4ee3-b1b2-73a908447c51,7,Lütfen mercimek çorbasını iptal edelim.,Tabii. Mercimek çorbasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+108,train,confirm_or_close_order,dlg-061066f5-b9d3-4537-9d77-a94233473558,4,Bu sipariş tamam.,Tamam. Siparişi onaylamak istediğinizi anladım.
+109,train,order_clarification,dlg-7d0a150f-d7d9-40a5-aec2-e53c1069511c,7,Salata için seçenek söyler misiniz?,Salata seçenekleri için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+110,train,clear_order_item,dlg-1f8539d4-68e5-40b1-bc55-2a56dca1856a,4,Bir su alabilir miyim?,1 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+111,train,polite_thanks_closing,dlg-06e5677b-6e83-41db-bea2-16cab53f1d47,8,"Teşekkürler, kapatabiliriz.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+112,train,clear_order_item,dlg-1e84b109-2218-472e-877f-8ae112a08dd2,3,4 sütlaç istiyorum.,Tabii. 4 adet sütlaç istediğinizi anladım. Başka bir isteğiniz var mı?
+113,train,order_clarification,dlg-d728d947-0090-4e0d-80dc-21e355a196a2,4,Içecek alabilir miyim?,Hangi içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+114,train,confirm_or_close_order,dlg-061066f5-b9d3-4537-9d77-a94233473558,11,"Evet, bu şekilde.",Tamam. Siparişi onaylamak istediğinizi anladım.
+115,train,clear_order_item,dlg-16b0e9f1-454b-4ab1-9069-9ab39546ccac,9,3 kebap istiyorum.,3 adet kebap istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+116,train,clear_order_item,dlg-1f8539d4-68e5-40b1-bc55-2a56dca1856a,3,Bir limonata alabilir miyim?,Tabii. 1 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+117,train,add_more_quantity,dlg-12fa13a5-805c-46f5-936c-592b1e39265b,5,2 kebap daha.,2 adet kebap daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+118,train,clear_order_item,dlg-2203cd63-7602-4be7-87c5-6c11f46b7ae6,5,Bir salata alabilir miyim?,1 adet salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+119,train,clear_order_item,dlg-115273a2-deac-4cbc-9964-7ec6e6602c9e,5,3 kahve istiyorum.,3 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+120,train,clear_order_item,dlg-07a5eb77-8852-41f7-a885-bf6c2c9404d1,5,1 patates kızartması istiyorum.,1 adet patates kızartması istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+121,train,polite_thanks_closing,dlg-06af4900-e9c9-4526-9621-7f4c102cf662,18,"Çok sağ olun, bu kadar olsun.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+122,train,remove_or_change_order,dlg-2bd6c73d-f75f-4a59-8596-398e9b0859e9,5,"pilavı istemiyorum, çıkaralım.",Tabii. Pilavı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+123,train,add_more_quantity,dlg-025a1022-3f81-4266-b4a9-da0b7deb3d24,3,1 çay daha.,1 adet çay daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+124,train,clear_order_item,dlg-0923d68b-08ce-4992-85d5-3933c7deddc8,10,2 çay istiyorum.,2 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+125,train,clear_order_item,dlg-20df7277-300f-4b76-92cd-302f2052f59e,3,Bir mercimek çorbası alabilir miyim?,Tabii. 1 adet mercimek çorbası istediğinizi anladım. Başka bir isteğiniz var mı?
+126,train,clear_order_item,dlg-09f9b8d3-9154-475f-b73d-9d6d4349e23f,3,2 mercimek çorbası istiyorum.,Tabii. 2 adet mercimek çorbası istediğinizi anladım. Başka bir isteğiniz var mı?
+127,train,confirm_or_close_order,dlg-0354e60a-4747-408a-9d1b-6c981d4d579f,8,Siparişi kesinleştirebiliriz.,Tamam. Siparişi onaylamak istediğinizi anladım.
+128,train,remove_or_change_order,dlg-1c7b1f54-e826-48bb-9ae7-e0479acfa120,5,ezogelin çorbasını siparişten çıkarabilir misiniz?,Tabii. Ezogelin çorbasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+129,train,confirm_or_close_order,dlg-09cccabc-a782-4d4a-b85a-220bad47cca9,5,Başka yok.,Tamam. Başka bir isteğiniz olmadığını anladım.
+130,train,add_more_quantity,dlg-1b21a56a-66be-4586-9560-427bd537f2d6,12,3 soda daha.,3 adet soda daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+131,train,side_drink_extra_request,dlg-0adc24d6-bfa2-478e-80d1-5605779803a4,5,Bir de 2 su olsun.,2 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+132,train,clear_order_item,dlg-1dafe01a-bfa8-4d97-bfdc-c25071794e79,3,4 patates kızartması istiyorum.,4 adet patates kızartması istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+133,train,clear_order_item,dlg-2d9ed7cc-0026-4b89-9ddd-6dbba093a520,3,Üç mercimek çorbası alabilir miyim?,Tabii. 3 adet mercimek çorbası istediğinizi anladım. Başka bir isteğiniz var mı?
+134,train,side_drink_extra_request,dlg-1844d373-b934-45fa-b512-d8bdaaa68d7d,5,Yanına pilav ekleyebilir miyiz?,pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+135,train,confirm_or_close_order,dlg-0788c23a-40e2-42d0-b46b-dc06f2ded94b,5,Böylece onaylıyorum.,Tamam. Siparişi onaylamak istediğinizi anladım.
+136,train,order_clarification,dlg-bdc46fbc-2be6-455b-8c90-8230a71e894b,7,Içecek olarak ne önerirsiniz?,Içecek tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+137,train,clear_order_item,dlg-2d8f6d4a-81eb-48a6-8f9d-5599f7281652,5,Üç soda alabilir miyim?,3 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+138,train,confirm_or_close_order,dlg-0419f6a2-94d8-43d0-8182-4ea7802de061,8,"Tamam, sipariş tamam.",Tamam. Siparişi onaylamak istediğinizi anladım.
+139,train,confirm_or_close_order,dlg-01765acc-b2cf-46b9-8961-7f259645b414,12,Bu şekilde onaylıyorum.,Tamam. Siparişi onaylamak istediğinizi anladım.
+140,train,polite_thanks_closing,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,21,"Teşekkürler, başka ürün eklemeyelim.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+141,train,confirm_or_close_order,dlg-0132dd67-ad75-4d59-83de-5cdadf9cd830,7,"Evet, onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+142,train,clear_order_item,dlg-285741f7-292f-4942-bc7a-c2473d29d310,3,İki kebap alabilir miyim?,2 adet kebap istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+143,train,remove_or_change_order,dlg-309c1bef-6a64-4206-b621-1a94a5679f18,9,Lütfen ayranı iptal edelim.,Tabii. Ayranı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+144,train,add_more_quantity,dlg-06800509-feaf-4411-a260-9a358abe5f32,4,1 ezogelin çorbası daha.,1 adet ezogelin çorbası daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+145,train,add_more_quantity,dlg-12fa13a5-805c-46f5-936c-592b1e39265b,4,2 köfte daha.,2 adet köfte daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+146,train,polite_thanks_closing,dlg-0419f6a2-94d8-43d0-8182-4ea7802de061,10,"Teşekkürler, bu şekilde kalsın.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+147,train,order_clarification,dlg-bdc46fbc-2be6-455b-8c90-8230a71e894b,7,Yanına çorba olsun.,Hangi çorba istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+148,train,order_clarification,dlg-7d0a150f-d7d9-40a5-aec2-e53c1069511c,9,Ana yemek için seçenek söyler misiniz?,Ana yemek seçenekleri için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+149,train,order_clarification,dlg-e67cbb51-2e6a-479d-896f-e34db7f729dd,9,Yanına soğuk içecek olsun.,Hangi soğuk içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+150,train,confirm_or_close_order,dlg-0460c70c-34cb-43c5-affb-952f7365be73,10,"Doğru, onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+151,train,clear_order_item,dlg-0432d350-ff4f-4fd8-82c3-4a50c88b0888,9,1 ezogelin çorbası istiyorum.,1 adet ezogelin çorbası istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+152,train,remove_or_change_order,dlg-329820ec-f25c-4ee3-b1b2-73a908447c51,3,Lütfen sodayı iptal edelim.,Tabii. Sodayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+153,train,confirm_or_close_order,dlg-0c66117b-8113-4f69-9592-528c4c4d9e37,5,Son olarak bu kadar.,Tamam. Başka bir isteğiniz olmadığını anladım.
+154,train,add_more_quantity,dlg-2e39e271-61ff-43c5-9482-23ce78de86f8,5,4 pilav daha.,4 adet pilav daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+155,train,confirm_or_close_order,dlg-06800509-feaf-4411-a260-9a358abe5f32,10,"Tamam, doğru anladınız.",Tamam. Siparişi onaylamak istediğinizi anladım.
+156,train,order_clarification,dlg-6c3a2265-87b7-454e-aa00-c823bcdc0cd0,8,Siparişe bir salata eklemek istiyorum.,Hangi salata istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+157,train,add_more_quantity,dlg-0f3cb363-5f4f-4d15-b7de-b526ec34e526,4,2 salata daha.,2 adet salata daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+158,train,clear_order_item,dlg-080ad2ae-5f07-4cbd-88ed-bb0893898f5c,12,1 künefe istiyorum.,1 adet künefe istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+159,train,clear_order_item,dlg-1b21a56a-66be-4586-9560-427bd537f2d6,3,4 pilav istiyorum.,4 adet pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+160,train,clear_order_item,dlg-22baae4e-6abe-474c-ac98-2a2c09dc735c,8,Bir patates kızartması alabilir miyim?,1 adet patates kızartması istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+161,train,remove_or_change_order,dlg-0d3ecb86-e098-40b6-bd74-69d3f7bc9c76,7,kebabı çıkarır mısın?,Tabii. Kebabı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+162,train,order_clarification,dlg-6c3a2265-87b7-454e-aa00-c823bcdc0cd0,8,Yemeğin yanına ne iyi gider?,Yan ürün tercihi için güncel menüye bakmak en doğrusu olur. Hafif mi daha doyurucu bir seçenek mi istersiniz?
+163,train,confirm_or_close_order,dlg-0c7b4e1f-eeb6-4036-9d93-3ebbee1d6253,5,Şimdilik başka yok.,Tamam. Başka bir isteğiniz olmadığını anladım.
+164,train,side_drink_extra_request,dlg-01765acc-b2cf-46b9-8961-7f259645b414,15,Yemeğin yanına 1 su alabilir miyim?,1 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+165,train,clear_order_item,dlg-12b106e0-37f5-4546-9798-726eb2856b53,3,3 soda istiyorum.,3 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+166,train,confirm_or_close_order,dlg-104812d4-b522-4ad9-b1c3-9e43e096dac8,3,Başka bir isteğim kalmadı.,Tamam. Başka bir isteğiniz olmadığını anladım.
+167,train,remove_or_change_order,dlg-093836e0-30d0-4014-80f5-e7112e064779,3,makarnayı çıkarır mısın?,Tabii. Makarnayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+168,train,add_more_quantity,dlg-0b6045c5-c1e7-47d5-999f-3829b454f884,2,1 künefe daha.,1 adet künefe daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+169,train,side_drink_extra_request,dlg-12fa13a5-805c-46f5-936c-592b1e39265b,5,Bir de 3 çay olsun.,3 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+170,train,clear_order_item,dlg-1711a87d-0169-485f-a606-19b577fbe583,4,3 baklava istiyorum.,3 adet baklava istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+171,train,add_more_quantity,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,10,1 ayran daha.,Tabii. 1 adet ayran daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+172,train,order_clarification,dlg-bf5457d1-a86a-4bcd-817d-1aa3eda8b7dc,4,Yanına salata olsun.,Hangi salata istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+173,train,confirm_or_close_order,dlg-03084b5a-1cf3-40d2-a2f6-4d3d1488532f,7,"Tamam, böyle olsun.",Tamam. Siparişi onaylamak istediğinizi anladım.
+174,train,order_clarification,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,4,Bir içecek alayım.,Hangi içeceği istediğinizi belirtir misiniz? Güncel seçenekler için menüye bakabiliriz.
+175,train,polite_thanks_closing,dlg-06800509-feaf-4411-a260-9a358abe5f32,16,"Teşekkür ederim, siparişi böyle bırakalım.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+176,train,add_more_quantity,dlg-09cccabc-a782-4d4a-b85a-220bad47cca9,5,1 patates kızartması daha.,1 adet patates kızartması daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+177,train,remove_or_change_order,dlg-22192b1b-808e-44aa-a848-b6c74a624598,4,patates kızartmasını siparişten çıkarabilir misiniz?,Tabii. Patates kızartmasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+178,train,add_more_quantity,dlg-382f7873-3d33-4b0b-96a1-d38c32e30530,7,Bir mercimek çorbası daha alabilir miyim?,Tabii. 1 adet mercimek çorbası daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+179,train,add_more_quantity,dlg-174bde2f-052d-4b9a-8913-39bbc546dd65,4,2 sütlaç daha.,Tabii. 2 adet sütlaç daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+180,train,clear_order_item,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,8,1 ayran istiyorum.,Tabii. 1 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+181,train,clear_order_item,dlg-1b21a56a-66be-4586-9560-427bd537f2d6,14,4 köfte istiyorum.,4 adet köfte istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+182,train,clear_order_item,dlg-1ae1917c-7c88-4207-9f79-93e7da8f6cd3,7,4 soda istiyorum.,4 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+183,train,confirm_or_close_order,dlg-072b3156-9fab-408c-b5da-0c22c2721724,16,"Tamam, sipariş bu olsun.",Tamam. Siparişi onaylamak istediğinizi anladım.
+184,train,order_clarification,dlg-e67cbb51-2e6a-479d-896f-e34db7f729dd,11,Yanına sıcak içecek olsun.,Hangi sıcak içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+185,train,remove_or_change_order,dlg-2f79b0e1-48ff-4df2-b71c-18afdbaf7d26,3,"sütlacı istemiyorum, çıkaralım.",Tabii. Sütlacı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+186,train,clear_order_item,dlg-061066f5-b9d3-4537-9d77-a94233473558,6,1 pilav istiyorum.,1 adet pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+187,train,polite_thanks_closing,dlg-06a169dc-2913-4346-bd15-190ce5fb6559,8,"Tamam, sağ olun.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+188,train,clear_order_item,dlg-2c1edeb0-903c-4c7c-9ff0-a0cbd9b6ca65,8,Üç su alabilir miyim?,3 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+189,train,clear_order_item,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,15,1 kahve istiyorum.,1 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+190,train,order_clarification,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,4,Çorba alabilir miyim?,Hangi çorba istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+191,train,add_more_quantity,dlg-2f839114-7408-4d73-8a88-0e35fa654651,3,4 köfte daha.,4 adet köfte daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+192,train,remove_or_change_order,dlg-186befcd-d177-42f0-958e-c51f3a0b87d5,5,kahveyi siparişten çıkarabilir misiniz?,Tabii. Kahveyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+193,train,side_drink_extra_request,dlg-0d81af4c-88f1-48ba-91db-f85f7b1c7f02,2,Bir de 2 soda olsun.,2 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+194,train,confirm_or_close_order,dlg-080ad2ae-5f07-4cbd-88ed-bb0893898f5c,8,Siparişi bu şekilde kabul ediyorum.,Tamam. Siparişi onaylamak istediğinizi anladım.
+195,train,add_more_quantity,dlg-1b21a56a-66be-4586-9560-427bd537f2d6,15,3 mercimek çorbası daha.,Tabii. 3 adet mercimek çorbası daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+196,train,polite_thanks_closing,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,19,"Teşekkürler, siparişim bu kadar.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+197,train,polite_thanks_closing,dlg-0685c410-3ff3-4ca7-ba16-0c5171de3933,7,"Teşekkürler, devamı yok.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+198,train,add_more_quantity,dlg-1034d4a2-6369-42f1-8d48-89b953daabc8,3,2 pilav daha.,2 adet pilav daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+199,train,clear_order_item,dlg-06e78062-2747-476f-b04a-2e76a458e238,3,1 tavuk şiş istiyorum.,1 adet tavuk şiş istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+200,train,side_drink_extra_request,dlg-12fa13a5-805c-46f5-936c-592b1e39265b,4,Yemeğin yanına 3 çay alabilir miyim?,3 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+201,train,clear_order_item,dlg-1ae1917c-7c88-4207-9f79-93e7da8f6cd3,5,4 kahve istiyorum.,4 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+202,train,clear_order_item,dlg-22baae4e-6abe-474c-ac98-2a2c09dc735c,6,Bir kebap alabilir miyim?,1 adet kebap istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+203,train,confirm_or_close_order,dlg-1034d4a2-6369-42f1-8d48-89b953daabc8,3,Bu kadar olsun lütfen.,Tamam. Başka bir isteğiniz olmadığını anladım.
+204,train,add_more_quantity,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,11,1 limonata daha.,Tabii. 1 adet limonata daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+205,train,clear_order_item,dlg-0d4b50d3-9db7-449d-856c-1061ce25b225,6,2 kebap istiyorum.,2 adet kebap istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+206,train,clear_order_item,dlg-07a5eb77-8852-41f7-a885-bf6c2c9404d1,6,1 baklava istiyorum.,1 adet baklava istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+207,train,confirm_or_close_order,dlg-0b7f79b9-753c-45b3-a46b-7f0170b0b3db,11,"Tamamdır, başka yok.",Tamam. Başka bir isteğiniz olmadığını anladım.
+208,train,confirm_or_close_order,dlg-0685c410-3ff3-4ca7-ba16-0c5171de3933,7,"Evet, sipariş böyle kalsın.",Tamam. Siparişi onaylamak istediğinizi anladım.
+209,train,side_drink_extra_request,dlg-174bde2f-052d-4b9a-8913-39bbc546dd65,7,Bir de salata alabilir miyim?,salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+210,train,remove_or_change_order,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,19,sodayı çıkarır mısın?,Tabii. Sodayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+211,train,remove_or_change_order,dlg-2af0a0c8-0218-46e0-8bf0-6f19958c66c6,8,"ezogelin çorbasını istemiyorum, çıkaralım.",Tabii. Ezogelin çorbasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+212,train,clear_order_item,dlg-283321ca-20f3-49f1-a4f8-3aea84a36b43,9,İki köfte alabilir miyim?,2 adet köfte istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+213,train,side_drink_extra_request,dlg-082d002c-82b7-4aa7-82fe-e19394fc7ea3,3,Bir de 1 soda olsun.,1 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+214,train,clear_order_item,dlg-0adc24d6-bfa2-478e-80d1-5605779803a4,5,2 pilav istiyorum.,2 adet pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+215,train,clear_order_item,dlg-1b0c2229-6434-4e4f-a003-c613ef507912,2,4 salata istiyorum.,4 adet salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+216,train,clear_order_item,dlg-0f125ba2-5385-4434-a5ea-76c495729915,4,2 baklava istiyorum.,2 adet baklava istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+217,train,order_clarification,dlg-486e9b52-5da0-4a6d-b7b5-acbcaf3e8da5,6,Siparişe bir yan ürün eklemek istiyorum.,Hangi yan ürün istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+218,train,confirm_or_close_order,dlg-080ad2ae-5f07-4cbd-88ed-bb0893898f5c,6,"Evet, bu sipariş benim.",Tamam. Siparişi onaylamak istediğinizi anladım.
+219,train,order_clarification,dlg-78bb8466-5c92-425d-98f7-65a6f03a5730,5,Çorba için seçenek söyler misiniz?,Çorba seçenekleri için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+220,train,add_more_quantity,dlg-245e6b0e-87d2-4f24-93af-f1df156be49a,5,3 patates kızartması daha.,3 adet patates kızartması daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+221,train,add_more_quantity,dlg-1b21a56a-66be-4586-9560-427bd537f2d6,1,3 kahve daha.,3 adet kahve daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+222,train,confirm_or_close_order,dlg-072b3156-9fab-408c-b5da-0c22c2721724,13,"Evet, sipariş doğru görünüyor.",Tamam. Siparişi onaylamak istediğinizi anladım.
+223,train,side_drink_extra_request,dlg-0993ea3a-b656-4222-bb14-127dc06113ff,8,Yemeğin yanına 2 limonata alabilir miyim?,Tabii. 2 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+224,train,remove_or_change_order,dlg-162361ce-89d9-4c31-bdf8-4f2825e1893a,9,çayı siparişten çıkarabilir misiniz?,Tabii. Çayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+225,train,order_clarification,dlg-ab715c02-b477-4a26-891a-a1abfe638087,13,Yanına yan ürün olsun.,Hangi yan ürün istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+226,train,side_drink_extra_request,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,13,Bir de 1 kahve olsun.,1 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+227,train,order_clarification,dlg-3273d2fd-49f3-4c76-84be-0a02cb3f3b5b,9,Sos alabilir miyim?,Hangi sos istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+228,train,remove_or_change_order,dlg-349f15b1-e727-498b-b6cd-f5a62513fe6a,10,Lütfen pilavı iptal edelim.,Tabii. Pilavı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+229,train,side_drink_extra_request,dlg-12b106e0-37f5-4546-9798-726eb2856b53,3,Bir de 3 su olsun.,3 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+230,train,confirm_or_close_order,dlg-0b6045c5-c1e7-47d5-999f-3829b454f884,6,Bu kadar yeter.,Tamam. Başka bir isteğiniz olmadığını anladım.
+231,train,clear_order_item,dlg-22d87698-2763-409c-a400-ec9267da36b3,5,Bir sütlaç alabilir miyim?,Tabii. 1 adet sütlaç istediğinizi anladım. Başka bir isteğiniz var mı?
+232,train,add_more_quantity,dlg-2e39e271-61ff-43c5-9482-23ce78de86f8,6,4 makarna daha.,4 adet makarna daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+233,train,add_more_quantity,dlg-285741f7-292f-4942-bc7a-c2473d29d310,3,4 su daha.,4 adet su daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+234,train,order_clarification,dlg-ab715c02-b477-4a26-891a-a1abfe638087,13,Hafif bir seçenek için seçenek söyler misiniz?,Hafif seçenekler için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+235,train,order_clarification,dlg-7d0a150f-d7d9-40a5-aec2-e53c1069511c,7,Siparişe bir soğuk içecek eklemek istiyorum.,Hangi soğuk içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+236,train,confirm_or_close_order,dlg-0b7f79b9-753c-45b3-a46b-7f0170b0b3db,13,Ekstra bir şey istemiyorum.,Tamam. Başka bir isteğiniz olmadığını anladım.
+237,train,confirm_or_close_order,dlg-0923d68b-08ce-4992-85d5-3933c7deddc8,8,Başka bir şey istemiyorum.,Tamam. Başka bir isteğiniz olmadığını anladım.
+238,train,confirm_or_close_order,dlg-08075f28-b2dc-4ebc-bfd7-08b2b4abd91b,5,"Tamam, onayım var.",Tamam. Siparişi onaylamak istediğinizi anladım.
+239,train,order_clarification,dlg-32f5c93b-b547-48e7-aff2-0439e4436d67,3,Menüde hafif ne var?,"Güncel menüye bakmak en doğrusu olur. Hafif bir ana yemek mi, salata gibi bir seçenek mi istersiniz?"
+240,train,order_clarification,dlg-9d57fac8-d59c-4d7a-bbc9-1f0e877711e8,3,Yanına içecek olsun.,Hangi içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+241,train,remove_or_change_order,dlg-285741f7-292f-4942-bc7a-c2473d29d310,5,"kahveyi istemiyorum, çıkaralım.",Tabii. Kahveyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+242,train,order_clarification,dlg-3273d2fd-49f3-4c76-84be-0a02cb3f3b5b,9,Hafif bir seçenek olarak ne önerirsiniz?,Hafif bir seçenek tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+243,train,order_clarification,dlg-32bb9aaa-fbb0-4097-9f40-3d369e7c4d7b,3,Siparişe bir içecek eklemek istiyorum.,Hangi içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+244,train,clear_order_item,dlg-1ae1917c-7c88-4207-9f79-93e7da8f6cd3,8,4 mercimek çorbası istiyorum.,Tabii. 4 adet mercimek çorbası istediğinizi anladım. Başka bir isteğiniz var mı?
+245,train,clear_order_item,dlg-2f4545bb-5115-4df1-8cfe-4720476bf002,12,Üç pilav alabilir miyim?,3 adet pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+246,train,remove_or_change_order,dlg-13d6d90b-a06b-42bb-b226-4e05ed3d17bf,7,suyu siparişten çıkarabilir misiniz?,Tabii. Suyu siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+247,train,add_more_quantity,dlg-12b106e0-37f5-4546-9798-726eb2856b53,10,2 tavuk şiş daha.,2 adet tavuk şiş daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+248,train,remove_or_change_order,dlg-2e39e271-61ff-43c5-9482-23ce78de86f8,9,"tavuk şişi istemiyorum, çıkaralım.",Tabii. Tavuk şişi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+249,train,polite_thanks_closing,dlg-05a3965e-312b-429c-be3c-6c2d1c42c6d0,9,"Sağ olun, benim için bu kadar.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+250,train,order_clarification,dlg-7d0a150f-d7d9-40a5-aec2-e53c1069511c,9,Siparişe bir sıcak içecek eklemek istiyorum.,Hangi sıcak içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+251,train,remove_or_change_order,dlg-0eb40d10-eee9-417e-8cfb-0622a890c85b,3,patates kızartmasını çıkarır mısın?,Tabii. Patates kızartmasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+252,train,remove_or_change_order,dlg-11a0a8a2-cf70-48a5-aa52-bba36edb9196,6,ayranı siparişten çıkarabilir misiniz?,Tabii. Ayranı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+253,train,clear_order_item,dlg-15e47b61-038f-4b7e-ac78-8b1a0f76772e,8,3 salata istiyorum.,3 adet salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+254,train,add_more_quantity,dlg-37679106-6953-49d6-8b67-e4603fdd52de,5,Bir soda daha alabilir miyim?,1 adet soda daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+255,train,clear_order_item,dlg-239ab661-aa69-494a-90e7-da905aa33813,4,İki ayran alabilir miyim?,Tabii. 2 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+256,train,remove_or_change_order,dlg-01765acc-b2cf-46b9-8961-7f259645b414,15,suyu çıkarır mısın?,Tabii. Suyu siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+257,train,side_drink_extra_request,dlg-10be1bdd-6b4f-4b0f-94f3-10ec3a3b6f89,5,Bir de 3 limonata olsun.,Tabii. 3 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+258,train,clear_order_item,dlg-25e5b89b-d234-4513-9c40-1d3a142f4084,3,İki ezogelin çorbası alabilir miyim?,2 adet ezogelin çorbası istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+259,train,clear_order_item,dlg-2f4545bb-5115-4df1-8cfe-4720476bf002,10,Üç salata alabilir miyim?,3 adet salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+260,train,side_drink_extra_request,dlg-1fc6ac23-1e3a-427d-b520-adadcf92c6e7,7,Son olarak künefe ekleyelim.,künefe istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+261,train,remove_or_change_order,dlg-2ecd8d99-07d4-41a3-86bb-40db13dae2ec,7,"kebabı istemiyorum, çıkaralım.",Tabii. Kebabı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+262,train,clear_order_item,dlg-252078cf-2674-4577-b6f2-dea85348d727,3,İki kahve alabilir miyim?,2 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+263,train,clear_order_item,dlg-310a590e-7e09-4e03-bdcc-15c0bfa48ae9,9,Üç tavuk şiş alabilir miyim?,3 adet tavuk şiş istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+264,train,side_drink_extra_request,dlg-1e84b109-2218-472e-877f-8ae112a08dd2,9,Tatlı olarak sütlaç alabilir miyim?,Tabii. sütlaç istediğinizi anladım. Başka bir isteğiniz var mı?
+265,train,side_drink_extra_request,dlg-01765acc-b2cf-46b9-8961-7f259645b414,7,Bir de 1 limonata olsun.,Tabii. 1 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+266,train,side_drink_extra_request,dlg-061066f5-b9d3-4537-9d77-a94233473558,6,Yemeğin yanına 1 çay alabilir miyim?,1 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+267,train,remove_or_change_order,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,8,ayranı çıkarır mısın?,Tabii. Ayranı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+268,train,remove_or_change_order,dlg-2eb914fb-d0c8-472b-a01a-40416f2efc98,7,"köfteyi istemiyorum, çıkaralım.",Tabii. Köfteyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+269,train,remove_or_change_order,dlg-2f839114-7408-4d73-8a88-0e35fa654651,11,"künefeyi istemiyorum, çıkaralım.",Tabii. Künefeyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+270,train,clear_order_item,dlg-0f3cb363-5f4f-4d15-b7de-b526ec34e526,5,2 sütlaç istiyorum.,Tabii. 2 adet sütlaç istediğinizi anladım. Başka bir isteğiniz var mı?
+271,train,remove_or_change_order,dlg-1dcfac27-20e9-41d3-b0d2-b15916ec45ba,5,salatayı siparişten çıkarabilir misiniz?,Tabii. Salatayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+272,train,remove_or_change_order,dlg-2b8717eb-d3c0-4fae-8450-3b65eec5e9e7,8,"salatayı istemiyorum, çıkaralım.",Tabii. Salatayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+273,train,confirm_or_close_order,dlg-0d4b50d3-9db7-449d-856c-1061ce25b225,6,Başka ekleme yapmayalım.,Tamam. Başka bir isteğiniz olmadığını anladım.
+274,train,clear_order_item,dlg-22192b1b-808e-44aa-a848-b6c74a624598,2,Bir makarna alabilir miyim?,1 adet makarna istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+275,train,clear_order_item,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,10,1 çay istiyorum.,1 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+276,train,order_clarification,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,4,Yanına hafif bir seçenek olsun.,Hafif seçenekler için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+277,train,clear_order_item,dlg-252078cf-2674-4577-b6f2-dea85348d727,5,İki soda alabilir miyim?,2 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+278,train,order_clarification,dlg-5457100e-4161-46cc-a9ce-d7cbba02f925,10,Içecek için seçenek söyler misiniz?,Içecek seçenekleri için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+279,train,polite_thanks_closing,dlg-01765acc-b2cf-46b9-8961-7f259645b414,17,"Teşekkürler, hepsi bu.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+280,train,remove_or_change_order,dlg-371eef01-4ff3-49d6-863f-d8446e3fb66e,4,Lütfen köfteyi iptal edelim.,Tabii. Köfteyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+281,train,confirm_or_close_order,dlg-0460c70c-34cb-43c5-affb-952f7365be73,8,"Evet, doğru.",Tamam. Siparişi onaylamak istediğinizi anladım.
+282,train,clear_order_item,dlg-1123f1b9-5410-472b-a202-3c2926ae7038,4,3 çay istiyorum.,3 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+283,train,order_clarification,dlg-5457100e-4161-46cc-a9ce-d7cbba02f925,10,İçecek olarak ne önerirsiniz?,İçecek tercihiniz için güncel menüye bakmak en doğrusu olur. Soğuk mu sıcak mı bir içecek istersiniz?
+284,train,confirm_or_close_order,dlg-080ad2ae-5f07-4cbd-88ed-bb0893898f5c,12,Bu kadar.,Tamam. Başka bir isteğiniz olmadığını anladım.
+285,train,clear_order_item,dlg-1844d373-b934-45fa-b512-d8bdaaa68d7d,3,3 künefe istiyorum.,3 adet künefe istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+286,train,side_drink_extra_request,dlg-174bde2f-052d-4b9a-8913-39bbc546dd65,4,Yanına salata ekleyebilir miyiz?,salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+287,train,confirm_or_close_order,dlg-01839744-e367-4b7d-b8c4-42a40974c310,7,"Evet, siparişim bu.",Tamam. Siparişi onaylamak istediğinizi anladım.
+288,train,polite_thanks_closing,dlg-03084b5a-1cf3-40d2-a2f6-4d3d1488532f,11,"Tamam, teşekkürler.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+289,train,add_more_quantity,dlg-2f839114-7408-4d73-8a88-0e35fa654651,11,4 kebap daha.,4 adet kebap daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+290,train,remove_or_change_order,dlg-21106cbc-ea4a-4bf6-97db-a02f1ee33fc9,17,köfteyi siparişten çıkarabilir misiniz?,Tabii. Köfteyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+291,train,add_more_quantity,dlg-292bfcb3-7401-4510-bed8-04c8e54364f1,10,4 kahve daha.,4 adet kahve daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+292,train,order_clarification,dlg-32f5c93b-b547-48e7-aff2-0439e4436d67,3,Sıcak içecek alabilir miyim?,Hangi sıcak içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+293,train,add_more_quantity,dlg-283321ca-20f3-49f1-a4f8-3aea84a36b43,9,4 limonata daha.,Tabii. 4 adet limonata daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+294,train,clear_order_item,dlg-2b8717eb-d3c0-4fae-8450-3b65eec5e9e7,4,İki künefe alabilir miyim?,2 adet künefe istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+295,train,add_more_quantity,dlg-22baae4e-6abe-474c-ac98-2a2c09dc735c,7,3 kebap daha.,3 adet kebap daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+296,train,side_drink_extra_request,dlg-110874f6-515b-4f86-bd46-74cbc377ea10,4,Yemeğin yanına 3 su alabilir miyim?,3 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+297,train,clear_order_item,dlg-1c7b1f54-e826-48bb-9ae7-e0479acfa120,3,4 kebap istiyorum.,4 adet kebap istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+298,train,remove_or_change_order,dlg-37ee51ef-d2fe-42d0-97ce-bc276c19a7a1,11,Lütfen kebabı iptal edelim.,Tabii. Kebabı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+299,train,clear_order_item,dlg-12fa13a5-805c-46f5-936c-592b1e39265b,3,3 mercimek çorbası istiyorum.,Tabii. 3 adet mercimek çorbası istediğinizi anladım. Başka bir isteğiniz var mı?
+300,train,side_drink_extra_request,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,15,Yemeğin yanına 1 limonata alabilir miyim?,Tabii. 1 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+301,train,clear_order_item,dlg-1860e83e-b218-47a8-9c21-b7e0307e8628,13,4 su istiyorum.,4 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+302,train,side_drink_extra_request,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,8,Yemeğin yanına 1 kahve alabilir miyim?,1 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+303,train,polite_thanks_closing,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,22,"Sağ olun, şimdilik başka yok.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+304,train,side_drink_extra_request,dlg-1dafe01a-bfa8-4d97-bfdc-c25071794e79,5,Son olarak sütlaç ekleyelim.,Tabii. sütlaç istediğinizi anladım. Başka bir isteğiniz var mı?
+305,train,clear_order_item,dlg-104812d4-b522-4ad9-b1c3-9e43e096dac8,3,2 künefe istiyorum.,2 adet künefe istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+306,train,clear_order_item,dlg-20e2a71d-9422-4acf-8913-c822f630f95a,6,Bir ezogelin çorbası alabilir miyim?,1 adet ezogelin çorbası istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+307,train,order_clarification,dlg-32f5c93b-b547-48e7-aff2-0439e4436d67,3,Siparişe bir tatlı eklemek istiyorum.,Hangi tatlı istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+308,train,order_clarification,dlg-9d57fac8-d59c-4d7a-bbc9-1f0e877711e8,8,Bir ana yemek istiyorum.,Hangi ana yemek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+309,train,polite_thanks_closing,dlg-061066f5-b9d3-4537-9d77-a94233473558,13,"Tamamdır, sağ olun.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+310,train,remove_or_change_order,dlg-2433aa4f-5dc6-4ccc-8ad1-7a5e7dd8bc2d,6,künefeyi siparişten çıkarabilir misiniz?,Tabii. Künefeyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+311,train,confirm_or_close_order,dlg-06a169dc-2913-4346-bd15-190ce5fb6559,6,"Evet, siparişi geçelim.",Tamam. Siparişi onaylamak istediğinizi anladım.
+312,train,clear_order_item,dlg-1f8539d4-68e5-40b1-bc55-2a56dca1856a,9,Bir kahve alabilir miyim?,1 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+313,train,add_more_quantity,dlg-259895a5-cadf-4564-9d88-5a7038cf8a2f,5,3 künefe daha.,3 adet künefe daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+314,train,confirm_or_close_order,dlg-0a2acdf0-a71d-42b4-a01e-8e2c8cf40d86,6,Başka bir şey almayacağım.,Tamam. Başka bir isteğiniz olmadığını anladım.
+315,train,add_more_quantity,dlg-0c66117b-8113-4f69-9592-528c4c4d9e37,3,2 limonata daha.,Tabii. 2 adet limonata daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+316,train,confirm_or_close_order,dlg-06af4900-e9c9-4526-9621-7f4c102cf662,15,"Tamamdır, onay veriyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+317,train,confirm_or_close_order,dlg-06e5677b-6e83-41db-bea2-16cab53f1d47,5,"Evet, başka değişiklik yok, onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+318,train,clear_order_item,dlg-0a5f5ba3-9431-4509-a9f5-d29656b8daeb,3,2 ezogelin çorbası istiyorum.,2 adet ezogelin çorbası istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+319,train,order_clarification,dlg-32bb9aaa-fbb0-4097-9f40-3d369e7c4d7b,3,Soğuk içecek alabilir miyim?,Hangi soğuk içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+320,train,polite_thanks_closing,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,18,"Sağ olun, başka bir şey yok.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+321,train,add_more_quantity,dlg-093836e0-30d0-4014-80f5-e7112e064779,3,1 köfte daha.,1 adet köfte daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+322,train,side_drink_extra_request,dlg-15e47b61-038f-4b7e-ac78-8b1a0f76772e,14,Bir de 3 kahve olsun.,3 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+323,train,side_drink_extra_request,dlg-1034d4a2-6369-42f1-8d48-89b953daabc8,3,Yemeğin yanına 3 limonata alabilir miyim?,Tabii. 3 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+324,train,add_more_quantity,dlg-1cc3da6d-80d2-4258-9ef0-772850463c07,5,3 ezogelin çorbası daha.,3 adet ezogelin çorbası daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+325,train,add_more_quantity,dlg-33284bdf-32fc-4c79-b760-48a76e6a8515,3,Bir su daha alabilir miyim?,1 adet su daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+326,train,add_more_quantity,dlg-080ad2ae-5f07-4cbd-88ed-bb0893898f5c,12,1 pilav daha.,1 adet pilav daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+327,train,side_drink_extra_request,dlg-0d4b50d3-9db7-449d-856c-1061ce25b225,6,Yemeğin yanına 2 soda alabilir miyim?,2 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+328,train,confirm_or_close_order,dlg-05a3965e-312b-429c-be3c-6c2d1c42c6d0,3,Siparişim doğru.,Tamam. Siparişi onaylamak istediğinizi anladım.
+329,train,order_clarification,dlg-486e9b52-5da0-4a6d-b7b5-acbcaf3e8da5,6,Tatlı olarak ne önerirsin?,Tatlı tercihiniz için güncel menüye bakmak en doğrusu olur. Hafif mi daha yoğun bir tatlı mı istersiniz?
+330,train,clear_order_item,dlg-2b8717eb-d3c0-4fae-8450-3b65eec5e9e7,3,İki sütlaç alabilir miyim?,Tabii. 2 adet sütlaç istediğinizi anladım. Başka bir isteğiniz var mı?
+331,train,order_clarification,dlg-7d0a150f-d7d9-40a5-aec2-e53c1069511c,7,Bir tatlı istiyorum.,Hangi tatlı istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+332,train,side_drink_extra_request,dlg-1ae1917c-7c88-4207-9f79-93e7da8f6cd3,8,Yanına patates kızartması ekleyebilir miyiz?,patates kızartması istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+333,train,add_more_quantity,dlg-22baae4e-6abe-474c-ac98-2a2c09dc735c,6,3 köfte daha.,3 adet köfte daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+334,train,confirm_or_close_order,dlg-0f54528d-a535-44c8-bd7f-1c04bfdf7fe6,9,Bu kadarı tamam.,Tamam. Başka bir isteğiniz olmadığını anladım.
+335,train,confirm_or_close_order,dlg-09a7ebae-784c-4da8-840f-272d9af53b1c,6,Hepsi bu.,Tamam. Başka bir isteğiniz olmadığını anladım.
+336,train,order_clarification,dlg-78bb8466-5c92-425d-98f7-65a6f03a5730,5,Bir içecek istiyorum.,Hangi içecek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+337,train,clear_order_item,dlg-22d87698-2763-409c-a400-ec9267da36b3,4,Bir baklava alabilir miyim?,1 adet baklava istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+338,train,add_more_quantity,dlg-32fca89b-f9b5-4868-9580-fa6e7c2b9296,5,Bir limonata daha alabilir miyim?,Tabii. 1 adet limonata daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+339,train,confirm_or_close_order,dlg-06af4900-e9c9-4526-9621-7f4c102cf662,18,"Sipariş bu, onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+340,train,clear_order_item,dlg-2d8f6d4a-81eb-48a6-8f9d-5599f7281652,3,Üç kahve alabilir miyim?,3 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+341,train,order_clarification,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,5,Salata alabilir miyim?,Hangi salata istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+342,train,confirm_or_close_order,dlg-0c66117b-8113-4f69-9592-528c4c4d9e37,3,Daha fazla istemiyorum.,Tamam. Başka bir isteğiniz olmadığını anladım.
+343,train,order_clarification,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,4,Sos olarak ne önerirsiniz?,Sos tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+344,train,side_drink_extra_request,dlg-0923d68b-08ce-4992-85d5-3933c7deddc8,10,Yemeğin yanına 2 ayran alabilir miyim?,Tabii. 2 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+345,train,order_clarification,dlg-967c0f62-38c3-4357-bd1e-a56011a60e1c,13,Sos için seçenek söyler misiniz?,Sos seçenekleri için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+346,train,add_more_quantity,dlg-15f8db6a-85dd-47a8-b477-6034b2d4f088,4,2 baklava daha.,2 adet baklava daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+347,train,clear_order_item,dlg-0eb40d10-eee9-417e-8cfb-0622a890c85b,3,2 patates kızartması istiyorum.,2 adet patates kızartması istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+348,train,clear_order_item,dlg-2203cd63-7602-4be7-87c5-6c11f46b7ae6,6,Bir pilav alabilir miyim?,1 adet pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+349,train,side_drink_extra_request,dlg-15e47b61-038f-4b7e-ac78-8b1a0f76772e,8,Yemeğin yanına 3 kahve alabilir miyim?,3 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+350,train,side_drink_extra_request,dlg-093836e0-30d0-4014-80f5-e7112e064779,3,Bir de 2 ayran olsun.,Tabii. 2 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+351,train,confirm_or_close_order,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,10,"Tamam, siparişi onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+352,train,add_more_quantity,dlg-0432d350-ff4f-4fd8-82c3-4a50c88b0888,9,1 soda daha.,1 adet soda daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+353,train,clear_order_item,dlg-221b9935-0321-406a-9376-95297bbf9625,4,Bir tavuk şiş alabilir miyim?,1 adet tavuk şiş istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+354,train,clear_order_item,dlg-1b21a56a-66be-4586-9560-427bd537f2d6,4,4 makarna istiyorum.,4 adet makarna istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+355,train,confirm_or_close_order,dlg-0f909662-6a8d-451d-9fe7-66ceac817cc2,7,Bunlar dışında istemiyorum.,Tamam. Başka bir isteğiniz olmadığını anladım.
+356,train,polite_thanks_closing,dlg-0460c70c-34cb-43c5-affb-952f7365be73,12,"Çok teşekkür ederim, hepsi bu.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+357,train,clear_order_item,dlg-305cd4e0-793e-4158-b06d-6c9a59ae91a1,3,Üç makarna alabilir miyim?,3 adet makarna istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+358,train,remove_or_change_order,dlg-3a708868-2772-4f0d-8d3a-b2f9d466aa42,8,Lütfen baklavayı iptal edelim.,Tabii. Baklavayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+359,train,polite_thanks_closing,dlg-06af4900-e9c9-4526-9621-7f4c102cf662,11,"Teşekkür ederim, sipariş tamam.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+360,train,confirm_or_close_order,dlg-025a1022-3f81-4266-b4a9-da0b7deb3d24,3,Siparişimi bu şekilde onaylıyorum.,Tamam. Siparişi onaylamak istediğinizi anladım.
+361,train,remove_or_change_order,dlg-06e78062-2747-476f-b04a-2e76a458e238,5,mercimek çorbasını çıkarır mısın?,Tabii. Mercimek çorbasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+362,train,confirm_or_close_order,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,17,Onaylayabilirsiniz.,Tamam. Siparişi onaylamak istediğinizi anladım.
+363,train,remove_or_change_order,dlg-2f4545bb-5115-4df1-8cfe-4720476bf002,18,"patates kızartmasını istemiyorum, çıkaralım.",Tabii. Patates kızartmasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+364,train,remove_or_change_order,dlg-12fa13a5-805c-46f5-936c-592b1e39265b,10,limonatayı siparişten çıkarabilir misiniz?,Tabii. Limonatayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+365,train,confirm_or_close_order,dlg-06af4900-e9c9-4526-9621-7f4c102cf662,7,Bunları onaylıyorum.,Tamam. Siparişi onaylamak istediğinizi anladım.
+366,train,order_clarification,dlg-70817963-d0e6-428f-8f8f-df90c296ff85,5,Sos seçenekleri neler?,Sos seçenekleri için güncel menüye veya personele bakmak en doğrusu olur. Siparişinize sos eklemek ister misiniz?
+367,train,confirm_or_close_order,dlg-08287da0-9b1e-4471-8f01-7e3a47958987,7,Şimdilik bu kadar.,Tamam. Başka bir isteğiniz olmadığını anladım.
+368,train,side_drink_extra_request,dlg-1b21a56a-66be-4586-9560-427bd537f2d6,4,Patates kızartması yanında olsun.,patates kızartması istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+369,train,add_more_quantity,dlg-0adc24d6-bfa2-478e-80d1-5605779803a4,5,1 sütlaç daha.,Tabii. 1 adet sütlaç daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+370,train,clear_order_item,dlg-185d3005-5216-442a-b398-abff73713f79,4,4 limonata istiyorum.,Tabii. 4 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+371,train,clear_order_item,dlg-2acd0ff9-e44d-4ff6-92dd-9aaeb7e85f60,3,İki baklava alabilir miyim?,2 adet baklava istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+372,train,clear_order_item,dlg-1711a87d-0169-485f-a606-19b577fbe583,3,3 patates kızartması istiyorum.,3 adet patates kızartması istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+373,train,confirm_or_close_order,dlg-025a1022-3f81-4266-b4a9-da0b7deb3d24,9,"Her şey doğru, onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+374,train,remove_or_change_order,dlg-0a2187ca-7e7e-4f03-8c42-bc6235d35477,12,tavuk şişi çıkarır mısın?,Tabii. Tavuk şişi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+375,train,confirm_or_close_order,dlg-0c66117b-8113-4f69-9592-528c4c4d9e37,7,Başka talebim yok.,Tamam. Başka bir isteğiniz olmadığını anladım.
+376,train,clear_order_item,dlg-2460eea6-d042-4483-8349-29310bd4b89e,13,İki çay alabilir miyim?,2 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+377,train,order_clarification,dlg-70817963-d0e6-428f-8f8f-df90c296ff85,5,Siparişe bir ana yemek eklemek istiyorum.,Hangi ana yemek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+378,train,polite_thanks_closing,dlg-0354e60a-4747-408a-9d1b-6c981d4d579f,10,"Teşekkür ederim, ekleme yapmayacağım.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+379,train,remove_or_change_order,dlg-382f7873-3d33-4b0b-96a1-d38c32e30530,11,Lütfen patates kızartmasını iptal edelim.,Tabii. Patates kızartmasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+380,train,add_more_quantity,dlg-1db69492-e3eb-4618-9f6c-240dcad1b10e,13,3 salata daha.,3 adet salata daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+381,train,remove_or_change_order,dlg-2203cd63-7602-4be7-87c5-6c11f46b7ae6,8,kebabı siparişten çıkarabilir misiniz?,Tabii. Kebabı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+382,train,order_clarification,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,5,Bana bir tatlı verir misin?,Hangi tatlıyı istediğinizi söyleyebilir misiniz? Güncel tatlı seçenekleri için menüye bakmak en doğrusu olur.
+383,train,order_clarification,dlg-967c0f62-38c3-4357-bd1e-a56011a60e1c,13,Bir çorba istiyorum.,Hangi çorba istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+384,train,clear_order_item,dlg-1f8539d4-68e5-40b1-bc55-2a56dca1856a,5,Bir çay alabilir miyim?,1 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+385,train,order_clarification,dlg-bf5457d1-a86a-4bcd-817d-1aa3eda8b7dc,6,Yanına ana yemek olsun.,Hangi ana yemek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+386,train,remove_or_change_order,dlg-08287da0-9b1e-4471-8f01-7e3a47958987,7,salatayı çıkarır mısın?,Tabii. Salatayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+387,train,remove_or_change_order,dlg-0a5f5ba3-9431-4509-a9f5-d29656b8daeb,3,köfteyi çıkarır mısın?,Tabii. Köfteyi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+388,train,remove_or_change_order,dlg-1b0c2229-6434-4e4f-a003-c613ef507912,10,sodayı siparişten çıkarabilir misiniz?,Tabii. Sodayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+389,train,remove_or_change_order,dlg-3188fb39-b495-458a-848e-ab3bbc43ed26,5,Lütfen limonatayı iptal edelim.,Tabii. Limonatayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+390,train,clear_order_item,dlg-082d002c-82b7-4aa7-82fe-e19394fc7ea3,3,2 limonata istiyorum.,Tabii. 2 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+391,train,remove_or_change_order,dlg-352c48d8-43cb-4c22-85ed-4c11fc4218b5,11,Lütfen makarnayı iptal edelim.,Tabii. Makarnayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+392,train,order_clarification,dlg-5457100e-4161-46cc-a9ce-d7cbba02f925,10,Siparişe bir çorba eklemek istiyorum.,Hangi çorba istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+393,train,confirm_or_close_order,dlg-0e1de864-2661-4ec1-a7a5-5486d66b4498,7,"Tamam, devamı yok.",Tamam. Başka bir isteğiniz olmadığını anladım.
+394,train,add_more_quantity,dlg-1f8539d4-68e5-40b1-bc55-2a56dca1856a,9,3 makarna daha.,3 adet makarna daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+395,train,confirm_or_close_order,dlg-0f909662-6a8d-451d-9fe7-66ceac817cc2,5,Daha başka yok.,Tamam. Başka bir isteğiniz olmadığını anladım.
+396,train,side_drink_extra_request,dlg-0d3ecb86-e098-40b6-bd74-69d3f7bc9c76,5,Bir de 2 kahve olsun.,2 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+397,train,confirm_or_close_order,dlg-0bb76f70-aa2a-4ec3-9b38-a784af270063,5,Böyle kalsın.,Tamam. Başka bir isteğiniz olmadığını anladım.
+398,train,polite_thanks_closing,dlg-03084b5a-1cf3-40d2-a2f6-4d3d1488532f,13,"Çok sağ olun, başka yok.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+399,train,remove_or_change_order,dlg-370990ab-8934-4b44-87dc-92d709a2134b,5,Lütfen tavuk şişi iptal edelim.,Tabii. Tavuk şişi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+400,valid,remove_or_change_order,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,16,limonatayı çıkarır mısın?,Tabii. Limonatayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+401,valid,remove_or_change_order,dlg-110874f6-515b-4f86-bd46-74cbc377ea10,8,sütlacı çıkarır mısın?,Tabii. Sütlacı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+402,valid,remove_or_change_order,dlg-295bd91f-d7a7-46ce-b3e3-d82dc4b5f69e,11,"mercimek çorbasını istemiyorum, çıkaralım.",Tabii. Mercimek çorbasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+403,valid,add_more_quantity,dlg-0e52d554-3d0c-4d75-b433-4e75501abbc7,7,2 mercimek çorbası daha.,Tabii. 2 adet mercimek çorbası daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+404,valid,remove_or_change_order,dlg-2f4545bb-5115-4df1-8cfe-4720476bf002,24,"baklavayı istemiyorum, çıkaralım.",Tabii. Baklavayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+405,valid,add_more_quantity,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,8,1 salata daha.,1 adet salata daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+406,valid,add_more_quantity,dlg-0a2187ca-7e7e-4f03-8c42-bc6235d35477,8,1 baklava daha.,1 adet baklava daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+407,valid,clear_order_item,dlg-2460eea6-d042-4483-8349-29310bd4b89e,5,İki limonata alabilir miyim?,Tabii. 2 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+408,valid,remove_or_change_order,dlg-2460eea6-d042-4483-8349-29310bd4b89e,18,"limonatayı istemiyorum, çıkaralım.",Tabii. Limonatayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+409,valid,clear_order_item,dlg-0354e60a-4747-408a-9d1b-6c981d4d579f,6,1 mercimek çorbası istiyorum.,Tabii. 1 adet mercimek çorbası istediğinizi anladım. Başka bir isteğiniz var mı?
+410,valid,add_more_quantity,dlg-326ed3e5-563a-43e5-a9d7-1baf950ff9cd,13,4 baklava daha.,4 adet baklava daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+411,valid,clear_order_item,dlg-080ad2ae-5f07-4cbd-88ed-bb0893898f5c,4,1 sütlaç istiyorum.,Tabii. 1 adet sütlaç istediğinizi anladım. Başka bir isteğiniz var mı?
+412,valid,side_drink_extra_request,dlg-16a8f851-d4c4-47f8-a9e6-daca87aaea73,3,Yemeğin yanına 3 soda alabilir miyim?,3 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+413,valid,side_drink_extra_request,dlg-1711a87d-0169-485f-a606-19b577fbe583,4,Bir de 3 soda olsun.,3 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+414,valid,add_more_quantity,dlg-0eb40d10-eee9-417e-8cfb-0622a890c85b,5,2 ezogelin çorbası daha.,2 adet ezogelin çorbası daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+415,valid,clear_order_item,dlg-082d002c-82b7-4aa7-82fe-e19394fc7ea3,9,2 su istiyorum.,2 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+416,valid,remove_or_change_order,dlg-21106cbc-ea4a-4bf6-97db-a02f1ee33fc9,15,tavuk şişi siparişten çıkarabilir misiniz?,Tabii. Tavuk şişi siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+417,valid,add_more_quantity,dlg-0c7b4e1f-eeb6-4036-9d93-3ebbee1d6253,7,2 su daha.,2 adet su daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+418,valid,order_clarification,dlg-07a5eb77-8852-41f7-a885-bf6c2c9404d1,9,Sıcak içecek olarak ne önerirsiniz?,Sıcak içecek tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+419,valid,side_drink_extra_request,dlg-1844d373-b934-45fa-b512-d8bdaaa68d7d,3,Salata yanında olsun.,salata istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+420,valid,remove_or_change_order,dlg-285741f7-292f-4942-bc7a-c2473d29d310,13,"sodayı istemiyorum, çıkaralım.",Tabii. Sodayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+421,valid,add_more_quantity,dlg-0b7f79b9-753c-45b3-a46b-7f0170b0b3db,7,2 ayran daha.,Tabii. 2 adet ayran daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+422,valid,side_drink_extra_request,dlg-1cc3da6d-80d2-4258-9ef0-772850463c07,5,Tatlı olarak baklava alabilir miyim?,baklava istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+423,valid,clear_order_item,dlg-27908c06-09e8-4710-9555-3e286312aff3,3,İki makarna alabilir miyim?,2 adet makarna istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+424,valid,add_more_quantity,dlg-14edb1c2-e057-467e-86bb-f3312fcc924f,5,2 patates kızartması daha.,2 adet patates kızartması daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+425,valid,order_clarification,dlg-e67cbb51-2e6a-479d-896f-e34db7f729dd,11,Ana yemek olarak ne önerirsiniz?,Ana yemek tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+426,valid,side_drink_extra_request,dlg-080ad2ae-5f07-4cbd-88ed-bb0893898f5c,12,Yemeğin yanına 1 soda alabilir miyim?,1 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+427,valid,order_clarification,dlg-07a5eb77-8852-41f7-a885-bf6c2c9404d1,9,Yanına bir şey ekleyelim.,Ne eklemek istediğinizi belirtir misiniz? Güncel yan ürün seçenekleri için menüye bakabiliriz.
+428,valid,side_drink_extra_request,dlg-0a2187ca-7e7e-4f03-8c42-bc6235d35477,8,Yemeğin yanına 2 su alabilir miyim?,2 adet su istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+429,valid,order_clarification,dlg-486e9b52-5da0-4a6d-b7b5-acbcaf3e8da5,6,Hafif bir seçenek alabilir miyim?,Hafif seçenekler için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+430,valid,add_more_quantity,dlg-1e84b109-2218-472e-877f-8ae112a08dd2,4,3 pilav daha.,3 adet pilav daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+431,valid,confirm_or_close_order,dlg-0f54528d-a535-44c8-bd7f-1c04bfdf7fe6,13,Sipariş burada bitsin.,Tamam. Başka bir isteğiniz olmadığını anladım.
+432,valid,clear_order_item,dlg-2a29ee2f-6686-4899-8198-9c8aec91f56f,7,İki patates kızartması alabilir miyim?,2 adet patates kızartması istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+433,valid,polite_thanks_closing,dlg-008c75b7-460f-430f-adcf-bd5dcc46854e,16,"Teşekkür ederim, bu kadar.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+434,valid,clear_order_item,dlg-186befcd-d177-42f0-958e-c51f3a0b87d5,3,4 çay istiyorum.,4 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+435,valid,add_more_quantity,dlg-336a7739-cfb2-4214-8530-9f3e268ad0e8,9,Bir çay daha alabilir miyim?,1 adet çay daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+436,valid,add_more_quantity,dlg-25e5b89b-d234-4513-9c40-1d3a142f4084,5,4 ayran daha.,Tabii. 4 adet ayran daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+437,valid,order_clarification,dlg-9d57fac8-d59c-4d7a-bbc9-1f0e877711e8,8,Sıcak içecek için seçenek söyler misiniz?,Sıcak içecek seçenekleri için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+438,valid,order_clarification,dlg-d728d947-0090-4e0d-80dc-21e355a196a2,4,Yanına sos olsun.,Hangi sos istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+439,valid,clear_order_item,dlg-072b3156-9fab-408c-b5da-0c22c2721724,9,1 kebap istiyorum.,1 adet kebap istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+440,valid,polite_thanks_closing,dlg-0432d350-ff4f-4fd8-82c3-4a50c88b0888,14,"Sağ olun, başka sipariş vermeyeceğim.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+441,valid,add_more_quantity,dlg-110874f6-515b-4f86-bd46-74cbc377ea10,4,2 makarna daha.,2 adet makarna daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+442,valid,confirm_or_close_order,dlg-01839744-e367-4b7d-b8c4-42a40974c310,3,"Tamamdır, sipariş onay.",Tamam. Siparişi onaylamak istediğinizi anladım.
+443,valid,add_more_quantity,dlg-309c1bef-6a64-4206-b621-1a94a5679f18,6,4 patates kızartması daha.,4 adet patates kızartması daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+444,valid,add_more_quantity,dlg-2460eea6-d042-4483-8349-29310bd4b89e,8,3 baklava daha.,3 adet baklava daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+445,valid,order_clarification,dlg-9d57fac8-d59c-4d7a-bbc9-1f0e877711e8,8,Yanına tatlı olsun.,Hangi tatlı istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+446,valid,clear_order_item,dlg-0b6045c5-c1e7-47d5-999f-3829b454f884,2,2 makarna istiyorum.,2 adet makarna istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+447,valid,confirm_or_close_order,dlg-10be1bdd-6b4f-4b0f-94f3-10ec3a3b6f89,8,Şimdilik sipariş bu.,Tamam. Başka bir isteğiniz olmadığını anladım.
+448,valid,clear_order_item,dlg-1693e916-e6f9-4956-80da-b5ebc257dc03,3,3 köfte istiyorum.,3 adet köfte istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+449,valid,side_drink_extra_request,dlg-06800509-feaf-4411-a260-9a358abe5f32,6,Bir de 1 çay olsun.,1 adet çay istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+450,test,side_drink_extra_request,dlg-1860e83e-b218-47a8-9c21-b7e0307e8628,4,Pilav yanında olsun.,pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+451,test,remove_or_change_order,dlg-2460eea6-d042-4483-8349-29310bd4b89e,6,"ayranı istemiyorum, çıkaralım.",Tabii. Ayranı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+452,test,order_clarification,dlg-e67cbb51-2e6a-479d-896f-e34db7f729dd,11,Yan ürün alabilir miyim?,Hangi yan ürün istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+453,test,order_clarification,dlg-ab715c02-b477-4a26-891a-a1abfe638087,13,Bir sos istiyorum.,Hangi sos istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+454,test,clear_order_item,dlg-1dafe01a-bfa8-4d97-bfdc-c25071794e79,5,4 baklava istiyorum.,4 adet baklava istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+455,test,order_clarification,dlg-e67cbb51-2e6a-479d-896f-e34db7f729dd,9,Salata olarak ne önerirsiniz?,Salata tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+456,test,remove_or_change_order,dlg-221b9935-0321-406a-9376-95297bbf9625,8,baklavayı siparişten çıkarabilir misiniz?,Tabii. Baklavayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+457,test,clear_order_item,dlg-2bd6c73d-f75f-4a59-8596-398e9b0859e9,3,Üç limonata alabilir miyim?,Tabii. 3 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+458,test,add_more_quantity,dlg-2d8e64ca-b9bd-4ffd-91ff-a85e36cfef0e,6,4 salata daha.,4 adet salata daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+459,test,remove_or_change_order,dlg-348be5f2-7dc1-4f94-916f-338e3e559c76,4,Lütfen ezogelin çorbasını iptal edelim.,Tabii. Ezogelin çorbasını siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+460,test,confirm_or_close_order,dlg-03084b5a-1cf3-40d2-a2f6-4d3d1488532f,13,"Evet, bu siparişi onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+461,test,add_more_quantity,dlg-20e2a71d-9422-4acf-8913-c822f630f95a,6,3 tavuk şiş daha.,3 adet tavuk şiş daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+462,test,confirm_or_close_order,dlg-0b6045c5-c1e7-47d5-999f-3829b454f884,2,Başka ürün eklemeyelim.,Tamam. Başka bir isteğiniz olmadığını anladım.
+463,test,polite_thanks_closing,dlg-01839744-e367-4b7d-b8c4-42a40974c310,11,"Sağ olun, bu kadar yeter.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+464,test,order_clarification,dlg-967c0f62-38c3-4357-bd1e-a56011a60e1c,13,Siparişe bir hafif bir seçenek eklemek istiyorum.,Hafif seçenekler için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+465,test,polite_thanks_closing,dlg-025a1022-3f81-4266-b4a9-da0b7deb3d24,5,"Teşekkür ederim, başka talebim yok.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+466,test,order_clarification,dlg-07a5eb77-8852-41f7-a885-bf6c2c9404d1,9,Ana yemek alabilir miyim?,Hangi ana yemek istediğinizi belirtir misiniz? Güncel menüye bakarak netleştirebiliriz.
+467,test,add_more_quantity,dlg-292bfcb3-7401-4510-bed8-04c8e54364f1,8,4 çay daha.,4 adet çay daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+468,test,polite_thanks_closing,dlg-0132dd67-ad75-4d59-83de-5cdadf9cd830,9,"Çok teşekkürler, başka istemiyorum.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+469,test,side_drink_extra_request,dlg-09cccabc-a782-4d4a-b85a-220bad47cca9,5,Bir de 2 limonata olsun.,Tabii. 2 adet limonata istediğinizi anladım. Başka bir isteğiniz var mı?
+470,test,clear_order_item,dlg-0999a44a-d59d-4644-a297-b8196a1b2e65,3,2 kahve istiyorum.,2 adet kahve istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+471,test,add_more_quantity,dlg-082d002c-82b7-4aa7-82fe-e19394fc7ea3,3,1 makarna daha.,1 adet makarna daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+472,test,clear_order_item,dlg-174bde2f-052d-4b9a-8913-39bbc546dd65,7,3 sütlaç istiyorum.,Tabii. 3 adet sütlaç istediğinizi anladım. Başka bir isteğiniz var mı?
+473,test,side_drink_extra_request,dlg-0f9a67ed-b4ea-4f70-beb8-cce6169d879b,5,Bir de 3 ayran olsun.,Tabii. 3 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+474,test,confirm_or_close_order,dlg-01765acc-b2cf-46b9-8961-7f259645b414,6,"Sipariş doğru, onaylayalım.",Tamam. Siparişi onaylamak istediğinizi anladım.
+475,test,add_more_quantity,dlg-32895101-8097-431a-8d22-34b3ea6a1465,4,4 sütlaç daha.,Tabii. 4 adet sütlaç daha eklemek istediğinizi anladım. Başka bir isteğiniz var mı?
+476,test,remove_or_change_order,dlg-025a1022-3f81-4266-b4a9-da0b7deb3d24,7,çayı çıkarır mısın?,Tabii. Çayı siparişten çıkarmak istediğinizi anladım. Başka bir değişiklik var mı?
+477,test,add_more_quantity,dlg-2c1edeb0-903c-4c7c-9ff0-a0cbd9b6ca65,8,4 ezogelin çorbası daha.,4 adet ezogelin çorbası daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+478,test,order_clarification,dlg-bf5457d1-a86a-4bcd-817d-1aa3eda8b7dc,6,Yan ürün olarak ne önerirsiniz?,Yan ürün tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+479,test,side_drink_extra_request,dlg-0f3cb363-5f4f-4d15-b7de-b526ec34e526,4,Yemeğin yanına 3 ayran alabilir miyim?,Tabii. 3 adet ayran istediğinizi anladım. Başka bir isteğiniz var mı?
+480,test,confirm_or_close_order,dlg-10dd22f0-9c9f-4c32-868f-79ffd1a66830,7,"Tamam, kapatalım.",Tamam. Başka bir isteğiniz olmadığını anladım.
+481,test,confirm_or_close_order,dlg-00d882a3-255d-4e15-99cb-f068046d6eb2,8,Siparişi onaylıyorum.,Tamam. Siparişi onaylamak istediğinizi anladım.
+482,test,clear_order_item,dlg-27908c06-09e8-4710-9555-3e286312aff3,2,İki pilav alabilir miyim?,2 adet pilav istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+483,test,order_clarification,dlg-3273d2fd-49f3-4c76-84be-0a02cb3f3b5b,9,Bir çorba olsun.,Hangi çorbayı istediğinizi söyleyebilir misiniz? Güncel menüye bakmak en doğrusu olur.
+484,test,polite_thanks_closing,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,17,"Teşekkür ederim, son olarak bu kadar.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+485,test,add_more_quantity,dlg-1844d373-b934-45fa-b512-d8bdaaa68d7d,3,2 künefe daha.,2 adet künefe daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+486,test,order_clarification,dlg-6c3a2265-87b7-454e-aa00-c823bcdc0cd0,8,Tatlı için seçenek söyler misiniz?,Tatlı seçenekleri için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+487,test,clear_order_item,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,13,1 makarna istiyorum.,1 adet makarna istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+488,test,clear_order_item,dlg-1fc6ac23-1e3a-427d-b520-adadcf92c6e7,7,Bir soda alabilir miyim?,1 adet soda istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+489,test,order_clarification,dlg-068b2ad4-8f09-4417-87be-fd3b387ddd40,5,Soğuk içecek olarak ne önerirsiniz?,Soğuk içecek tercihiniz için güncel menüye bakmak en doğrusu olur. Nasıl bir seçenek istediğinizi biraz açar mısınız?
+490,test,confirm_or_close_order,dlg-0e52d554-3d0c-4d75-b433-4e75501abbc7,9,Başka sipariş vermeyeceğim.,Tamam. Başka bir isteğiniz olmadığını anladım.
+491,test,polite_thanks_closing,dlg-0460c70c-34cb-43c5-affb-952f7365be73,10,"Teşekkürler, liste bu kadar.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+492,test,order_clarification,dlg-70817963-d0e6-428f-8f8f-df90c296ff85,5,Yan ürün için seçenek söyler misiniz?,Yan ürün seçenekleri için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+493,test,order_clarification,dlg-bf5457d1-a86a-4bcd-817d-1aa3eda8b7dc,6,Bir hafif bir seçenek istiyorum.,Hafif seçenekler için güncel menüye bakmak en doğrusu olur. Aklınızda belirli bir tercih var mı?
+494,test,add_more_quantity,dlg-329820ec-f25c-4ee3-b1b2-73a908447c51,3,4 künefe daha.,4 adet künefe daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+495,test,polite_thanks_closing,dlg-025a1022-3f81-4266-b4a9-da0b7deb3d24,11,"Sağ olun, sipariş bu.",Rica ederim. Başka bir isteğiniz olmadığını anladım.
+496,test,add_more_quantity,dlg-1ae1917c-7c88-4207-9f79-93e7da8f6cd3,10,3 çay daha.,3 adet çay daha istediğinizi anladım. Güncel menüde varsa siparişe eklenebilir. Başka bir isteğiniz var mı?
+497,test,confirm_or_close_order,dlg-06af4900-e9c9-4526-9621-7f4c102cf662,9,"Siparişim net, onaylıyorum.",Tamam. Siparişi onaylamak istediğinizi anladım.
+498,test,confirm_or_close_order,dlg-110874f6-515b-4f86-bd46-74cbc377ea10,6,Liste bu kadar.,Tamam. Başka bir isteğiniz olmadığını anladım.
+499,test,order_clarification,dlg-32bb9aaa-fbb0-4097-9f40-3d369e7c4d7b,3,Bir ana yemek alacağım.,Hangi ana yemeği istediğinizi belirtir misiniz? Güncel menüden birlikte netleştirebiliriz.

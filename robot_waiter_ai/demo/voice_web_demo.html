@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GarsonBot Voice Demo</title>
+    <style>
+      :root {
+        --bg: #f3eee3;
+        --panel: #fffaf1;
+        --accent: #176b5b;
+        --accent-2: #d96b2b;
+        --text: #1e1b18;
+        --muted: #6b625b;
+        --line: #d7c7b0;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+        background:
+          radial-gradient(circle at top left, #fff3d0 0, transparent 32%),
+          linear-gradient(135deg, #f5efe4 0%, #eadcc8 100%);
+        color: var(--text);
+      }
+
+      .page {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 32px 20px 48px;
+      }
+
+      .hero,
+      .panel {
+        background: rgba(255, 250, 241, 0.94);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(77, 57, 33, 0.08);
+      }
+
+      .hero {
+        padding: 28px;
+        margin-bottom: 20px;
+      }
+
+      h1,
+      h2 {
+        margin: 0 0 10px;
+      }
+
+      h1 {
+        font-size: clamp(28px, 4vw, 42px);
+      }
+
+      p {
+        margin: 0;
+        line-height: 1.5;
+      }
+
+      .hero p {
+        color: var(--muted);
+        max-width: 720px;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: 1.4fr 1fr;
+        gap: 20px;
+      }
+
+      .panel {
+        padding: 22px;
+      }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 18px 0;
+      }
+
+      button {
+        border: 0;
+        border-radius: 999px;
+        padding: 12px 18px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .primary {
+        background: var(--accent);
+        color: white;
+      }
+
+      .secondary {
+        background: #f7d9c6;
+        color: #6d3416;
+      }
+
+      .ghost {
+        background: #efe6d8;
+        color: #4f463f;
+      }
+
+      .status-chip {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: #e8f4ef;
+        color: var(--accent);
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 14px;
+      }
+
+      .field {
+        margin-top: 16px;
+      }
+
+      .field label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 700;
+      }
+
+      textarea,
+      .response-box {
+        width: 100%;
+        min-height: 110px;
+        border-radius: 16px;
+        border: 1px solid var(--line);
+        background: white;
+        padding: 14px;
+        font: inherit;
+        color: inherit;
+      }
+
+      textarea {
+        resize: vertical;
+      }
+
+      .response-box {
+        white-space: pre-wrap;
+      }
+
+      .status-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .phrase-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .phrase-button {
+        border-radius: 14px;
+        padding: 9px 12px;
+        background: #ffffff;
+        border: 1px solid var(--line);
+        color: #3f3832;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .status-item {
+        padding: 12px 14px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        background: white;
+      }
+
+      .status-item strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .small {
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      @media (max-width: 860px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <section class="hero">
+        <div class="status-chip">Demo-only local voice wrapper</div>
+        <h1>GarsonBot Sesli Demo</h1>
+        <p>
+          Bu sayfa, mevcut deterministik garson asistanını mikrofon ve hoparlör üzerinden
+          göstermek için hazırlanmış hafif bir yerel demo arayüzüdür. Her yanıt mevcut
+          deterministik yol üzerinden üretilir; runtime LLM entegrasyonu yoktur.
+        </p>
+      </section>
+
+      <div class="grid">
+        <section class="panel">
+          <h2>Sesli Etkileşim</h2>
+          <p class="small">
+            Chrome veya Edge önerilir. Mikrofon iznini onaylayın. Tanıma dili `tr-TR`
+            olarak ayarlanmaya çalışılır.
+          </p>
+
+          <div class="controls">
+            <button id="speakBtn" class="primary">Konuş</button>
+            <button id="sendBtn" class="ghost">Metni Gönder</button>
+            <button id="ttsBtn" class="secondary">Cevabı seslendir</button>
+          </div>
+
+          <div class="field">
+            <label for="recognizedText">Algılanan kullanıcı metni</label>
+            <textarea
+              id="recognizedText"
+              placeholder="Mikrofondan algılanan veya elle girilen metin burada görünecek."
+            ></textarea>
+          </div>
+
+          <div class="field">
+            <label for="assistantResponse">Asistan yanıtı</label>
+            <p class="small">Demo phrases</p>
+            <div class="phrase-grid">
+              <button class="phrase-button" type="button" data-phrase="Ayran ne kadar?">Ayran ne kadar?</button>
+              <button class="phrase-button" type="button" data-phrase="Pizza var mı?">Pizza var mı?</button>
+              <button class="phrase-button" type="button" data-phrase="İçecek seçenekleri neler?">İçecek seçenekleri neler?</button>
+              <button class="phrase-button" type="button" data-phrase="Domates Çorbası içinde ne var?">Domates Çorbası içinde ne var?</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Asistan yaniti</label>
+            <div id="assistantResponse" class="response-box">
+              Henüz bir yanıt yok.
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <h2>Durum Paneli</h2>
+          <div class="status-list">
+            <div class="status-item">
+              <strong>Deterministic eval</strong>
+              <span>17/17</span>
+            </div>
+            <div class="status-item">
+              <strong>Tests</strong>
+              <span>164 passed</span>
+            </div>
+            <div class="status-item">
+              <strong>Runtime LLM</strong>
+              <span>not integrated</span>
+            </div>
+            <div class="status-item">
+              <strong>Scope</strong>
+              <span>menu-grounded waiter conversation</span>
+            </div>
+            <div class="status-item">
+              <strong>Live status</strong>
+              <span id="liveStatus">Hazır.</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <script>
+      const speakBtn = document.getElementById("speakBtn");
+      const sendBtn = document.getElementById("sendBtn");
+      const ttsBtn = document.getElementById("ttsBtn");
+      const recognizedText = document.getElementById("recognizedText");
+      const assistantResponse = document.getElementById("assistantResponse");
+      const liveStatus = document.getElementById("liveStatus");
+      const phraseButtons = document.querySelectorAll("[data-phrase]");
+
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      let recognition = null;
+
+      function setStatus(message) {
+        liveStatus.textContent = message;
+      }
+
+      function pickTurkishVoice() {
+        const voices = window.speechSynthesis.getVoices();
+        return (
+          voices.find((voice) => voice.lang === "tr-TR") ||
+          voices.find((voice) => voice.lang.startsWith("tr")) ||
+          null
+        );
+      }
+
+      function speakResponse() {
+        const text = assistantResponse.textContent.trim();
+        if (!text || text === "Henüz bir yanıt yok.") {
+          setStatus("Seslendirilecek yanıt bulunamadı.");
+          return;
+        }
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "tr-TR";
+        const voice = pickTurkishVoice();
+        if (voice) {
+          utterance.voice = voice;
+        }
+        utterance.onstart = () => setStatus("Yanıt seslendiriliyor...");
+        utterance.onend = () => setStatus("Yanıt seslendirmesi tamamlandı.");
+        utterance.onerror = () => setStatus("Seslendirme başarısız oldu.");
+        window.speechSynthesis.cancel();
+        window.speechSynthesis.speak(utterance);
+      }
+
+      async function sendMessage() {
+        const message = recognizedText.value.trim();
+        if (!message) {
+          setStatus("Önce konuşun veya bir mesaj girin.");
+          return;
+        }
+
+        setStatus("Deterministik asistana gönderiliyor...");
+        assistantResponse.textContent = "Yanıt bekleniyor...";
+
+        try {
+          const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ message }),
+          });
+          const payload = await response.json();
+          if (!response.ok) {
+            throw new Error(payload.error || "İstek başarısız oldu.");
+          }
+
+          assistantResponse.textContent = payload.response || "";
+          setStatus(`Yanıt alındı. Intent: ${payload.intent || "bilinmiyor"}`);
+          speakResponse();
+        } catch (error) {
+          assistantResponse.textContent = "Bir hata oluştu.";
+          setStatus(error.message || "İstek sırasında hata oluştu.");
+        }
+      }
+
+      function startRecognition() {
+        if (!SpeechRecognition) {
+          setStatus("Bu tarayıcı Web Speech API konuşma tanımayı desteklemiyor.");
+          return;
+        }
+
+        if (!recognition) {
+          recognition = new SpeechRecognition();
+          recognition.lang = "tr-TR";
+          recognition.interimResults = false;
+          recognition.maxAlternatives = 1;
+
+          recognition.onstart = () => setStatus("Dinleniyor...");
+          recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            recognizedText.value = transcript;
+            setStatus("Konuşma algılandı. Yanıt hazırlanıyor...");
+            sendMessage();
+          };
+          recognition.onerror = (event) => {
+            setStatus(`Konuşma tanıma hatası: ${event.error}`);
+          };
+          recognition.onend = () => {
+            if (liveStatus.textContent === "Dinleniyor...") {
+              setStatus("Dinleme tamamlandı.");
+            }
+          };
+        }
+
+        recognizedText.focus();
+        recognition.start();
+      }
+
+      speakBtn.addEventListener("click", startRecognition);
+      sendBtn.addEventListener("click", sendMessage);
+      ttsBtn.addEventListener("click", speakResponse);
+      phraseButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          recognizedText.value = button.dataset.phrase || "";
+          sendMessage();
+        });
+      });
+
+      window.speechSynthesis.onvoiceschanged = () => {};
+    </script>
+  </body>
+</html>

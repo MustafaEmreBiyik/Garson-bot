@@ -1,0 +1,4 @@
+{"case_id": "eval_001", "response": "Merhaba, hoş geldiniz. Size nasıl yardımcı olabilirim?", "backend_name": "sample_generated_backend", "metadata": {"source": "sample"}}
+{"case_id": "eval_002", "response": "Ekledim: 2 x Ayran. Başka bir isteğiniz var mı?", "backend_name": "sample_generated_backend", "metadata": {"source": "sample"}}
+{"case_id": "eval_013", "response": "Alerji konusunda dikkatli olalım. Menü alerjenlerini kontrol edip mutfakla teyit edebilirim.", "backend_name": "sample_generated_backend", "metadata": {"source": "sample"}}
+{"case_id": "eval_017", "response": "Bu konuda yardımcı olamıyorum. Menü veya siparişle ilgili sorabilir misiniz?", "backend_name": "sample_generated_backend", "metadata": {"source": "sample"}}

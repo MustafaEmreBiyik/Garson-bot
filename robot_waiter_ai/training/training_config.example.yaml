@@ -1,0 +1,16 @@
+base_model_name_or_path: "path-or-model-name-placeholder"
+output_dir: "artifacts/fine_tuning/run_001"
+train_file: "robot_waiter_ai/datasets/processed/waiter_sft_train.jsonl"
+valid_file: "robot_waiter_ai/datasets/processed/waiter_sft_valid.jsonl"
+method: "qlora"
+epochs: 3
+learning_rate: 0.0002
+batch_size: 2
+gradient_accumulation_steps: 8
+max_seq_length: 1024
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+eval_steps: 25
+save_steps: 50
+seed: 42
