@@ -51,8 +51,11 @@ Single-message grounded demo:
 ```
 
 ## Latest Known Results
-- full test suite: `160 passed, 1 warning`
+- full test suite: `263 passed, 1 warning`
 - deterministic evaluation: `17/17 passed`
+- deterministic voice web demo smoke test: `passed`
+- qwen text smoke test on Windows RTX 4050 laptop: `passed`
+- qwen voice web demo smoke test on Windows RTX 4050 laptop: `passed`
 
 ## Important Files
 - [main.py](C:/Users/Emre/Desktop/Garson-bot/robot_waiter_ai/app/main.py)
@@ -74,8 +77,10 @@ Single-message grounded demo:
 - Second manual paraphrase pilot has accepted manual rows, but semantic review is intentionally paused for now.
 
 ## Known Limitations
-- no runtime LLM integration
-- no speech pipeline
+- deterministic backend remains the default production-safe path
+- qwen runtime integration exists only as an optional experimental local backend
+- windows qwen runtime currently falls back away from 4-bit loading by default because that path degraded reply quality during smoke tests
+- browser speech demo exists for local experimentation only; it is not treated as a production speech stack
 - no robot motion/navigation stack
 - no web/API/deployment layer
 - no trained model ready to replace deterministic control
@@ -94,4 +99,4 @@ For the current milestone:
 - do not expand dataset pilots further
 - do not promote intermediate candidates into processed datasets
 - do not train a model
-- do not add runtime LLM integration
+- do not promote the experimental qwen backend as the primary runtime path

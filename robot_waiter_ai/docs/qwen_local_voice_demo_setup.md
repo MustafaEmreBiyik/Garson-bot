@@ -7,6 +7,8 @@ This project has two browser voice demo backends:
 
 Deterministic mode remains the default. If local Qwen does not run on your Windows machine because of VRAM, `bitsandbytes`, `torch`, or driver issues, use the deterministic demo locally and test Qwen on Colab, Ubuntu, WSL2, or Jetson instead.
 
+On this Windows setup, the runtime now avoids 4-bit loading by default even when `bitsandbytes` is installed, because smoke tests showed degraded Turkish reply quality on the 4-bit path.
+
 ## Base Model vs LoRA Adapter
 
 The LoRA adapter is not the full model.
@@ -83,19 +85,19 @@ If you want the scripted version, run:
 ## Text Test
 
 ```powershell
-.\.venv-llm\Scripts\python.exe -m robot_waiter_ai.inference.qwen_lora_waiter --base-model-path robot_waiter_ai\models\Qwen2.5-3B-Instruct --adapter-path robot_waiter_ai\models\qwen25_3b_waiter_v1_1_lora --message "2 ayran istiyorum" --no-4bit
+.\.venv-llm\Scripts\python.exe -m robot_waiter_ai.inference.qwen_lora_waiter --base-model-path robot_waiter_ai\models\Qwen2.5-3B-Instruct --adapter-path robot_waiter_ai\models\qwen25_3b_waiter_v1_1_lora --message "2 ayran istiyorum"
 ```
 
 Notes:
 
-- `--no-4bit` is useful on Windows when `bitsandbytes` does not work
+- `--no-4bit` is still a valid explicit flag and matches the current Windows default behavior
 - `--no-4bit` may need more RAM or VRAM
 - if loading still fails, that is an environment/runtime limitation, not a dataset or training failure
 
 ## Browser Voice Demo with Qwen
 
 ```powershell
-.\.venv-llm\Scripts\python.exe -m robot_waiter_ai.demo.voice_web_demo --port 8001 --backend qwen --qwen-base-model-path robot_waiter_ai\models\Qwen2.5-3B-Instruct --qwen-adapter-path robot_waiter_ai\models\qwen25_3b_waiter_v1_1_lora --no-4bit
+.\.venv-llm\Scripts\python.exe -m robot_waiter_ai.demo.voice_web_demo --port 8001 --backend qwen --qwen-base-model-path robot_waiter_ai\models\Qwen2.5-3B-Instruct --qwen-adapter-path robot_waiter_ai\models\qwen25_3b_waiter_v1_1_lora
 ```
 
 Then open:

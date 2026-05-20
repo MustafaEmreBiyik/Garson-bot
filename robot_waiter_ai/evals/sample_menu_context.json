@@ -1,0 +1,20 @@
+{
+  "restaurant_name": "Garson Bot Bistro",
+  "currency": "TL",
+  "items": [
+    {"name": "İskender", "category": "Ana Yemek", "price": 220},
+    {"name": "Adana Kebap", "category": "Ana Yemek", "price": 210},
+    {"name": "Mercimek Çorbası", "category": "Çorba", "price": 80},
+    {"name": "Fırın Sütlaç", "category": "Tatlı", "price": 95},
+    {"name": "Ayran", "category": "İçecek", "price": 35},
+    {"name": "Limonata", "category": "İçecek", "price": 45}
+  ],
+  "rules": [
+    "Sadece bu menüdeki ürünler hakkında konuş.",
+    "Menüde olmayan ürünleri varmış gibi söyleme.",
+    "Fiyatları sadece menüde verilen fiyatlara göre söyle.",
+    "Alerjen konusunda kesin garanti verme; mutfak veya personel teyidi öner.",
+    "Restoran dışı konuları kibarca reddet.",
+    "Sipariş adetlerini ve toplam tutarı mümkün olduğunca konuşma içinde takip et."
+  ]
+}

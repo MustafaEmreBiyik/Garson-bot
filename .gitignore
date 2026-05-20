@@ -10,6 +10,10 @@ dist/
 build/
 .eggs/
 .pytest_cache/
+robot_waiter_ai/.pytest_tmp/
+robot_waiter_ai/.tmp_pytest/
+robot_waiter_ai/.test_tmp_runtime/
+robot_waiter_ai/.test_tmp_probe/
 pytest_tmp_work/
 pytest_tmp_*/
 probe_basetemp/
@@ -24,5 +28,6 @@ Thumbs.db
 voice_demo_stdout.log
 voice_demo_stderr.log
 *.log
+robot_waiter_ai/evals/*_outputs.jsonl
 .ipynb_checkpoints/
 .vscode/
