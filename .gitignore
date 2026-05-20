@@ -31,3 +31,10 @@ voice_demo_stderr.log
 robot_waiter_ai/evals/*_outputs.jsonl
 .ipynb_checkpoints/
 .vscode/
+
+# Scratch and temp files
+*scratch*
+*.diff
+*.patch
+*.tmp
+

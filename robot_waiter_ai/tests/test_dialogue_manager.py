@@ -24,32 +24,32 @@ def test_add_order_flow(manager):
     response = manager.handle_message("2 Ayran istiyorum")
     assert "Ekledim" in response
     assert "Ayran" in response
-    assert manager.order.items["b1"].quantity == 2
+    assert manager.order.items["drink_1"].quantity == 2
 
     response = manager.handle_message("ayran alabilir miyim 3 tane")
     assert "Ekledim" in response
-    assert manager.order.items["b1"].quantity == 5
+    assert manager.order.items["drink_1"].quantity == 5
 
     response = manager.handle_message("bir mercimek corbasi ekle")
     assert "Ekledim" in response
     assert "Mercimek" in response
-    assert manager.order.items["s1"].quantity == 1
+    assert manager.order.items["soup_1"].quantity == 1
 
 
 def test_add_order_flow_handles_turkish_characters(manager):
     response = manager.handle_message("Bir mercimek çorbası ekle")
     assert "Ekledim" in response
     assert "Mercimek" in response
-    assert manager.order.items["s1"].quantity == 1
+    assert manager.order.items["soup_1"].quantity == 1
 
 
 @pytest.mark.parametrize(
     "message, item_id, expected_quantity",
     [
-        ("2 ayran daha", "b1", 2),
-        ("bir ayran daha", "b1", 1),
-        ("bir tane ayran daha", "b1", 1),
-        ("2 limonata daha", "b2", 2),
+        ("2 ayran daha", "drink_1", 2),
+        ("bir ayran daha", "drink_1", 1),
+        ("bir tane ayran daha", "drink_1", 1),
+        ("2 limonata daha", "drink_2", 2),
     ],
 )
 def test_add_order_shorthand_phrases(manager, message, item_id, expected_quantity):
@@ -61,10 +61,10 @@ def test_add_order_shorthand_phrases(manager, message, item_id, expected_quantit
 
 def test_remove_order(manager):
     manager.handle_message("2 ayran istiyorum")
-    assert "b1" in manager.order.items
+    assert "drink_1" in manager.order.items
     response = manager.handle_message("ayranı çıkar")
     assert "Çıkardım" in response
-    assert "b1" not in manager.order.items
+    assert "drink_1" not in manager.order.items
 
 
 def test_clear_order(manager):
@@ -77,7 +77,7 @@ def test_clear_order(manager):
 def test_summarize_order(manager):
     manager.handle_message("ayran ekle")
     response = manager.handle_message("siparişim ne")
-    assert "Ayran" in response
+    assert "Yayık Ayran" in response
     assert "Toplam" in response
     assert "Onaylamak ister misiniz?" in response
 
@@ -86,7 +86,7 @@ def test_confirm_order_with_non_empty_order(manager):
     manager.handle_message("2 Ayran istiyorum")
     response = manager.handle_message("Siparişi onayla")
     assert "Siparişinizi onaylıyorum." in response
-    assert "2 x Ayran" in response
+    assert "2 x Yayık Ayran" in response
     assert "MVP/demo onayıdır" in response
 
 
@@ -108,33 +108,33 @@ def test_confirm_order_natural_turkish_phrases(manager):
 
 def test_menu_question(manager):
     response = manager.handle_message("ayranın fiyatı nedir")
-    assert "Ayran" in response
+    assert "Yayık Ayran" in response
     assert "45.00 TL" in response
-    assert response == "Ayran 45.00 TL."
+    assert response == "Yayık Ayran 45.00 TL."
     assert "Alerjenler" not in response
-    assert "Tuzlu yoğurt içeceği" not in response
+    assert "Tuzlu yoğurt" not in response
 
 
 def test_price_question_ne_kadar_is_concise(manager):
     response = manager.handle_message("Ayran ne kadar?")
-    assert response == "Ayran 45.00 TL."
+    assert response == "Yayık Ayran 45.00 TL."
 
 
 def test_price_question_fiyat_word_is_concise(manager):
     response = manager.handle_message("Ayran fiyatı nedir?")
-    assert response == "Ayran 45.00 TL."
+    assert response == "Yayık Ayran 45.00 TL."
 
 
 def test_ingredient_question_still_returns_detail_and_caution(manager):
-    response = manager.handle_message("Domates Çorbası içinde ne var?")
-    assert "Domates bazlı" in response
+    response = manager.handle_message("Kremalı Mantar Çorbası içinde ne var?")
+    assert "dağ mantarları" in response
     assert "Alerjenler" in response
     assert "teyit" in response
 
 
 def test_item_allergy_question_keeps_cautious_language(manager):
     response = manager.handle_message("Ayran süt ürünü içeriyor mu?")
-    assert "Ayran" in response
+    assert "Yayık Ayran" in response
     assert "teyit" in response
     assert "kesinlikle güvenli" not in response
 
@@ -142,7 +142,7 @@ def test_item_allergy_question_keeps_cautious_language(manager):
 def test_category_specific_menu_question_lists_category_items(manager):
     response = manager.handle_message("İçecek seçenekleri neler?")
     assert "İçecek seçeneklerimiz" in response
-    assert "Ayran" in response
+    assert "Yayık Ayran" in response
     assert "Limonata" in response
     assert "Siparişe eklemek istediğiniz ürünü yazar mısınız?" not in response
 
@@ -168,7 +168,7 @@ def test_main_dish_alias_questions_list_main_dishes(manager, message):
 
     assert "Ana Yemek seçeneklerimiz" in response
     assert "Izgara Tavuk Salata" in response
-    assert "Etli Güveç" in response
+    assert "Et Döner" in response
 
 
 def test_recommendation_with_turkish_characters(manager):

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from argparse import Namespace
+from pathlib import Path
 
 from robot_waiter_ai.demo import voice_web_demo
 from robot_waiter_ai.demo.voice_web_demo import build_chat_response, handle_chat_request
@@ -106,7 +107,7 @@ def test_run_server_passes_base_model_path_and_no_4bit_to_qwen_loader(monkeypatc
 
     assert calls == [
         (
-            "robot_waiter_ai\\models\\qwen25_3b_waiter_v1_1_lora",
+            str(Path("robot_waiter_ai/models/qwen25_3b_waiter_v1_1_lora")),
             "robot_waiter_ai/models/Qwen2.5-3B-Instruct",
             False,
         )

@@ -6,6 +6,8 @@ import re
 from collections import Counter
 from pathlib import Path
 
+import pytest
+
 from robot_waiter_ai.training.build_qwen25_waiter_v1_1_taskmaster_targeted import (
     DEFAULT_ALL_OUTPUT_PATH,
     DEFAULT_AUDIT_OUTPUT_PATH,
@@ -180,6 +182,10 @@ def test_uncertain_items_use_availability_safe_wording():
     )
 
 
+@pytest.mark.skipif(
+    not DEFAULT_FOOD_ORDERING_PATH.exists(),
+    reason="Raw taskmaster food-ordering.json dataset not present in this local environment."
+)
 def test_builder_uses_food_ordering_source_only(tmp_path):
     all_output = tmp_path / "targeted_500.jsonl"
     train_output = tmp_path / "targeted_train.jsonl"

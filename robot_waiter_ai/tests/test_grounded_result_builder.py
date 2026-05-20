@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 
 from robot_waiter_ai.assistant.dialogue_manager import DialogueManager
 from robot_waiter_ai.inference.grounded_result_builder import GroundedResultBuilder
@@ -32,9 +32,9 @@ def test_add_item_includes_item_quantity_and_canonical_response():
     result = builder.build("2 Ayran istiyorum")
 
     assert result.action.intent == "add_item"
-    assert result.action.entities["items"] == ["Ayran"]
-    assert result.action.entities["quantities"]["Ayran"] == 2
-    assert result.order.items[0]["name"] == "Ayran"
+    assert result.action.entities["items"] == ["Yayık Ayran"]
+    assert result.action.entities["quantities"]["Yayık Ayran"] == 2
+    assert result.order.items[0]["name"] == "Yayık Ayran"
     assert result.order.items[0]["quantity"] == 2
     assert "Ekledim" in result.canonical_response
     assert validate_grounded_result(result) == []
@@ -45,8 +45,8 @@ def test_price_question_includes_correct_price_and_tl_preservation():
     result = builder.build("Ayranın fiyatı nedir?")
 
     assert result.action.intent == "price_question"
-    assert result.menu.prices["Ayran"] == 45.0
-    assert result.canonical_response == "Ayran 45.00 TL."
+    assert result.menu.prices["Yayık Ayran"] == 45.0
+    assert result.canonical_response == "Yayık Ayran 45.00 TL."
     assert "TL" in result.must_preserve_terms
     assert "45.00" in result.must_preserve_terms
     assert validate_grounded_result(result) == []
@@ -104,8 +104,8 @@ def test_paraphrase_safety_accepts_safe_and_rejects_unsafe_price_paraphrase():
     builder = _build_builder()
     result = builder.build("Ayranın fiyatı nedir?")
 
-    safe_text = "Ayran 45.00 TL."
-    unsafe_text = "Ayran 15.00 TL."
+    safe_text = "Yayık Ayran 45.00 TL."
+    unsafe_text = "Yayık Ayran 15.00 TL."
 
     assert check_paraphrase_safety(result, safe_text) == []
     errors = check_paraphrase_safety(result, unsafe_text)

@@ -30,15 +30,12 @@ def test_handle_chat_request_rejects_invalid_payload():
 
 
 def test_demo_assets_exist_and_processed_datasets_stay_untouched():
+    base_dir = Path(__file__).parent.parent
     processed_paths = [
-        Path("C:/Users/Emre/Desktop/Garson-bot/robot_waiter_ai/datasets/processed/waiter_sft_train.jsonl"),
-        Path("C:/Users/Emre/Desktop/Garson-bot/robot_waiter_ai/datasets/processed/waiter_sft_valid.jsonl"),
-        Path(
-            "C:/Users/Emre/Desktop/Garson-bot/robot_waiter_ai/datasets/processed/grounded_paraphrase_train.jsonl"
-        ),
-        Path(
-            "C:/Users/Emre/Desktop/Garson-bot/robot_waiter_ai/datasets/processed/grounded_paraphrase_valid.jsonl"
-        ),
+        base_dir / "datasets/processed/waiter_sft_train.jsonl",
+        base_dir / "datasets/processed/waiter_sft_valid.jsonl",
+        base_dir / "datasets/processed/grounded_paraphrase_train.jsonl",
+        base_dir / "datasets/processed/grounded_paraphrase_valid.jsonl",
     ]
     before_hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in processed_paths}
 

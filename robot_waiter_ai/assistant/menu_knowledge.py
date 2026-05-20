@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 import unicodedata
 from typing import Dict, Iterable, List, Optional
@@ -18,6 +18,7 @@ class MenuItem:
     allergens: List[str]
     availability: bool
     tags: List[str]
+    aliases: List[str] = field(default_factory=list)
 
 
 def _repair_text(text: str) -> str:
@@ -72,6 +73,7 @@ class MenuKnowledge:
             allergens=list(entry.get("allergens", []) or []),
             availability=bool(entry.get("availability", False)),
             tags=list(entry.get("tags", []) or []),
+            aliases=list(entry.get("aliases", []) or []),
         )
 
     def list_categories(self) -> List[str]:
@@ -88,12 +90,21 @@ class MenuKnowledge:
         q = normalize_text(query).strip()
         if not q:
             return []
-        return [item for item in self.items if q in normalize_text(item.name)]
+        results = []
+        for item in self.items:
+            if q in normalize_text(item.name):
+                results.append(item)
+            elif any(q in normalize_text(alias) for alias in item.aliases):
+                results.append(item)
+        return results
 
     def get_item_by_name(self, name: str) -> Optional[MenuItem]:
         q = normalize_text(name).strip()
         for item in self.items:
             if normalize_text(item.name) == q:
+                return item
+        for item in self.items:
+            if any(normalize_text(alias) == q for alias in item.aliases):
                 return item
         return None
 
@@ -115,4 +126,13 @@ class MenuKnowledge:
 
     def find_mentions(self, text: str) -> List[MenuItem]:
         normalized_text = normalize_text(text)
-        return [item for item in self.items if normalize_text(item.name) in normalized_text]
+        matched_items: List[MenuItem] = []
+        for item in self.items:
+            if normalize_text(item.name) in normalized_text:
+                matched_items.append(item)
+                continue
+            for alias in item.aliases:
+                if normalize_text(alias) in normalized_text:
+                    matched_items.append(item)
+                    break
+        return matched_items

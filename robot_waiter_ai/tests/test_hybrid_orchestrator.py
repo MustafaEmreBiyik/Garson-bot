@@ -29,7 +29,7 @@ def test_hybrid_orchestrator_does_not_invent_prices():
 
     result = orchestrator.handle_message("Ayran ne kadar?")
 
-    assert result.response_text == "Ayran 45.00 TL."
+    assert result.response_text == "Yayık Ayran 45.00 TL."
     assert "tahminen" not in result.response_text.casefold()
 
 
@@ -58,7 +58,7 @@ def test_hybrid_orchestrator_routes_flexible_category_question_to_deterministic_
     result = orchestrator.handle_message("Soğuk içecek var mı?")
 
     assert "İçecek seçeneklerimiz" in result.response_text
-    assert "Ayran" in result.response_text
+    assert "Yayık Ayran" in result.response_text
     assert "Limonata" in result.response_text
 
 

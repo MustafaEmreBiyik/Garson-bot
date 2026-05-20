@@ -93,7 +93,7 @@ def test_existing_supported_item_order_still_works(manager):
 def test_existing_price_question_still_concise(manager):
     response = manager.handle_message("Ayran ne kadar?")
 
-    assert response == "Ayran 45.00 TL."
+    assert response == "Yayık Ayran 45.00 TL."
 
 
 def test_existing_drink_listing_still_works(manager):

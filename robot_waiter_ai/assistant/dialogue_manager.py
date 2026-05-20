@@ -284,7 +284,17 @@ class DialogueManager:
     def _extract_quantity(self, text: str, name: str) -> int:
         word_to_num = {"bir": 1, "iki": 2, "uc": 3, "dort": 4, "bes": 5}
         normalized_text = normalize_text(text)
-        normalized_name = normalize_text(name)
+        
+        matched_name = name
+        item = self.menu.get_item_by_name(name)
+        if item:
+            if normalize_text(item.name) not in normalized_text:
+                for alias in item.aliases:
+                    if normalize_text(alias) in normalized_text:
+                        matched_name = alias
+                        break
+                        
+        normalized_name = normalize_text(matched_name)
         num_pattern = r"(\d+|bir|iki|uc|dort|bes)"
 
         p1 = rf"{num_pattern}\s*(?:x|adet|tane)?\s*{re.escape(normalized_name)}"
@@ -373,7 +383,12 @@ class DialogueManager:
         )
 
     def _is_recommendation(self, lower: str) -> bool:
-        return any(word in lower for word in ["oner", "tavsiye", "ne onerirsin", "onerir"])
+        words = lower.split()
+        return any(
+            any(w.startswith(prefix) for prefix in ["oner", "tavsiye"])
+            for w in words
+            if not w.startswith("doner")
+        )
 
     def _is_restaurant_info_question(self, lower: str) -> bool:
         return any(

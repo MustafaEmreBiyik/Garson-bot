@@ -1,5 +1,5 @@
 menu:
-  - id: s1
+  - id: soup_1
     name: Mercimek Çorbası
     category: Çorba
     price: 85
@@ -7,59 +7,88 @@ menu:
     allergens: [gluten]
     availability: true
     tags: [vegetarian, traditional]
-  - id: s2
-    name: Domates Çorbası
+    aliases: ["mercimek", "mercimek çorbası", "mercimek corbasi"]
+  - id: soup_2
+    name: Kremalı Mantar Çorbası
     category: Çorba
-    price: 80
-    description: Domates bazlı, krema ile servis edilir.
+    price: 95
+    description: Taze dağ mantarları ve kremanın eşsiz uyumu.
     allergens: [dairy, gluten]
     availability: true
     tags: [vegetarian]
-  - id: m1
+    aliases: ["mantar çorbası", "mantar corbasi"]
+    
+  - id: main_1
+    name: Izgara Köfte
+    category: Ana Yemek
+    price: 240
+    description: Kasap köfte, elma dilim patates and köz biber ile servis edilir.
+    allergens: [gluten]
+    availability: true
+    tags: [meat, traditional]
+    aliases: ["köfte", "kofte"]
+  - id: main_2
+    name: Et Döner
+    category: Ana Yemek
+    price: 280
+    description: İnce dilimlenmiş dana eti, özel soslu lavaş ve sumaklı soğan ile.
+    allergens: [gluten]
+    availability: true
+    tags: [meat]
+    aliases: ["döner", "doner"]
+  - id: main_3
     name: Izgara Tavuk Salata
     category: Ana Yemek
     price: 210
-    description: Izgara tavuk, mevsim salata ve zeytinyağlı sos ile hazırlanır.
+    description: Özel marineli tavuk, taze yeşillikler.
     allergens: []
     availability: true
-    tags: [light, high-protein, gluten-free]
-  - id: m2
-    name: Sebzeli Makarna
-    category: Ana Yemek
-    price: 195
-    description: Sebzelerle sotelenmiş penne makarna.
-    allergens: [gluten]
-    availability: true
-    tags: [vegetarian]
-  - id: m3
-    name: Etli Güveç
-    category: Ana Yemek
-    price: 260
-    description: Dana eti, sebzeler ve fırın güveç ile hazırlanır.
-    allergens: []
-    availability: true
-    tags: [hearty]
-  - id: d1
+    tags: [chicken, light]
+    aliases: ["tavuk salata", "tavuklu salata"]
+
+  - id: dessert_1
     name: Fırın Sütlaç
     category: Tatlı
-    price: 120
-    description: Fırında karamelize sütlü tatlı.
+    price: 100
+    description: Fırında üzeri kızarmış günlük taze sütlaç.
     allergens: [dairy]
     availability: true
-    tags: [sweet]
-  - id: b1
-    name: Ayran
+    tags: [traditional, sweet]
+    aliases: ["sütlaç", "sutlac"]
+  - id: dessert_2
+    name: Künefe
+    category: Tatlı
+    price: 140
+    description: Özel Hatay peyniri ve ince tel kadayıf, sıcak servis.
+    allergens: [dairy, gluten, nuts]
+    availability: true
+    tags: [sweet, hot]
+    aliases: ["kunefe"]
+
+  - id: drink_1
+    name: Yayık Ayran
     category: İçecek
     price: 45
-    description: Tuzlu yoğurt içeceği.
+    description: Ev yapımı köpüklü soğuk ayran.
     allergens: [dairy]
     availability: true
     tags: [cold]
-  - id: b2
+    aliases: ["ayran"]
+  - id: drink_2
     name: Limonata
     category: İçecek
-    price: 65
-    description: Taze limon, su ve şeker ile hazırlanır.
+    price: 70
+    description: Taze nane yaprakları ile naneli limonata.
     allergens: []
     availability: true
-    tags: [cold]
+    tags: [cold, refreshing]
+    aliases: ["limonata"]
+  - id: drink_3
+    name: Şalgam Suyu
+    category: İçecek
+    price: 50
+    description: Acılı veya acısız seçenekleri ile soğuk şalgam.
+    allergens: []
+    availability: true
+    tags: [cold, traditional]
+    aliases: ["şalgam", "salgam"]

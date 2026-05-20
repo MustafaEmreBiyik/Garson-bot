@@ -69,15 +69,15 @@ def test_price_only_question_returns_concise_price_answer():
     payload = run_grounded_demo("Ayran ne kadar?")
 
     assert payload["detected_intent"] == "price_question"
-    assert payload["final_response"] == "Ayran 45.00 TL."
+    assert payload["final_response"] == "Yayık Ayran 45.00 TL."
     assert "Alerjenler" not in payload["final_response"]
-    assert "Tuzlu yoğurt içeceği" not in payload["final_response"]
+    assert "Tuzlu yoğurt" not in payload["final_response"]
 
 
 def test_ingredient_question_keeps_description_and_caution():
-    payload = run_grounded_demo("Domates Çorbası içinde ne var?")
+    payload = run_grounded_demo("Kremalı Mantar Çorbası içinde ne var?")
 
-    assert "Domates bazlı" in payload["final_response"]
+    assert "dağ mantarları" in payload["final_response"]
     assert "Alerjenler" in payload["final_response"]
     assert "teyit" in payload["final_response"]
 

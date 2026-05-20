@@ -28,7 +28,7 @@ def test_no_paraphrase_returns_canonical_response():
 def test_safe_paraphrase_is_accepted():
     builder = _build_builder()
     result = builder.build("Ayranın fiyatı nedir?")
-    candidate = "Fiyat bilgisi: Ayran 45.00 TL."
+    candidate = "Fiyat bilgisi: Yayık Ayran 45.00 TL."
 
     assert format_grounded_response(result, candidate) == candidate
     assert explain_paraphrase_rejection(result, candidate) == []
@@ -88,7 +88,7 @@ def test_confirm_order_paraphrase_must_preserve_mvp_demo():
     builder.build("Bir Ayran istiyorum")
     result = builder.build("Evet, onaylıyorum")
     safe_candidate = (
-        "Siparişinizi onaylıyorum. 1 x Ayran için birim fiyat 45.00 TL, Toplam 45.00 TL. "
+        "Siparişinizi onaylıyorum. 1 x Yayık Ayran için birim fiyat 45.00 TL, Toplam 45.00 TL. "
         "Not: Bu yalnızca MVP/demo onayıdır."
     )
     unsafe_candidate = "Siparişinizi onaylıyorum. Toplam 45.00 TL."

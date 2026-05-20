@@ -41,9 +41,9 @@ def test_supervisor_menu_category_phrases_are_menu_oriented(manager, message, ex
 @pytest.mark.parametrize(
     "message, expected",
     [
-        ("Ayran ne kadar?", "Ayran 45.00 TL."),
-        ("Ayran fiyatı nedir?", "Ayran 45.00 TL."),
-        ("Etli Güveç kaç TL?", "Etli Güveç 260.00 TL."),
+        ("Ayran ne kadar?", "Yayık Ayran 45.00 TL."),
+        ("Ayran fiyatı nedir?", "Yayık Ayran 45.00 TL."),
+        ("Et Döner kaç TL?", "Et Döner 280.00 TL."),
     ],
 )
 def test_supervisor_price_phrases_are_concise(manager, message, expected):
@@ -54,10 +54,10 @@ def test_supervisor_price_phrases_are_concise(manager, message, expected):
 
 
 def test_grounded_demo_keeps_ingredient_detail_and_allergy_caution():
-    payload = run_grounded_demo("Domates Çorbası içinde ne var?")
+    payload = run_grounded_demo("Kremalı Mantar Çorbası içinde ne var?")
 
     assert payload["detected_intent"] == "menu_question"
-    assert "Domates bazlı" in payload["final_response"]
+    assert "dağ mantarları" in payload["final_response"]
     assert "teyit" in payload["final_response"]
 
 
@@ -74,8 +74,8 @@ def test_grounded_demo_keeps_refusals_for_unsupported_and_off_topic():
 @pytest.mark.parametrize(
     "message, expected_quantity_text",
     [
-        ("2 ayran daha", "2 x Ayran"),
-        ("bir ayran daha", "1 x Ayran"),
+        ("2 ayran daha", "2 x Yayık Ayran"),
+        ("bir ayran daha", "1 x Yayık Ayran"),
     ],
 )
 def test_grounded_demo_supports_add_order_shorthand(message, expected_quantity_text):

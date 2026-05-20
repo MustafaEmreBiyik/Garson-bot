@@ -61,3 +61,22 @@ This runner is the shared benchmark harness for:
 - a future generated-output comparison workflow
 
 It intentionally does not use an LLM or any external API.
+
+## Pure Qwen Quality Audit (Sprint 1)
+
+The Pure Qwen Quality Audit runner evaluates the model against a specialized restaurant dataset (`pure_qwen_restaurant_eval_200.jsonl`).
+
+### How to Run the Mock/Dry-Run (CPU Safe)
+This mode tests the runner framework itself without loading the model into memory.
+```bash
+python -m robot_waiter_ai.evals.run_qwen_quality_audit --dry-run
+```
+
+### How to Run the Real Audit (GPU/Jetson)
+Use this command on a capable GPU machine to perform the real LLM inference and quality check.
+```bash
+python -m robot_waiter_ai.evals.run_qwen_quality_audit --device cuda
+```
+*(On Windows or memory-constrained setups, if bitsandbytes fails, append `--no-4bit`)*
+
+The results are saved to `robot_waiter_ai/evals/pure_qwen_audit_results.jsonl`, which you can summarize using the template in `reports/sprint1_qwen_quality_audit_template.md`.
