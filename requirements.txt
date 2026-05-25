@@ -1,2 +1,12 @@
 PyYAML
 pytest
+edge-tts
+# ReSpeaker Mic Array v2.0 — hardware capture
+sounddevice
+pyusb
+numpy
+# Web server
+fastapi
+uvicorn[standard]
+python-multipart
+httpx

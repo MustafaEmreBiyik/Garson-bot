@@ -211,8 +211,8 @@
         <section class="panel">
           <h2>Sesli Etkileşim</h2>
           <p class="small">
-            Chrome veya Edge önerilir. Mikrofon iznini onaylayın. Tanıma dili `tr-TR`
-            olarak ayarlanmaya çalışılır.
+            Chrome veya Edge önerilir. Mikrofon iznini onaylayın. Kayıt başlatmak için
+            "Konuş" düğmesine basın; durdurmak için tekrar basın.
           </p>
 
           <div class="controls">
@@ -227,6 +227,8 @@
               id="recognizedText"
               placeholder="Mikrofondan algılanan veya elle girilen metin burada görünecek."
             ></textarea>
+            <!-- Shown when STT returns low_confidence=true or fetch fails -->
+            <div id="stt-warning" style="display:none; color:#c0392b; font-size:0.85em; margin-top:4px;"></div>
           </div>
 
           <div class="field">
@@ -277,50 +279,66 @@
     </div>
 
     <script>
-      const speakBtn = document.getElementById("speakBtn");
-      const sendBtn = document.getElementById("sendBtn");
-      const ttsBtn = document.getElementById("ttsBtn");
-      const recognizedText = document.getElementById("recognizedText");
+      const speakBtn        = document.getElementById("speakBtn");
+      const sendBtn         = document.getElementById("sendBtn");
+      const ttsBtn          = document.getElementById("ttsBtn");
+      const recognizedText  = document.getElementById("recognizedText");
       const assistantResponse = document.getElementById("assistantResponse");
-      const liveStatus = document.getElementById("liveStatus");
-      const phraseButtons = document.querySelectorAll("[data-phrase]");
+      const liveStatus      = document.getElementById("liveStatus");
+      const sttWarning      = document.getElementById("stt-warning");
+      const phraseButtons   = document.querySelectorAll("[data-phrase]");
 
-      const SpeechRecognition =
-        window.SpeechRecognition || window.webkitSpeechRecognition;
-      let recognition = null;
+      // -----------------------------------------------------------------------
+      // Helpers
+      // -----------------------------------------------------------------------
 
       function setStatus(message) {
         liveStatus.textContent = message;
       }
 
-      function pickTurkishVoice() {
-        const voices = window.speechSynthesis.getVoices();
-        return (
-          voices.find((voice) => voice.lang === "tr-TR") ||
-          voices.find((voice) => voice.lang.startsWith("tr")) ||
-          null
-        );
+      function showWarning(message) {
+        sttWarning.textContent = message;
+        sttWarning.style.display = "block";
       }
 
-      function speakResponse() {
-        const text = assistantResponse.textContent.trim();
-        if (!text || text === "Henüz bir yanıt yok.") {
-          setStatus("Seslendirilecek yanıt bulunamadı.");
-          return;
-        }
-
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = "tr-TR";
-        const voice = pickTurkishVoice();
-        if (voice) {
-          utterance.voice = voice;
-        }
-        utterance.onstart = () => setStatus("Yanıt seslendiriliyor...");
-        utterance.onend = () => setStatus("Yanıt seslendirmesi tamamlandı.");
-        utterance.onerror = () => setStatus("Seslendirme başarısız oldu.");
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(utterance);
+      function clearWarning() {
+        sttWarning.textContent = "";
+        sttWarning.style.display = "none";
       }
+
+      // -----------------------------------------------------------------------
+      // TTS — fetches audio from GET /tts and plays it via Web Audio
+      // -----------------------------------------------------------------------
+
+      async function speakText(text) {
+        if (!text || !text.trim()) return;
+        speakBtn.disabled = true;
+        try {
+          const url = "/tts?text=" + encodeURIComponent(text.trim());
+          const response = await fetch(url);
+          if (!response.ok) {
+            speakBtn.disabled = false;
+            return;
+          }
+          const blob = await response.blob();
+          const audioUrl = URL.createObjectURL(blob);
+          const audio = new Audio(audioUrl);
+          const releaseAudioLock = () => {
+            URL.revokeObjectURL(audioUrl);
+            speakBtn.disabled = false;
+          };
+          audio.onended = releaseAudioLock;
+          audio.onerror = releaseAudioLock;
+          await audio.play();
+        } catch (e) {
+          speakBtn.disabled = false;
+          console.warn("TTS failed:", e);
+        }
+      }
+
+      // -----------------------------------------------------------------------
+      // /chat — unchanged
+      // -----------------------------------------------------------------------
 
       async function sendMessage() {
         const message = recognizedText.value.trim();
@@ -347,49 +365,134 @@
 
           assistantResponse.textContent = payload.response || "";
           setStatus(`Yanıt alındı. Intent: ${payload.intent || "bilinmiyor"}`);
-          speakResponse();
+          await speakText(assistantResponse.textContent.trim());
         } catch (error) {
           assistantResponse.textContent = "Bir hata oluştu.";
           setStatus(error.message || "İstek sırasında hata oluştu.");
         }
       }
 
-      function startRecognition() {
-        if (!SpeechRecognition) {
-          setStatus("Bu tarayıcı Web Speech API konuşma tanımayı desteklemiyor.");
+      // -----------------------------------------------------------------------
+      // MediaRecorder-based STT → POST /transcribe
+      // -----------------------------------------------------------------------
+
+      let mediaRecorder = null;
+      let audioChunks   = [];
+      let isRecording   = false;
+
+      async function startRecording() {
+        let stream;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (err) {
+          setStatus("Mikrofon erişimi reddedildi: " + err.message);
+          showWarning("Mikrofon izni verilmedi, lütfen yazarak girin.");
           return;
         }
 
-        if (!recognition) {
-          recognition = new SpeechRecognition();
-          recognition.lang = "tr-TR";
-          recognition.interimResults = false;
-          recognition.maxAlternatives = 1;
+        // Prefer audio/webm (Chromium); fall back to whatever the browser supports.
+        const mimeType = MediaRecorder.isTypeSupported("audio/webm")
+          ? "audio/webm"
+          : "";
 
-          recognition.onstart = () => setStatus("Dinleniyor...");
-          recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            recognizedText.value = transcript;
-            setStatus("Konuşma algılandı. Yanıt hazırlanıyor...");
-            sendMessage();
-          };
-          recognition.onerror = (event) => {
-            setStatus(`Konuşma tanıma hatası: ${event.error}`);
-          };
-          recognition.onend = () => {
-            if (liveStatus.textContent === "Dinleniyor...") {
-              setStatus("Dinleme tamamlandı.");
-            }
-          };
-        }
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
 
-        recognizedText.focus();
-        recognition.start();
+        mediaRecorder.addEventListener("dataavailable", (event) => {
+          if (event.data && event.data.size > 0) {
+            audioChunks.push(event.data);
+          }
+        });
+
+        mediaRecorder.addEventListener("stop", async () => {
+          // Release mic tracks as soon as recording stops.
+          stream.getTracks().forEach((track) => track.stop());
+
+          const effectiveMime = mediaRecorder.mimeType || "audio/webm";
+          const audioBlob = new Blob(audioChunks, { type: effectiveMime });
+
+          setStatus("Ses sunucuya gönderiliyor...");
+          await postAudioForTranscription(audioBlob, effectiveMime);
+        });
+
+        mediaRecorder.start();
+        isRecording = true;
+        speakBtn.textContent = "Durdur";
+        speakBtn.style.background = "var(--accent-2)";
+        clearWarning();
+        setStatus("Kayıt yapılıyor...");
       }
 
-      speakBtn.addEventListener("click", startRecognition);
+      function stopRecording() {
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+          mediaRecorder.stop();
+        }
+        isRecording = false;
+        speakBtn.textContent = "Konuş";
+        speakBtn.style.background = "";
+        setStatus("Kayıt durduruldu, işleniyor...");
+      }
+
+      async function postAudioForTranscription(audioBlob, mimeType) {
+        try {
+          const response = await fetch("/transcribe", {
+            method: "POST",
+            headers: {
+              "Content-Type": mimeType,
+              "Content-Length": audioBlob.size,
+            },
+            body: audioBlob,
+          });
+
+          const payload = await response.json();
+
+          if (!response.ok) {
+            throw new Error(payload.error || "Sunucu hatası.");
+          }
+
+          const text = (payload.text || "").trim();
+          recognizedText.value = text;
+
+          if (payload.low_confidence === true) {
+            showWarning(
+              "Ses net anlaşılamadı, lütfen tekrar konuşun veya yazarak girin."
+            );
+            setStatus("Düşük güven skoru — metin düzenlenilebilir.");
+            // Do NOT auto-send on low confidence — let the user review first.
+            return;
+          }
+
+          clearWarning();
+
+          if (text) {
+            setStatus("Konuşma algılandı. Yanıt hazırlanıyor...");
+            await sendMessage();
+          } else {
+            // Empty transcript and not low_confidence — unusual but handle gracefully.
+            setStatus("Ses alındı ancak metin üretilemedi. Lütfen yazarak girin.");
+          }
+        } catch (err) {
+          showWarning("Ses tanıma başarısız, lütfen yazarak girin.");
+          setStatus("Transkripsiyon hatası: " + err.message);
+        }
+      }
+
+      function handleMicButton() {
+        if (isRecording) {
+          stopRecording();
+        } else {
+          startRecording();
+        }
+      }
+
+      // -----------------------------------------------------------------------
+      // Event wiring
+      // -----------------------------------------------------------------------
+
+      speakBtn.addEventListener("click", handleMicButton);
       sendBtn.addEventListener("click", sendMessage);
-      ttsBtn.addEventListener("click", speakResponse);
+      ttsBtn.addEventListener("click", () => speakText(assistantResponse.textContent.trim()));
+
       phraseButtons.forEach((button) => {
         button.addEventListener("click", () => {
           recognizedText.value = button.dataset.phrase || "";
@@ -397,7 +500,6 @@
         });
       });
 
-      window.speechSynthesis.onvoiceschanged = () => {};
     </script>
   </body>
 </html>

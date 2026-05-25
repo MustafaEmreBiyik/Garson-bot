@@ -40,9 +40,11 @@ def test_demo_assets_exist_and_processed_datasets_stay_untouched():
     before_hashes = {path: hashlib.sha256(path.read_bytes()).hexdigest() for path in processed_paths}
 
     html = HTML_PATH.read_text(encoding="utf-8")
-    assert "SpeechRecognition" in html
-    assert "speechSynthesis" in html
-    assert "tr-TR" in html
+    # HTML now uses MediaRecorder + server-side /transcribe instead of browser
+    # SpeechRecognition, and GET /tts instead of browser speechSynthesis.
+    assert "MediaRecorder" in html, "HTML must use MediaRecorder for STT capture"
+    assert "/transcribe" in html, "HTML must POST audio to /transcribe"
+    assert "/tts" in html, "HTML must fetch TTS audio from /tts"
 
     _ = build_chat_response("Pizza var mı?")
 
@@ -61,11 +63,12 @@ def test_handle_chat_request_returns_json_serializable_payload():
 
 
 def test_run_server_prints_friendly_message_when_port_is_unavailable(monkeypatch, capsys):
-    class OccupiedPortServer:
-        def __init__(self, *_args, **_kwargs):
-            raise PermissionError(10013, "Permission denied")
+    import uvicorn as _uvicorn
 
-    monkeypatch.setattr("robot_waiter_ai.demo.voice_web_demo.ThreadingHTTPServer", OccupiedPortServer)
+    def _raise_permission_error(*_a, **_kw):
+        raise PermissionError(10013, "Permission denied")
+
+    monkeypatch.setattr(_uvicorn, "run", _raise_permission_error)
 
     with pytest.raises(PermissionError):
         run_server(port=8000)

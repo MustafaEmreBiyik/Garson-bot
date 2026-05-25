@@ -39,6 +39,42 @@ def _format_list(label: str, values: Any) -> str:
     return ""
 
 
+def _extract_menu_item_names(menu_path: Path | None = None) -> list[str]:
+    """Return a flat list of every item name and alias from menu.yaml.
+
+    Used to build the faster-whisper initial_prompt so the STT model
+    recognises menu-specific vocabulary (Turkish dish names, abbreviations,
+    common misspellings, etc.).
+
+    Parameters
+    ----------
+    menu_path:
+        Path to menu.yaml.  Defaults to DEFAULT_MENU_PATH.
+
+    Returns
+    -------
+    list[str]
+        Flat, undeduped list: [name, alias1, alias2, name2, alias3, …].
+        Deduplication and sorting are left to the caller
+        (SpeechToText.build_initial_prompt handles both).
+    """
+    menu_data = _load_yaml(menu_path or DEFAULT_MENU_PATH)
+    names: list[str] = []
+    for item in menu_data.get("menu") or []:
+        if not isinstance(item, dict):
+            continue
+        name = _as_clean_text(item.get("name"))
+        if name:
+            names.append(name)
+        aliases = item.get("aliases")
+        if isinstance(aliases, list):
+            for alias in aliases:
+                cleaned = _as_clean_text(alias)
+                if cleaned:
+                    names.append(cleaned)
+    return names
+
+
 def build_menu_context(
     menu_path: Path | None = None,
     restaurant_info_path: Path | None = None,

@@ -55,17 +55,8 @@ def test_chat_request_returns_compatible_json_shape_in_qwen_mode() -> None:
 def test_run_server_does_not_load_qwen_when_backend_is_default(monkeypatch) -> None:
     calls: list[str] = []
 
-    class DummyServer:
-        def __init__(self, *_args, **_kwargs) -> None:
-            pass
-
-        def serve_forever(self) -> None:
-            raise KeyboardInterrupt
-
-        def server_close(self) -> None:
-            return None
-
-    monkeypatch.setattr(voice_web_demo, "ThreadingHTTPServer", DummyServer)
+    import uvicorn as _uvicorn
+    monkeypatch.setattr(_uvicorn, "run", lambda *_a, **_kw: None)
     monkeypatch.setattr(voice_web_demo, "_load_qwen_backend", lambda *_args, **_kwargs: calls.append("qwen"))
     monkeypatch.setattr(voice_web_demo, "build_menu_context", lambda: calls.append("context"))
 
@@ -77,17 +68,8 @@ def test_run_server_does_not_load_qwen_when_backend_is_default(monkeypatch) -> N
 def test_run_server_passes_base_model_path_and_no_4bit_to_qwen_loader(monkeypatch) -> None:
     calls: list[tuple[str, str, bool]] = []
 
-    class DummyServer:
-        def __init__(self, *_args, **_kwargs) -> None:
-            pass
-
-        def serve_forever(self) -> None:
-            raise KeyboardInterrupt
-
-        def server_close(self) -> None:
-            return None
-
-    monkeypatch.setattr(voice_web_demo, "ThreadingHTTPServer", DummyServer)
+    import uvicorn as _uvicorn
+    monkeypatch.setattr(_uvicorn, "run", lambda *_a, **_kw: None)
     monkeypatch.setattr(voice_web_demo, "build_menu_context", lambda: "menu")
     monkeypatch.setattr(
         voice_web_demo,
