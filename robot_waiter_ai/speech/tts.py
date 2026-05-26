@@ -32,6 +32,10 @@ Design notes
 from __future__ import annotations
 
 import logging
+import os
+import subprocess
+import tempfile
+from pathlib import Path
 from typing import AsyncIterator
 
 logger = logging.getLogger(__name__)
@@ -56,21 +60,9 @@ _SUPPORTED_TR_VOICES: list[str] = [
 # ---------------------------------------------------------------------------
 
 class TextToSpeech:
-    """Async wrapper around edge-tts for Turkish neural speech synthesis.
+    """Async wrapper around edge-tts for Turkish neural speech synthesis."""
 
-    Parameters
-    ----------
-    voice:
-        Microsoft Edge TTS voice name.  Must be one of the Turkish voices in
-        _SUPPORTED_TR_VOICES or any valid edge-tts voice string.
-        Defaults to DEFAULT_VOICE ("tr-TR-EmelNeural").
-    rate:
-        Speaking rate adjustment, e.g. "+10%", "-20%", "+0%".
-        Defaults to DEFAULT_RATE ("+0%", no change).
-    volume:
-        Volume adjustment, e.g. "+10%", "-5%", "+0%".
-        Defaults to DEFAULT_VOLUME ("+0%", no change).
-    """
+    AUDIO_CONTENT_TYPE: str = "audio/mpeg"
 
     def __init__(
         self,
@@ -217,6 +209,116 @@ class TextToSpeech:
                     "synthesize_streaming(): yielding %d bytes", len(chunk["data"])
                 )
                 yield chunk["data"]
+
+
+# ---------------------------------------------------------------------------
+# PiperTTS — offline, aarch64-compatible
+# ---------------------------------------------------------------------------
+
+_SPEECH_DIR = Path(__file__).resolve().parent          # speech/
+_PROJECT_ROOT = _SPEECH_DIR.parent.parent              # Garson-bot/
+
+_PIPER_BINARY_CANDIDATES: list[str] = [
+    str(_PROJECT_ROOT / "piper" / "piper"),
+    str(_PROJECT_ROOT / "piper" / "piper.exe"),
+    "piper",
+]
+
+_PIPER_MODEL_CANDIDATES: list[Path] = [
+    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "tr_TR-fahrettin-medium.onnx",
+    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "tr_TR-fahrettin-high.onnx",
+    _PROJECT_ROOT / "models" / "tr_TR-fahrettin-medium.onnx",
+]
+
+
+def _find_piper_binary(override: str | None = None) -> str | None:
+    import shutil
+    if override:
+        return override if Path(override).is_file() else None
+    for candidate in _PIPER_BINARY_CANDIDATES:
+        p = Path(candidate)
+        if p.is_file() and os.access(str(p), os.X_OK):
+            return str(p)
+        if "/" not in candidate:
+            found = shutil.which(candidate)
+            if found:
+                return found
+    return None
+
+
+def _find_piper_model(override: str | None = None) -> Path | None:
+    if override:
+        p = Path(override)
+        return p if p.exists() else None
+    for candidate in _PIPER_MODEL_CANDIDATES:
+        if candidate.exists():
+            return candidate
+    return None
+
+
+class PiperTTS:
+    """Offline TTS using the Piper binary (aarch64 + x86_64). Returns WAV audio."""
+
+    AUDIO_CONTENT_TYPE: str = "audio/wav"
+
+    def __init__(
+        self,
+        binary: str | None = None,
+        model: str | None = None,
+    ) -> None:
+        resolved_binary = _find_piper_binary(binary)
+        if not resolved_binary:
+            raise RuntimeError(
+                "Piper binary bulunamadı. "
+                "scripts/setup_jetson_piper.sh ile kurun veya binary= belirtin."
+            )
+        resolved_model = _find_piper_model(model)
+        if not resolved_model:
+            raise RuntimeError(
+                "Piper Türkçe modeli bulunamadı. "
+                "robot_waiter_ai/models/tr_TR-fahrettin-medium.onnx bekleniyor."
+            )
+        self._binary = resolved_binary
+        self._model = resolved_model
+        logger.debug("PiperTTS: binary=%s  model=%s", self._binary, self._model)
+
+    def _validate_text(self, text: str) -> str:
+        stripped = text.strip()
+        if not stripped:
+            raise ValueError("Metin boş olamaz.")
+        return stripped
+
+    def _run_piper_blocking(self, text: str) -> bytes:
+        fd, tmp = tempfile.mkstemp(suffix=".wav")
+        os.close(fd)
+        try:
+            result = subprocess.run(
+                [self._binary, "--model", str(self._model),
+                 "--output_file", tmp, "--quiet"],
+                input=text.encode("utf-8"),
+                capture_output=True,
+                timeout=30,
+            )
+            if result.returncode != 0:
+                raise RuntimeError(
+                    f"piper exited {result.returncode}: "
+                    f"{result.stderr.decode(errors='replace')[:200]}"
+                )
+            return Path(tmp).read_bytes()
+        finally:
+            try:
+                os.unlink(tmp)
+            except OSError:
+                pass
+
+    async def synthesize(self, text: str) -> bytes:
+        import asyncio
+        stripped = self._validate_text(text)
+        return await asyncio.to_thread(self._run_piper_blocking, stripped)
+
+    async def synthesize_streaming(self, text: str) -> AsyncIterator[bytes]:
+        wav_bytes = await self.synthesize(text)
+        yield wav_bytes
 
 
 # ---------------------------------------------------------------------------

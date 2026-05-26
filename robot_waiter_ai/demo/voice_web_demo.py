@@ -29,7 +29,7 @@ from robot_waiter_ai.inference.menu_context_builder import (
     build_menu_context,
 )
 from robot_waiter_ai.speech.stt import SpeechToText
-from robot_waiter_ai.speech.tts import TextToSpeech
+from robot_waiter_ai.speech.tts import PiperTTS, TextToSpeech
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +44,7 @@ DEFAULT_STT_MODEL = "small"
 DEFAULT_STT_DEVICE = "cpu"
 DEFAULT_STT_COMPUTE_TYPE = "int8"
 DEFAULT_TTS_VOICE = "tr-TR-EmelNeural"
+DEFAULT_TTS_ENGINE = "piper"
 DEFAULT_MIC_SECONDS = 4.0
 MAX_MIC_SECONDS = 30.0
 MAX_AUDIO_BYTES = 10 * 1024 * 1024  # 10 MB hard cap for /transcribe uploads
@@ -175,7 +176,7 @@ def create_app(
     fully self-contained and safe to instantiate multiple times in tests.
     """
     _stt: SpeechToText = stt or SpeechToText()
-    _tts: TextToSpeech = tts or TextToSpeech()
+    _tts: Any = tts or TextToSpeech()
     _mic_lock = asyncio.Lock()
 
     app = FastAPI(title="GarsonBot Voice Demo")
@@ -276,9 +277,10 @@ def create_app(
             return JSONResponse({"error": "Metin parametresi gerekli."}, status_code=400)
         try:
             audio_bytes = await _tts.synthesize(text)
+            content_type = getattr(_tts, "AUDIO_CONTENT_TYPE", "audio/mpeg")
             return FResponse(
                 audio_bytes,
-                media_type="audio/mpeg",
+                media_type=content_type,
                 headers={"Cache-Control": "no-cache"},
             )
         except ValueError:
@@ -364,6 +366,7 @@ def run_server(
     stt_compute_type: str = DEFAULT_STT_COMPUTE_TYPE,
     use_vad: bool = True,
     tts_voice: str = DEFAULT_TTS_VOICE,
+    tts_engine: str = DEFAULT_TTS_ENGINE,
     enable_mic: bool = False,
     mic_seconds: float = DEFAULT_MIC_SECONDS,
 ) -> None:
@@ -401,8 +404,18 @@ def run_server(
     print("      Model will load on the first /transcribe request.")
 
     # --- TTS ---
-    tts = TextToSpeech(voice=tts_voice)
-    print(f"TTS: edge-tts voice='{tts_voice}' (requires internet)")
+    tts: Any
+    if tts_engine == "piper":
+        try:
+            tts = PiperTTS()
+            print(f"TTS: Piper offline  binary={tts._binary}  model={tts._model.name}")
+        except RuntimeError as exc:
+            print(f"TTS: Piper bulunamadı ({exc}), edge-tts'e fallback yapılıyor")
+            tts = TextToSpeech(voice=tts_voice)
+            print(f"TTS: edge-tts voice='{tts_voice}' (internet gerekli)")
+    else:
+        tts = TextToSpeech(voice=tts_voice)
+        print(f"TTS: edge-tts voice='{tts_voice}' (internet gerekli)")
 
     # --- Mic (opt-in) ---
     mic: CaptureMic | None = None
@@ -490,6 +503,10 @@ def _parse_args() -> argparse.Namespace:
         "--tts-voice", default=DEFAULT_TTS_VOICE,
         choices=["tr-TR-EmelNeural", "tr-TR-AhmetNeural"],
     )
+    parser.add_argument(
+        "--tts-engine", default=DEFAULT_TTS_ENGINE,
+        choices=["piper", "edge-tts"],
+    )
     parser.add_argument("--enable-mic", action="store_true")
     parser.add_argument(
         "--mic-seconds", type=_parse_mic_seconds, default=DEFAULT_MIC_SECONDS
@@ -511,6 +528,7 @@ def main() -> int:
         stt_compute_type=args.stt_compute_type,
         use_vad=not args.no_vad,
         tts_voice=args.tts_voice,
+        tts_engine=args.tts_engine,
         enable_mic=args.enable_mic,
         mic_seconds=args.mic_seconds,
     )

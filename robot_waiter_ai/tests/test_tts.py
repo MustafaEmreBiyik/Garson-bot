@@ -8,6 +8,8 @@ machines.
 from __future__ import annotations
 
 import asyncio
+import os
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -307,3 +309,123 @@ def test_synthesize_streaming_raises_runtime_error_when_edge_tts_missing():
                     pass
 
             asyncio.run(consume())
+
+
+# ---------------------------------------------------------------------------
+# PiperTTS
+# ---------------------------------------------------------------------------
+
+def _make_fake_piper_binary(tmp_path: Path) -> str:
+    """Write a shell script that acts like piper --output_file."""
+    script = tmp_path / "piper"
+    script.write_text(
+        "#!/bin/sh\n"
+        "# Fake piper: find --output_file arg and write a minimal WAV header\n"
+        "while [ $# -gt 0 ]; do\n"
+        "  if [ \"$1\" = \"--output_file\" ]; then\n"
+        "    printf 'RIFF\\x00\\x00\\x00\\x00WAVEfmt ' > \"$2\"\n"
+        "    shift 2\n"
+        "  else\n"
+        "    shift\n"
+        "  fi\n"
+        "done\n"
+        "exit 0\n"
+    )
+    script.chmod(0o755)
+    return str(script)
+
+
+def test_piper_tts_audio_content_type():
+    from robot_waiter_ai.speech.tts import PiperTTS
+
+    assert PiperTTS.AUDIO_CONTENT_TYPE == "audio/wav"
+
+
+def test_piper_tts_raises_runtime_error_if_binary_not_found(tmp_path):
+    from robot_waiter_ai.speech.tts import PiperTTS
+
+    with patch("robot_waiter_ai.speech.tts._find_piper_binary", return_value=None), \
+         patch("robot_waiter_ai.speech.tts._find_piper_model",
+               return_value=tmp_path / "model.onnx"):
+        with pytest.raises(RuntimeError, match="Piper binary"):
+            PiperTTS()
+
+
+def test_piper_tts_raises_runtime_error_if_model_not_found(tmp_path):
+    from robot_waiter_ai.speech.tts import PiperTTS
+
+    with patch("robot_waiter_ai.speech.tts._find_piper_binary",
+               return_value="/fake/piper"), \
+         patch("robot_waiter_ai.speech.tts._find_piper_model", return_value=None):
+        with pytest.raises(RuntimeError, match="model"):
+            PiperTTS()
+
+
+def test_piper_tts_raises_value_error_on_empty_text(tmp_path):
+    from robot_waiter_ai.speech.tts import PiperTTS
+
+    with patch("robot_waiter_ai.speech.tts._find_piper_binary",
+               return_value="/fake/piper"), \
+         patch("robot_waiter_ai.speech.tts._find_piper_model",
+               return_value=tmp_path / "m.onnx"):
+        tts = PiperTTS()
+
+    with pytest.raises(ValueError, match="boş"):
+        asyncio.run(tts.synthesize(""))
+
+
+def test_piper_tts_synthesize_calls_piper_and_returns_wav(tmp_path):
+    from robot_waiter_ai.speech.tts import PiperTTS
+
+    binary = _make_fake_piper_binary(tmp_path)
+    model = tmp_path / "model.onnx"
+    model.touch()
+
+    with patch("robot_waiter_ai.speech.tts._find_piper_binary", return_value=binary), \
+         patch("robot_waiter_ai.speech.tts._find_piper_model", return_value=model):
+        tts = PiperTTS()
+
+    result = asyncio.run(tts.synthesize("Merhaba"))
+    assert isinstance(result, bytes)
+    assert len(result) > 0
+    assert result[:4] == b"RIFF"
+
+
+def test_piper_tts_synthesize_raises_runtime_error_on_nonzero_exit(tmp_path):
+    from robot_waiter_ai.speech.tts import PiperTTS
+
+    fail_script = tmp_path / "piper"
+    fail_script.write_text("#!/bin/sh\necho 'synthesis error' >&2\nexit 1\n")
+    fail_script.chmod(0o755)
+    model = tmp_path / "model.onnx"
+    model.touch()
+
+    with patch("robot_waiter_ai.speech.tts._find_piper_binary",
+               return_value=str(fail_script)), \
+         patch("robot_waiter_ai.speech.tts._find_piper_model", return_value=model):
+        tts = PiperTTS()
+
+    with pytest.raises(RuntimeError, match="piper exited"):
+        asyncio.run(tts.synthesize("Test"))
+
+
+def test_piper_tts_synthesize_streaming_yields_one_wav_chunk(tmp_path):
+    from robot_waiter_ai.speech.tts import PiperTTS
+
+    binary = _make_fake_piper_binary(tmp_path)
+    model = tmp_path / "model.onnx"
+    model.touch()
+
+    with patch("robot_waiter_ai.speech.tts._find_piper_binary", return_value=binary), \
+         patch("robot_waiter_ai.speech.tts._find_piper_model", return_value=model):
+        tts = PiperTTS()
+
+    async def collect():
+        chunks = []
+        async for chunk in tts.synthesize_streaming("Merhaba"):
+            chunks.append(chunk)
+        return chunks
+
+    chunks = asyncio.run(collect())
+    assert len(chunks) == 1
+    assert chunks[0][:4] == b"RIFF"
