@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** Mayıs 2026 | **Sürüm:** 2.7
+**Son güncelleme:** Mayıs 2026 | **Sürüm:** 2.8
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -29,7 +29,10 @@ Garson-bot/
 ├── scripts/
 │   ├── benchmark_stt.py          # ✅ STT latency & RAM benchmark (Jetson Orin NX)
 │   ├── benchmark_tts.py          # ✅ TTS latency & TTFA benchmark (edge-tts vs Piper)
-│   └── benchmark_audio/          # ✅ silence_2s.wav, tone_440hz_4s.wav, tone_mix_6s.wav
+│   ├── benchmark_audio/          # ✅ silence_2s.wav, tone_440hz_4s.wav, tone_mix_6s.wav
+│   ├── train_wakeword.py         # ✅ openWakeWord eğitim scripti (MMS-TTS + sentetik gürültü)
+│   ├── test_wakeword_usb.py      # ✅ USB mikrofon ile gerçek zamanlı wake word testi
+│   └── wakeword_training_output/ # Ara çıktılar (positive_clips, negative_clips, raw ONNX)
 └── robot_waiter_ai/
     ├── app/
     │   ├── main.py               # CLI entry point (run_cli) — Türkçe REPL
@@ -110,6 +113,18 @@ Garson-bot/
   - `DEFAULT_WAKEWORD_THRESHOLD = 0.5`
   - `WAKEWORD_CHUNK_SAMPLES = 1280` (80 ms @ 16 kHz)
 - **Testler:** Smoke test (donanım gerektirir) ⚠️ — 9/9 mock unit test ✅ (test_wakeword.py)
+
+### `models/hey_garson.onnx` — Wake Word Modeli (v2.8)
+- **Motor:** openWakeWord (FCN head, 789 KB)
+- **Eğitim ortamı:** Ubuntu, RTX 4050, `venv_wakeword/`
+- **Pozitif:** 3000 örnek — MMS-TTS (facebook/mms-tts-tur) ile üretilmiş 6 varyasyon
+- **Negatif:** 1200 MMS-TTS (25 ifade, "hey X" dahil) + 3000 sentetik gürültü
+- **Smoke test (sentetik):** pozitif=1.000, negatif=0.000 ✅
+- **⚠️ Gerçek mikrofon sorunu:** Sentetik TTS verisiyle eğitildiğinden, gerçek insan sesi
+  (farklı tonlarda "hey X" dahil) de yüksek skor verebiliyor — yanlış tetiklenme riski var.
+- **Karar bekleniyor:** Gerçek ses verisi toplama (Seçenek A) **veya** Picovoice Porcupine
+  entegrasyonu (Seçenek C — Türkçe, üretim kalitesi, ~$3/ay restoran başına).
+- **Test scripti:** `scripts/test_wakeword_usb.py` — USB mikrofon ile gerçek zamanlı test
 
 ### `demo/voice_web_demo.py` — FastAPI HTTP Server ✅ v2.5'te yeniden yazıldı
 
@@ -223,6 +238,7 @@ TextToSpeech.synthesize() → MP3 bytes → Browser Audio() → Hoparlör
 | 7 | ~~Jetson STT benchmark~~ | ~~🟠 Yüksek~~ | ✅ **Tamamlandı v2.4** |
 | 8 | ~~FastAPI'ye geçiş~~ | ~~🟡 Orta~~ | ✅ **Tamamlandı v2.5** — create_app() + uvicorn + TestClient |
 | 9 | ~~Wake word Colab notebook~~ | ~~🟠 Yüksek~~ | ✅ **Tamamlandı v2.7** — colab_hey_garson_wakeword_training.ipynb |
+| 13 | Wake word — yerel eğitim (Ubuntu + RTX 4050) | 🟡 Kısmi | ⚠️ Bkz. wake word notu |
 | 10 | ~~Offline TTS — Piper benchmark~~ | ~~🟡 Orta~~ | ✅ **Tamamlandı v2.6** — benchmark_tts.py yazıldı |
 | 11 | Çoklu konuşmacı — DOA + UX | 🟡 Orta | mic.get_doa() hazır |
 | 12 | systemd watchdog + Docker | 🟢 Düşük | Production deployment |
@@ -340,12 +356,11 @@ Modeli `robot_waiter_ai/models/tr_TR-fahrettin-medium.onnx` olarak kaydet.
 Öncelik sırasıyla:
 
 ```
-1. Hey Garson model eğitimini Colab'da çalıştır (🟠 Yüksek):
-   - Notebook: robot_waiter_ai/notebooks/colab_hey_garson_wakeword_training.ipynb
-   - Colab'da aç → Çalışma Zamanı → T4 GPU → Tümünü Çalıştır
-   - K hücresinde hey_garson.onnx indirilecek
-   - İndir → robot_waiter_ai/models/hey_garson.onnx kaydet
-   - Smoke test: python -m robot_waiter_ai.speech.mic
+1. Wake word kararı (🟠 Yüksek — patrona danış):
+   - Seçenek A: Gerçek ses verisi topla (scripts/test_wakeword_usb.py'ye kayıt modu ekle,
+     50-100 "hey garson" + 50-100 negatif kaydet, yeniden eğit) → ücretsiz
+   - Seçenek C: Picovoice Porcupine entegrasyonu → mic.py _blocking_listen_for_wakeword
+     metodunu değiştir, ~$3/ay restoran başına, Türkçe üretim kalitesi
 
 2. Piper TTS modeli indir + çalıştır (🟡 Orta):
    - benchmark_tts.py hazır — sadece Piper binary + model gerekli

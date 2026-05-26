@@ -1,5 +1,14 @@
-robot_waiter_ai/models/
+# Büyük model dosyaları (git'e girmesin)
+robot_waiter_ai/models/Qwen*/
+robot_waiter_ai/models/qwen*/
+robot_waiter_ai/models/tr_TR-*.onnx
+robot_waiter_ai/models/tr_TR-*.onnx.json
 *.safetensors
+
+# Wake word eğitim çıktıları (üretilebilir, büyük)
+scripts/wakeword_training_output/
+openWakeWord/
+venv_wakeword/
 __pycache__/
 *.pyc
 *.pyo

@@ -95,6 +95,8 @@ _PIPER_BINARY_CANDIDATES: list[str] = [
 
 # Where to look for the Turkish Piper model when --piper-model is not set.
 _PIPER_MODEL_CANDIDATES: list[Path] = [
+    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "tr_TR-fahrettin-medium.onnx",
+    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "tr_TR-fahrettin-high.onnx",
     _PROJECT_ROOT / "models" / "tr_TR-fahrettin-medium.onnx",
     _PROJECT_ROOT / "models" / "tr_TR-fahrettin-high.onnx",
     _SCRIPT_DIR / "tr_TR-fahrettin-medium.onnx",
