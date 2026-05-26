@@ -258,17 +258,18 @@ def benchmark_edge_tts(
 # ---------------------------------------------------------------------------
 
 def _find_piper_binary(override: Optional[str]) -> Optional[str]:
+    import shutil
     if override:
-        return override if Path(override).exists() else None
+        return override if Path(override).is_file() else None
     for candidate in _PIPER_BINARY_CANDIDATES:
         p = Path(candidate)
-        if p.exists():
+        if p.is_file() and os.access(str(p), os.X_OK):
             return str(p)
-        # Also check PATH
-        import shutil
-        found = shutil.which(candidate)
-        if found:
-            return found
+        # Also check PATH (only makes sense for bare names, not paths)
+        if "/" not in candidate:
+            found = shutil.which(candidate)
+            if found:
+                return found
     return None
 
 
