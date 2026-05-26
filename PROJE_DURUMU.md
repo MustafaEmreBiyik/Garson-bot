@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** Mayıs 2026 | **Sürüm:** 2.8
+**Son güncelleme:** Mayıs 2026 | **Sürüm:** 2.9
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -93,8 +93,9 @@ Garson-bot/
 - **Motor:** edge-tts (demo ve geliştirme için)
 - **Ses:** `tr-TR-EmelNeural` veya `tr-TR-AhmetNeural`
 - **Metot:** `async synthesize(text) → bytes` ve `async synthesize_streaming()`
-- **Latency:** ~200-400ms ilk chunk
-- **Production notu:** edge-tts internet bağımlı. Offline production için **Piper TTS** ayrıca benchmark edilecek.
+- **Latency:** ~200-400ms ilk chunk (streaming, internet gerekli)
+- **Production kararı (v2.9):** edge-tts internet bağımlı. Restoran Wi-Fi kesilirse sessizlik.
+  Piper offline birincil, edge-tts fallback olarak kullanılacak. Bkz. TTS Benchmark sonuçları.
 - **Testler:** 16/16 unit test ✅ (test_tts.py — edge_tts.Communicate mock'lu, network gerekmez)
 
 ### `speech/mic.py` — ReSpeaker Mic Array v2.0
@@ -238,8 +239,11 @@ TextToSpeech.synthesize() → MP3 bytes → Browser Audio() → Hoparlör
 | 7 | ~~Jetson STT benchmark~~ | ~~🟠 Yüksek~~ | ✅ **Tamamlandı v2.4** |
 | 8 | ~~FastAPI'ye geçiş~~ | ~~🟡 Orta~~ | ✅ **Tamamlandı v2.5** — create_app() + uvicorn + TestClient |
 | 9 | ~~Wake word Colab notebook~~ | ~~🟠 Yüksek~~ | ✅ **Tamamlandı v2.7** — colab_hey_garson_wakeword_training.ipynb |
-| 13 | Wake word — yerel eğitim (Ubuntu + RTX 4050) | 🟡 Kısmi | ⚠️ Bkz. wake word notu |
-| 10 | ~~Offline TTS — Piper benchmark~~ | ~~🟡 Orta~~ | ✅ **Tamamlandı v2.6** — benchmark_tts.py yazıldı |
+| 13 | Wake word — gerçek veri veya Porcupine | 🔴 Kritik | ⚠️ Sentetik model üretimde çalışmıyor, karar bekleniyor |
+| 10 | ~~Offline TTS — Piper benchmark~~ | ~~🟡 Orta~~ | ✅ **Tamamlandı v2.9** — 494-779ms CPU, birincil seçildi |
+| 14 | Piper'ı tts.py'ye entegre et | 🔴 Kritik | Henüz yapılmadı — tts.py sadece edge-tts biliyor |
+| 15 | Deterministik adapter'ı kaldır | 🔴 Kritik | hybrid_orchestrator.py içinde — doğal sohbet engeli |
+| 16 | Qwen LLM uçtan uca test (Jetson) | 🟠 Yüksek | LoRA adapter var ama üretim kalitesi değerlendirilmedi |
 | 11 | Çoklu konuşmacı — DOA + UX | 🟡 Orta | mic.get_doa() hazır |
 | 12 | systemd watchdog + Docker | 🟢 Düşük | Production deployment |
 
@@ -275,9 +279,25 @@ TextToSpeech.synthesize() → MP3 bytes → Browser Audio() → Hoparlör
 
 | Motor | Kalite | Offline | Durum |
 |---|---|---|---|
-| edge-tts | ⭐⭐⭐⭐⭐ | ❌ | Demo ve geliştirme |
-| Piper TTS | ⭐⭐⭐⭐ | ✅ | Production adayı — benchmark_tts.py ile ölç |
-| Coqui XTTS v2 | ⭐⭐⭐⭐ | ✅ | GPU gerektirir |
+| edge-tts | ⭐⭐⭐⭐⭐ | ❌ | Demo, geliştirme ve fallback |
+| Piper TTS | ⭐⭐⭐⭐ | ✅ | **✅ Production birincil (v2.9)** |
+| Coqui XTTS v2 | ⭐⭐⭐⭐ | ✅ | GPU gerektirir — düşük öncelik |
+
+### Piper Benchmark Sonuçları (Jetson Orin NX, aarch64, CPU, 26 Mayıs 2026)
+
+| Cümle | Karakter | Medyan (ms) | p95 (ms) |
+|-------|----------|-------------|----------|
+| "Merhaba!" | 8 | 494 | 495 |
+| "Siparişinizi alıyorum." | 22 | 551 | 552 |
+| "Teşekkür ederim, afiyet olsun." | 30 | 590 | 592 |
+| "Bugün şefin önerisi mercimek çorbası ve kuzu tandır." | 52 | 677 | 677 |
+| "Siparişinizi onayladım: iki kişilik masa…" | 76 | 779 | 783 |
+
+**Model:** tr_TR-fahrettin-medium.onnx | **Çalışma modu:** CPU (ONNX Runtime)
+
+**Değerlendirme:** Hedef eşik 300ms'ti — Piper bu eşiği geçemedi. Ancak bu, Piper'ı ezmek için yeterli bir sebep değil. Restoran bağlamında müşteri zaten konuşmasını bitirmiş, STT ve LLM işlemlerini de bekliyor; 500ms'lik TTS bu zincirin yalnızca son adımı. İnternetsiz çalışma güvenilirliği, latency avantajından daha kritik. **Karar: Piper birincil, edge-tts fallback.**
+
+> **Olası iyileştirme:** Jetson'un entegre GPU'su ile CUDA/TensorRT backend denenebilir. Tahminen 150-250ms'ye düşebilir — ancak driver kurulumu gerektirir, erken öncelik değil.
 
 ---
 
@@ -346,31 +366,83 @@ Piper modeli indirmek için:
   https://huggingface.co/rhasspy/piper-voices/tree/main/tr/tr_TR/fahrettin/medium
 Modeli `robot_waiter_ai/models/tr_TR-fahrettin-medium.onnx` olarak kaydet.
 
-**Üretim kararı:** Piper medyan latency < 300 ms ise offline'a geç; aksi hâlde edge-tts koru.
+**Üretim kararı (v2.9):** Piper birincil, edge-tts fallback. Bkz. TTS Seçim Notu → Piper Benchmark Sonuçları.
 
 
 ---
 
-## Bir Sonraki Görev
+## Başarı Kriterine Göre Mevcut Durum Analizi
 
-Öncelik sırasıyla:
+Hedef: **Müşteri ile doğal sohbet ve sipariş alabilmek. Deterministik model yok.**
 
-```
-1. Wake word kararı (🟠 Yüksek — patrona danış):
-   - Seçenek A: Gerçek ses verisi topla (scripts/test_wakeword_usb.py'ye kayıt modu ekle,
-     50-100 "hey garson" + 50-100 negatif kaydet, yeniden eğit) → ücretsiz
-   - Seçenek C: Picovoice Porcupine entegrasyonu → mic.py _blocking_listen_for_wakeword
-     metodunu değiştir, ~$3/ay restoran başına, Türkçe üretim kalitesi
+### Bileşen Değerlendirmesi
 
-2. Piper TTS modeli indir + çalıştır (🟡 Orta):
-   - benchmark_tts.py hazır — sadece Piper binary + model gerekli
-   - İndir: https://huggingface.co/rhasspy/piper-voices (tr_TR-fahrettin-medium)
-   - Koştur: python scripts/benchmark_tts.py --engines edge-tts piper
-   - Hedef: medyan latency < 300 ms → production'da edge-tts yerine geç
+| Bileşen | Durum | Açıklama |
+|---------|-------|----------|
+| STT (faster-whisper) | ✅ Yeterli | Türkçe kalitesi iyi, Jetson'da çalışıyor |
+| TTS (Piper) | ✅ Yeterli | 490-780ms offline, restoran için kabul edilebilir |
+| LLM (Qwen2.5-3B + LoRA) | ⚠️ Belirsiz | Adapter var ama uçtan uca test edilmedi |
+| Wake word | ❌ Hazır değil | Sentetik veri → gerçek mikrofonda false positive |
+| Uçtan uca pipeline | ❌ Test edilmedi | Jetson'da tam akış hiç çalıştırılmadı |
 
-3. systemd watchdog + Docker (🟢 Düşük):
-   - Production deployment için robot süreç yönetimi
-```
+### Deterministik Model Sorunu
+
+`deterministic_adapter.py` (regex + keyword NLU) hâlâ `hybrid_orchestrator.py` içinde aktif.
+Patron deterministik model istemiyor — bu, `HybridOrchestrator`'ın **yalnızca LLM yolunu**
+kullanması gerektiği anlamına geliyor. `deterministic_adapter` ya devre dışı bırakılmalı
+ya da kaldırılmalı. Bu yapılmadan LLM ne kadar iyi olursa olsun sistem doğal hissetmeyecek:
+regex eşleşirse robot kalıp cümle, eşleşmezse LLM — kullanıcı bu tutarsızlığı hissediyor.
+
+### Wake Word Modeli Hakkında Benim Görüşüm
+
+**Şu anki model yeniden eğitilmemeli** — aynı yaklaşımla (daha fazla MMS-TTS sentetik verisi)
+eğitmek fundamental sorunu çözmez. TTS sesi ile gerçek insan sesi akustik olarak farklıdır;
+buna ek olarak gürültülü restoran ortamı eklenince false positive oranı kabul edilemez düzeyde
+kalır. İki gerçekçi seçenek var:
+
+- **Seçenek A — Gerçek ses verisi:** `test_wakeword_usb.py`'ye kayıt modu ekle, gerçek
+  insanlardan 100-200 "hey garson" + 200-300 çeşitli negatif kaydı topla, yeniden eğit.
+  Ücretsiz ama zaman alır; gerçek restoran koşullarında kayıt yapmak zor.
+
+- **Seçenek C — Picovoice Porcupine:** Türkçe destekli, gerçek dünya gürültüsüne dayanıklı,
+  üretim kalitesi. `mic.py` içindeki `_blocking_listen_for_wakeword` metodunu değiştirmek
+  yeterli. ~$3/ay restoran başına. **Benim önerim bu** — aylar süren veri toplama yerine
+  gün içinde entegre edilip teste alınabilir.
+
+---
+
+## Bir Sonraki Görev (Öncelik Sırasıyla)
+
+### 🔴 1. Wake Word — Patrona Danış ve Karar Ver
+Sistem şu an olmayan bir wake word üzerine kurulu. Bu çözülmeden diğer hiçbir şey test edilemez.
+- Seçenek A: Gerçek ses verisi toplayıp yeniden eğit (ücretsiz, ~1-2 hafta)
+- Seçenek C: Porcupine entegrasyonu (ücretli, ~1 gün iş)
+
+### 🔴 2. Piper'ı Üretim TTS Olarak Entegre Et
+`tts.py` şu an sadece edge-tts biliyor. Piper'ı birincil motor olarak ekle:
+- `tts.py`'ye `PiperTTS` sınıfı ekle (subprocess ile `piper/piper` binary'sini çağır)
+- `voice_web_demo.py`'e `--tts-engine piper|edge-tts` flag'i ekle
+- Piper başarısız olursa edge-tts'e fallback yap
+- `robot_waiter_ai/models/` içindeki Piper model path'i config'e ekle
+
+### 🔴 3. Deterministik Adapter'ı Devre Dışı Bırak
+`hybrid_orchestrator.py` içinde `deterministic_adapter` kullanımını kaldır ya da devre dışı bırak.
+Her şey Qwen LLM üzerinden akmalı. Bu yapılmadan "doğal sohbet" kriteri karşılanamaz.
+
+### 🟠 4. Qwen LLM + LoRA Uçtan Uca Test
+LoRA adapter var ama gerçek konuşma kalitesi hiç değerlendirilmedi:
+- Jetson'da `voice_web_demo.py --backend qwen` ile çalıştır
+- Birkaç farklı sipariş senaryosu dene (belirsiz istek, menü dışı soru, fiyat soru)
+- Eğer yanıtlar doğal değilse: LoRA fine-tune verisi genişletilmeli
+
+### 🟠 5. Uçtan Uca Pipeline Testi (Jetson)
+Hiç çalıştırılmadı: Wake word → STT → LLM → TTS → hoparlör tam zinciri.
+Wake word kararı verildikten sonra bu test yapılabilir.
+- RAM bütçesi: Qwen (~3GB) + Whisper small (~1GB) + Piper (~100MB) = ~4.1GB
+- Jetson Orin NX 8GB RAM ile bu bütçeye giriyor olmalı
+
+### 🟢 6. systemd watchdog + Docker
+Production deployment — diğerleri stabil olduktan sonra.
 
 ---
 
