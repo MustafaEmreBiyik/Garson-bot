@@ -1,6 +1,9 @@
 # Büyük model dosyaları (git'e girmesin)
 robot_waiter_ai/models/Qwen*/
 robot_waiter_ai/models/qwen*/
+
+# Piper binary ve kütüphaneler (binary, git'e girmesin)
+piper/
 robot_waiter_ai/models/tr_TR-*.onnx
 robot_waiter_ai/models/tr_TR-*.onnx.json
 *.safetensors

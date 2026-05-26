@@ -22,7 +22,7 @@ menu:
     name: Izgara Köfte
     category: Ana Yemek
     price: 240
-    description: Kasap köfte, elma dilim patates and köz biber ile servis edilir.
+    description: Kasap köfte, elma dilim patates ve köz biber ile servis edilir.
     allergens: [gluten]
     availability: true
     tags: [meat, traditional]
