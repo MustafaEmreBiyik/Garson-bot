@@ -438,6 +438,9 @@ def train() -> Path:
             )
 
         def forward(self, x: torch.Tensor) -> torch.Tensor:
+            # openWakeWord (1, n_frames, 96) rank-3 gönderir → düzleştir
+            if x.dim() == 3:
+                x = x.reshape(x.shape[0], -1)
             return self.net(x)
 
     model = WakeWordFCN().to(device)
@@ -485,9 +488,10 @@ def train() -> Path:
         model.load_state_dict(best_state)
     print(f"\n✅ Eğitim tamamlandı: {(time.time()-t_start)/60:.1f} dk")
 
-    # ONNX export — input: (batch, FLAT_DIM=1536)
+    # ONNX export — input: (batch, N_FRAMES, FEAT_DIM) rank-3
+    # openWakeWord get_features() her zaman (1, n_frames, 96) gönderir
     onnx_path   = OUTPUT_DIR / "hey_garson_raw.onnx"
-    dummy_input = torch.zeros(1, FLAT_DIM)
+    dummy_input = torch.zeros(1, N_FRAMES, FEAT_DIM)
 
     torch.onnx.export(
         model.cpu(),
@@ -519,7 +523,7 @@ def validate_and_export(onnx_src: Path) -> Path:
     sess       = ort.InferenceSession(str(onnx_src))
     in_name    = sess.get_inputs()[0].name
     in_shape   = sess.get_inputs()[0].shape
-    dummy      = np.zeros((1, FLAT_DIM), dtype=np.float32)
+    dummy      = np.zeros((1, N_FRAMES, FEAT_DIM), dtype=np.float32)
     out        = sess.run(None, {in_name: dummy})
     print(f"✅ ONNX runtime testi geçti | giriş shape: {in_shape} | çıktı: {out[0].shape}")
 
@@ -563,7 +567,7 @@ def smoke_test(model_path: Path) -> None:
             else:
                 window = np.zeros(FLAT_DIM, dtype=np.float32)
                 window[-(n * FEAT_DIM):] = feat.flatten()
-            x = window.reshape(1, FLAT_DIM)
+            x = window.reshape(1, N_FRAMES, FEAT_DIM)
             score = float(sess.run(None, {in_name: x})[0][0, 0])
             scores.append(score)
         mean = float(np.mean(scores))

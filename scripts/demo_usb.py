@@ -7,8 +7,10 @@ Kullanım:
 Çıkmak için Ctrl+C.
 
 Akış:
-    ENTER'a bas → USB mikrofondan 6 sn kayıt → Whisper STT →
+    "hey garson" → USB mikrofondan 6 sn kayıt → Whisper STT →
     Qwen3-4B → Piper TTS → USB hoparlörden çal → tekrar
+
+    hey_garson.onnx yoksa otomatik olarak ENTER tuşu moduna geçer.
 """
 from __future__ import annotations
 
@@ -16,6 +18,7 @@ import asyncio
 import io
 import logging
 import sys
+import threading
 import wave
 from pathlib import Path
 
@@ -31,18 +34,24 @@ logger = logging.getLogger("demo_usb")
 # Sabitler
 # ---------------------------------------------------------------------------
 
-SAMPLE_RATE = 16_000
+SAMPLE_RATE    = 16_000
 RECORD_SECONDS = 6
-CHANNELS = 1
+CHANNELS       = 1
 
 WHISPER_MODEL = "medium"
-PIPER_MODEL = None  # None → otomatik bul
+PIPER_MODEL   = None  # None → otomatik bul
 
 # Whisper'a Türkçe restoran bağlamı ver → menü kelimelerini daha iyi tanır
 STT_INITIAL_PROMPT = (
     "Türkçe restoran siparişi. Menü: mercimek çorbası, mantar çorbası, "
-    "izgara köfte, et döner, tavuk salata, sütlaç, künefe, ayran, limonata, şalgam."
+    "ızgara köfte, et döner, tavuk salata, sütlaç, künefe, ayran, limonata, şalgam."
 )
+
+WAKEWORD_MODEL_PATH = (
+    Path(__file__).resolve().parent.parent / "robot_waiter_ai" / "models" / "hey_garson.onnx"
+)
+WAKEWORD_THRESHOLD = 0.5
+WAKEWORD_CHUNK     = 1280   # 80 ms @ 16 kHz — openWakeWord beklentisi
 
 
 # ---------------------------------------------------------------------------
@@ -63,8 +72,8 @@ def _play_wav(wav_bytes: bytes) -> None:
     buf = io.BytesIO(wav_bytes)
     with wave.open(buf, "rb") as wf:
         rate = wf.getframerate()
-        ch = wf.getnchannels()
-        raw = wf.readframes(wf.getnframes())
+        ch   = wf.getnchannels()
+        raw  = wf.readframes(wf.getnframes())
     audio = np.frombuffer(raw, dtype=np.int16)
     if ch > 1:
         audio = audio.reshape(-1, ch)
@@ -87,14 +96,20 @@ def _play_mp3(mp3_bytes: bytes) -> None:
             pass
 
 
-async def _speak(tts, text: str) -> None:
-    """TTS ile seslendir — Piper (WAV) ve edge-tts (MP3) ikisini de destekler."""
-    audio_bytes = await tts.synthesize(text)
-    content_type = getattr(tts, "AUDIO_CONTENT_TYPE", "audio/wav")
-    if "wav" in content_type:
-        await asyncio.to_thread(_play_wav, audio_bytes)
-    else:
-        await asyncio.to_thread(_play_mp3, audio_bytes)
+async def _speak(tts, text: str, tts_active: threading.Event | None = None) -> None:
+    """TTS ile seslendir. tts_active set iken wake word algılaması durur."""
+    if tts_active is not None:
+        tts_active.set()
+    try:
+        audio_bytes  = await tts.synthesize(text)
+        content_type = getattr(tts, "AUDIO_CONTENT_TYPE", "audio/wav")
+        if "wav" in content_type:
+            await asyncio.to_thread(_play_wav, audio_bytes)
+        else:
+            await asyncio.to_thread(_play_mp3, audio_bytes)
+    finally:
+        if tts_active is not None:
+            tts_active.clear()
 
 
 def _record() -> bytes:
@@ -107,6 +122,51 @@ def _record() -> bytes:
     )
     sd.wait()
     return _numpy_to_wav(audio.flatten(), SAMPLE_RATE)
+
+
+# ---------------------------------------------------------------------------
+# Wake word
+# ---------------------------------------------------------------------------
+
+def _load_wakeword():
+    """hey_garson.onnx modelini yükle. Hata varsa None döner."""
+    if not WAKEWORD_MODEL_PATH.exists():
+        return None
+    try:
+        oww_dir = str(Path(__file__).resolve().parent.parent / "openWakeWord")
+        if oww_dir not in sys.path:
+            sys.path.insert(0, oww_dir)
+        from openwakeword.model import Model
+        m = Model(wakeword_models=[str(WAKEWORD_MODEL_PATH)], inference_framework="onnx")
+        logger.info("Wake word modeli yüklendi.")
+        return m
+    except Exception as e:
+        logger.warning("Wake word modeli yüklenemedi: %s", e)
+        return None
+
+
+async def _wait_for_wakeword(ww_model, tts_active: threading.Event) -> None:
+    """'hey garson' algılanana kadar mikrofonu dinle."""
+    loop     = asyncio.get_event_loop()
+    detected = asyncio.Event()
+
+    def _cb(indata, frames, time_info, status):
+        if tts_active.is_set():
+            return  # TTS çalarken algılama yapma (feedback engeli)
+        if detected.is_set():
+            return
+        audio  = (indata[:, 0] * 32768).astype(np.int16)
+        scores = ww_model.predict(audio)
+        score  = float(list(scores.values())[0])
+        if score > WAKEWORD_THRESHOLD:
+            loop.call_soon_threadsafe(detected.set)
+
+    print("  👂 'hey garson' bekleniyor...", flush=True)
+    with sd.InputStream(samplerate=16_000, channels=1, dtype="float32",
+                        blocksize=WAKEWORD_CHUNK, callback=_cb):
+        await detected.wait()
+
+    print("  ✔  Wake word algılandı!", flush=True)
 
 
 # ---------------------------------------------------------------------------
@@ -135,7 +195,7 @@ async def run_demo() -> None:
     # LLM
     llm = Qwen3Backend()
 
-    # STT — modeli şimdi yükle (lazy load'u startup'a çek, ilk konuşmada gecikme olmasın)
+    # STT
     print("STT modeli yükleniyor...")
     stt = SpeechToText(model_size=WHISPER_MODEL, device="cuda", compute_type="float16")
     silence_wav = _numpy_to_wav(np.zeros(SAMPLE_RATE, dtype=np.int16), SAMPLE_RATE)
@@ -143,23 +203,36 @@ async def run_demo() -> None:
                          initial_prompt=STT_INITIAL_PROMPT)  # modeli ısıt
     print("STT: hazır\n")
 
-    print("✓ Tüm modeller hazır!\n")
+    # Wake word
+    ww_model   = _load_wakeword()
+    tts_active = threading.Event()  # TTS çalarken set, dinlerken clear
+    if ww_model:
+        print("Wake word: hey_garson.onnx yüklendi")
+    else:
+        print("Wake word: model bulunamadı → ENTER tuşu modu")
+
+    print("\n✓ Tüm modeller hazır!\n")
 
     # Karşılama
     greeting = "Merhaba, hoş geldiniz! Ben W-BOT. Size nasıl yardımcı olabilirim?"
     print(f"W-BOT: {greeting}")
     try:
-        await _speak(tts, greeting)
+        await _speak(tts, greeting, tts_active)
     except Exception as e:
         logger.warning("Karşılama TTS hatası: %s", e)
 
     # --- Ana döngü ---
     while True:
         print("\n" + "-" * 40)
-        try:
-            input("  ENTER'a bas ve konuş → ")
-        except EOFError:
-            break
+
+        # Tetikleyici: wake word veya ENTER
+        if ww_model:
+            await _wait_for_wakeword(ww_model, tts_active)
+        else:
+            try:
+                input("  ENTER'a bas ve konuş → ")
+            except EOFError:
+                break
 
         # 1. Kayıt
         wav_bytes = await asyncio.to_thread(_record)
@@ -167,8 +240,8 @@ async def run_demo() -> None:
         # 2. STT
         print("  ⏳ Anlıyorum...", flush=True)
         try:
-            result = await stt.transcribe(wav_bytes, language="tr",
-                                         initial_prompt=STT_INITIAL_PROMPT)
+            result    = await stt.transcribe(wav_bytes, language="tr",
+                                             initial_prompt=STT_INITIAL_PROMPT)
             user_text = result["text"].strip()
         except Exception as e:
             print(f"  ✗ STT hatası: {e}")
@@ -190,14 +263,13 @@ async def run_demo() -> None:
 
         print(f"W-BOT:   {reply}")
 
-        # 4. TTS + çal
+        # 4. TTS + çal (tts_active set → wake word susturulur)
         try:
-            await _speak(tts, reply)
+            await _speak(tts, reply, tts_active)
         except Exception as e:
             logger.warning("TTS/oynatma hatası: %s", e)
 
-        # Oturum sonu → kısa veda cümlesi ise history sıfırla
-        # "Tabii teşekkürler, bir şey daha..." gibi uzun cümleleri tetiklememeli
+        # Oturum sonu kontrolü
         farewell_phrases = ["güle güle", "görüşürüz", "hoşça kal", "iyi günler"]
         short_thanks = user_text.strip().lower()
         is_farewell = (
