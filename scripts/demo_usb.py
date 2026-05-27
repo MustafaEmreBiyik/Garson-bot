@@ -81,16 +81,17 @@ def _numpy_to_wav(audio: np.ndarray, rate: int) -> bytes:
 
 
 def _play_wav(wav_bytes: bytes) -> None:
-    buf = io.BytesIO(wav_bytes)
-    with wave.open(buf, "rb") as wf:
-        rate = wf.getframerate()
-        ch   = wf.getnchannels()
-        raw  = wf.readframes(wf.getnframes())
-    audio = np.frombuffer(raw, dtype=np.int16)
-    if ch > 1:
-        audio = audio.reshape(-1, ch)
-    sd.play(audio, samplerate=rate)
-    sd.wait()
+    import os, subprocess, tempfile
+    fd, tmp = tempfile.mkstemp(suffix=".wav")
+    os.close(fd)
+    try:
+        Path(tmp).write_bytes(wav_bytes)
+        subprocess.run(["aplay", "-q", tmp], check=True)
+    finally:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
 
 
 def _play_mp3(mp3_bytes: bytes) -> None:
@@ -165,14 +166,14 @@ def _load_wakeword():
         return None
 
 
-async def _wait_for_wakeword(ww_model, tts_active: threading.Event) -> None:
-    """'hey garson' algılanana kadar mikrofonu dinle."""
+async def _detect_wakeword(ww_model, tts_active: threading.Event) -> None:
+    """'hey garson' algılanana kadar mikrofonu dinle (tek kullanımlık coroutine)."""
     loop     = asyncio.get_event_loop()
     detected = asyncio.Event()
 
     def _cb(indata, frames, time_info, status):
         if tts_active.is_set():
-            return  # TTS çalarken algılama yapma (feedback engeli)
+            return  # TTS çalarken tetikleme yapma (feedback engeli)
         if detected.is_set():
             return
         audio  = (indata[:, 0] * 32768).astype(np.int16)
@@ -181,13 +182,9 @@ async def _wait_for_wakeword(ww_model, tts_active: threading.Event) -> None:
         if score > WAKEWORD_THRESHOLD:
             loop.call_soon_threadsafe(detected.set)
 
-    print("  👂 'hey garson' bekleniyor...", flush=True)
     with sd.InputStream(samplerate=16_000, channels=1, dtype="float32",
                         blocksize=WAKEWORD_CHUNK, callback=_cb):
         await detected.wait()
-
-    print("  ✔  Wake word algılandı!", flush=True)
-    await asyncio.to_thread(_beep)  # "şimdi konuş" sinyali
 
 
 # ---------------------------------------------------------------------------
@@ -234,26 +231,47 @@ async def run_demo() -> None:
 
     print("\n✓ Tüm modeller hazır!\n")
 
-    # Karşılama
-    greeting = "Merhaba, hoş geldiniz! Ben W-BOT. Size nasıl yardımcı olabilirim?"
-    print(f"W-BOT: {greeting}")
-    try:
-        await _speak(tts, greeting, tts_active)
-    except Exception as e:
-        logger.warning("Karşılama TTS hatası: %s", e)
+    GREETING = "Merhaba, hoş geldiniz! Ben W-BOT. Size nasıl yardımcı olabilirim?"
+
+    # Wake word modunda karşılamayı ilk seslenişe bırak
+    ww_task: "asyncio.Task | None" = None
+    if ww_model:
+        print("\n  👂 'hey garson' bekleniyor...", flush=True)
+        ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
+    else:
+        # ENTER modunda karşılamayı hemen söyle
+        print(f"W-BOT: {GREETING}")
+        try:
+            await _speak(tts, GREETING, tts_active)
+        except Exception as e:
+            logger.warning("Karşılama TTS hatası: %s", e)
 
     # --- Ana döngü ---
+    first_wakeword    = True
+    new_customer      = True   # Her oturum başında karşıla
     while True:
-        print("\n" + "-" * 40)
-
-        # Tetikleyici: wake word veya ENTER
+        # Tetikleyici: wake word (task zaten çalışıyor) veya ENTER
         if ww_model:
-            await _wait_for_wakeword(ww_model, tts_active)
+            await ww_task
+            print("  ✔  Wake word algılandı!", flush=True)
+            if first_wakeword:
+                await asyncio.to_thread(_beep)
+                first_wakeword = False
         else:
             try:
+                print("\n" + "-" * 40)
                 input("  ENTER'a bas ve konuş → ")
             except EOFError:
                 break
+
+        # Yeni müşteri oturumunda karşıla, ardından direkt kayda geç
+        if new_customer and ww_model:
+            new_customer = False
+            print(f"W-BOT: {GREETING}")
+            try:
+                await _speak(tts, GREETING, tts_active)
+            except Exception as e:
+                logger.warning("Karşılama TTS hatası: %s", e)
 
         # 1. Kayıt
         wav_bytes = await asyncio.to_thread(_record)
@@ -266,10 +284,14 @@ async def run_demo() -> None:
             user_text = result["text"].strip()
         except Exception as e:
             print(f"  ✗ STT hatası: {e}")
+            if ww_model:
+                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
             continue
 
         if not user_text:
             print("  (Ses algılanamadı, tekrar dene)")
+            if ww_model:
+                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
             continue
 
         print(f"\nMüşteri: {user_text}")
@@ -280,27 +302,36 @@ async def run_demo() -> None:
             reply = await asyncio.to_thread(llm.generate_reply, user_text)
         except Exception as e:
             print(f"  ✗ LLM hatası: {e}")
+            if ww_model:
+                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
             continue
 
         print(f"W-BOT:   {reply}")
 
-        # 4. TTS + çal (tts_active set → wake word susturulur)
+        # 4. Konuşmadan önce bir sonraki tespiti başlat (aplay çatışmaz)
+        if ww_model:
+            ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
+
+        # 5. TTS + çal
         try:
             await _speak(tts, reply, tts_active)
         except Exception as e:
             logger.warning("TTS/oynatma hatası: %s", e)
 
-        # Oturum sonu kontrolü
-        farewell_phrases = ["güle güle", "görüşürüz", "hoşça kal", "iyi günler"]
-        short_thanks = user_text.strip().lower()
+        # Oturum sonu kontrolü — müşteri veya bot veda ediyorsa sıfırla
+        farewell_phrases = ["güle güle", "görüşürüz", "hoşça kal", "iyi günler", "tekrar bekleriz"]
+        short_user = user_text.strip().lower()
+        reply_lower = reply.lower()
         is_farewell = (
-            any(p in short_thanks for p in farewell_phrases)
-            or (len(short_thanks) < 40 and "teşekkür" in short_thanks
-                and not any(q in short_thanks for q in ["alabilir", "istiyorum", "verir", "?", "mı", "mi"]))
+            any(p in reply_lower for p in farewell_phrases)   # bot veda etti
+            or any(p in short_user for p in farewell_phrases)  # müşteri veda etti
+            or (len(short_user) < 40 and "teşekkür" in short_user
+                and not any(q in short_user for q in ["alabilir", "istiyorum", "verir", "?", "mı", "mi"]))
         )
         if is_farewell:
             print("\n--- Yeni müşteri oturumu başladı ---")
             llm.reset_history()
+            new_customer = True
 
 
 def main() -> None:

@@ -30,6 +30,7 @@ def _strip_markdown(text: str) -> str:
     text = re.sub(r'\bizgara\b', 'ızgara', text)      # küçük: izgara → ızgara
     text = re.sub(r'\bkunefe\b', 'künefe', text, flags=re.IGNORECASE)
     text = re.sub(r'\biçeçek', 'içecek', text, flags=re.IGNORECASE)  # içeçek → içecek
+    text = re.sub(r'[Ss]ize getirmek ister misiniz\??', 'Getireyim mi?', text)
     return text.strip()
 
 _MENU_YAML = Path(__file__).resolve().parent.parent / "data" / "menu.yaml"
@@ -50,9 +51,11 @@ KURALLAR:
 - Yalnızca menüdeki ürünleri söyle, asla uydurma kelime veya ürün ekleme.
 - Türkçe imla kurallarına uy: ürün adlarını menüdeki gibi yaz. Doğru: "ızgara köfte", "ızgara tavuk", "içecek". Yanlış: "izgara", "içeçek".
 - Menüyü anlattıktan sonra "Ne sipariş etmek istersiniz?" veya "Size ne getirebilirim?" diye sor. "Başka bir şey alır mısınız?" SADECE müşteri sipariş verdikten sonra söyle.
-- Sipariş alınca ürün adı ve fiyatıyla birlikte tekrar et, onay iste. Onaylandıktan sonra "Başka bir şey alır mısınız?" diye sor.
-- Hesap sorulunca toplam tutarı düz sayıyla söyle: "Toplam 310 TL."
-- Veda cümlelerini ("Güle güle", "Tekrar bekleriz") SADECE müşteri ayrılıyor veya hesabı ödüyor olduğunda söyle. Sipariş sonrası asla veda etme.
+- Müşteri bir şey istediğinde ("X alabilir miyim", "X istiyorum", "X getirir misin") direkt sipariş olarak al. Örnek: "Elbette, mercimek çorbası 85 TL eklendi. Başka bir şey alır mısınız?" "Siparişiniz onaylandı" ifadesini asla kullanma.
+- Ürün hakkında soru gelince kısa bilgi ver ve "Getireyim mi?" diye sor. "Size getirmek ister misiniz?" ifadesini kullanma.
+- Her sipariş eklemesinde toplam söyleme. Toplam tutarı yalnızca müşteri hesap istediğinde söyle: "Toplam 310 TL."
+- Müşteri "Başka bir şey istemiyorum / Bu kadar / Hepsi bu" derse "Anladım, siparişiniz hazırlanıyor. Afiyet olsun!" de, veda etme. "Güle güle" yalnızca müşteri masadan kalkıp ayrılırken veya hesabı öderken söyle.
+- "Size yardımcı oldum", "Satıyoruz" gibi robotik ifadeler kullanma. Doğal garson dili kullan.
 - Menüde olmayan soruları "Bu konuda bilgim yok, personelimize sorabilirsiniz." ile yanıtla."""
 
 
