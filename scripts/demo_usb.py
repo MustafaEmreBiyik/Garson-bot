@@ -199,7 +199,6 @@ async def run_demo() -> None:
 
     from robot_waiter_ai.speech.stt import SpeechToText
     from robot_waiter_ai.speech.tts import PiperTTS
-    from robot_waiter_ai.inference.qwen3_backend import Qwen3Backend
 
     # TTS
     try:
@@ -210,8 +209,15 @@ async def run_demo() -> None:
         tts = TextToSpeech()
         print("TTS: edge-tts (fallback, internet gerekli)")
 
-    # LLM
-    llm = Qwen3Backend()
+    # LLM — llama-cpp-python (Jetson/GGUF) önce dene, yoksa transformers (PC)
+    try:
+        from robot_waiter_ai.inference.llama_cpp_backend import LlamaCppBackend
+        llm = LlamaCppBackend()
+        print("LLM: llama-cpp-python GGUF (GPU)")
+    except Exception as _llama_err:
+        from robot_waiter_ai.inference.qwen3_backend import Qwen3Backend
+        llm = Qwen3Backend()
+        print("LLM: Qwen3Backend (transformers)")
 
     # STT
     print("STT modeli yükleniyor...")
