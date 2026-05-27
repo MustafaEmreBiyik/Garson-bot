@@ -26,9 +26,10 @@ def _strip_markdown(text: str) -> str:
     text = re.sub(r'[\U0001F300-\U0001FAFF\U00002700-\U000027BF]+', '', text)
     text = re.sub(r' {2,}', ' ', text)        # çift boşluk
     # Türkçe imla düzeltmeleri
-    text = re.sub(r'\bIzgara\b', 'Izgara', text)   # büyük harf koruma
-    text = re.sub(r'\bizgara\b', 'ızgara', text)   # küçük harf düzeltme
+    text = re.sub(r'\b[İI]zgara\b', 'Izgara', text)  # büyük: İzgara/Izgara → Izgara
+    text = re.sub(r'\bizgara\b', 'ızgara', text)      # küçük: izgara → ızgara
     text = re.sub(r'\bkunefe\b', 'künefe', text, flags=re.IGNORECASE)
+    text = re.sub(r'\biçeçek', 'içecek', text, flags=re.IGNORECASE)  # içeçek → içecek
     return text.strip()
 
 _MENU_YAML = Path(__file__).resolve().parent.parent / "data" / "menu.yaml"
@@ -47,8 +48,9 @@ KURALLAR:
 - Menüyü sıralamak yerine sohbet ederek anlat. Örnek: "Çorbalarımız arasında mercimek ve kremalı mantar var."
 - Kısa tut: 2-3 cümle yeterli. Müşteri daha fazla sormak isterse sorar.
 - Yalnızca menüdeki ürünleri söyle, asla uydurma kelime veya ürün ekleme.
-- Türkçe imla kurallarına uy: ürün adlarını menüdeki gibi yaz. Doğru: "ızgara köfte", "ızgara tavuk". Yanlış: "izgara".
-- Sipariş alınca ürün adı ve fiyatıyla birlikte tekrar et, onay iste. Sonra "Başka bir şey alır mısınız?" diye sor.
+- Türkçe imla kurallarına uy: ürün adlarını menüdeki gibi yaz. Doğru: "ızgara köfte", "ızgara tavuk", "içecek". Yanlış: "izgara", "içeçek".
+- Menüyü anlattıktan sonra "Ne sipariş etmek istersiniz?" veya "Size ne getirebilirim?" diye sor. "Başka bir şey alır mısınız?" SADECE müşteri sipariş verdikten sonra söyle.
+- Sipariş alınca ürün adı ve fiyatıyla birlikte tekrar et, onay iste. Onaylandıktan sonra "Başka bir şey alır mısınız?" diye sor.
 - Hesap sorulunca toplam tutarı düz sayıyla söyle: "Toplam 310 TL."
 - Veda cümlelerini ("Güle güle", "Tekrar bekleriz") SADECE müşteri ayrılıyor veya hesabı ödüyor olduğunda söyle. Sipariş sonrası asla veda etme.
 - Menüde olmayan soruları "Bu konuda bilgim yok, personelimize sorabilirsiniz." ile yanıtla."""

@@ -25,6 +25,14 @@ from pathlib import Path
 import numpy as np
 import sounddevice as sd
 
+# ALSA underrun uyarılarını bastır
+try:
+    import ctypes
+    _asound = ctypes.cdll.LoadLibrary("libasound.so.2")
+    _asound.snd_lib_error_set_handler(ctypes.c_void_p(None))
+except Exception:
+    pass
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s %(name)s: %(message)s")

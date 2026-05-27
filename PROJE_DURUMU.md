@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** Mayıs 2026 | **Sürüm:** 2.9
+**Son güncelleme:** Mayıs 2026 | **Sürüm:** 3.0
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -27,6 +27,7 @@ Garson-bot/
 ├── requirements-llm.txt          # torch, transformers, peft, bitsandbytes, safetensors
 ├── pytest.ini                    # markers: unit, integration
 ├── scripts/
+│   ├── demo_usb.py               # ✅ USB demo — "hey garson" → STT → Qwen3-4B → Piper TTS
 │   ├── benchmark_stt.py          # ✅ STT latency & RAM benchmark (Jetson Orin NX)
 │   ├── benchmark_tts.py          # ✅ TTS latency & TTFA benchmark (edge-tts vs Piper)
 │   ├── benchmark_audio/          # ✅ silence_2s.wav, tone_440hz_4s.wav, tone_mix_6s.wav
@@ -239,13 +240,18 @@ TextToSpeech.synthesize() → MP3 bytes → Browser Audio() → Hoparlör
 | 7 | ~~Jetson STT benchmark~~ | ~~🟠 Yüksek~~ | ✅ **Tamamlandı v2.4** |
 | 8 | ~~FastAPI'ye geçiş~~ | ~~🟡 Orta~~ | ✅ **Tamamlandı v2.5** — create_app() + uvicorn + TestClient |
 | 9 | ~~Wake word Colab notebook~~ | ~~🟠 Yüksek~~ | ✅ **Tamamlandı v2.7** — colab_hey_garson_wakeword_training.ipynb |
-| 13 | Wake word — gerçek veri veya Porcupine | 🔴 Kritik | ⚠️ Sentetik model üretimde çalışmıyor, karar bekleniyor |
 | 10 | ~~Offline TTS — Piper benchmark~~ | ~~🟡 Orta~~ | ✅ **Tamamlandı v2.9** — 494-779ms CPU, birincil seçildi |
-| 14 | Piper'ı tts.py'ye entegre et | 🔴 Kritik | Henüz yapılmadı — tts.py sadece edge-tts biliyor |
-| 15 | Deterministik adapter'ı kaldır | 🔴 Kritik | hybrid_orchestrator.py içinde — doğal sohbet engeli |
-| 16 | Qwen LLM uçtan uca test (Jetson) | 🟠 Yüksek | LoRA adapter var ama üretim kalitesi değerlendirilmedi |
+| 14 | ~~Piper'ı demo'ya entegre et~~ | ~~🔴 Kritik~~ | ✅ **Tamamlandı v3.0** — demo_usb.py, PiperTTS + edge-tts fallback |
+| 17 | ~~Qwen3-4B backend~~ | ~~🔴 Kritik~~ | ✅ **Tamamlandı v3.0** — qwen3_backend.py, 4-bit NF4, offline |
+| 18 | ~~USB demo (Enter tetiklemeli)~~ | ~~🟠 Yüksek~~ | ✅ **Tamamlandı v3.0** — scripts/demo_usb.py çalışıyor |
+| 19 | ~~Wake word entegrasyonu demo'ya~~ | ~~🟠 Yüksek~~ | ✅ **Tamamlandı v3.0** — hey_garson.onnx rank-3 fix + demo_usb.py entegre |
+| 13 | Wake word gerçek ses testi | 🔴 Kritik | ⚠️ Model sentetik sesle eğitildi — gerçek mikrofon testi yapılmadı |
+| 20 | LLM konuşma kalitesi: menü→sipariş akışı | 🟠 Yüksek | ⚠️ Menü anlatınca erken "Başka bir şey?" diyor — prompt iyileştirmesi devam ediyor |
+| 21 | Jetson Orin NX deploy | 🔴 Kritik | Henüz yapılmadı — Piper aarch64, ReSpeaker device index, systemd |
+| 15 | Deterministik adapter'ı kaldır | 🟡 Orta | hybrid_orchestrator.py içinde — demo_usb.py kullanmıyor, eski pipeline |
 | 11 | Çoklu konuşmacı — DOA + UX | 🟡 Orta | mic.get_doa() hazır |
 | 12 | systemd watchdog + Docker | 🟢 Düşük | Production deployment |
+| 22 | Sipariş yönetimi (mutfak iletimi) | 🟢 Düşük | Siparişler sadece LLM history'de, POS entegrasyonu yok |
 
 ---
 
@@ -253,12 +259,13 @@ TextToSpeech.synthesize() → MP3 bytes → Browser Audio() → Hoparlör
 
 | Parametre | Değer |
 |---|---|
-| Base model | `Qwen/Qwen2.5-3B-Instruct` |
-| Local path | `robot_waiter_ai/models/Qwen2.5-3B-Instruct` |
-| LoRA adapter | `qwen25_3b_waiter_v1_1_lora` |
-| Adapter dosyaları | `adapter_config.json` + `adapter_model.safetensors` |
-| Quantization | `BitsAndBytesConfig(load_in_4bit=True)` — CUDA varsa aktif |
-| Max new tokens | 120, repetition_penalty=1.05 |
+| Base model | `Qwen/Qwen3-4B` (v3.0'dan itibaren) |
+| Backend | `robot_waiter_ai/inference/qwen3_backend.py` |
+| Quantization | `BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4")` |
+| Thinking mode | `enable_thinking=False` — hızlı, doğrudan yanıt |
+| Max new tokens | 150, repetition_penalty=1.1, do_sample=False |
+| Sistem prompt | menu.yaml'dan otomatik oluşturulur |
+| Eski model | `Qwen/Qwen2.5-3B-Instruct` + LoRA — Türkçe kalitesi yetersiz, kullanım dışı |
 
 ---
 
