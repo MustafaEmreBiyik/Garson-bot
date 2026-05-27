@@ -22,13 +22,15 @@ import threading
 import wave
 from pathlib import Path
 
-# ALSA underrun uyarılarını bastır — sounddevice'ten önce yapılmalı
+# ALSA underrun uyarılarını bastır — callback module-level'da tutulmalı (GC koruması)
 try:
     import ctypes
     _asound = ctypes.cdll.LoadLibrary("libasound.so.2")
-    _ERROR_HANDLER_FUNC = ctypes.CFUNCTYPE(None, ctypes.c_char_p, ctypes.c_int,
-                                           ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p)
-    _asound.snd_lib_error_set_handler(_ERROR_HANDLER_FUNC(lambda *_: None))
+    _ALSA_ERROR_HANDLER = ctypes.CFUNCTYPE(
+        None, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p
+    )
+    _alsa_error_handler_ref = _ALSA_ERROR_HANDLER(lambda *_: None)  # GC'den koru
+    _asound.snd_lib_error_set_handler(_alsa_error_handler_ref)
 except Exception:
     pass
 
