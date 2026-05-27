@@ -65,6 +65,17 @@ WAKEWORD_MODEL_PATH = (
 WAKEWORD_THRESHOLD = 0.7   # 0.5 çok hassastı — yanlış pozitifler azaltıldı
 WAKEWORD_CHUNK     = 1280   # 80 ms @ 16 kHz — openWakeWord beklentisi
 
+# ALSA çıkış cihazı — None → sistem varsayılanı, "plughw:2,0" → Jetson APE jack çıkışı
+ALSA_OUTPUT_DEVICE: str | None = None
+
+
+def _find_input_device() -> int | None:
+    """USB ses giriş cihazının sounddevice index'ini döndür, bulamazsa None."""
+    for i, d in enumerate(sd.query_devices()):
+        if "USB" in d["name"] and d["max_input_channels"] > 0:
+            return i
+    return None
+
 
 # ---------------------------------------------------------------------------
 # Ses yardımcıları
@@ -86,7 +97,11 @@ def _play_wav(wav_bytes: bytes) -> None:
     os.close(fd)
     try:
         Path(tmp).write_bytes(wav_bytes)
-        subprocess.run(["aplay", "-q", tmp], check=True)
+        cmd = ["aplay", "-q"]
+        if ALSA_OUTPUT_DEVICE:
+            cmd += ["-D", ALSA_OUTPUT_DEVICE]
+        cmd.append(tmp)
+        subprocess.run(cmd, check=True)
     finally:
         try:
             os.unlink(tmp)
@@ -133,13 +148,14 @@ def _beep() -> None:
     sd.wait()
 
 
-def _record() -> bytes:
+def _record(input_device: int | None = None) -> bytes:
     print("  🎙  Dinliyorum... (6 sn)", flush=True)
     audio = sd.rec(
         int(SAMPLE_RATE * RECORD_SECONDS),
         samplerate=SAMPLE_RATE,
         channels=CHANNELS,
         dtype="int16",
+        device=input_device,
     )
     sd.wait()
     return _numpy_to_wav(audio.flatten(), SAMPLE_RATE)
@@ -166,7 +182,8 @@ def _load_wakeword():
         return None
 
 
-async def _detect_wakeword(ww_model, tts_active: threading.Event) -> None:
+async def _detect_wakeword(ww_model, tts_active: threading.Event,
+                           input_device: int | None = None) -> None:
     """'hey garson' algılanana kadar mikrofonu dinle (tek kullanımlık coroutine)."""
     loop     = asyncio.get_event_loop()
     detected = asyncio.Event()
@@ -183,7 +200,8 @@ async def _detect_wakeword(ww_model, tts_active: threading.Event) -> None:
             loop.call_soon_threadsafe(detected.set)
 
     with sd.InputStream(samplerate=16_000, channels=1, dtype="float32",
-                        blocksize=WAKEWORD_CHUNK, callback=_cb):
+                        blocksize=WAKEWORD_CHUNK, callback=_cb,
+                        device=input_device):
         await detected.wait()
 
 
@@ -227,6 +245,13 @@ async def run_demo() -> None:
                          initial_prompt=STT_INITIAL_PROMPT)  # modeli ısıt
     print("STT: hazır\n")
 
+    # USB mikrofon cihazını otomatik bul
+    input_device = _find_input_device()
+    if input_device is not None:
+        print(f"Mikrofon: device {input_device} ({sd.query_devices(input_device)['name'].strip()})")
+    else:
+        print("Mikrofon: varsayılan cihaz")
+
     # Wake word
     ww_model   = _load_wakeword()
     tts_active = threading.Event()  # TTS çalarken set, dinlerken clear
@@ -243,7 +268,7 @@ async def run_demo() -> None:
     ww_task: "asyncio.Task | None" = None
     if ww_model:
         print("\n  👂 'hey garson' bekleniyor...", flush=True)
-        ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
+        ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
     else:
         # ENTER modunda karşılamayı hemen söyle
         print(f"W-BOT: {GREETING}")
@@ -280,7 +305,7 @@ async def run_demo() -> None:
                 logger.warning("Karşılama TTS hatası: %s", e)
 
         # 1. Kayıt
-        wav_bytes = await asyncio.to_thread(_record)
+        wav_bytes = await asyncio.to_thread(_record, input_device)
 
         # 2. STT
         print("  ⏳ Anlıyorum...", flush=True)
@@ -291,13 +316,13 @@ async def run_demo() -> None:
         except Exception as e:
             print(f"  ✗ STT hatası: {e}")
             if ww_model:
-                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
+                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
 
         if not user_text:
             print("  (Ses algılanamadı, tekrar dene)")
             if ww_model:
-                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
+                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
 
         print(f"\nMüşteri: {user_text}")
@@ -309,14 +334,14 @@ async def run_demo() -> None:
         except Exception as e:
             print(f"  ✗ LLM hatası: {e}")
             if ww_model:
-                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
+                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
 
         print(f"W-BOT:   {reply}")
 
         # 4. Konuşmadan önce bir sonraki tespiti başlat (aplay çatışmaz)
         if ww_model:
-            ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active))
+            ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
 
         # 5. TTS + çal
         try:
