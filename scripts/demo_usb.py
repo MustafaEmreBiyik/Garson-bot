@@ -22,16 +22,18 @@ import threading
 import wave
 from pathlib import Path
 
-import numpy as np
-import sounddevice as sd
-
-# ALSA underrun uyarılarını bastır
+# ALSA underrun uyarılarını bastır — sounddevice'ten önce yapılmalı
 try:
     import ctypes
     _asound = ctypes.cdll.LoadLibrary("libasound.so.2")
-    _asound.snd_lib_error_set_handler(ctypes.c_void_p(None))
+    _ERROR_HANDLER_FUNC = ctypes.CFUNCTYPE(None, ctypes.c_char_p, ctypes.c_int,
+                                           ctypes.c_char_p, ctypes.c_int, ctypes.c_char_p)
+    _asound.snd_lib_error_set_handler(_ERROR_HANDLER_FUNC(lambda *_: None))
 except Exception:
     pass
+
+import numpy as np
+import sounddevice as sd
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
@@ -58,7 +60,7 @@ STT_INITIAL_PROMPT = (
 WAKEWORD_MODEL_PATH = (
     Path(__file__).resolve().parent.parent / "robot_waiter_ai" / "models" / "hey_garson.onnx"
 )
-WAKEWORD_THRESHOLD = 0.5
+WAKEWORD_THRESHOLD = 0.7   # 0.5 çok hassastı — yanlış pozitifler azaltıldı
 WAKEWORD_CHUNK     = 1280   # 80 ms @ 16 kHz — openWakeWord beklentisi
 
 
@@ -120,6 +122,14 @@ async def _speak(tts, text: str, tts_active: threading.Event | None = None) -> N
             tts_active.clear()
 
 
+def _beep() -> None:
+    """Kısa onay bip tonu — wake word algılandığında çal."""
+    t = np.linspace(0, 0.15, int(SAMPLE_RATE * 0.15), dtype=np.float32)
+    tone = (np.sin(2 * np.pi * 880 * t) * 0.3).astype(np.float32)
+    sd.play(tone, samplerate=SAMPLE_RATE)
+    sd.wait()
+
+
 def _record() -> bytes:
     print("  🎙  Dinliyorum... (6 sn)", flush=True)
     audio = sd.rec(
@@ -175,6 +185,7 @@ async def _wait_for_wakeword(ww_model, tts_active: threading.Event) -> None:
         await detected.wait()
 
     print("  ✔  Wake word algılandı!", flush=True)
+    await asyncio.to_thread(_beep)  # "şimdi konuş" sinyali
 
 
 # ---------------------------------------------------------------------------
