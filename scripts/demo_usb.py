@@ -71,6 +71,9 @@ WAKEWORD_CHUNK     = 1280   # 80 ms @ 16 kHz — openWakeWord beklentisi
 # ALSA çıkış cihazı — None → sistem varsayılanı, "plughw:2,0" → Jetson APE jack çıkışı
 ALSA_OUTPUT_DEVICE: str | None = None
 
+# Cümle sonu tespiti: nokta/ünlem/soru işaretinden sonra boşluk veya newline
+_SENT_RE = re.compile(r'(?<=[.!?])[ \t\n]')
+
 
 _MENU_YAML_PATH = Path(__file__).resolve().parent.parent / "robot_waiter_ai" / "data" / "menu.yaml"
 
@@ -208,6 +211,77 @@ async def _speak(tts, text: str, tts_active: threading.Event | None = None) -> N
     finally:
         if tts_active is not None:
             tts_active.clear()
+
+
+async def _speak_streaming(tts, llm, user_text: str,
+                            tts_active: "threading.Event | None" = None) -> str:
+    """LLM token akışını cümle cümle TTS'e ver; ilk sesi hızla başlat.
+
+    Pipeline: LLM thread → sentence_q → tts_worker → audio_q → play_worker
+    tts_worker ve play_worker eş zamanlı çalışır: biri sentezlerken diğeri çalar.
+    """
+    loop = asyncio.get_event_loop()
+    sentence_q: asyncio.Queue = asyncio.Queue()
+    audio_q: asyncio.Queue = asyncio.Queue(maxsize=2)
+    spoken: list[str] = []
+
+    def _run_llm():
+        buf = ""
+        try:
+            for token in llm.stream_reply(user_text):
+                buf += token
+                while True:
+                    m = _SENT_RE.search(buf)
+                    if not m:
+                        break
+                    sentence = buf[:m.start()].strip()
+                    buf = buf[m.end():]
+                    if sentence:
+                        loop.call_soon_threadsafe(sentence_q.put_nowait, sentence)
+        except Exception as exc:
+            logger.error("LLM stream hatası: %s", exc)
+        finally:
+            if buf.strip():
+                loop.call_soon_threadsafe(sentence_q.put_nowait, buf.strip())
+            loop.call_soon_threadsafe(sentence_q.put_nowait, None)
+
+    async def _tts_worker():
+        ctype = getattr(tts, "AUDIO_CONTENT_TYPE", "audio/wav")
+        while True:
+            sentence = await sentence_q.get()
+            if sentence is None:
+                await audio_q.put(None)
+                break
+            spoken.append(sentence)
+            clean = re.sub(r'\*+', '', sentence).strip()
+            if not clean:
+                continue
+            wav = await tts.synthesize(clean)
+            await audio_q.put((wav, ctype))
+
+    async def _play_worker():
+        while True:
+            item = await audio_q.get()
+            if item is None:
+                break
+            wav, ctype = item
+            if "wav" in ctype:
+                await asyncio.to_thread(_play_wav, wav)
+            else:
+                await asyncio.to_thread(_play_mp3, wav)
+
+    if tts_active is not None:
+        tts_active.set()
+    llm_thread = threading.Thread(target=_run_llm, daemon=True)
+    llm_thread.start()
+    try:
+        await asyncio.gather(_tts_worker(), _play_worker())
+    finally:
+        if tts_active is not None:
+            tts_active.clear()
+        llm_thread.join(timeout=5)
+
+    return " ".join(spoken)
 
 
 def _beep() -> None:
@@ -429,31 +503,25 @@ async def run_demo() -> None:
 
         print(f"\nMüşteri: {user_text}")
 
-        # 3. LLM — hesap istenmişse gerçek toplamı enjekte et
-        print("  ⏳ Düşünüyorum...", flush=True)
+        # 3+5. Streaming: LLM üretim + TTS sentez + oynatma paralel pipeline
+        print("  ⏳ Yanıt üretiliyor...", flush=True)
         llm_input = user_text
         if _is_bill_request(user_text) and order_tracker.total > 0:
             llm_input = f"{user_text} [Gerçek toplam: {order_tracker.total} TL]"
         try:
-            reply = await asyncio.to_thread(llm.generate_reply, llm_input)
+            reply = await _speak_streaming(tts, llm, llm_input, tts_active)
             order_tracker.detect_order(user_text)
         except Exception as e:
-            print(f"  ✗ LLM hatası: {e}")
+            print(f"  ✗ LLM/TTS hatası: {e}")
             if ww_model:
                 ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
 
         print(f"W-BOT:   {reply}")
 
-        # 4. Konuşmadan önce bir sonraki tespiti başlat (aplay çatışmaz)
+        # 4. Bir sonraki wake word tespitini başlat
         if ww_model:
             ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
-
-        # 5. TTS + çal
-        try:
-            await _speak(tts, reply, tts_active)
-        except Exception as e:
-            logger.warning("TTS/oynatma hatası: %s", e)
 
         # Oturum sonu kontrolü — müşteri veya bot veda ediyorsa sıfırla
         farewell_phrases = ["güle güle", "görüşürüz", "hoşça kal", "iyi günler", "tekrar bekleriz"]

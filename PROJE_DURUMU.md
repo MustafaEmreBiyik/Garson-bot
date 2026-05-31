@@ -318,11 +318,11 @@ OrderTracker değişmeyecek — hâlâ kullanıcı metnini parse ediyor.
 | 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | **Streaming pipeline** (LLM+TTS paralel) | 🔴 Kritik | 1-2 sn hedefi için gerekli — bakınız yukarıdaki plan |
+| 4 | **Streaming pipeline** (LLM+TTS paralel) | 🔴 Kritik | ✅ Tamamlandı — `_speak_streaming` + `stream_reply` |
 | 5 | openwakeword Jetson'a kur | 🟠 Yüksek | ENTER modundan wake word moduna geç |
-| 6 | W1/W2: Sistem promptuna allergens + tags ekle (vejetaryen/alerji yanıtları) | 🟠 Yüksek | Prompt düzenlemesi |
-| 7 | W3: Sipariş iptali/değişikliği prompt'a ekle | 🟡 Orta | |
-| 8 | W4: LLM onay mesajında adeti göster ("İki Izgara Köfte") | 🟡 Orta | Prompt düzenlemesi |
+| 6 | W1/W2: Sistem promptuna allergens + tags ekle (vejetaryen/alerji yanıtları) | 🟠 Yüksek | ✅ Tamamlandı — `_build_menu_text` + prompt kuralları |
+| 7 | W3: Sipariş iptali/değişikliği prompt'a ekle | 🟡 Orta | ✅ Tamamlandı — prompt kuralı eklendi |
+| 8 | W4: LLM onay mesajında adeti göster ("İki Izgara Köfte") | 🟡 Orta | ✅ Tamamlandı — prompt kuralı + örnek eklendi |
 
 ## Uzun Vadede / Beklemede
 

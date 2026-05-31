@@ -7,6 +7,7 @@ conversation history. Thinking mode is disabled for fast, direct responses.
 from __future__ import annotations
 
 import logging
+import threading
 from pathlib import Path
 
 import yaml
@@ -50,12 +51,20 @@ KURALLAR:
 - Karşılamada kategori özeti ver: "Çorbalar, ana yemekler, tatlılar ve içecekler var. Ne istersiniz?" Tam liste verme.
 - Sipariş ("alayım/istiyorum/getir" geçiyorsa): "Elbette, [ürün] [fiyat] TL eklendi. Başka bir şey alır mısınız?" Bu kalıptan sonra hiçbir şey ekleme.
 - Birden fazla ürün siparişi: HER ürünü ayrı "Elbette, [ürün] [fiyat] TL eklendi." cümlesiyle onayla, hepsini say.
+- Sipariş miktarı ("iki/üç/dört/2/3/4" geçiyorsa): Onayda adeti ve toplam fiyatı yaz. Örnek: "iki köfte" → "Elbette, iki Izgara Köfte 480 TL eklendi. Başka bir şey alır mısınız?"
 - "Siparişiniz onaylandı" YASAK.
 - Ürün sorusu ("nedir/nasıl" geçiyorsa): ÖNCE menüdeki açıklamayı söyle, SONRA "Getireyim mi?" diye sor. Açıklama olmadan "Getireyim mi?" deme.
 - Sipariş sırasında ASLA toplam söyleme. Toplam yalnızca hesap istenince: "Toplam X TL. Afiyet olsun!"
 - "Başka istemiyorum" veya "Bu kadar" → "Anladım, siparişiniz hazırlanıyor. Afiyet olsun!" de.
 - "Güle güle" yalnızca müşteri masadan kalkarken veya hesabı öderken söyle.
+- Sipariş iptali/değişikliği ("istemiyorum/iptal/yerine/çıkar" geçiyorsa): "Anladım, [ürün] siparişinizden çıkarıldı." de; yeni sipariş varsa normal şekilde ekle.
+- Vejetaryen/etsiz sorusu: Menüde [vejetaryen] etiketli ürünleri listele.
+- Alerji sorusu ("alerji/gluten/süt/içerik" geçiyorsa): İlgili ürünlerin allerjen bilgisini menüden söyle; kesin karar için "personelimize danışabilirsiniz" de.
 - Menüde olmayan soru: "Bu konuda bilgim yok, personelimize sorabilirsiniz." """
+
+
+_ALLERGEN_TR = {"gluten": "gluten", "dairy": "süt ürünü", "nuts": "kuruyemiş"}
+_TAG_TR = {"vegetarian": "vejetaryen", "meat": "et", "chicken": "tavuk"}
 
 
 def _build_menu_text() -> str:
@@ -73,7 +82,15 @@ def _build_menu_text() -> str:
         name = item["name"]
         price = item["price"]
         desc = item.get("description", "")
-        lines.append(f"  - {name}: {price} TL  ({desc})")
+        allergens = [_ALLERGEN_TR[a] for a in item.get("allergens", []) if a in _ALLERGEN_TR]
+        tags = [_TAG_TR[t] for t in item.get("tags", []) if t in _TAG_TR]
+        extra_parts = []
+        if tags:
+            extra_parts.append(", ".join(tags))
+        if allergens:
+            extra_parts.append(f"içerir: {', '.join(allergens)}")
+        extra = f" [{'; '.join(extra_parts)}]" if extra_parts else ""
+        lines.append(f"  - {name}: {price} TL  ({desc}){extra}")
     return "\n".join(lines).strip()
 
 
@@ -142,6 +159,50 @@ class Qwen3Backend:
 
         self._history.append({"role": "assistant", "content": reply})
         return reply
+
+    def stream_reply(self, user_text: str):
+        """Generate reply as a token stream; yields raw tokens one by one.
+
+        History is updated after all tokens are consumed (generator exhausted).
+        """
+        from transformers import TextIteratorStreamer
+        import torch
+
+        self._history.append({"role": "user", "content": user_text})
+        messages = [{"role": "system", "content": self._system_prompt}] + self._history
+
+        text = self._tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            enable_thinking=False,
+        )
+        inputs = self._tokenizer(text, return_tensors="pt").to(self._model.device)
+
+        streamer = TextIteratorStreamer(
+            self._tokenizer, skip_prompt=True, skip_special_tokens=True
+        )
+        gen_kwargs = dict(
+            **inputs,
+            max_new_tokens=80,
+            do_sample=False,
+            repetition_penalty=1.1,
+            pad_token_id=self._tokenizer.eos_token_id,
+            streamer=streamer,
+        )
+        gen_thread = threading.Thread(
+            target=self._model.generate, kwargs=gen_kwargs, daemon=True
+        )
+        gen_thread.start()
+
+        full_parts: list[str] = []
+        for token in streamer:
+            full_parts.append(token)
+            yield token
+
+        gen_thread.join()
+        reply = _strip_markdown("".join(full_parts))
+        self._history.append({"role": "assistant", "content": reply})
 
     def reset_history(self) -> None:
         """Clear conversation history (new customer session)."""
