@@ -218,8 +218,9 @@ def _resample_to_16k(audio: np.ndarray, from_sr: int) -> np.ndarray:
         from math import gcd
         g = gcd(from_sr, SAMPLE_RATE)
         return resample_poly(audio.astype(np.float32), SAMPLE_RATE // g, from_sr // g).astype(np.int16)
-    except ImportError:
-        # 48kHz → 16kHz için 3:1 decimation yeterince temiz
+    except Exception:
+        # scipy yoksa veya NumPy sürümü uyumsuzsa decimation kullan
+        # 48kHz→16kHz için 3:1 adım yeterince temiz
         step = from_sr // SAMPLE_RATE
         return audio[::step]
 
