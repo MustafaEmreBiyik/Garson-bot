@@ -85,9 +85,10 @@ _SENT_RE = re.compile(r'(?<=[.!?])[ \t\n]')
 
 _MENU_YAML_PATH = Path(__file__).resolve().parent.parent / "robot_waiter_ai" / "data" / "menu.yaml"
 
-_ORDER_VERBS = {"istiyorum", "alayım", "alabilir", "getirir", "lütfen",
-                "tane", "adet", "istiyom", "alalım", "getir", "ver"}
-_QUANTITIES  = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
+_ORDER_VERBS  = {"istiyorum", "alayım", "alabilir", "getirir", "lütfen",
+                 "tane", "adet", "istiyom", "alalım", "getir", "ver"}
+_CANCEL_VERBS = {"istemiyorum", "istemiyom", "iptal", "çıkar", "çıkarın", "kaldır"}
+_QUANTITIES   = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
 
 
 def _load_menu_lookup() -> list[tuple[list[str], str, int]]:
@@ -104,6 +105,27 @@ def _load_menu_lookup() -> list[tuple[list[str], str, int]]:
     return result
 
 
+def _match_items(t: str, lookup: list) -> list[tuple[str, int, int]]:
+    """t içindeki menü öğelerini bul; [(name, price, qty)] döndür."""
+    matches = []
+    for aliases, name, price in lookup:
+        for alias in aliases:
+            if alias not in t:
+                continue
+            # Alias'dan önce gelen 1-2 kelimeye bak — miktar olabilir
+            # "iki köfte" → 1 kelime; "iki tane köfte" → 2 kelime
+            m1 = re.search(r'(\w+)\s+' + re.escape(alias), t)
+            m2 = re.search(r'(\w+)\s+\w+\s+' + re.escape(alias), t)
+            qty = 1
+            if m1:
+                qty = _QUANTITIES.get(m1.group(1), 1)
+            if qty == 1 and m2:
+                qty = _QUANTITIES.get(m2.group(1), 1)
+            matches.append((name, price, qty))
+            break  # Bu ürün için ilk eşleşen alias yeterli
+    return matches
+
+
 class OrderTracker:
     """Kullanıcı metninden menü ürünü tespit eder, toplamı takip eder."""
 
@@ -112,26 +134,39 @@ class OrderTracker:
         self._lookup = _load_menu_lookup()
 
     def detect_order(self, user_text: str) -> None:
-        """Sipariş niyeti varsa menüde eşleşen ürünü bul ve toplamı güncelle."""
-        # "İ".lower() → "i̇" (birleştirme noktası), regex bunu kesiyor — temizle
+        """Sipariş/iptal/takas niyetini tespit et ve toplamı güncelle.
+
+        Üç durum:
+          - "X yerine Y": X'i çıkar, Y'yi ekle.
+          - "X iptal / X istemiyorum": X'i çıkar.
+          - "X alayım / Y istiyorum": X'i ekle.
+        """
+        # "İ".lower() → "i̇" (birleştirme noktası) → regex kopar; temizle
         t = user_text.lower().replace('̇', '')
+
+        is_cancel = any(v in t for v in _CANCEL_VERBS)
+        is_swap   = "yerine" in t
+
+        if is_swap:
+            # "X yerine Y istiyorum" — sol: iptal, sağ: ekle
+            before, after = t.split("yerine", 1)
+            for _, price, qty in _match_items(before, self._lookup):
+                self._total = max(0, self._total - price * qty)
+            for _, price, qty in _match_items(after, self._lookup):
+                self._total += price * qty
+            return
+
+        if is_cancel:
+            # "X iptal" / "X istemiyorum" — eşleşen ürünleri çıkar
+            for _, price, qty in _match_items(t, self._lookup):
+                self._total = max(0, self._total - price * qty)
+            return
+
+        # Normal sipariş — eylem fiili yoksa dikkate alma
         if not any(v in t for v in _ORDER_VERBS):
             return
-        for aliases, _name, price in self._lookup:
-            for alias in aliases:
-                if alias not in t:
-                    continue
-                # Alias'dan önce gelen 1-2 kelimeye bak — miktar olabilir
-                # "iki köfte" → 1 kelime; "iki tane köfte" → 2 kelime
-                m1 = re.search(r'(\w+)\s+' + re.escape(alias), t)
-                m2 = re.search(r'(\w+)\s+\w+\s+' + re.escape(alias), t)
-                qty = 1
-                if m1:
-                    qty = _QUANTITIES.get(m1.group(1), 1)
-                if qty == 1 and m2:
-                    qty = _QUANTITIES.get(m2.group(1), 1)
-                self._total += price * qty
-                break  # Bu ürün için ilk eşleşen alias yeterli
+        for _, price, qty in _match_items(t, self._lookup):
+            self._total += price * qty
 
     @property
     def total(self) -> int:
