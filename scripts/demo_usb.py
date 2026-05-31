@@ -459,19 +459,28 @@ async def _detect_wakeword(ww_model, tts_active: threading.Event,
     loop     = asyncio.get_event_loop()
     detected = asyncio.Event()
 
+    # USB mikler genelde 48kHz native — 16kHz'i reddedebilirler
+    if input_device is not None:
+        native_sr = int(sd.query_devices(input_device)["default_samplerate"])
+    else:
+        native_sr = SAMPLE_RATE
+    native_chunk = int(native_sr * WAKEWORD_CHUNK / SAMPLE_RATE)
+
     def _cb(indata, frames, time_info, status):
         if tts_active.is_set():
             return  # TTS çalarken tetikleme yapma (feedback engeli)
         if detected.is_set():
             return
-        audio  = (indata[:, 0] * 32768).astype(np.int16)
+        audio = (indata[:, 0] * 32768).astype(np.int16)
+        if native_sr != SAMPLE_RATE:
+            audio = _resample_to_16k(audio, native_sr)
         scores = ww_model.predict(audio)
         score  = float(list(scores.values())[0])
         if score > WAKEWORD_THRESHOLD:
             loop.call_soon_threadsafe(detected.set)
 
-    with sd.InputStream(samplerate=16_000, channels=1, dtype="float32",
-                        blocksize=WAKEWORD_CHUNK, callback=_cb,
+    with sd.InputStream(samplerate=native_sr, channels=1, dtype="float32",
+                        blocksize=native_chunk, callback=_cb,
                         device=input_device):
         await detected.wait()
 
