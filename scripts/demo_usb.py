@@ -584,12 +584,13 @@ async def run_demo() -> None:
 
         # 3+5. Streaming: LLM üretim + TTS sentez + oynatma paralel pipeline
         print("  ⏳ Yanıt üretiliyor...", flush=True)
+        # Siparişi ÖNCE işle; aynı cümlede "sütlaç alayım + hesap" varsa doğru toplam gider
+        order_tracker.detect_order(user_text)
         llm_input = user_text
         if _is_bill_request(user_text) and order_tracker.total > 0:
             llm_input = f"{user_text} [Gerçek toplam: {order_tracker.total} TL]"
         try:
             reply = await _speak_streaming(tts, llm, llm_input, tts_active)
-            order_tracker.detect_order(user_text)
         except Exception as e:
             print(f"  ✗ LLM/TTS hatası: {e}")
             if ww_model:

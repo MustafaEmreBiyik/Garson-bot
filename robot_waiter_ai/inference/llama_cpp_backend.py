@@ -131,9 +131,26 @@ class LlamaCppBackend:
         parts.append("<|im_start|>assistant\n<think>\n\n</think>\n\n")
         return "".join(parts)
 
+    # n_ctx(1536) - sistem_prompt(~950 tok) - max_tokens(80) ≈ 506 tok → ~1500 karakter
+    _MAX_HIST_CHARS = 1400
+
+    def _trim_history(self) -> None:
+        """Bağlam penceresi dolmadan önce en eski user+assistant turlarını at."""
+        while len(self._history) > 1:
+            total = sum(len(m["content"]) for m in self._history)
+            if total <= self._MAX_HIST_CHARS:
+                break
+            # En eski ikiliyi (user + assistant) sil; son mesaja dokunma
+            if len(self._history) >= 3:
+                self._history = self._history[2:]
+                logger.warning("Bağlam penceresi dolmak üzere — en eski tur silindi, %d mesaj kaldı.", len(self._history))
+            else:
+                break
+
     def generate_reply(self, user_text: str) -> str:
         """Generate a Turkish waiter reply, maintaining conversation history."""
         self._history.append({"role": "user", "content": user_text})
+        self._trim_history()
 
         messages = [{"role": "system", "content": self._system_prompt}] + self._history
 
@@ -157,6 +174,7 @@ class LlamaCppBackend:
         History is updated after all tokens are consumed (generator exhausted).
         """
         self._history.append({"role": "user", "content": user_text})
+        self._trim_history()
         messages = [{"role": "system", "content": self._system_prompt}] + self._history
 
         stream = self._llm.create_completion(

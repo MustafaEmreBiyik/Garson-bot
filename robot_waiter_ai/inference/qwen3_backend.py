@@ -128,11 +128,27 @@ class Qwen3Backend:
         self._model.eval()
         logger.info("Qwen3-4B hazır.")
 
+    # Transformers context geniş, ama uzun geçmiş yavaşlatır — ~6000 karakter yeterli
+    _MAX_HIST_CHARS = 6000
+
+    def _trim_history(self) -> None:
+        """Çok uzun geçmişi kısalt — en eski user+assistant turlarını at."""
+        while len(self._history) > 1:
+            total = sum(len(m["content"]) for m in self._history)
+            if total <= self._MAX_HIST_CHARS:
+                break
+            if len(self._history) >= 3:
+                self._history = self._history[2:]
+                logger.warning("Geçmiş kısaltıldı — %d mesaj kaldı.", len(self._history))
+            else:
+                break
+
     def generate_reply(self, user_text: str) -> str:
         """Generate a Turkish waiter reply for *user_text*, maintaining history."""
         import torch
 
         self._history.append({"role": "user", "content": user_text})
+        self._trim_history()
 
         messages = [{"role": "system", "content": self._system_prompt}] + self._history
 
@@ -169,6 +185,7 @@ class Qwen3Backend:
         import torch
 
         self._history.append({"role": "user", "content": user_text})
+        self._trim_history()
         messages = [{"role": "system", "content": self._system_prompt}] + self._history
 
         text = self._tokenizer.apply_chat_template(
