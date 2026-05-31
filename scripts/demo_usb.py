@@ -615,12 +615,14 @@ async def run_demo() -> None:
         except Exception as e:
             print(f"  ✗ STT hatası: {e}")
             if ww_model:
+                await asyncio.sleep(1.0)
                 ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
 
         if not user_text:
             print("  (Ses algılanamadı, tekrar dene)")
             if ww_model:
+                await asyncio.sleep(1.0)
                 ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
 
@@ -638,13 +640,16 @@ async def run_demo() -> None:
         except Exception as e:
             print(f"  ✗ LLM/TTS hatası: {e}")
             if ww_model:
+                await asyncio.sleep(1.0)
                 ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
 
         print(f"W-BOT:   {reply}")
 
         # 4. Bir sonraki wake word tespitini başlat
+        # 1s bekleme: kayıt sonu buffer kalıntısının wake word'ü yanlış tetiklemesini önler
         if ww_model:
+            await asyncio.sleep(1.0)
             ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
 
         # Oturum sonu kontrolü — müşteri veya bot veda ediyorsa sıfırla
