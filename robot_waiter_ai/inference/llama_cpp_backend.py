@@ -15,7 +15,7 @@ import yaml
 logger = logging.getLogger(__name__)
 
 GGUF_4B  = Path("/home/emk/llama.cpp/Qwen3-4B-Q4_K_M.gguf")
-GGUF_17B = Path("/home/emk/llama.cpp/qwen3-1.7b-q4_k_m.gguf")
+GGUF_17B = Path("/home/emk/llama.cpp/Qwen3-1.7B-Q8_0.gguf")
 
 # Küçük model varsa onu kullan (daha hızlı), yoksa 4B
 GGUF_PATH = GGUF_17B if GGUF_17B.exists() else GGUF_4B
