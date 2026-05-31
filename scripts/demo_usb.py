@@ -15,6 +15,7 @@ Akış:
 from __future__ import annotations
 
 import asyncio
+import collections
 import io
 import logging
 import re
@@ -50,8 +51,15 @@ logger = logging.getLogger("demo_usb")
 # ---------------------------------------------------------------------------
 
 SAMPLE_RATE    = 16_000
-RECORD_SECONDS = 6
 CHANNELS       = 1
+
+# VAD kayıt parametreleri
+VAD_AGGRESSIVENESS = 3     # webrtcvad sertliği 0-3 (3 = en agresif, gürültülü ortam)
+VAD_CHUNK_MS       = 30    # webrtcvad geçerli değerleri: 10, 20, 30
+VAD_SILENCE_S      = 1.5   # konuşma bittikten sonra bu kadar sessizlik → kaydı bitir
+VAD_PRE_ROLL       = 5     # konuşma başlamadan önce tutulacak chunk (5×30ms = 150ms)
+VAD_MAX_S          = 12    # güvenlik kapağı — en fazla bu kadar kayıt yap
+VAD_ENERGY_THRESH  = 300   # webrtcvad yoksa enerji eşiği (0–32767 arası int16 RMS)
 
 WHISPER_MODEL = "small"
 PIPER_MODEL   = None  # None → otomatik bul
@@ -305,24 +313,88 @@ def _resample_to_16k(audio: np.ndarray, from_sr: int) -> np.ndarray:
 
 
 def _record(input_device: int | None = None) -> bytes:
-    print("  🎙  Dinliyorum... (6 sn)", flush=True)
-    # Cihazın desteklediği native sample rate'i kullan (USB mikler genelde 48kHz)
+    """VAD tabanlı kayıt — sessizlik sonrası durur, maks VAD_MAX_S saniye.
+
+    webrtcvad kuruluysa kullanır; yoksa enerji eşiğine döner.
+    """
+    CHUNK_SAMPLES = SAMPLE_RATE * VAD_CHUNK_MS // 1000  # 16000*30//1000 = 480
+
+    # webrtcvad veya enerji tabanlı fallback
+    try:
+        import webrtcvad as _wvad
+        _v = _wvad.Vad(VAD_AGGRESSIVENESS)
+        def _is_speech(pcm: bytes) -> bool:
+            try:
+                return _v.is_speech(pcm, SAMPLE_RATE)
+            except Exception:
+                return False
+    except ImportError:
+        def _is_speech(pcm: bytes) -> bool:
+            arr = np.frombuffer(pcm, dtype=np.int16).astype(np.float32)
+            return float(np.sqrt(np.mean(arr ** 2))) > VAD_ENERGY_THRESH
+
+    # Native sample rate (USB mikler genelde 48 kHz)
     if input_device is not None:
         native_sr = int(sd.query_devices(input_device)["default_samplerate"])
     else:
         native_sr = SAMPLE_RATE
-    audio = sd.rec(
-        int(native_sr * RECORD_SECONDS),
-        samplerate=native_sr,
-        channels=CHANNELS,
-        dtype="int16",
-        device=input_device,
-    )
-    sd.wait()
-    flat = audio.flatten()
-    if native_sr != SAMPLE_RATE:
-        flat = _resample_to_16k(flat, native_sr)
-    return _numpy_to_wav(flat, SAMPLE_RATE)
+    native_chunk = int(native_sr * VAD_CHUNK_MS / 1000)
+
+    silence_limit = int(VAD_SILENCE_S * 1000 / VAD_CHUNK_MS)
+    max_chunks    = int(VAD_MAX_S    * 1000 / VAD_CHUNK_MS)
+
+    ring_buf    = collections.deque(maxlen=VAD_PRE_ROLL)
+    voiced_16k: list[bytes] = []
+    in_speech   = False
+    silence_cnt = 0
+    total       = 0
+
+    print("  🎙  Dinliyorum...", flush=True)
+
+    with sd.InputStream(samplerate=native_sr, channels=CHANNELS,
+                        dtype="int16", blocksize=native_chunk,
+                        device=input_device) as stream:
+        while total < max_chunks:
+            indata, _ = stream.read(native_chunk)
+            total += 1
+            chunk = indata[:, 0] if indata.ndim > 1 else indata.flatten()
+
+            # 16 kHz'e dönüştür
+            if native_sr != SAMPLE_RATE:
+                chunk = _resample_to_16k(chunk, native_sr)
+
+            # webrtcvad tam boyut ister — kırp ya da pad uygula
+            if len(chunk) > CHUNK_SAMPLES:
+                chunk = chunk[:CHUNK_SAMPLES]
+            elif len(chunk) < CHUNK_SAMPLES:
+                chunk = np.pad(chunk, (0, CHUNK_SAMPLES - len(chunk)))
+
+            pcm    = chunk.astype(np.int16).tobytes()
+            speech = _is_speech(pcm)
+
+            if not in_speech:
+                ring_buf.append(pcm)
+                if speech:
+                    in_speech = True
+                    voiced_16k.extend(ring_buf)
+                    ring_buf.clear()
+                    silence_cnt = 0
+            else:
+                voiced_16k.append(pcm)
+                if speech:
+                    silence_cnt = 0
+                else:
+                    silence_cnt += 1
+                    if silence_cnt >= silence_limit:
+                        elapsed = total * VAD_CHUNK_MS / 1000
+                        print(f"  ✓  Alındı ({elapsed:.1f}s)", flush=True)
+                        break
+
+    if not voiced_16k:
+        return _numpy_to_wav(np.zeros(SAMPLE_RATE, dtype=np.int16), SAMPLE_RATE)
+
+    audio = np.frombuffer(b"".join(voiced_16k), dtype=np.int16)
+    return _numpy_to_wav(audio, SAMPLE_RATE)
 
 
 # ---------------------------------------------------------------------------
