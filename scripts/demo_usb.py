@@ -401,6 +401,13 @@ async def run_demo() -> None:
         llm = Qwen3Backend()
         print("LLM: Qwen3Backend (transformers)")
 
+    # KV cache ön ısıtma — sistem promptu (944 tok) bir kez işle, tüm müşterilerin
+    # ilk turn'ü soğuk start yerine sıcak (~0.25s TTFT) olsun.
+    print("LLM KV cache ısıtılıyor…")
+    await asyncio.to_thread(llm.generate_reply, "Merhaba.")
+    llm.reset_history()
+    print("LLM: KV cache hazır")
+
     # STT — CUDA varsa kullan, yoksa CPU'ya düş
     def _stt_backend():
         try:
