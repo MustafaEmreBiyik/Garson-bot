@@ -269,28 +269,69 @@ ALSA_OUTPUT_DEVICE = None              # None=sistem default, "plughw:2,0"=Jetso
 | Piper TTS (CPU) | ~0.60 sn |
 | **Toplam tahmini boru hattı** | **~3.70 sn** (hedef < 5 sn ✅) |
 
+### Gerçek Pipeline Ölçümleri — PC (RTX 4050, 31 Mayıs 2026)
+| Bileşen | Ort | Min | Max |
+|---------|-----|-----|-----|
+| LLM (qwen3_backend) | 2008 ms | 1360 ms | 2617 ms |
+| TTS (Piper sentez) | 477 ms | 316 ms | 562 ms |
+| STT (Whisper small, GPU tahmini) | ~500 ms | ~300 ms | ~700 ms |
+| **Toplam (sıralı)** | **~3.0 sn** | **~2.0 sn** | **~3.8 sn** |
+
+**Patron hedefi:** 1-2 sn — şu an ~1-2 sn fazla.
+
 ---
 
-## Kısa Vadede Yapılacaklar (Bloker)
+## Sonraki Adım: Streaming Pipeline (1-2 sn hedefi)
+
+**Problem:** Şu an LLM tüm cevabı bitirip TTS'e veriyor → sıralı, yavaş (~3 sn).
+
+**Çözüm:** LLM'den ilk cümle çıkar çıkmaz TTS'e ver, LLM arka planda üretmeye devam etsin.
+
+```
+Mevcut (sıralı):
+  [STT 0.5s] → [LLM 2.0s tüm cevap] → [TTS 0.5s] → ses  = ~3.0 sn
+
+Hedef (paralel):
+  [STT 0.5s] → [LLM ilk cümle ~0.5s] → [TTS 0.2s] → ses  = ~1.2 sn
+                      ↓ arka planda devam
+               [LLM 2. cümle] → [TTS] → ses devam eder
+```
+
+**Yapılacak değişiklikler:**
+1. `llama_cpp_backend.py` → `stream=True` ile token-by-token üretim (zaten destekliyor)
+2. `qwen3_backend.py` → `TextIteratorStreamer` ile streaming üretim ekle
+3. `demo_usb.py` → `generate_reply` yerine `stream_reply(text) → Iterator[str]` kullan
+4. `demo_usb.py` → cümle sonu (`.!?`) gelince TTS chunk'ı başlat, `asyncio.Queue` ile paralel çalıştır
+5. `tts.py` → `synthesize_stream(sentences: AsyncIterator[str])` metodu ekle
+
+**Tahmini kazanım:** ~3.0 sn → ~1.2-1.5 sn (ilk ses çıkana kadar)
+
+**Uygulama notu:** `demo_usb.py`'de yeni bir `_speak_streaming(tts, llm, text)` coroutine yazılacak.
+OrderTracker değişmeyecek — hâlâ kullanıcı metnini parse ediyor.
+
+---
+
+## Kısa Vadede Yapılacaklar
 
 | # | Görev | Öncelik | Durum |
 |---|-------|---------|-------|
 | 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | openwakeword Jetson'a kur | 🟠 Yüksek | ENTER modundan wake word moduna geç |
-| 5 | W1/W2: Sistem promptuna allergens + tags ekle (vejetaryen/alerji yanıtları) | 🟠 Yüksek | Prompt düzenlemesi |
-| 6 | W3: Sipariş iptali/değişikliği prompt'a ekle | 🟡 Orta | |
-| 7 | W4: LLM onay mesajında adeti göster ("İki Izgara Köfte") | 🟡 Orta | Prompt düzenlemesi |
+| 4 | **Streaming pipeline** (LLM+TTS paralel) | 🔴 Kritik | 1-2 sn hedefi için gerekli — bakınız yukarıdaki plan |
+| 5 | openwakeword Jetson'a kur | 🟠 Yüksek | ENTER modundan wake word moduna geç |
+| 6 | W1/W2: Sistem promptuna allergens + tags ekle (vejetaryen/alerji yanıtları) | 🟠 Yüksek | Prompt düzenlemesi |
+| 7 | W3: Sipariş iptali/değişikliği prompt'a ekle | 🟡 Orta | |
+| 8 | W4: LLM onay mesajında adeti göster ("İki Izgara Köfte") | 🟡 Orta | Prompt düzenlemesi |
 
 ## Uzun Vadede / Beklemede
 
 | # | Görev | Açıklama |
 |---|-------|----------|
-| 8 | Wake word gerçek ortam testi (restoran gürültüsü) | Sentetik eğitim yetersiz kalırsa yeniden eğit |
-| 9 | Whisper small kalite doğrulaması (Türkçe restoran kelimeleri) | Adaptöre bağlı |
-| 10 | Piper GPU (onnxruntime-gpu) | JetPack R36 aarch64 için pip'te yok — ertelenmiş |
-| 11 | systemd servis (otomatik başlatma) | Stabil olduktan sonra |
+| 9 | Wake word gerçek ortam testi (restoran gürültüsü) | Sentetik eğitim yetersiz kalırsa yeniden eğit |
+| 10 | Whisper small kalite doğrulaması (Türkçe restoran kelimeleri) | Adaptöre bağlı |
+| 11 | Piper GPU (onnxruntime-gpu) | JetPack R36 aarch64 için pip'te yok — ertelenmiş |
+| 12 | systemd servis (otomatik başlatma) | Stabil olduktan sonra |
 
 ---
 
