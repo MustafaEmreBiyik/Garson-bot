@@ -209,17 +209,40 @@ def _beep() -> None:
     sd.wait()
 
 
+def _resample_to_16k(audio: np.ndarray, from_sr: int) -> np.ndarray:
+    """audio'yu from_sr'den 16kHz'ye düşür. Scipy varsa yüksek kalite, yoksa decimation."""
+    if from_sr == SAMPLE_RATE:
+        return audio
+    try:
+        from scipy.signal import resample_poly
+        from math import gcd
+        g = gcd(from_sr, SAMPLE_RATE)
+        return resample_poly(audio.astype(np.float32), SAMPLE_RATE // g, from_sr // g).astype(np.int16)
+    except ImportError:
+        # 48kHz → 16kHz için 3:1 decimation yeterince temiz
+        step = from_sr // SAMPLE_RATE
+        return audio[::step]
+
+
 def _record(input_device: int | None = None) -> bytes:
     print("  🎙  Dinliyorum... (6 sn)", flush=True)
+    # Cihazın desteklediği native sample rate'i kullan (USB mikler genelde 48kHz)
+    if input_device is not None:
+        native_sr = int(sd.query_devices(input_device)["default_samplerate"])
+    else:
+        native_sr = SAMPLE_RATE
     audio = sd.rec(
-        int(SAMPLE_RATE * RECORD_SECONDS),
-        samplerate=SAMPLE_RATE,
+        int(native_sr * RECORD_SECONDS),
+        samplerate=native_sr,
         channels=CHANNELS,
         dtype="int16",
         device=input_device,
     )
     sd.wait()
-    return _numpy_to_wav(audio.flatten(), SAMPLE_RATE)
+    flat = audio.flatten()
+    if native_sr != SAMPLE_RATE:
+        flat = _resample_to_16k(flat, native_sr)
+    return _numpy_to_wav(flat, SAMPLE_RATE)
 
 
 # ---------------------------------------------------------------------------
