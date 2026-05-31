@@ -210,19 +210,15 @@ def _beep() -> None:
 
 
 def _resample_to_16k(audio: np.ndarray, from_sr: int) -> np.ndarray:
-    """audio'yu from_sr'den 16kHz'ye düşür. Scipy varsa yüksek kalite, yoksa decimation."""
+    """audio'yu from_sr'den SAMPLE_RATE'e düşür — numpy lineer interpolasyon."""
     if from_sr == SAMPLE_RATE:
         return audio
-    try:
-        from scipy.signal import resample_poly
-        from math import gcd
-        g = gcd(from_sr, SAMPLE_RATE)
-        return resample_poly(audio.astype(np.float32), SAMPLE_RATE // g, from_sr // g).astype(np.int16)
-    except Exception:
-        # scipy yoksa veya NumPy sürümü uyumsuzsa decimation kullan
-        # 48kHz→16kHz için 3:1 adım yeterince temiz
-        step = from_sr // SAMPLE_RATE
-        return audio[::step]
+    target_len = int(len(audio) * SAMPLE_RATE / from_sr)
+    return np.interp(
+        np.linspace(0, len(audio) - 1, target_len),
+        np.arange(len(audio)),
+        audio.astype(np.float32),
+    ).astype(np.int16)
 
 
 def _record(input_device: int | None = None) -> bytes:
