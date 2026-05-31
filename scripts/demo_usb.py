@@ -102,17 +102,25 @@ class OrderTracker:
 
     def detect_order(self, user_text: str) -> None:
         """Sipariş niyeti varsa menüde eşleşen ürünü bul ve toplamı güncelle."""
-        t = user_text.lower()
+        # "İ".lower() → "i̇" (birleştirme noktası), regex bunu kesiyor — temizle
+        t = user_text.lower().replace('̇', '')
         if not any(v in t for v in _ORDER_VERBS):
             return
-        qty = 1
-        for word, n in _QUANTITIES.items():
-            if re.search(r'\b' + re.escape(word) + r'\b', t):
-                qty = n
-                break
         for aliases, _name, price in self._lookup:
-            if any(alias in t for alias in aliases):
+            for alias in aliases:
+                if alias not in t:
+                    continue
+                # Alias'dan önce gelen 1-2 kelimeye bak — miktar olabilir
+                # "iki köfte" → 1 kelime; "iki tane köfte" → 2 kelime
+                m1 = re.search(r'(\w+)\s+' + re.escape(alias), t)
+                m2 = re.search(r'(\w+)\s+\w+\s+' + re.escape(alias), t)
+                qty = 1
+                if m1:
+                    qty = _QUANTITIES.get(m1.group(1), 1)
+                if qty == 1 and m2:
+                    qty = _QUANTITIES.get(m2.group(1), 1)
                 self._total += price * qty
+                break  # Bu ürün için ilk eşleşen alias yeterli
 
     @property
     def total(self) -> int:
@@ -122,7 +130,8 @@ class OrderTracker:
         self._total = 0
 
 
-_BILL_KEYWORDS = ["hesab", "ödeyeyim", "ödüyorum", "parayı öde", "hesap lütfen"]
+_BILL_KEYWORDS = ["hesab", "ödeyeyim", "ödüyorum", "parayı öde", "hesap lütfen",
+                  "toplam", "tutar", "ne kadar tut", "kaç tl", "kaç lira"]
 
 
 def _is_bill_request(text: str) -> bool:
