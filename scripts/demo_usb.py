@@ -298,9 +298,19 @@ async def run_demo() -> None:
         llm = Qwen3Backend()
         print("LLM: Qwen3Backend (transformers)")
 
-    # STT
+    # STT — CUDA varsa kullan, yoksa CPU'ya düş
+    def _stt_backend():
+        try:
+            import ctranslate2
+            if ctranslate2.get_cuda_device_count() > 0:
+                return "cuda", "float16"
+        except Exception:
+            pass
+        return "cpu", "int8"
+
+    _stt_dev, _stt_ct = _stt_backend()
     print("STT modeli yükleniyor...")
-    stt = SpeechToText(model_size=WHISPER_MODEL, device="cuda", compute_type="float16")
+    stt = SpeechToText(model_size=WHISPER_MODEL, device=_stt_dev, compute_type=_stt_ct)
     silence_wav = _numpy_to_wav(np.zeros(SAMPLE_RATE, dtype=np.int16), SAMPLE_RATE)
     await stt.transcribe(silence_wav, language="tr",
                          initial_prompt=STT_INITIAL_PROMPT)  # modeli ısıt
