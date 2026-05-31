@@ -614,7 +614,9 @@ async def run_demo() -> None:
         wav_bytes = await asyncio.to_thread(_record, input_device)
 
         # 2. STT
+        import time as _time
         print("  ⏳ Anlıyorum...", flush=True)
+        _t_stt = _time.perf_counter()
         try:
             result    = await stt.transcribe(wav_bytes, language="tr",
                                              initial_prompt=STT_INITIAL_PROMPT)
@@ -624,6 +626,7 @@ async def run_demo() -> None:
             if ww_model:
                 ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
+        _stt_ms = (_time.perf_counter() - _t_stt) * 1000
 
         if not user_text:
             print("  (Ses algılanamadı, tekrar dene)")
@@ -632,6 +635,7 @@ async def run_demo() -> None:
             continue
 
         print(f"\nMüşteri: {user_text}")
+        print(f"  ⏱  STT: {_stt_ms:.0f}ms", flush=True)
 
         # 3+5. Streaming: LLM üretim + TTS sentez + oynatma paralel pipeline
         print("  ⏳ Yanıt üretiliyor...", flush=True)
@@ -647,6 +651,7 @@ async def run_demo() -> None:
                              f"Toplam {order_tracker.total} TL. Afiyet olsun!]")
             else:
                 llm_input = f"{user_text} [Gerçek toplam: {order_tracker.total} TL]"
+        _t_llm = _time.perf_counter()
         try:
             reply = await _speak_streaming(tts, llm, llm_input, tts_active)
         except Exception as e:
@@ -654,8 +659,10 @@ async def run_demo() -> None:
             if ww_model:
                 ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
+        _llm_ms = (_time.perf_counter() - _t_llm) * 1000
 
         print(f"W-BOT:   {reply}")
+        print(f"  ⏱  LLM+TTS: {_llm_ms:.0f}ms  |  Toplam: {_stt_ms + _llm_ms:.0f}ms")
 
         # 4. Bir sonraki wake word tespitini başlat
         if ww_model:
