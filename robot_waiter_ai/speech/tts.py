@@ -257,7 +257,7 @@ def _find_piper_model(override: str | None = None) -> Path | None:
 
 
 class PiperTTS:
-    """Offline TTS using the Piper binary (aarch64 + x86_64). Returns WAV audio."""
+    """Offline TTS using Piper. GPU via Python piper-tts package, fallback to binary."""
 
     AUDIO_CONTENT_TYPE: str = "audio/wav"
 
@@ -266,21 +266,37 @@ class PiperTTS:
         binary: str | None = None,
         model: str | None = None,
     ) -> None:
-        resolved_binary = _find_piper_binary(binary)
-        if not resolved_binary:
-            raise RuntimeError(
-                "Piper binary bulunamadı. "
-                "scripts/setup_jetson_piper.sh ile kurun veya binary= belirtin."
-            )
         resolved_model = _find_piper_model(model)
         if not resolved_model:
             raise RuntimeError(
                 "Piper Türkçe modeli bulunamadı. "
                 "robot_waiter_ai/models/tr_TR-fahrettin-medium.onnx bekleniyor."
             )
-        self._binary = resolved_binary
         self._model = resolved_model
-        logger.debug("PiperTTS: binary=%s  model=%s", self._binary, self._model)
+        self._voice = None  # lazy-init: Python piper-tts (GPU)
+
+        # Python API yüklemeyi dene (GPU); başarısız olursa binary'e dön
+        self._use_python_api = self._try_load_python_api()
+        if self._use_python_api:
+            logger.info("PiperTTS: Python API (GPU) kullanılıyor.")
+        else:
+            resolved_binary = _find_piper_binary(binary)
+            if not resolved_binary:
+                raise RuntimeError(
+                    "Piper binary bulunamadı ve piper-tts Python paketi yüklü değil. "
+                    "pip install piper-tts  VEYA  scripts/setup_jetson_piper.sh"
+                )
+            self._binary = resolved_binary
+            logger.info("PiperTTS: binary (CPU) kullanılıyor: %s", self._binary)
+
+    def _try_load_python_api(self) -> bool:
+        try:
+            from piper import PiperVoice  # type: ignore
+            self._voice = PiperVoice.load(str(self._model), use_cuda=True)
+            return True
+        except Exception as e:
+            logger.debug("piper-tts Python API yüklenemedi, binary'e dönülüyor: %s", e)
+            return False
 
     def _validate_text(self, text: str) -> str:
         stripped = text.strip()
@@ -288,7 +304,14 @@ class PiperTTS:
             raise ValueError("Metin boş olamaz.")
         return stripped
 
-    def _run_piper_blocking(self, text: str) -> bytes:
+    def _run_piper_python(self, text: str) -> bytes:
+        import io, wave as wave_mod
+        buf = io.BytesIO()
+        with wave_mod.open(buf, "wb") as wf:
+            self._voice.synthesize(text, wf)
+        return buf.getvalue()
+
+    def _run_piper_binary(self, text: str) -> bytes:
         fd, tmp = tempfile.mkstemp(suffix=".wav")
         os.close(fd)
         try:
@@ -310,6 +333,11 @@ class PiperTTS:
                 os.unlink(tmp)
             except OSError:
                 pass
+
+    def _run_piper_blocking(self, text: str) -> bytes:
+        if self._use_python_api:
+            return self._run_piper_python(text)
+        return self._run_piper_binary(text)
 
     async def synthesize(self, text: str) -> bytes:
         import asyncio
