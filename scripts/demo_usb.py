@@ -642,9 +642,9 @@ async def run_demo() -> None:
             t_lower = user_text.lower()
             has_new_order = any(v in t_lower for v in _ORDER_VERBS)
             if has_new_order:
-                # Hem yeni sipariş hem hesap: önce onayla, ardından toplamı söyle
-                llm_input = (f"{user_text} [Yeni siparişi onayla, "
-                             f"SONRA: Toplam {order_tracker.total} TL. Afiyet olsun!]")
+                # Hem yeni sipariş hem hesap: yanıtın sonu toplamla bitmeli
+                llm_input = (f"{user_text} [Yanıtın sonu şöyle bitmeli: "
+                             f"Toplam {order_tracker.total} TL. Afiyet olsun!]")
             else:
                 llm_input = f"{user_text} [Gerçek toplam: {order_tracker.total} TL]"
         try:
