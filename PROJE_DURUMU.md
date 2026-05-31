@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 31 Mayıs 2026 | **Sürüm:** 4.2
+**Son güncelleme:** 31 Mayıs 2026 | **Sürüm:** 4.3
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -30,7 +30,7 @@ Müşterilerle doğal konuşma, sipariş alma ve menü bilgisi sunma hedeflenmek
 ```
 Garson-bot/
 ├── scripts/
-│   ├── demo_usb.py               ✅ Ana demo — wake word → STT → LLM → Piper TTS
+│   ├── demo_usb.py               ✅ Ana demo — wake word → VAD kayıt → STT → LLM → Piper TTS
 │   ├── eval_llm.py               ✅ LLM kalite + performans eval (10 senaryo, 16 turn)
 │   ├── compare_models.py         ✅ Model karşılaştırma scripti (4B vs 1.7B)
 │   ├── train_wakeword.py         ✅ openWakeWord eğitim (MMS-TTS + gürültü)
@@ -53,19 +53,26 @@ Garson-bot/
 
 ---
 
-## Aktif Pipeline (demo_usb.py)
+## Aktif Pipeline (demo_usb.py — v4.3)
 
 ```
 "hey garson" denir
     │  openWakeWord (hey_garson.onnx, threshold=0.7)
     │  USB mikrofon auto-detect (_find_input_device → "USB PnP" → device=24)
     ▼
-6 sn kayıt (sd.rec, device=native_sr → np.interp ile 16kHz'ye resample)
+VAD tabanlı kayıt (_record)
+    │  webrtcvad (aggressiveness=3) veya enerji eşiği fallback
+    │  Native rate (48kHz) → np.interp → 16kHz, 30ms chunk
+    │  Pre-roll: konuşma başlamadan 150ms tutar
+    │  1.5s sessizlik → durdur (max 12s güvenlik kapağı)
     ▼
 faster-whisper small (CUDA varsa float16, yoksa CPU int8 — auto-detect)
     │  initial_prompt ile menü kelimeleri Whisper'a hint
     ▼
 OrderTracker — kullanıcı metnini parse et, sipariş toplamını takip et
+    │  Ekleme: "X alayım/istiyorum" → fiyat ekle
+    │  İptal: "X iptal/istemiyorum" → fiyat çıkar (min 0)
+    │  Takas: "X yerine Y" → X çıkar, Y ekle
     │  Per-item adet tespiti: alias önceki 1-2 kelimeye bakılır
     │  Türkçe İ fix: "İ".lower() → "i̇" birleştirme noktası temizlenir
     │  Hesap istenince LLM girdisine "[Gerçek toplam: X TL]" ekle
@@ -73,6 +80,11 @@ OrderTracker — kullanıcı metnini parse et, sipariş toplamını takip et
 LLM — otomatik seçim:
     │  llama_cpp_backend.py varsa → Qwen3-4B Q4_K_M GGUF (Jetson)
     │  yoksa → qwen3_backend.py → Qwen3-4B transformers (PC)
+    │  Streaming: stream_reply() → token akışı → cümle sonu tespiti
+    ▼
+_speak_streaming pipeline (paralel):
+    │  LLM thread → sentence_q → tts_worker → audio_q → play_worker
+    │  İlk cümle hazır olunca TTS başlar, LLM arka planda devam eder
     ▼
 Piper TTS → WAV → aplay subprocess (ALSA_OUTPUT_DEVICE ile)
     ▼
@@ -93,8 +105,9 @@ Tekrar "hey garson" bekle
 | VRAM | ~2.37 GB / 15.6 GB |
 | Hız | ~12-15 tok/s |
 | Thinking | Kapalı — _format_prompt() `<think>\n\n</think>` prefix ekler |
-| n_ctx | **1536** (2048'den düşürüldü — sistem prompt 706 tok, ~25 tur kapasitesi) |
+| n_ctx | **1536** |
 | max_tokens | **80** (gerçek yanıt max ~53 tok, 1.5× emniyet marjı) |
+| _MAX_HIST_CHARS | **1400** — aşılınca en eski user+assistant turu silinir |
 
 ### PC — qwen3_backend.py
 | Parametre | Değer |
@@ -103,13 +116,25 @@ Tekrar "hey garson" bekle
 | Quantization | BitsAndBytesConfig 4-bit NF4 |
 | Thinking | enable_thinking=False (apply_chat_template) |
 | max_new_tokens | **80**, repetition_penalty=1.1 |
+| _MAX_HIST_CHARS | **6000** |
 
-### Sistem Prompt Token Bütçesi
+### Sistem Prompt Token Bütçesi (Jetson)
 | Öğe | Token |
 |-----|-------|
-| Sistem prompt (sabit metin) | ~706 |
+| Sistem prompt (sabit metin) | ~944 |
 | n_ctx | 1536 |
-| Konuşmaya kalan | ~830 (~25 tur) |
+| max_tokens | 80 |
+| Konuşmaya kalan | ~512 (~5-6 tur) |
+
+**_trim_history():** Toplam geçmiş karakter sayısı _MAX_HIST_CHARS'ı aşınca en eski
+user+assistant ikilisi silinir. Billing bu mekanizmadan etkilenmez — OrderTracker
+Python tarafında bağımsız çalışır.
+
+### KV Cache Ön Isıtma
+Startup'ta `generate_reply("Merhaba.") + reset_history()` çağrısı yapılır.
+Sistem promptunun (~944 tok) KV cache'e yazılmasını sağlar.
+- Soğuk start TTFT: ~2.96s
+- Sıcak start TTFT: ~0.25s (12× iyileşme)
 
 ### Qwen3-1.7B Testi (31 Mayıs 2026 — REDDEDİLDİ)
 - Hız: 23.4 tok/s (1.9x daha hızlı)
@@ -128,10 +153,21 @@ Tekrar "hey garson" bekle
 | Latency | ~0.5-1 sn (small, GPU) |
 | initial_prompt | Türkçe restoran + menü kelimeleri |
 
-### USB Mikrofon Resample (v4.2'de eklendi)
-USB PnP mikrofon native 48kHz destekliyor, 16kHz'de `paInvalidSampleRate` veriyordu.
-Çözüm: `sd.query_devices(device)["default_samplerate"]` ile native rate'te kayıt,
-`np.interp` ile 16kHz'ye lineer interpolasyon. scipy kaldırıldı (NumPy 2.x uyumsuz).
+### USB Mikrofon VAD Kaydı (v4.3)
+Eski: `sd.rec` ile sabit 6 sn kayıt.
+Yeni: `sd.InputStream` + webrtcvad ile değişken süreli kayıt.
+
+```python
+VAD_AGGRESSIVENESS = 3     # 0-3 (3 = gürültülü ortam)
+VAD_CHUNK_MS       = 30    # webrtcvad için geçerli değer (10/20/30)
+VAD_SILENCE_S      = 1.5   # sessizlik süresi → kayıt biter
+VAD_PRE_ROLL       = 5     # konuşma öncesi 150ms ring buffer
+VAD_MAX_S          = 12    # güvenlik kapağı
+VAD_ENERGY_THRESH  = 300   # webrtcvad yoksa enerji eşiği fallback
+```
+
+Resample: USB PnP mikrofon native 48kHz, np.interp ile 16kHz'ye dönüştürülür.
+webrtcvad yoksa enerji tabanlı fallback devreye girer.
 
 ---
 
@@ -149,35 +185,31 @@ Playback: `aplay` subprocess (ALSA_OUTPUT_DEVICE ile yapılandırılabilir)
 
 ---
 
-## OrderTracker (demo_usb.py) — v4.2
+## OrderTracker (demo_usb.py) — v4.3
 
 Kullanıcı metnini Python tarafında parse ederek doğru sipariş toplamını hesaplar.
 LLM'in çıktısına değil, kullanıcının söylediğine bakılır.
 
 ```python
-# Tetikleyici fiiller
-_ORDER_VERBS = {"istiyorum", "alayım", "alabilir", "getirir", "lütfen",
-                "tane", "adet", "istiyom", "alalım", "getir", "ver"}
-
-# Per-item adet tespiti — alias'dan önce 1-2 kelimeye bak
-# "iki köfte" → qty=2  |  "iki tane köfte" → qty=2  |  "bir köfte" → qty=1
-m1 = re.search(r'(\w+)\s+' + re.escape(alias), t)
-m2 = re.search(r'(\w+)\s+\w+\s+' + re.escape(alias), t)
-qty = _QUANTITIES.get(m1.group(1), 1) if m1 else 1
-if qty == 1 and m2: qty = _QUANTITIES.get(m2.group(1), 1)
-
-# Türkçe İ fix: "İ".lower() → "i̇" (U+0307), regex \w+ bunu kesiyor
-t = user_text.lower().replace('̇', '')
-
-# Hesap istenince LLM girdisine eklenir:
-_BILL_KEYWORDS = ["hesab", "ödeyeyim", "ödüyorum", "parayı öde", "hesap lütfen",
-                  "toplam", "tutar", "ne kadar tut", "kaç tl", "kaç lira"]
+_ORDER_VERBS  = {"istiyorum", "alayım", "alabilir", "getirir", "lütfen",
+                 "tane", "adet", "istiyom", "alalım", "getir", "ver"}
+_CANCEL_VERBS = {"istemiyorum", "istemiyom", "iptal", "çıkar", "çıkarın", "kaldır"}
+_QUANTITIES   = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
 ```
 
-**Manuel test sonuçları (v4.2):**
+`detect_order()` üç dala ayrılır:
+1. **"X yerine Y"** → X çıkar, Y ekle
+2. **Cancel verb** → eşleşen ürünü çıkar (min 0, negatife düşmez)
+3. **Order verb** → eşleşen ürünü ekle
+
+Race condition fix: `detect_order()` her zaman bill check'ten ÖNCE çağrılır;
+aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
+
+**Manuel test sonuçları (v4.3):**
 - "İki köfte bir mantar çorbası alayım." → 575 TL ✅ (2×240 + 95)
 - "İki tane ayran alabilir miyim?" → 90 TL ✅ (2×45)
-- "2 köfte 3 ayran istiyorum." → 615 TL ✅
+- "Köfteyi iptal et." → 0 TL ✅ (240 çıkarıldı)
+- "Köfte yerine sütlaç istiyorum." → 100 TL ✅ (240 çıkar, 100 ekle)
 - "Toplam tutar ne kadar?" → 575 TL ✅ (LLM'e [Gerçek toplam] enjekte edildi)
 
 ---
@@ -190,22 +222,18 @@ _BILL_KEYWORDS = ["hesab", "ödeyeyim", "ödüyorum", "parayı öde", "hesap lü
 |---------|------|------|-----------|-----|-----|
 | Prompt v4.0 (önceki) | 14/16 (%87) | 2 | — | — | — |
 | Prompt v4.1 | 16/16 (%100) | 0 | 1734 ms | — | — |
-| **Prompt v4.1 (v4.2 kodu, 31 Mayıs 2026)** | **16/16 (%100)** | **0** | **1745 ms** | **1219 ms** | **2423 ms** |
-
-Eval kapsamı dışında tespit edilen sorunlar (aşağıda detay).
+| **Prompt v4.1 (v4.3 kodu, 31 Mayıs 2026)** | **16/16 (%100)** | **0** | **1745 ms** | **1219 ms** | **2423 ms** |
 
 ---
 
-## Bilinen LLM Zayıflıkları (Eval Dışı Testler — 31 Mayıs 2026)
+## Bilinen LLM Zayıflıkları (Eval Dışı)
 
-| # | Senaryo | Kullanıcı | Bot Yanıtı | Sorun | Kök Neden |
-|---|---------|-----------|------------|-------|-----------|
-| W1 | Vejetaryen sorusu | "Vejetaryen ne var?" | "Çorbalar, ana yemekler... Ne istersiniz?" | Spesifik ürün listesi yok | Sistem promptunda `tags` bilgisi yok |
-| W2 | Alerji sorusu | "Süt alerjim var, ne yiyebilirim?" | "Bu konuda bilgim yok, personelimize sorabilirsiniz." | Aşırı savunmacı — allergen bilgisi verilebilir | Sistem promptunda `allergens` bilgisi yok |
-| W3 | İptal / değişiklik | "Köfte ve ayran istiyorum." → "Aslında köfte istemiyorum, döner alayım." | Erken "Afiyet olsun" + iptali yok | Köfte silinmedi, ikinci sıraya da erken bitti | Prompt'ta iptal/değişiklik senaryosu yok |
-| W4 | LLM adet gösterimi | "İki köfte bir mantar çorbası alayım." | "Izgara Köfte 240 TL eklendi." | Miktarı göstermedi (1 gibi davrandı) | LLM'in kendi bağlamında adet takibi yok (OrderTracker hallediyor ama LLM mesajı yanlış) |
-
-**Not:** W4 için OrderTracker doğru çalışıyor (575 TL hesaplandı), sadece LLM'in onay mesajı "iki" adeti yansıtmıyor. Gerçek toplam her zaman OrderTracker'dan alınıyor.
+| # | Senaryo | Sorun | Kök Neden | Durum |
+|---|---------|-------|-----------|-------|
+| W1 | Vejetaryen sorusu | Ürün listesi vermiyor | Sistem promptunda tags + kural var | ✅ Düzeltildi |
+| W2 | Alerji sorusu | Aşırı savunmacı | Sistem promptunda allergens + kural var | ✅ Düzeltildi |
+| W3 | İptal/değişiklik | LLM iptali yok sayıyor | Prompt'ta kural eklendi + OrderTracker cancellation | ✅ Düzeltildi |
+| W4 | Adet gösterimi | "iki Izgara Köfte" yerine "Izgara Köfte" | Prompt kuralı + örnek eklendi | ✅ Düzeltildi |
 
 ---
 
@@ -227,11 +255,20 @@ Eval kapsamı dışında tespit edilen sorunlar (aşağıda detay).
 ## demo_usb.py Yapılandırma Sabitleri
 
 ```python
-WHISPER_MODEL      = "small"           # medium → small (31 Mayıs 2026)
-SAMPLE_RATE        = 16_000            # Hedef rate — kayıt native rate'te yapılır
-RECORD_SECONDS     = 6
+WHISPER_MODEL      = "small"
+SAMPLE_RATE        = 16_000
+CHANNELS           = 1
+
+# VAD kayıt
+VAD_AGGRESSIVENESS = 3
+VAD_CHUNK_MS       = 30
+VAD_SILENCE_S      = 1.5
+VAD_PRE_ROLL       = 5
+VAD_MAX_S          = 12
+VAD_ENERGY_THRESH  = 300
+
 WAKEWORD_THRESHOLD = 0.7
-ALSA_OUTPUT_DEVICE = None              # None=sistem default, "plughw:2,0"=Jetson APE
+ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 ```
 
 ---
@@ -240,13 +277,13 @@ ALSA_OUTPUT_DEVICE = None              # None=sistem default, "plughw:2,0"=Jetso
 
 ### Kurulu Bileşenler ✅
 - JetPack R36.5.0, CUDA 12.6, Python 3.10
-- faster-whisper + Whisper small modeli (~464MB, `~/.cache/huggingface/hub/`)
+- faster-whisper + Whisper small modeli (~464MB)
 - sounddevice, portaudio
 - onnxruntime (GPU uyarısıyla çalışıyor)
-- Piper TTS (piper_linux_aarch64, /home/emk/Desktop/Garson-bot/Garson-bot/piper/)
+- Piper TTS (piper_linux_aarch64)
 - llama-cpp-python 0.3.23 (CUDA SM87 ile derlendi)
 - Qwen3-4B-Q4_K_M.gguf (/home/emk/llama.cpp/)
-- Qwen3-1.7B-Q8_0.gguf (/home/emk/llama.cpp/ — test edildi, kullanılmıyor)
+- webrtcvad ✅ (VAD için, aarch64 uyumlu)
 - Proje: /home/emk/Desktop/Garson-bot/Garson-bot/ (iç içe dizin)
 
 ### Ses Donanımı Durumu
@@ -259,55 +296,16 @@ ALSA_OUTPUT_DEVICE = None              # None=sistem default, "plughw:2,0"=Jetso
 
 **Çözüm:** USB ses adaptörü (USB → 3.5mm) gerekiyor — ~100 TL
 
-### Performans Ölçümleri
+### Performans Ölçümleri (Jetson, Sıcak Start)
 | Ölçüm | Sonuç |
 |-------|-------|
 | llama-bench pp512 | 492 tok/s |
 | llama-bench tg128 | 14.97 tok/s |
-| Python API ortalama yanıt süresi | 2.40 sn |
-| STT (Whisper small, GPU) tahmini | ~0.70 sn |
+| TTFT (soğuk — KV cache boş) | ~2.96 sn |
+| TTFT (sıcak — KV cache dolu) | ~0.25 sn |
+| STT (Whisper small, GPU) | ~0.70 sn |
 | Piper TTS (CPU) | ~0.60 sn |
-| **Toplam tahmini boru hattı** | **~3.70 sn** (hedef < 5 sn ✅) |
-
-### Gerçek Pipeline Ölçümleri — PC (RTX 4050, 31 Mayıs 2026)
-| Bileşen | Ort | Min | Max |
-|---------|-----|-----|-----|
-| LLM (qwen3_backend) | 2008 ms | 1360 ms | 2617 ms |
-| TTS (Piper sentez) | 477 ms | 316 ms | 562 ms |
-| STT (Whisper small, GPU tahmini) | ~500 ms | ~300 ms | ~700 ms |
-| **Toplam (sıralı)** | **~3.0 sn** | **~2.0 sn** | **~3.8 sn** |
-
-**Patron hedefi:** 1-2 sn — şu an ~1-2 sn fazla.
-
----
-
-## Sonraki Adım: Streaming Pipeline (1-2 sn hedefi)
-
-**Problem:** Şu an LLM tüm cevabı bitirip TTS'e veriyor → sıralı, yavaş (~3 sn).
-
-**Çözüm:** LLM'den ilk cümle çıkar çıkmaz TTS'e ver, LLM arka planda üretmeye devam etsin.
-
-```
-Mevcut (sıralı):
-  [STT 0.5s] → [LLM 2.0s tüm cevap] → [TTS 0.5s] → ses  = ~3.0 sn
-
-Hedef (paralel):
-  [STT 0.5s] → [LLM ilk cümle ~0.5s] → [TTS 0.2s] → ses  = ~1.2 sn
-                      ↓ arka planda devam
-               [LLM 2. cümle] → [TTS] → ses devam eder
-```
-
-**Yapılacak değişiklikler:**
-1. `llama_cpp_backend.py` → `stream=True` ile token-by-token üretim (zaten destekliyor)
-2. `qwen3_backend.py` → `TextIteratorStreamer` ile streaming üretim ekle
-3. `demo_usb.py` → `generate_reply` yerine `stream_reply(text) → Iterator[str]` kullan
-4. `demo_usb.py` → cümle sonu (`.!?`) gelince TTS chunk'ı başlat, `asyncio.Queue` ile paralel çalıştır
-5. `tts.py` → `synthesize_stream(sentences: AsyncIterator[str])` metodu ekle
-
-**Tahmini kazanım:** ~3.0 sn → ~1.2-1.5 sn (ilk ses çıkana kadar)
-
-**Uygulama notu:** `demo_usb.py`'de yeni bir `_speak_streaming(tts, llm, text)` coroutine yazılacak.
-OrderTracker değişmeyecek — hâlâ kullanıcı metnini parse ediyor.
+| **İlk ses çıkana kadar (sıcak)** | **~1.4-2.3 sn** |
 
 ---
 
@@ -318,20 +316,16 @@ OrderTracker değişmeyecek — hâlâ kullanıcı metnini parse ediyor.
 | 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | **Streaming pipeline** (LLM+TTS paralel) | 🔴 Kritik | ✅ Tamamlandı — `_speak_streaming` + `stream_reply` |
-| 5 | openwakeword Jetson'a kur | 🟠 Yüksek | ENTER modundan wake word moduna geç |
-| 6 | W1/W2: Sistem promptuna allergens + tags ekle (vejetaryen/alerji yanıtları) | 🟠 Yüksek | ✅ Tamamlandı — `_build_menu_text` + prompt kuralları |
-| 7 | W3: Sipariş iptali/değişikliği prompt'a ekle | 🟡 Orta | ✅ Tamamlandı — prompt kuralı eklendi |
-| 8 | W4: LLM onay mesajında adeti göster ("İki Izgara Köfte") | 🟡 Orta | ✅ Tamamlandı — prompt kuralı + örnek eklendi |
+| 4 | openwakeword Jetson'a kur | 🟠 Yüksek | ENTER modundan wake word moduna geç |
+| 5 | Wake word gerçek ortam testi (restoran gürültüsü) | 🟡 Orta | Adaptör + openwakeword sonrası |
+| 6 | Whisper small kalite doğrulaması (Türkçe restoran kelimeleri) | 🟡 Orta | Adaptöre bağlı |
 
-## Uzun Vadede / Beklemede
+## Uzun Vade / Ertelenmiş
 
 | # | Görev | Açıklama |
 |---|-------|----------|
-| 9 | Wake word gerçek ortam testi (restoran gürültüsü) | Sentetik eğitim yetersiz kalırsa yeniden eğit |
-| 10 | Whisper small kalite doğrulaması (Türkçe restoran kelimeleri) | Adaptöre bağlı |
-| 11 | Piper GPU (onnxruntime-gpu) | JetPack R36 aarch64 için pip'te yok — ertelenmiş |
-| 12 | systemd servis (otomatik başlatma) | Stabil olduktan sonra |
+| 7 | Piper GPU (onnxruntime-gpu) | JetPack R36 aarch64 için pip'te yok — ertelenmiş |
+| 8 | systemd servis (otomatik başlatma) | Stabil olduktan sonra |
 
 ---
 
@@ -354,9 +348,12 @@ Müşteri: "İki köfte bir mantar çorbası alayım."
 Robot:   "...Izgara Köfte... Kremalı Mantar Çorbası... Başka bir şey alır mısınız?"
 Toplam:  575 TL  (OrderTracker: 2×240 + 1×95)                                   ✅
 
+Müşteri: "Aslında köfteyi istemiyorum."
+Robot:   "Anladım, Izgara Köfte siparişinizden çıkarıldı."
+Toplam:  95 TL  (OrderTracker: 575 - 240×2)                                     ✅
+
 LLM kalite (eval_llm.py):  16/16 PASS (%100)                                    ✅
-Yanıt süresi PC:            1745 ms ort. (min 1219, max 2423)                   ✅
-Yanıt süresi Jetson (est.): ~3.70 sn toplam boru hattı                          ✅
+İlk ses (Jetson, sıcak):   ~1.4-2.3 sn                                          ✅
 ```
 
 ---
@@ -374,3 +371,4 @@ Yanıt süresi Jetson (est.): ~3.70 sn toplam boru hattı                       
 9. **OrderTracker kullanıcı metnini parse eder** — LLM çıktısını değil
 10. **Türkçe İ fix** — `user_text.lower().replace('̇', '')` (U+0307 birleştirme noktası)
 11. **scipy kullanma** — NumPy 2.x uyumsuz, np.interp yeterli
+12. **KV cache ön ısıtma** — startup'ta `generate_reply("Merhaba.") + reset_history()`
