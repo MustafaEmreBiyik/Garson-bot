@@ -50,7 +50,7 @@ SAMPLE_RATE    = 16_000
 RECORD_SECONDS = 6
 CHANNELS       = 1
 
-WHISPER_MODEL = "medium"
+WHISPER_MODEL = "small"
 PIPER_MODEL   = None  # None → otomatik bul
 
 # Whisper'a Türkçe restoran bağlamı ver → menü kelimelerini daha iyi tanır
