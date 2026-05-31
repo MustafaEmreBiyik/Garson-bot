@@ -17,9 +17,12 @@ from __future__ import annotations
 import asyncio
 import io
 import logging
+import re
 import sys
 import threading
 import wave
+
+import yaml
 from pathlib import Path
 
 # ALSA underrun uyarılarını bastır — callback module-level'da tutulmalı (GC koruması)
@@ -67,6 +70,64 @@ WAKEWORD_CHUNK     = 1280   # 80 ms @ 16 kHz — openWakeWord beklentisi
 
 # ALSA çıkış cihazı — None → sistem varsayılanı, "plughw:2,0" → Jetson APE jack çıkışı
 ALSA_OUTPUT_DEVICE: str | None = None
+
+
+_MENU_YAML_PATH = Path(__file__).resolve().parent.parent / "robot_waiter_ai" / "data" / "menu.yaml"
+
+_ORDER_VERBS = {"istiyorum", "alayım", "alabilir", "getirir", "lütfen",
+                "tane", "adet", "istiyom", "alalım", "getir", "ver"}
+_QUANTITIES  = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
+
+
+def _load_menu_lookup() -> list[tuple[list[str], str, int]]:
+    """(aliases, name, price) listesi döndür."""
+    if not _MENU_YAML_PATH.exists():
+        return []
+    with open(_MENU_YAML_PATH, encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    result = []
+    for item in data.get("menu", []):
+        aliases = [a.lower() for a in item.get("aliases", [])]
+        aliases.append(item["name"].lower())
+        result.append((aliases, item["name"], item["price"]))
+    return result
+
+
+class OrderTracker:
+    """Kullanıcı metninden menü ürünü tespit eder, toplamı takip eder."""
+
+    def __init__(self) -> None:
+        self._total = 0
+        self._lookup = _load_menu_lookup()
+
+    def detect_order(self, user_text: str) -> None:
+        """Sipariş niyeti varsa menüde eşleşen ürünü bul ve toplamı güncelle."""
+        t = user_text.lower()
+        if not any(v in t for v in _ORDER_VERBS):
+            return
+        qty = 1
+        for word, n in _QUANTITIES.items():
+            if re.search(r'\b' + re.escape(word) + r'\b', t):
+                qty = n
+                break
+        for aliases, _name, price in self._lookup:
+            if any(alias in t for alias in aliases):
+                self._total += price * qty
+
+    @property
+    def total(self) -> int:
+        return self._total
+
+    def reset(self) -> None:
+        self._total = 0
+
+
+_BILL_KEYWORDS = ["hesab", "ödeyeyim", "ödüyorum", "parayı öde", "hesap lütfen"]
+
+
+def _is_bill_request(text: str) -> bool:
+    t = text.lower()
+    return any(k in t for k in _BILL_KEYWORDS)
 
 
 def _find_input_device() -> int | None:
@@ -252,6 +313,8 @@ async def run_demo() -> None:
     else:
         print("Mikrofon: varsayılan cihaz")
 
+    order_tracker = OrderTracker()
+
     # Wake word
     ww_model   = _load_wakeword()
     tts_active = threading.Event()  # TTS çalarken set, dinlerken clear
@@ -327,10 +390,14 @@ async def run_demo() -> None:
 
         print(f"\nMüşteri: {user_text}")
 
-        # 3. LLM
+        # 3. LLM — hesap istenmişse gerçek toplamı enjekte et
         print("  ⏳ Düşünüyorum...", flush=True)
+        llm_input = user_text
+        if _is_bill_request(user_text) and order_tracker.total > 0:
+            llm_input = f"{user_text} [Gerçek toplam: {order_tracker.total} TL]"
         try:
-            reply = await asyncio.to_thread(llm.generate_reply, user_text)
+            reply = await asyncio.to_thread(llm.generate_reply, llm_input)
+            order_tracker.detect_order(user_text)
         except Exception as e:
             print(f"  ✗ LLM hatası: {e}")
             if ww_model:
@@ -362,6 +429,7 @@ async def run_demo() -> None:
         if is_farewell:
             print("\n--- Yeni müşteri oturumu başladı ---")
             llm.reset_history()
+            order_tracker.reset()
             new_customer = True
 
 
