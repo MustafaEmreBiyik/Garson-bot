@@ -466,7 +466,14 @@ async def _detect_wakeword(ww_model, tts_active: threading.Event,
         native_sr = SAMPLE_RATE
     native_chunk = int(native_sr * WAKEWORD_CHUNK / SAMPLE_RATE)
 
+    # Stream açılırken buffer'da kalan ses kalıntısı ilk chunk'larda false positive yapar;
+    # 10 chunk (10×80ms = 800ms) atla — kullanıcıya gecikme hissettirmez.
+    _warm_up = [10]
+
     def _cb(indata, frames, time_info, status):
+        if _warm_up[0] > 0:
+            _warm_up[0] -= 1
+            return
         if tts_active.is_set():
             return  # TTS çalarken tetikleme yapma (feedback engeli)
         if detected.is_set():
@@ -632,7 +639,14 @@ async def run_demo() -> None:
         order_tracker.detect_order(user_text)
         llm_input = user_text
         if _is_bill_request(user_text) and order_tracker.total > 0:
-            llm_input = f"{user_text} [Gerçek toplam: {order_tracker.total} TL]"
+            t_lower = user_text.lower()
+            has_new_order = any(v in t_lower for v in _ORDER_VERBS)
+            if has_new_order:
+                # Hem yeni sipariş hem hesap: önce onayla, ardından toplamı söyle
+                llm_input = (f"{user_text} [Yeni siparişi onayla, "
+                             f"SONRA: Toplam {order_tracker.total} TL. Afiyet olsun!]")
+            else:
+                llm_input = f"{user_text} [Gerçek toplam: {order_tracker.total} TL]"
         try:
             reply = await _speak_streaming(tts, llm, llm_input, tts_active)
         except Exception as e:
