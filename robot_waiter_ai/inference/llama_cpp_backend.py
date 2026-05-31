@@ -101,21 +101,35 @@ class LlamaCppBackend:
         )
         logger.info("LlamaCppBackend hazır.")
 
+    def _format_prompt(self, messages: list[dict]) -> str:
+        """Qwen3 chat formatı — thinking modu kapalı (<think>\n\n</think> ile başlar)."""
+        parts = []
+        for msg in messages:
+            role, content = msg["role"], msg["content"]
+            if role == "system":
+                parts.append(f"<|im_start|>system\n{content}<|im_end|>\n")
+            elif role == "user":
+                parts.append(f"<|im_start|>user\n{content}<|im_end|>\n")
+            elif role == "assistant":
+                parts.append(f"<|im_start|>assistant\n{content}<|im_end|>\n")
+        parts.append("<|im_start|>assistant\n<think>\n\n</think>\n\n")
+        return "".join(parts)
+
     def generate_reply(self, user_text: str) -> str:
         """Generate a Turkish waiter reply, maintaining conversation history."""
         self._history.append({"role": "user", "content": user_text})
 
         messages = [{"role": "system", "content": self._system_prompt}] + self._history
 
-        result = self._llm.create_chat_completion(
-            messages=messages,
+        result = self._llm.create_completion(
+            prompt=self._format_prompt(messages),
             max_tokens=150,
             temperature=0.0,
             repeat_penalty=1.1,
             stop=["<|im_end|>", "<|endoftext|>"],
         )
 
-        reply = result["choices"][0]["message"]["content"].strip()
+        reply = result["choices"][0]["text"].strip()
         reply = _strip_markdown(reply)
 
         self._history.append({"role": "assistant", "content": reply})
