@@ -155,7 +155,8 @@ SCENARIOS: list[Scenario] = [
         checks=[{
             "must_contain": ["50"],
             "must_not_contain": ["siparişiniz onaylandı"],
-            "regex": r"başka bir şey alır mısınız",
+            # "başka" kelimesi + soru: "başka bir şey alır mısınız?", "başka ne arzu edersiniz?" vs.
+            "regex": r"başka.{0,40}\?",
         }],
     ),
 ]

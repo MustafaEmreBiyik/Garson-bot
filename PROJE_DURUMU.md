@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 1 Haziran 2026 | **Sürüm:** 4.5
+**Son güncelleme:** 1 Haziran 2026 | **Sürüm:** 4.8
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -53,7 +53,7 @@ Garson-bot/
 
 ---
 
-## Aktif Pipeline (demo_usb.py — v4.5)
+## Aktif Pipeline (demo_usb.py — v4.7)
 
 ```
 "hey garson" denir
@@ -88,7 +88,9 @@ _speak_streaming pipeline (paralel):
     ▼
 Piper TTS → WAV → aplay subprocess (ALSA_OUTPUT_DEVICE ile)
     ▼
-Tekrar "hey garson" bekle
+10s konuşma penceresi (CONVO_HOLD_S) — wake word'süz dinle
+    │  konuşma gelirse → tur devam (LLM history korunur)
+    │  10s sessizlikte → wake word moduna dön (varsa farewell → yeni müşteri reset)
 ```
 
 ---
@@ -106,7 +108,8 @@ Tekrar "hey garson" bekle
 | Hız | ~12-15 tok/s |
 | Thinking | Kapalı — _format_prompt() `<think>\n\n</think>` prefix ekler |
 | n_ctx | **1536** |
-| max_tokens | **80** (gerçek yanıt max ~53 tok, 1.5× emniyet marjı) |
+| max_tokens | **50** (v4.8 — yanıtlar daha özlü; 1 cümle / 20 kelime hedefi) |
+| Decoding | temperature=0.55, top_p=0.9, top_k=40, repeat_penalty=1.2 (v4.8) |
 | _MAX_HIST_CHARS | **1400** — aşılınca en eski user+assistant turu silinir |
 
 ### PC — qwen3_backend.py
@@ -115,7 +118,8 @@ Tekrar "hey garson" bekle
 | Model | Qwen/Qwen3-4B (HuggingFace) |
 | Quantization | BitsAndBytesConfig 4-bit NF4 |
 | Thinking | enable_thinking=False (apply_chat_template) |
-| max_new_tokens | **80**, repetition_penalty=1.1 |
+| max_new_tokens | **50** (v4.8) |
+| Decoding | do_sample=True, temperature=0.55, top_p=0.9, top_k=40, repetition_penalty=1.2 (v4.8) |
 | _MAX_HIST_CHARS | **12000** (v4.5'te 6000'den artırıldı) |
 | local_files_only | İlk indirmeden sonra HF Hub'a istek atılmaz |
 | VRAM izleme | Yükleme sonrası kullanılan/toplam VRAM ekrana basılır |
@@ -150,9 +154,11 @@ Sistem promptunun (~944 tok) KV cache'e yazılmasını sağlar.
 | Parametre | Değer |
 |-----------|-------|
 | Motor | faster-whisper |
-| Model | **medium** (1 Haziran 2026 — kalite için small'dan yükseltildi) |
-| Device | CUDA varsa float16, yoksa CPU float32 (otomatik algılama) |
-| Latency | ~1500-2000ms (medium, CUDA) — küçük kalite/hız dengesi tercihi |
+| Model (PC) | **small** (v4.6 — host VRAM 5.64 GB; Qwen3-4B + Whisper medium birlikte OOM oluyordu) |
+| Model (Jetson hedefi) | **medium** (16 GB VRAM ile birlikte sığar; entegrasyonda açılacak) |
+| Device seçimi | Toplam VRAM ≥ 8 GB → CUDA float16; aksi halde CPU int8. `W_BOT_STT_DEVICE` env'i ile override edilebilir. |
+| Latency (PC CPU int8, small) | ~130-300ms |
+| Latency (Jetson CUDA float16, medium hedefi) | ~1500-2000ms |
 | initial_prompt | Türkçe restoran + menü kelimeleri |
 
 ### USB Mikrofon VAD Kaydı (v4.3)
@@ -224,7 +230,9 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 |---------|------|------|-----------|-----|-----|
 | Prompt v4.0 (önceki) | 14/16 (%87) | 2 | — | — | — |
 | Prompt v4.1 | 16/16 (%100) | 0 | 1734 ms | — | — |
-| **Prompt v4.1 (v4.3 kodu, 31 Mayıs 2026)** | **16/16 (%100)** | **0** | **1745 ms** | **1219 ms** | **2423 ms** |
+| Prompt v4.1 (v4.3 kodu, 31 Mayıs 2026) | 16/16 (%100) | 0 | 1745 ms | 1219 ms | 2423 ms |
+| Prompt v4.6 (sampling açık — T=0.55, top_p=0.9, rep_pen=1.15) | 16/16 (%100) | 0 | 2330 ms | 1726 ms | 3050 ms |
+| **Prompt v4.8 (max_tok=50, top_k=40, rep_pen=1.2 — kısa yanıt)** | **16/16 (%100)** | **0** | **2195 ms** | — | — |
 
 ---
 
@@ -237,6 +245,13 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | W3 | İptal/değişiklik | LLM iptali yok sayıyor | Prompt'ta kural eklendi + OrderTracker cancellation | ✅ Düzeltildi |
 | W4 | Adet gösterimi | "iki Izgara Köfte" yerine "Izgara Köfte" | Prompt kuralı + örnek eklendi | ✅ Düzeltildi |
 | W5 | Öneri/tavsiye sorusu | Her soruya jenerik kategori özeti veriyordu | "Karşılamada" kuralı çok geneldi | ✅ Düzeltildi (v4.5) |
+| W6 | Kalıplaşmış yanıtlar | Her turda kelimesi kelimesine aynı cümle | Greedy decoding (`do_sample=False`/`T=0`) + prompt'ta birebir şablon cümleleri | ✅ Düzeltildi (v4.6 — sampling + hedefli prompt gevşetme) |
+| W7 | STT CUDA OOM (PC, 6 GB) | Qwen3-4B + Whisper CUDA peak workspace 5.64 GB'a sığmıyor | LLM ile STT aynı GPU'da çakışıyordu, ısıtma sonrası ~2 GB serbest kalıyordu | ✅ Düzeltildi (v4.6 — Toplam VRAM < 8 GB → STT CPU int8; latency ~130-300ms) |
+| W8 | Her turda "hey garson" gerekliydi | Wake word algılandıktan sonra tek bir tur dinleyip wake word'e dönüyordu | Ana döngü tek-tur tasarlı | ✅ Düzeltildi (v4.7 — `CONVO_HOLD_S=10s` pencere; yanıt sonrası sessizlikte wake word'e dön) |
+| W9 | Öneri sorularında fiyat söyleniyordu | Müşteri "ne önerirsin" deyince robot fiyat dahil cevap veriyordu | Prompt'ta "isim ve fiyatıyla öner" kuralı vardı | ✅ Düzeltildi (v4.8 — TL kelimesi öneri/karşılama/açıklamada YASAK; sadece fiyat sorusu/sipariş onayı/hesapta geçer) |
+| W10 | Yanıt çok uzun (80 token aşımı) ve kalıplaşmış | Karşılamada ürün listesi sayıyordu, "Buyurun, menümüzde..." kalıbı | max_tokens=80 + prompt "1-2 cümle" + örnek cümleler ezberleniyordu | ✅ Düzeltildi (v4.8 — max_tokens=50, "1 cümle/20 kelime" zorunluluğu, karşılama örnekleri kaldırıldı, top_k=40 + rep_pen=1.2) |
+| W11 | Hesap sorulmadan toplam söylendi | Kullanıcı "Başka bir şey istemiyorum galiba" deyince bot "Toplam 85 TL" verdi | "Başka istemiyorum" + sipariş kapanışı tetikleyicisi yanlışlıkla hesap döngüsünü tetikliyor | ⏳ Sonraki sohbette düzeltilecek |
+| W12 | Robotik ve soğuk ton | Teknik doğru ama doğal, samimi Türkçe akışı yok; gerçek bir garsonla konuşulduğu hissi vermiyor | Sistem promptu kural listesi gibi yazılmış; kişilik/ton yönergesi eksik | ⏳ Sonraki sohbette kök neden analizi + çözüm |
 
 ---
 
@@ -258,7 +273,7 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 ## demo_usb.py Yapılandırma Sabitleri
 
 ```python
-WHISPER_MODEL      = "medium"
+WHISPER_MODEL      = "small"   # PC için (v4.6); Jetson 16 GB'da "medium"a geri dönülebilir
 SAMPLE_RATE        = 16_000
 CHANNELS           = 1
 
@@ -269,6 +284,7 @@ VAD_SILENCE_S      = 1.5
 VAD_PRE_ROLL       = 5
 VAD_MAX_S          = 12
 VAD_ENERGY_THRESH  = 300
+CONVO_HOLD_S       = 10   # v4.7 — yanıttan sonra wake word'süz dinleme penceresi
 
 WAKEWORD_THRESHOLD = 0.7
 ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
@@ -323,7 +339,9 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
 | 4 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ubuntu PC'de yapılacak (adaptör bekleniyor) |
-| 5 | Whisper medium kalite doğrulaması (Türkçe restoran kelimeleri) | 🟡 Orta | small'dan medium'a geçildi, doğrulama gerekiyor |
+| 5 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak (PC'de small kullanılıyor — VRAM dar) |
+| 6 | W11: Hesap sorulmadan toplam söylenmesi (kapanış tetikleyici hatası) | 🔴 Kritik | Sonraki sohbette fix |
+| 7 | W12: Doğal, samimi Türkçe ton (şu an robotik) | 🔴 Kritik | Sistem promptuna kişilik/ton katmanı + yanıt çeşitliliği arttırılacak — sonraki sohbette |
 
 ## Uzun Vade / Ertelenmiş
 
@@ -377,3 +395,4 @@ LLM kalite (eval_llm.py):  16/16 PASS (%100)                                    
 10. **Türkçe İ fix** — `user_text.lower().replace('̇', '')` (U+0307 birleştirme noktası)
 11. **scipy kullanma** — NumPy 2.x uyumsuz, np.interp yeterli
 12. **KV cache ön ısıtma** — startup'ta `generate_reply("Merhaba.") + reset_history()`
+13. **Sampling (v4.6)** — `temperature=0.55, top_p=0.9, repetition_penalty=1.15` her iki backend'de. Greedy decoding kalıplaşmaya yol açıyordu; sampling ile yanıtlar tur-tur farklılaşıyor. Eval %100 korunuyor (sıkı zorunluluk kelimeleri prompt'ta vurgulu).

@@ -1,7 +1,7 @@
 # W-BOT Metodoloji Belgesi
 
 **Proje:** Türkçe Konuşan Restoran Garson Robotu (W-BOT)
-**Tarih:** 1 Haziran 2026 (v4.5)
+**Tarih:** 1 Haziran 2026 (v4.8)
 **Hedef:** Fiziksel servis robotuna entegre edilecek, gerçek zamanlı Türkçe sesli yapay zeka asistanı
 
 ---
@@ -125,6 +125,26 @@ Pre-roll buffer    = 150ms (konuşma başlamadan önceki ses tutulur)
 Maksimum kayıt     = 12 saniye (güvenlik kapağı)
 ```
 
+### Conversation Hold (v4.7)
+
+Eski tasarımda her tur için kullanıcının yeniden "hey garson" demesi gerekiyordu — bu, restoran senaryosunda doğal konuşma akışını bozuyordu.
+
+v4.7'de eklenen mekanizma: bot yanıtı bittikten sonra **10 saniyelik** bir "konuşma penceresi" açılır. Bu pencerede wake word beklenmez; VAD aktif şekilde konuşma dinler.
+
+```
+[Bot yanıtı tamamlandı]
+       │
+       ▼
+CONVO_HOLD_S=10s pencere aç (wake word YOK)
+       │
+       ├── Konuşma geldi → tur devam (LLM history korunur, "bir de şu olsun" mümkün)
+       │
+       └── 10s sessizlik → wake word moduna dön
+               └── Farewell tespit edildiyse → llm.reset_history() + order.reset() + new_customer=True
+```
+
+`_record()` artık `initial_wait_s` parametresiyle çağrılır; konuşma başlamadan timeout olursa `b""` döner ve ana döngü pencereyi kapatır. Farewell tespiti (`is_farewell`) artık doğrudan reset uygulamaz — sadece `pending_reset = True` işaretler; reset gerçekten 10s sessizlikten sonra uygulanır (müşterinin "bir de şu olsun" diye eklemesi için fırsat verir).
+
 ### USB Mikrofon Uyumluluk Sorunu ve Çözümü
 **Sorun:** USB PnP mikrofon yalnızca 48kHz native örnekleme hızını destekler. Ancak webrtcvad ve Whisper 16kHz gerektirir. Sounddevice'a `samplerate=16000` verilince `paInvalidSampleRate` hatası alındı.
 
@@ -143,7 +163,7 @@ audio_16k = np.interp(
 
 ## 5. Bileşen 3: Konuşmadan Metne (STT)
 
-### Kullanılan Teknoloji: faster-whisper (Whisper medium)
+### Kullanılan Teknoloji: faster-whisper (Whisper small — PC, medium — Jetson hedefi)
 OpenAI'ın Whisper modelinin CTranslate2 motoruyla optimize edilmiş versiyonu.
 
 ### Model Seçimi
@@ -154,7 +174,19 @@ OpenAI'ın Whisper modelinin CTranslate2 motoruyla optimize edilmiş versiyonu.
 | small | 244M | İyi — restoran ortamı için yeterli | ~850ms |
 | **medium** | 769M | **Çok iyi — Türkçe kalitesi belirgin yüksek** | **~1500-2000ms** |
 
-v4.5'te `small`'dan `medium`'a geçildi: gürültülü restoran ortamında Türkçe menü kelimelerini daha güvenilir tanıması için. Latency artışı (~600-900ms) sesli yanıt başlamadan önce yaşandığından kullanıcıya etkisi minimumdur.
+v4.5'te `small`'dan `medium`'a geçildi: gürültülü restoran ortamında Türkçe menü kelimelerini daha güvenilir tanıması için. v4.6'da PC tarafında **small'a geri dönüldü**: 5.64 GB GPU'da (RTX 4050) Qwen3-4B + Whisper medium CUDA workspace birlikte sığmıyor (`CUDA failed with error out of memory`). Jetson 16 GB entegrasyonunda medium tekrar açılacak.
+
+### STT Cihaz Seçimi (v4.6)
+
+`scripts/demo_usb.py:_stt_backend()` toplam VRAM'e bakarak cihazı belirler:
+
+```
+Toplam VRAM ≥ 8 GB (örn. Jetson 16 GB) → CUDA float16
+Toplam VRAM <  8 GB (örn. RTX 4050 6 GB) → CPU int8
+W_BOT_STT_DEVICE env  → manuel override ("cpu"/"cuda")
+```
+
+LLM ile aynı GPU'da çakışma riski olduğunda CPU'ya düşülür. PC'de CPU int8 Whisper small latency'si **130-300 ms** (CUDA medium'un 10× hızlısı) çünkü model küçük + int8 kuantizasyonu. VRAM kullanımı 0.
 
 ### CUDA Hızlandırması
 **Sorun:** ctranslate2'nin standart pip paketi ARM64/Jetson için CUDA içermez.
@@ -242,11 +274,14 @@ Sıcak TTFT: ~0.25 saniye  (12× iyileşme)
 LLM'e verilen sistem promptu şu kuralları içerir:
 - Yalnızca Türkçe yanıt, emoji ve madde işareti yasak
 - Yalnızca menüdeki ürünler, uydurma ürün yok
-- Genel menü sorusunda kategori özeti: "Çorbalar, ana yemekler, tatlılar ve içecekler var. Ne istersiniz?"
-- **Öneri/tavsiye sorusunda** ("ne önerirsin/ne yesem/ne alsam" gibi): 1-2 popüler ürün isim+fiyatla önerilir — jenerik kategoriye gidilmez (v4.5)
-- Sipariş onay formatı: "Elbette, [ürün] [fiyat] TL eklendi."
-- Toplam yalnızca hesap istenince söylenir
+- Karşılama ve genel menü sorusunda dört kategori adının (çorba, ana yemek, tatlı, içecek) dördü de geçmek zorundadır; ürün adı sayılmaz
+- **Öneri/tavsiye sorusunda** ("ne önerirsin/ne yesem/ne alsam" gibi): 1-2 ürün **YALNIZCA İSİMLE** önerilir, fiyat söylenmez (v4.7). Kategori belirtildiyse (örn. "çorba olarak") o kategoriden 2 ürün
+- **Fiyat söyleme kuralı (v4.7):** Fiyat sadece şu üç durumda söylenir: (1) müşteri açıkça fiyat sorduysa, (2) sipariş onayında, (3) hesap istendiğinde. Öneri/tanıtım/sohbette fiyat söylenmez
+- Sipariş onayı için yapısal şablon: "Elbette/Tabii ki/..." gibi olumlu kabul + ürün adı + TL fiyat + sonunda "başka bir şey alır mısınız?" anlamına gelen bir soru. "Getireyim mi?" sipariş onayında YASAK — yalnızca "nedir/nasıl" ürün sorusunda kullanılır
+- Toplam yalnızca hesap istenince söylenir; ara toplam soruları için "Bu konuda bilgim yok, personelimize sorabilirsiniz" yönlendirmesi
 - Vejetaryen/allerjen sorusu için menü etiketlerini kullan
+
+**v4.6 değişikliği — birebir şablon → yapısal yönerge:** Prompt KURALLAR bloğundaki cümle örnekleri (örn. "Elbette, [ürün] [fiyat] TL eklendi. Başka bir şey alır mısınız?" gibi birebir kalıplar) "şu içeriği şu sırayla, doğal bir varyasyonla söyle" tarzına çevrildi. Greedy decoding + birebir şablon kombinasyonu her turda kelimesi kelimesine aynı yanıt üretiyordu; bu kalıplaşma kullanıcı şikayeti olarak işaretlendi.
 
 ### Thinking Modunu Kapatma
 Qwen3 modeli varsayılan olarak yanıttan önce uzun bir iç akıl yürütme (`<think>...</think>`) bloğu üretir. Bu blok 100-300 token uzunluğunda olabilir ve yanıt gecikmesini ciddi şekilde artırır. Restorant senaryosunda hızlı yanıt gerektiğinden bu mod kapatıldı:
@@ -259,6 +294,22 @@ parts.append("<|im_start|>assistant\n<think>\n\n</think>\n\n")
 # qwen3_backend — apply_chat_template içinde:
 enable_thinking=False
 ```
+
+### Decoding Parametreleri (v4.6)
+
+v4.5'e kadar her iki backend de greedy decoding (`do_sample=False` / `temperature=0`) kullanıyordu. Sonuç: aynı kullanıcı cümlesi her seferinde **kelimesi kelimesine aynı yanıtı** üretiyordu. Restoran senaryosunda aynı müşteri farklı turlarda aynı cümleyi duyduğunda doğallık kaybediliyordu.
+
+v4.6'da sampling tabanlı decoding'e geçildi:
+
+| Parametre | Değer | Gerekçe |
+|-----------|-------|---------|
+| `temperature` | 0.55 | Çeşitlilik için 0 → 0.55. 0.7+ değerlerde model sayı/format halüsinasyonu yapıyordu (örn. "Bir köfte" → "İki köfte 480 TL"). |
+| `top_p` | 0.9 | Düşük olasılıklı tokenlerin tamamen elenmesi yerine üst %90'ı tutar |
+| `top_k` | 40 | (v4.8) En yüksek 40 token havuzu; daha sağlıklı varyasyon |
+| `repetition_penalty` / `repeat_penalty` | 1.2 | (v4.8'de 1.15→1.2) Sampling açıkken tekrarlanan n-gram'ları azaltır |
+| `max_tokens` / `max_new_tokens` | 50 | (v4.8'de 80→50) "1 cümle / 20 kelime" hedefi; uzun listeleme engellenir |
+
+Aynı parametreler `qwen3_backend.py` (HuggingFace transformers `model.generate`) ve `llama_cpp_backend.py` (`llm.create_completion`) için ortak. Eval suite 16/16 (%100) PASS oranı korundu; ortalama latency 1745 ms → 2330 ms (greedy → sampling overhead'i).
 
 ### Konuşma Geçmişi Yönetimi
 Jetson'da bağlam penceresi (n_ctx) 1536 token ile sınırlıdır. Sistem prompt (~944 token) + max yanıt (80 token) = ~512 token konuşma geçmişi için kalır. Bu ~5-6 tura karşılık gelir.
@@ -283,7 +334,8 @@ def _trim_history(self):
 | Versiyon | Başarı |
 |---------|--------|
 | Prompt v4.0 | 14/16 (%87) |
-| **Prompt v4.1 (mevcut)** | **16/16 (%100)** |
+| Prompt v4.1 | 16/16 (%100) |
+| **Prompt v4.6 (sampling + gevşetilmiş prompt)** | **16/16 (%100)** |
 
 ---
 
@@ -428,6 +480,7 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | Sipariş geçmişi kaybı | `_trim_history` eski konuşmaları siliyor | OrderTracker LLM'den bağımsız Python tarafında çalışır |
 | Hesap + sipariş çakışması | "Toplam söyleme" kuralı hesap isteğini engelliyor | `has_new_order` tespiti + özel LLM yönergesi |
 | **Demo 2. turdan sonra tamamen donuyor** | `TextIteratorStreamer` timeout yok — `model.generate()` CUDA hatası/OOM atınca streamer stop sinyali almıyor; `for token in streamer:` sonsuza bloklanıyor | `timeout=30.0` + `_generate_safe()` wrapper (exception'da manuel stop sinyali) + `gen_thread.join(timeout=10)` + `torch.cuda.empty_cache()` (v4.5) |
+| **STT CUDA OOM (`CUDA failed with error out of memory`)** | 5.64 GB GPU'da Qwen3-4B (2.5 GB) + KV cache + Whisper medium CUDA workspace birlikte sığmıyor | (1) `WHISPER_MODEL = "small"` (Codex), (2) `_stt_backend()` toplam VRAM'e bakar; <8 GB ise CPU int8 (v4.6), (3) KV ısıtmadan sonra `torch.cuda.empty_cache()` |
 | Her turdan sonra sistem sessiz bekliyor | `ww_task` yeniden yaratılırken "hey garson bekleniyor" print yok | Her yeni `ww_task` sonrası print eklendi (v4.5) |
 | HuggingFace Hub'a her başlatmada istek atılıyor | `from_pretrained` varsayılan olarak Hub'u kontrol ediyor | `local_files_only=True` + ilk çalıştırmada download fallback (v4.5) |
 | openwakeword import hatası | NumPy 2.x — sistem scipy uyumsuzluğu | `pip install "numpy<2.0"` ile 1.26'ya düşürüldü |
@@ -473,6 +526,23 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 - **Öneri/tavsiye yanıtı** — "ne önerirsin?" sorusunda menüden ürün önerilir (v4.5)
 - **Bağlam penceresi genişletildi** — PC'de _MAX_HIST_CHARS 6000 → 12000 (v4.5)
 - **Offline model yükleme** — local_files_only=True, HF Hub'a gereksiz istek yok (v4.5)
+- **Sampling tabanlı decoding** — greedy yerine T=0.55/top_p=0.9; eval 16/16 korundu, kalıplaşma azaldı (v4.6)
+- **Sistem prompt'unda birebir kalıplar yapısal yönergeye çevrildi** (v4.6)
+- **STT VRAM-aware cihaz seçimi** — toplam VRAM <8 GB ise CPU int8 (PC 5.64 GB), aksi halde CUDA float16 (Jetson 16 GB hedefi) (v4.6)
+- **Conversation hold** — yanıt sonrası 10s wake word'süz dinleme penceresi; doğal sohbet akışı (v4.7)
+- **Fiyat bağlam kuralı** — fiyat sadece müşteri sorduğunda / sipariş onayında / hesapta söylenir (v4.7, v4.8'de TL kelimesi yasağıyla sertleştirildi)
+- **Kısa yanıt zorlaması** — max_tokens 80→50, "1 cümle 20 kelime" prompt kuralı, top_k=40, rep_pen 1.15→1.2 (v4.8)
+- **Karşılama örnekleri kaldırıldı** — model artık örnek kopyalamıyor, gerçek varyasyon üretiyor (v4.8)
+- **Offline mod doğrulandı** — `HF_HUB_OFFLINE=1` + `local_files_only=True` ile ağ erişimi gerekmiyor; "Loading weights" mesajı sadece disk cache'den okuma progress bar'ıdır (v4.8)
+
+### Açık Sorunlar (Sonraki Sohbete Ertelendi)
+
+**W11 — Hesap tetikleyici hatası:** "Başka bir şey istemiyorum" gibi kapanış cümlelerinde bot bazen hesap istenmedeyken "Toplam X TL" söylüyor. `_is_bill_request()` veya farewell+totlam tetikleyicisi gereğinden geniş eşleşiyor olabilir; incelenmeli.
+
+**W12 — Robotik ton:** Sistem promptu kural listesi biçiminde yazılmış; model doğru kurallara uysa da cevaplar soğuk ve mekanik. Gerçek bir garsonla konuşulduğu hissi yok. Yaklaşım seçenekleri (sonraki sohbette tartışılacak):
+- Sistem promptuna "sen sıcakkanlı, güler yüzlü bir garsonsun" tarzı kişilik/ton yönergesi ekle
+- "Siparişinize eklemek istediğiniz var mı?" yerine "Başka bir şey alayım mı?" tarzı daha doğal kapanışlar
+- Az token'a sığarken bile doğal Türkçe konuşma örneklerini (few-shot) prompt'a ekle — fakat karşılama örneklerinde gördüğümüz ezberleme riskine dikkat
 
 ### Bekleyen ⏳
 | Görev | Engel |
@@ -480,5 +550,5 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | Hoparlörden ses çıkışı | USB ses adaptörü (~100 TL) gerekiyor |
 | Uçtan uca tam demo | Ses adaptörüne bağlı |
 | Gürültülü ortam testi (restoran müziği + kalabalık) | Ses adaptörü gerekiyor |
-| Whisper medium kalite doğrulaması | Gerçek konuşma kaydı gerekiyor |
+| Whisper medium kalite doğrulaması | Jetson 16 GB entegrasyonunda yapılacak (PC'de medium VRAM sığmıyor) |
 | VRAM kullanımı ölçümü (Ubuntu PC, Qwen3-4B) | Sonraki çalıştırmada ekrana basılacak |

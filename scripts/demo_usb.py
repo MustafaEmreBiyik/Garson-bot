@@ -60,8 +60,9 @@ VAD_SILENCE_S      = 1.5   # konuşma bittikten sonra bu kadar sessizlik → kay
 VAD_PRE_ROLL       = 5     # konuşma başlamadan önce tutulacak chunk (5×30ms = 150ms)
 VAD_MAX_S          = 12    # güvenlik kapağı — en fazla bu kadar kayıt yap
 VAD_ENERGY_THRESH  = 300   # webrtcvad yoksa enerji eşiği (0–32767 arası int16 RMS)
+CONVO_HOLD_S       = 10    # bot yanıtından sonra wake word'süz dinleme penceresi
 
-WHISPER_MODEL = "medium"
+WHISPER_MODEL = "small"  # Ubuntu host icin stabil; Jetson entegrasyonunda medium tekrar acilabilir.
 PIPER_MODEL   = None  # None → otomatik bul
 
 # Whisper'a Türkçe restoran bağlamı ver → menü kelimelerini daha iyi tanır
@@ -347,10 +348,15 @@ def _resample_to_16k(audio: np.ndarray, from_sr: int) -> np.ndarray:
     ).astype(np.int16)
 
 
-def _record(input_device: int | None = None) -> bytes:
+def _record(input_device: int | None = None, *,
+            initial_wait_s: float | None = None) -> bytes:
     """VAD tabanlı kayıt — sessizlik sonrası durur, maks VAD_MAX_S saniye.
 
     webrtcvad kuruluysa kullanır; yoksa enerji eşiğine döner.
+
+    initial_wait_s: konuşma başlamadan beklenecek max süre. None ise VAD_MAX_S
+    (mevcut davranış). Süre dolduğunda konuşma başlamadıysa boş bytes (b"")
+    döndürülür — çağıran "kullanıcı konuşmadı" diye anlayabilir.
     """
     CHUNK_SAMPLES = SAMPLE_RATE * VAD_CHUNK_MS // 1000  # 16000*30//1000 = 480
 
@@ -377,6 +383,8 @@ def _record(input_device: int | None = None) -> bytes:
 
     silence_limit = int(VAD_SILENCE_S * 1000 / VAD_CHUNK_MS)
     max_chunks    = int(VAD_MAX_S    * 1000 / VAD_CHUNK_MS)
+    # Konuşma başlamadan beklenecek max chunk; initial_wait_s verilmediyse max_chunks
+    initial_max  = int(initial_wait_s * 1000 / VAD_CHUNK_MS) if initial_wait_s else max_chunks
 
     ring_buf    = collections.deque(maxlen=VAD_PRE_ROLL)
     voiced_16k: list[bytes] = []
@@ -414,6 +422,9 @@ def _record(input_device: int | None = None) -> bytes:
                     voiced_16k.extend(ring_buf)
                     ring_buf.clear()
                     silence_cnt = 0
+                elif total >= initial_max:
+                    # Konuşma başlamadan timeout — çağıran sessizlik diye anlasın
+                    break
             else:
                 voiced_16k.append(pcm)
                 if speech:
@@ -426,7 +437,7 @@ def _record(input_device: int | None = None) -> bytes:
                         break
 
     if not voiced_16k:
-        return _numpy_to_wav(np.zeros(SAMPLE_RATE, dtype=np.int16), SAMPLE_RATE)
+        return b""  # konuşma yoktu — çağıran "sessizlik / timeout" diye değerlendirir
 
     audio = np.frombuffer(b"".join(voiced_16k), dtype=np.int16)
     return _numpy_to_wav(audio, SAMPLE_RATE)
@@ -529,14 +540,40 @@ async def run_demo() -> None:
     print("LLM KV cache ısıtılıyor…")
     await asyncio.to_thread(llm.generate_reply, "Merhaba.")
     llm.reset_history()
+    try:
+        import torch as _torch
+        if _torch.cuda.is_available():
+            _torch.cuda.empty_cache()
+    except Exception:
+        pass
     print("LLM: KV cache hazır")
 
-    # STT — CUDA varsa kullan, yoksa CPU'ya düş
+    # STT cihaz seçimi — LLM ile aynı GPU'da çakışmasını önler.
+    #   * Total VRAM < 8 GB ise CUDA'da Qwen3-4B + Whisper birlikte sığmaz (OOM)
+    #     → CPU int8. Bu host (RTX 4050 6 GB) bu kategoride.
+    #   * Total VRAM ≥ 8 GB (örn. Jetson Orin NX 16 GB) → CUDA float16.
+    #   * W_BOT_STT_DEVICE env değişkeni ("cpu"/"cuda") ile manuel override.
+    _STT_VRAM_THRESHOLD_GB = 8.0
+
     def _stt_backend():
+        import os as _os
+        override = _os.environ.get("W_BOT_STT_DEVICE", "").lower()
+        try:
+            import torch as _t
+            if _t.cuda.is_available() and override != "cpu":
+                total_gb = _t.cuda.get_device_properties(0).total_memory / (1024 ** 3)
+                if override == "cuda" or total_gb >= _STT_VRAM_THRESHOLD_GB:
+                    import ctranslate2
+                    if ctranslate2.get_supported_compute_types("cuda"):
+                        print(f"  STT: CUDA seçildi (toplam VRAM {total_gb:.1f} GB)")
+                        return "cuda", "float16"
+                print(f"  STT: VRAM dar ({total_gb:.1f} GB < {_STT_VRAM_THRESHOLD_GB:.0f} GB) → CPU int8")
+        except Exception:
+            pass
         try:
             import ctranslate2
-            if ctranslate2.get_supported_compute_types("cuda"):
-                return "cuda", "float16"
+            if "int8" in ctranslate2.get_supported_compute_types("cpu"):
+                return "cpu", "int8"
         except Exception:
             pass
         return "cpu", "float32"
@@ -584,36 +621,64 @@ async def run_demo() -> None:
             logger.warning("Karşılama TTS hatası: %s", e)
 
     # --- Ana döngü ---
-    first_wakeword    = True
-    new_customer      = True   # Her oturum başında karşıla
+    first_wakeword     = True
+    new_customer       = True   # Her oturum başında karşıla
+    conversation_active = False  # Yanıttan sonra wake word'süz dinleme penceresi açık mı?
+    pending_reset      = False  # Farewell tespit edildi mi (10s sessizlik sonrası uygulanır)
     while True:
-        # Tetikleyici: wake word (task zaten çalışıyor) veya ENTER
-        if ww_model:
-            await ww_task
-            print("  ✔  Wake word algılandı!", flush=True)
-            if first_wakeword:
-                await asyncio.to_thread(_beep)
-                first_wakeword = False
+        # Tetikleyici: conversation hold | wake word | ENTER
+        if conversation_active:
+            # Yanıttan hemen sonra 10s pencere — wake word beklenmez
+            wav_bytes = await asyncio.to_thread(
+                _record, input_device, initial_wait_s=CONVO_HOLD_S)
+            if not wav_bytes:
+                # Sessizlik — wake word moduna geri dön
+                print(f"  ⏰ {CONVO_HOLD_S}s sessizlik — 'hey garson' bekleniyor...", flush=True)
+                conversation_active = False
+                if pending_reset:
+                    llm.reset_history()
+                    order_tracker.reset()
+                    new_customer = True
+                    pending_reset = False
+                    print("--- Yeni müşteri oturumu hazır ---", flush=True)
+                if ww_model:
+                    ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
+                continue
+            # Konuşma geldi — farewell beklemesini iptal et, tur devam etsin
+            pending_reset = False
         else:
-            try:
-                print("\n" + "-" * 40)
-                input("  ENTER'a bas ve konuş → ")
-            except EOFError:
-                break
+            if ww_model:
+                await ww_task
+                print("  ✔  Wake word algılandı!", flush=True)
+                if first_wakeword:
+                    await asyncio.to_thread(_beep)
+                    first_wakeword = False
+            else:
+                try:
+                    print("\n" + "-" * 40)
+                    input("  ENTER'a bas ve konuş → ")
+                except EOFError:
+                    break
 
-        # Yeni müşteri oturumunda karşıla, ardından direkt kayda geç
-        if new_customer and ww_model:
-            new_customer = False
-            print(f"W-BOT: {GREETING}")
-            try:
-                await _speak(tts, GREETING, tts_active)
-            except Exception as e:
-                logger.warning("Karşılama TTS hatası: %s", e)
+            # Yeni müşteri oturumunda karşıla, ardından direkt kayda geç
+            if new_customer and ww_model:
+                new_customer = False
+                print(f"W-BOT: {GREETING}")
+                try:
+                    await _speak(tts, GREETING, tts_active)
+                except Exception as e:
+                    logger.warning("Karşılama TTS hatası: %s", e)
 
-        # 1. Kayıt
-        wav_bytes = await asyncio.to_thread(_record, input_device)
+            # Kayıt — mevcut davranış (VAD_MAX_S güvenlik kapağı)
+            wav_bytes = await asyncio.to_thread(_record, input_device)
+            if not wav_bytes:
+                # Wake word algılandı ama konuşma gelmedi — tekrar wake word'e dön
+                if ww_model:
+                    ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
+                    print("\n  👂 'hey garson' bekleniyor...", flush=True)
+                continue
 
-        # 2. STT
+        # STT
         import time as _time
         print("  ⏳ Anlıyorum...", flush=True)
         _t_stt = _time.perf_counter()
@@ -623,6 +688,7 @@ async def run_demo() -> None:
             user_text = result["text"].strip()
         except Exception as e:
             print(f"  ✗ STT hatası: {e}")
+            conversation_active = False
             if ww_model:
                 ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
@@ -630,6 +696,7 @@ async def run_demo() -> None:
 
         if not user_text:
             print("  (Ses algılanamadı, tekrar dene)")
+            conversation_active = False
             if ww_model:
                 ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
@@ -664,12 +731,7 @@ async def run_demo() -> None:
         print(f"W-BOT:   {reply}")
         print(f"  ⏱  LLM+TTS: {_llm_ms:.0f}ms  |  Toplam: {_stt_ms + _llm_ms:.0f}ms")
 
-        # 4. Bir sonraki wake word tespitini başlat
-        if ww_model:
-            ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
-            print("\n  👂 'hey garson' bekleniyor...", flush=True)
-
-        # Oturum sonu kontrolü — müşteri veya bot veda ediyorsa sıfırla
+        # Oturum sonu tespiti — müşteri veya bot veda ediyorsa 10s sonra sıfırla
         farewell_phrases = ["güle güle", "görüşürüz", "hoşça kal", "iyi günler", "tekrar bekleriz"]
         short_user = user_text.strip().lower()
         reply_lower = reply.lower()
@@ -680,10 +742,12 @@ async def run_demo() -> None:
                 and not any(q in short_user for q in ["alabilir", "istiyorum", "verir", "?", "mı", "mi"]))
         )
         if is_farewell:
-            print("\n--- Yeni müşteri oturumu başladı ---")
-            llm.reset_history()
-            order_tracker.reset()
-            new_customer = True
+            pending_reset = True
+            print(f"  💤 Veda algılandı — {CONVO_HOLD_S}s sessizlik sonrası yeni müşteri için hazır")
+
+        # Conversation hold penceresini aç; sessizlikte wake word'e dönülür
+        conversation_active = True
+        print(f"  ⏳ Devam etmek için konuşabilirsiniz ({CONVO_HOLD_S}s)...", flush=True)
 
 
 def main() -> None:
