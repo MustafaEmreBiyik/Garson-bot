@@ -1,7 +1,7 @@
 # W-BOT Metodoloji Belgesi
 
 **Proje:** Türkçe Konuşan Restoran Garson Robotu (W-BOT)
-**Tarih:** 1 Haziran 2026 (v4.4)
+**Tarih:** 1 Haziran 2026 (v4.5)
 **Hedef:** Fiziksel servis robotuna entegre edilecek, gerçek zamanlı Türkçe sesli yapay zeka asistanı
 
 ---
@@ -143,18 +143,18 @@ audio_16k = np.interp(
 
 ## 5. Bileşen 3: Konuşmadan Metne (STT)
 
-### Kullanılan Teknoloji: faster-whisper (Whisper small)
+### Kullanılan Teknoloji: faster-whisper (Whisper medium)
 OpenAI'ın Whisper modelinin CTranslate2 motoruyla optimize edilmiş versiyonu.
 
-### Model Seçimi: Neden "small"?
+### Model Seçimi
 
 | Model | Parametre | Kalite | Jetson GPU Süresi |
 |-------|-----------|--------|-------------------|
-| tiny | 39M | Düşük — Türkçe restorant kelimelerini kaçırıyor | ~200ms |
-| **small** | 244M | **İyi — restoran ortamı için yeterli** | **~850ms** |
-| medium | 769M | Çok iyi — fazla VRAM kullanıyor | ~2000ms |
+| tiny | 39M | Düşük — Türkçe restoran kelimelerini kaçırıyor | ~200ms |
+| small | 244M | İyi — restoran ortamı için yeterli | ~850ms |
+| **medium** | 769M | **Çok iyi — Türkçe kalitesi belirgin yüksek** | **~1500-2000ms** |
 
-Small modeli, hız-kalite dengesi açısından optimal seçimdir.
+v4.5'te `small`'dan `medium`'a geçildi: gürültülü restoran ortamında Türkçe menü kelimelerini daha güvenilir tanıması için. Latency artışı (~600-900ms) sesli yanıt başlamadan önce yaşandığından kullanıcıya etkisi minimumdur.
 
 ### CUDA Hızlandırması
 **Sorun:** ctranslate2'nin standart pip paketi ARM64/Jetson için CUDA içermez.
@@ -242,6 +242,8 @@ Sıcak TTFT: ~0.25 saniye  (12× iyileşme)
 LLM'e verilen sistem promptu şu kuralları içerir:
 - Yalnızca Türkçe yanıt, emoji ve madde işareti yasak
 - Yalnızca menüdeki ürünler, uydurma ürün yok
+- Genel menü sorusunda kategori özeti: "Çorbalar, ana yemekler, tatlılar ve içecekler var. Ne istersiniz?"
+- **Öneri/tavsiye sorusunda** ("ne önerirsin/ne yesem/ne alsam" gibi): 1-2 popüler ürün isim+fiyatla önerilir — jenerik kategoriye gidilmez (v4.5)
 - Sipariş onay formatı: "Elbette, [ürün] [fiyat] TL eklendi."
 - Toplam yalnızca hesap istenince söylenir
 - Vejetaryen/allerjen sorusu için menü etiketlerini kullan
@@ -264,7 +266,8 @@ Jetson'da bağlam penceresi (n_ctx) 1536 token ile sınırlıdır. Sistem prompt
 `_trim_history()` fonksiyonu toplam geçmiş boyutu eşiği aşınca en eski user+assistant çiftini siler:
 
 ```python
-_MAX_HIST_CHARS = 1400  # karakter cinsinden (~350 token)
+_MAX_HIST_CHARS = 1400  # Jetson: karakter cinsinden (~350 token)
+# PC (qwen3_backend): 12000 karakter — uzun oturumlar için geniş bağlam
 
 def _trim_history(self):
     while len(self._history) > 1:
@@ -424,6 +427,9 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | Thinking modu açık kalıyor | Qwen3'ün varsayılan davranışı | llama.cpp'de boş `<think>` prefix; transformers'da `enable_thinking=False` |
 | Sipariş geçmişi kaybı | `_trim_history` eski konuşmaları siliyor | OrderTracker LLM'den bağımsız Python tarafında çalışır |
 | Hesap + sipariş çakışması | "Toplam söyleme" kuralı hesap isteğini engelliyor | `has_new_order` tespiti + özel LLM yönergesi |
+| **Demo 2. turdan sonra tamamen donuyor** | `TextIteratorStreamer` timeout yok — `model.generate()` CUDA hatası/OOM atınca streamer stop sinyali almıyor; `for token in streamer:` sonsuza bloklanıyor | `timeout=30.0` + `_generate_safe()` wrapper (exception'da manuel stop sinyali) + `gen_thread.join(timeout=10)` + `torch.cuda.empty_cache()` (v4.5) |
+| Her turdan sonra sistem sessiz bekliyor | `ww_task` yeniden yaratılırken "hey garson bekleniyor" print yok | Her yeni `ww_task` sonrası print eklendi (v4.5) |
+| HuggingFace Hub'a her başlatmada istek atılıyor | `from_pretrained` varsayılan olarak Hub'u kontrol ediyor | `local_files_only=True` + ilk çalıştırmada download fallback (v4.5) |
 | openwakeword import hatası | NumPy 2.x — sistem scipy uyumsuzluğu | `pip install "numpy<2.0"` ile 1.26'ya düşürüldü |
 | openwakeword model bulunamadı | pip paketi model dosyalarını içermiyor | `openwakeword.utils.download_models()` çağrısı |
 | ctranslate2 CUDA ARM64'te yok | pip paketi ARM için CUDA içermiyor | Kaynaktan derleme (cmake + CUDA SM87) |
@@ -440,7 +446,7 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | LLM VRAM kullanımı | ~2.37 GB / 15.6 GB |
 | LLM token üretim hızı | ~12-15 tok/s |
 | LLM ilk token (sıcak cache) | ~250ms |
-| STT latency (CUDA float16) | ~850-1100ms |
+| STT latency (CUDA float16, medium) | ~1500-2000ms |
 | TTS sentez (Piper, CPU) | ~500-800ms |
 | **Müşteriye ilk ses (TTFA)** | **~2.2-2.7 saniye** |
 | LLM eval başarı | 16/16 (%100) |
@@ -454,7 +460,7 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 - VAD tabanlı akıllı ses kaydı
 - openwakeword Jetson'a kuruldu (numpy<2.0 uyumlu)
 - ctranslate2 CUDA SM87 kaynaktan derlendi (`-DWITH_CUDA=ON -DOPENMP_RUNTIME=COMP -DWITH_MKL=OFF`)
-- Whisper small CUDA STT (~850-1100ms, ölçüldü)
+- Whisper **medium** CUDA STT (kalite için small'dan yükseltildi, v4.5)
 - Qwen3-4B GGUF LLM (llama-cpp-python CUDA)
 - Piper TTS offline Türkçe ses
 - OrderTracker (ekleme + iptal + takas + adet)
@@ -463,11 +469,16 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 - False positive düzeltme (800ms warm-up)
 - Hesap + sipariş aynı cümlede doğru yanıt
 - Per-turn STT ve LLM+TTS latency ölçümü
+- **TextIteratorStreamer donma düzeltmesi** — 2. turdan itibaren donma giderildi (v4.5)
+- **Öneri/tavsiye yanıtı** — "ne önerirsin?" sorusunda menüden ürün önerilir (v4.5)
+- **Bağlam penceresi genişletildi** — PC'de _MAX_HIST_CHARS 6000 → 12000 (v4.5)
+- **Offline model yükleme** — local_files_only=True, HF Hub'a gereksiz istek yok (v4.5)
 
 ### Bekleyen ⏳
 | Görev | Engel |
 |-------|-------|
 | Hoparlörden ses çıkışı | USB ses adaptörü (~100 TL) gerekiyor |
 | Uçtan uca tam demo | Ses adaptörüne bağlı |
-| Wake word gerçek ortam testi | Ses adaptörü + gürültülü restoran ortamı |
-| Whisper STT kalite doğrulaması | Gerçek konuşma kaydı gerekiyor |
+| Gürültülü ortam testi (restoran müziği + kalabalık) | Ses adaptörü gerekiyor |
+| Whisper medium kalite doğrulaması | Gerçek konuşma kaydı gerekiyor |
+| VRAM kullanımı ölçümü (Ubuntu PC, Qwen3-4B) | Sonraki çalıştırmada ekrana basılacak |

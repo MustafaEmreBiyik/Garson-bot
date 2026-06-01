@@ -48,7 +48,8 @@ KURALLAR:
 - Yalnızca Türkçe. İngilizce kelime, madde işareti, kalın yazı veya emoji kullanma.
 - 1-2 cümle yeterli.
 - Yalnızca menüdeki ürünleri söyle; asla uydurma ürün ekleme.
-- Karşılamada kategori özeti ver: "Çorbalar, ana yemekler, tatlılar ve içecekler var. Ne istersiniz?" Tam liste verme.
+- Genel menü sorusunda ("ne var", "ne servis ediyorsunuz", "menünüz ne" gibi): "Çorbalar, ana yemekler, tatlılar ve içecekler var. Ne istersiniz?" Tam liste verme.
+- Öneri veya tavsiye sorusunda ("ne önerirsin", "ne yesem", "ne alsam", "ne tavsiye edersiniz", "ne iyi" geçiyorsa): Menüden 1-2 öne çıkan ürünü isim ve fiyatıyla öner. Örnek: "Izgara Köfte çok beğeniliyor, 240 TL. İsterseniz Mercimek Çorbası da güzel bir başlangıç, 85 TL. Ne istersiniz?"
 - Sipariş ("alayım/istiyorum/getir" geçiyorsa): "Elbette, [ürün] [fiyat] TL eklendi. Başka bir şey alır mısınız?" Bu kalıptan sonra hiçbir şey ekleme.
 - Birden fazla ürün siparişi: HER ürünü ayrı "Elbette, [ürün] [fiyat] TL eklendi." cümlesiyle onayla, hepsini say.
 - Sipariş miktarı ("iki/üç/dört/2/3/4" geçiyorsa): Onayda adeti ve toplam fiyatı yaz. Örnek: "iki köfte" → "Elbette, iki Izgara Köfte 480 TL eklendi. Başka bir şey alır mısınız?"
@@ -116,20 +117,33 @@ class Qwen3Backend:
             bnb_4bit_compute_dtype=torch.float16,
             bnb_4bit_use_double_quant=True,
         )
-        self._tokenizer = AutoTokenizer.from_pretrained(
-            self._model_id, trust_remote_code=True
-        )
-        self._model = AutoModelForCausalLM.from_pretrained(
-            self._model_id,
-            quantization_config=bnb,
-            device_map="auto",
-            trust_remote_code=True,
-        )
+        # local_files_only=True: ilk indirimden sonra HF Hub'a istek atmaz; ağ gerekmez.
+        # Model cache'te yoksa OSError → tekrar dene (ilk çalıştırma).
+        _shared = dict(trust_remote_code=True, local_files_only=True)
+        try:
+            self._tokenizer = AutoTokenizer.from_pretrained(self._model_id, **_shared)
+            self._model = AutoModelForCausalLM.from_pretrained(
+                self._model_id, quantization_config=bnb, device_map="auto", **_shared
+            )
+        except OSError:
+            logger.warning("Model cache'te yok, HuggingFace Hub'dan indiriliyor…")
+            self._tokenizer = AutoTokenizer.from_pretrained(
+                self._model_id, trust_remote_code=True
+            )
+            self._model = AutoModelForCausalLM.from_pretrained(
+                self._model_id, quantization_config=bnb, device_map="auto",
+                trust_remote_code=True,
+            )
         self._model.eval()
-        logger.info("Qwen3-4B hazır.")
+        if torch.cuda.is_available():
+            used  = torch.cuda.memory_allocated() / 1024 ** 3
+            total = torch.cuda.get_device_properties(0).total_memory / 1024 ** 3
+            logger.info("Qwen3-4B hazır. VRAM: %.2f GB / %.2f GB", used, total)
+            print(f"  VRAM: {used:.2f} GB kullanımda / {total:.2f} GB toplam")
+        else:
+            logger.info("Qwen3-4B hazır (CPU).")
 
-    # Transformers context geniş, ama uzun geçmiş yavaşlatır — ~6000 karakter yeterli
-    _MAX_HIST_CHARS = 6000
+    _MAX_HIST_CHARS = 12000
 
     def _trim_history(self) -> None:
         """Çok uzun geçmişi kısalt — en eski user+assistant turlarını at."""
@@ -196,28 +210,44 @@ class Qwen3Backend:
         )
         inputs = self._tokenizer(text, return_tensors="pt").to(self._model.device)
 
+        # timeout=30: gen_thread CUDA/OOM hatasında streamer sonsuza dek bloklanmasın
         streamer = TextIteratorStreamer(
-            self._tokenizer, skip_prompt=True, skip_special_tokens=True
+            self._tokenizer, skip_prompt=True, skip_special_tokens=True, timeout=30.0
         )
-        gen_kwargs = dict(
-            **inputs,
-            max_new_tokens=80,
-            do_sample=False,
-            repetition_penalty=1.1,
-            pad_token_id=self._tokenizer.eos_token_id,
-            streamer=streamer,
-        )
-        gen_thread = threading.Thread(
-            target=self._model.generate, kwargs=gen_kwargs, daemon=True
-        )
+
+        def _generate_safe():
+            try:
+                self._model.generate(**dict(
+                    **inputs,
+                    max_new_tokens=80,
+                    do_sample=False,
+                    repetition_penalty=1.1,
+                    pad_token_id=self._tokenizer.eos_token_id,
+                    streamer=streamer,
+                ))
+            except Exception as exc:
+                logger.error("model.generate hatası: %s", exc)
+                # Streamer'a dur sinyali gönder; yoksa for döngüsü sonsuza bloklanır
+                try:
+                    streamer.text_queue.put(streamer.stop_signal)
+                except Exception:
+                    pass
+
+        gen_thread = threading.Thread(target=_generate_safe, daemon=True)
         gen_thread.start()
 
         full_parts: list[str] = []
-        for token in streamer:
-            full_parts.append(token)
-            yield token
+        try:
+            for token in streamer:
+                full_parts.append(token)
+                yield token
+        except Exception as exc:
+            logger.error("Streamer hatası: %s", exc)
 
-        gen_thread.join()
+        gen_thread.join(timeout=10)
+        import torch
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
         reply = _strip_markdown("".join(full_parts))
         self._history.append({"role": "assistant", "content": reply})
 

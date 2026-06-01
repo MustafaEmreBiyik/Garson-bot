@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 1 Haziran 2026 | **Sürüm:** 4.4
+**Son güncelleme:** 1 Haziran 2026 | **Sürüm:** 4.5
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -53,7 +53,7 @@ Garson-bot/
 
 ---
 
-## Aktif Pipeline (demo_usb.py — v4.3)
+## Aktif Pipeline (demo_usb.py — v4.5)
 
 ```
 "hey garson" denir
@@ -116,7 +116,9 @@ Tekrar "hey garson" bekle
 | Quantization | BitsAndBytesConfig 4-bit NF4 |
 | Thinking | enable_thinking=False (apply_chat_template) |
 | max_new_tokens | **80**, repetition_penalty=1.1 |
-| _MAX_HIST_CHARS | **6000** |
+| _MAX_HIST_CHARS | **12000** (v4.5'te 6000'den artırıldı) |
+| local_files_only | İlk indirmeden sonra HF Hub'a istek atılmaz |
+| VRAM izleme | Yükleme sonrası kullanılan/toplam VRAM ekrana basılır |
 
 ### Sistem Prompt Token Bütçesi (Jetson)
 | Öğe | Token |
@@ -148,9 +150,9 @@ Sistem promptunun (~944 tok) KV cache'e yazılmasını sağlar.
 | Parametre | Değer |
 |-----------|-------|
 | Motor | faster-whisper |
-| Model | **small** (medium → small değiştirildi, 31 Mayıs 2026) |
+| Model | **medium** (1 Haziran 2026 — kalite için small'dan yükseltildi) |
 | Device | CUDA varsa float16, yoksa CPU float32 (otomatik algılama) |
-| Latency | ~850-1100ms (small, CUDA) — CPU ARM: ~1.9s |
+| Latency | ~1500-2000ms (medium, CUDA) — küçük kalite/hız dengesi tercihi |
 | initial_prompt | Türkçe restoran + menü kelimeleri |
 
 ### USB Mikrofon VAD Kaydı (v4.3)
@@ -234,6 +236,7 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | W2 | Alerji sorusu | Aşırı savunmacı | Sistem promptunda allergens + kural var | ✅ Düzeltildi |
 | W3 | İptal/değişiklik | LLM iptali yok sayıyor | Prompt'ta kural eklendi + OrderTracker cancellation | ✅ Düzeltildi |
 | W4 | Adet gösterimi | "iki Izgara Köfte" yerine "Izgara Köfte" | Prompt kuralı + örnek eklendi | ✅ Düzeltildi |
+| W5 | Öneri/tavsiye sorusu | Her soruya jenerik kategori özeti veriyordu | "Karşılamada" kuralı çok geneldi | ✅ Düzeltildi (v4.5) |
 
 ---
 
@@ -255,7 +258,7 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 ## demo_usb.py Yapılandırma Sabitleri
 
 ```python
-WHISPER_MODEL      = "small"
+WHISPER_MODEL      = "medium"
 SAMPLE_RATE        = 16_000
 CHANNELS           = 1
 
@@ -319,8 +322,8 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | Wake word gerçek ortam testi (restoran gürültüsü) | 🟡 Orta | openwakeword ✅ kuruldu, adaptör bekliyor |
-| 5 | Whisper small kalite doğrulaması (Türkçe restoran kelimeleri) | 🟡 Orta | Adaptöre bağlı |
+| 4 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ubuntu PC'de yapılacak (adaptör bekleniyor) |
+| 5 | Whisper medium kalite doğrulaması (Türkçe restoran kelimeleri) | 🟡 Orta | small'dan medium'a geçildi, doğrulama gerekiyor |
 
 ## Uzun Vade / Ertelenmiş
 

@@ -61,7 +61,7 @@ VAD_PRE_ROLL       = 5     # konuşma başlamadan önce tutulacak chunk (5×30ms
 VAD_MAX_S          = 12    # güvenlik kapağı — en fazla bu kadar kayıt yap
 VAD_ENERGY_THRESH  = 300   # webrtcvad yoksa enerji eşiği (0–32767 arası int16 RMS)
 
-WHISPER_MODEL = "small"
+WHISPER_MODEL = "medium"
 PIPER_MODEL   = None  # None → otomatik bul
 
 # Whisper'a Türkçe restoran bağlamı ver → menü kelimelerini daha iyi tanır
@@ -667,6 +667,7 @@ async def run_demo() -> None:
         # 4. Bir sonraki wake word tespitini başlat
         if ww_model:
             ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
+            print("\n  👂 'hey garson' bekleniyor...", flush=True)
 
         # Oturum sonu kontrolü — müşteri veya bot veda ediyorsa sıfırla
         farewell_phrases = ["güle güle", "görüşürüz", "hoşça kal", "iyi günler", "tekrar bekleriz"]
