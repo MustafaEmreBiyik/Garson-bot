@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 31 Mayıs 2026 | **Sürüm:** 4.3
+**Son güncelleme:** 1 Haziran 2026 | **Sürüm:** 4.4
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -66,7 +66,7 @@ VAD tabanlı kayıt (_record)
     │  Pre-roll: konuşma başlamadan 150ms tutar
     │  1.5s sessizlik → durdur (max 12s güvenlik kapağı)
     ▼
-faster-whisper small (CUDA varsa float16, yoksa CPU int8 — auto-detect)
+faster-whisper small (CUDA varsa float16, yoksa CPU float32 — auto-detect)
     │  initial_prompt ile menü kelimeleri Whisper'a hint
     ▼
 OrderTracker — kullanıcı metnini parse et, sipariş toplamını takip et
@@ -149,8 +149,8 @@ Sistem promptunun (~944 tok) KV cache'e yazılmasını sağlar.
 |-----------|-------|
 | Motor | faster-whisper |
 | Model | **small** (medium → small değiştirildi, 31 Mayıs 2026) |
-| Device | CUDA varsa float16, yoksa CPU int8 (otomatik algılama) |
-| Latency | ~0.5-1 sn (small, GPU) |
+| Device | CUDA varsa float16, yoksa CPU float32 (otomatik algılama) |
+| Latency | ~850-1100ms (small, CUDA) — CPU ARM: ~1.9s |
 | initial_prompt | Türkçe restoran + menü kelimeleri |
 
 ### USB Mikrofon VAD Kaydı (v4.3)
@@ -248,7 +248,7 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | Eğitim | 3000 pozitif (MMS-TTS), 4840 negatif |
 | Smoke test | pozitif=0.999, negatif=0.001 ✅ |
 | ⚠️ Uyarı | Sentetik sesle eğitildi — gerçek gürültülü ortamda test edilmedi |
-| ⚠️ Jetson | `openwakeword` paketi kurulu değil → ENTER tuşu modu aktif |
+| ✅ Jetson | `openwakeword` kuruldu — wake word modu aktif |
 
 ---
 
@@ -284,6 +284,8 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 - llama-cpp-python 0.3.23 (CUDA SM87 ile derlendi)
 - Qwen3-4B-Q4_K_M.gguf (/home/emk/llama.cpp/)
 - webrtcvad ✅ (VAD için, aarch64 uyumlu)
+- openwakeword ✅ (pip + model indirildi, numpy<2.0 ile uyumlu)
+- ctranslate2 4.7.2 ✅ CUDA SM87 ile kaynaktan derlendi (`-DWITH_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=87 -DOPENMP_RUNTIME=COMP -DWITH_MKL=OFF`)
 - Proje: /home/emk/Desktop/Garson-bot/Garson-bot/ (iç içe dizin)
 
 ### Ses Donanımı Durumu
@@ -303,9 +305,10 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | llama-bench tg128 | 14.97 tok/s |
 | TTFT (soğuk — KV cache boş) | ~2.96 sn |
 | TTFT (sıcak — KV cache dolu) | ~0.25 sn |
-| STT (Whisper small, GPU) | ~0.70 sn |
+| STT (Whisper small, CPU ARM) | ~1.9 sn (ölçüldü) |
+| STT (Whisper small, CUDA) | ~0.85-1.1 sn (ölçüldü) |
 | Piper TTS (CPU) | ~0.60 sn |
-| **İlk ses çıkana kadar (sıcak)** | **~1.4-2.3 sn** |
+| **İlk ses çıkana kadar (sıcak, CUDA STT)** | **~2.2-2.7 sn** |
 
 ---
 
@@ -316,16 +319,15 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | openwakeword Jetson'a kur | 🟠 Yüksek | ENTER modundan wake word moduna geç |
-| 5 | Wake word gerçek ortam testi (restoran gürültüsü) | 🟡 Orta | Adaptör + openwakeword sonrası |
-| 6 | Whisper small kalite doğrulaması (Türkçe restoran kelimeleri) | 🟡 Orta | Adaptöre bağlı |
+| 4 | Wake word gerçek ortam testi (restoran gürültüsü) | 🟡 Orta | openwakeword ✅ kuruldu, adaptör bekliyor |
+| 5 | Whisper small kalite doğrulaması (Türkçe restoran kelimeleri) | 🟡 Orta | Adaptöre bağlı |
 
 ## Uzun Vade / Ertelenmiş
 
 | # | Görev | Açıklama |
 |---|-------|----------|
-| 7 | Piper GPU (onnxruntime-gpu) | JetPack R36 aarch64 için pip'te yok — ertelenmiş |
-| 8 | systemd servis (otomatik başlatma) | Stabil olduktan sonra |
+| 6 | Piper GPU (onnxruntime-gpu) | JetPack R36 aarch64 için pip'te yok — ertelenmiş |
+| 7 | systemd servis (otomatik başlatma) | Stabil olduktan sonra |
 
 ---
 
