@@ -157,55 +157,71 @@ def load_model_and_tokenizer(base_model: str):
     return model, tok
 
 
-# ── Dataset formatting ────────────────────────────────────────────────────────
+# ── Dataset formatting + completion-only label masking ────────────────────────
 
-def build_hf_dataset(records: list[dict], tokenizer):
+def _mask_completion_only(ids: list[int], asst_start: list[int], im_end: list[int]) -> list[int]:
+    """Return labels list: -100 for system/user tokens, real token IDs for assistant tokens."""
+    labels = [-100] * len(ids)
+    n_s, n_e = len(asst_start), len(im_end)
+    i = 0
+    while i <= len(ids) - n_s:
+        if ids[i:i + n_s] == asst_start:
+            j = i + n_s
+            while j < len(ids):
+                if ids[j:j + n_e] == im_end:
+                    for k in range(n_e):       # include <|im_end|> so model learns to stop
+                        if j + k < len(ids):
+                            labels[j + k] = ids[j + k]
+                    j += n_e
+                    break
+                labels[j] = ids[j]
+                j += 1
+            i = j
+        else:
+            i += 1
+    return labels
+
+
+def build_hf_dataset(records: list[dict], tokenizer, max_length: int):
+    """Tokenize records and apply completion-only label masking.
+
+    Returns a Dataset with input_ids / attention_mask / labels fields.
+    No TRL dependency — works directly with transformers.Trainer.
+    """
     from datasets import Dataset
 
-    texts = [
-        tokenizer.apply_chat_template(
-            r["messages"], tokenize=False, add_generation_prompt=False
+    asst_start = tokenizer.encode("<|im_start|>assistant\n", add_special_tokens=False)
+    im_end     = tokenizer.encode("<|im_end|>",              add_special_tokens=False)
+    log.info("Completion-only mask — asst_start_ids: %s  im_end_ids: %s", asst_start, im_end)
+
+    rows: list[dict] = []
+    n_empty = 0
+    for rec in records:
+        text = tokenizer.apply_chat_template(
+            rec["messages"], tokenize=False, add_generation_prompt=False
         )
-        for r in records
-    ]
-    return Dataset.from_dict({"text": texts})
+        enc = tokenizer(
+            text, truncation=True, max_length=max_length, padding=False, return_tensors=None
+        )
+        ids    = enc["input_ids"]
+        labels = _mask_completion_only(ids, asst_start, im_end)
+        if all(l == -100 for l in labels):
+            n_empty += 1
+        rows.append({"input_ids": ids, "attention_mask": enc["attention_mask"], "labels": labels})
+
+    if n_empty:
+        log.warning(
+            "%d/%d kayıtta asistan token'ı bulunamadı — asst_start IDs eşleşmiyor olabilir",
+            n_empty, len(records),
+        )
+    return Dataset.from_list(rows)
 
 
 # ── Training ──────────────────────────────────────────────────────────────────
 
-def _import_collator():
-    """DataCollatorForCompletionOnlyLM was moved between TRL versions.
-    TRL < 0.16 : trl.DataCollatorForCompletionOnlyLM
-    TRL >= 0.16 : trl.data_utils.DataCollatorForCompletionOnlyLM
-    """
-    for module_path, attr in [
-        ("trl", "DataCollatorForCompletionOnlyLM"),
-        ("trl.data_utils", "DataCollatorForCompletionOnlyLM"),
-        ("trl.trainer.utils", "DataCollatorForCompletionOnlyLM"),
-    ]:
-        try:
-            import importlib
-            mod = importlib.import_module(module_path)
-            cls = getattr(mod, attr, None)
-            if cls is not None:
-                return cls
-        except ImportError:
-            continue
-    raise ImportError(
-        "DataCollatorForCompletionOnlyLM bulunamadı. "
-        "TRL sürümünü kontrol edin: pip install 'trl>=0.12'"
-    )
-
-
 def run_training(args: argparse.Namespace, output_dir: Path) -> None:
     import torch
-    import trl
-    from trl import SFTTrainer
-
-    trl_ver = tuple(int(x) for x in trl.__version__.split(".")[:2])
-    log.info("TRL %s (parsed: %d.%d)", trl.__version__, *trl_ver)
-
-    DataCollatorForCompletionOnlyLM = _import_collator()
+    from transformers import DataCollatorForSeq2Seq, Trainer, TrainingArguments
 
     records = load_jsonl(Path(args.dataset))
     log.info("Dataset: %d records", len(records))
@@ -218,20 +234,21 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
 
     model, tok = load_model_and_tokenizer(args.base_model)
 
-    train_ds = build_hf_dataset(train_rec, tok)
-    valid_ds = build_hf_dataset(valid_rec, tok)
+    # Pre-tokenize with completion-only label masking — no TRL required
+    log.info("Dataset tokenize ediliyor (max_seq=%d)...", args.max_seq_len)
+    train_ds = build_hf_dataset(train_rec, tok, args.max_seq_len)
+    valid_ds  = build_hf_dataset(valid_rec, tok, args.max_seq_len)
 
-    # Completion-only collator: train only on assistant turns.
-    # Encodes "<|im_start|>assistant\n" as token IDs so the collator can locate
-    # assistant spans and mask everything before them with -100.
-    response_template_ids = tok.encode("<|im_start|>assistant\n", add_special_tokens=False)
-    log.info("Response template IDs (completion-only mask): %s", response_template_ids)
-    collator = DataCollatorForCompletionOnlyLM(response_template_ids, tokenizer=tok)
+    # DataCollatorForSeq2Seq pads input_ids and propagates -100 labels correctly
+    collator = DataCollatorForSeq2Seq(
+        tokenizer=tok,
+        padding=True,
+        label_pad_token_id=-100,
+        pad_to_multiple_of=8,
+    )
 
     use_bf16 = torch.cuda.is_available() and torch.cuda.is_bf16_supported()
-
-    # Common hyperparameters shared between TrainingArguments and SFTConfig
-    _hparams = dict(
+    training_args = TrainingArguments(
         output_dir=str(output_dir),
         num_train_epochs=args.epochs,
         per_device_train_batch_size=args.batch_size,
@@ -255,38 +272,16 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
         optim="paged_adamw_8bit",
         gradient_checkpointing=True,
         dataloader_pin_memory=False,
+        remove_unused_columns=False,
     )
 
-    # TRL >= 0.12: SFTConfig absorbs SFT-specific params; processing_class replaces tokenizer
-    if trl_ver >= (0, 12):
-        from trl import SFTConfig
-        sft_config = SFTConfig(
-            **_hparams,
-            max_seq_length=args.max_seq_len,
-            dataset_text_field="text",
-            packing=False,
-        )
-        trainer = SFTTrainer(
-            model=model,
-            train_dataset=train_ds,
-            eval_dataset=valid_ds,
-            processing_class=tok,
-            args=sft_config,
-            data_collator=collator,
-        )
-    else:
-        from transformers import TrainingArguments
-        trainer = SFTTrainer(
-            model=model,
-            train_dataset=train_ds,
-            eval_dataset=valid_ds,
-            tokenizer=tok,
-            args=TrainingArguments(**_hparams),
-            data_collator=collator,
-            max_seq_length=args.max_seq_len,
-            dataset_text_field="text",
-            packing=False,
-        )
+    trainer = Trainer(
+        model=model,
+        train_dataset=train_ds,
+        eval_dataset=valid_ds,
+        data_collator=collator,
+        args=training_args,
+    )
 
     log.info(
         "Eğitim başlıyor — epochs=%d  eff_batch=%d  lr=%.1e  max_seq=%d",
@@ -302,7 +297,6 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
     tok.save_pretrained(str(adapter_dir))
     log.info("Adapter kaydedildi: %s", adapter_dir)
 
-    # Extract system prompt from first record for smoke test
     system_content = records[0]["messages"][0]["content"]
     run_smoke_test(model, tok, system_content, output_dir)
 

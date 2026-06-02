@@ -1,11 +1,10 @@
 # Training-only dependencies — install in Colab or training venv only.
 # Do NOT install these locally (they pull in heavy CUDA deps).
 #
-# Colab quick install:
-#   !pip install -q -r robot_waiter_ai/training/requirements_train.txt
+# Colab: torch, transformers, peft, bitsandbytes zaten kurulu.
+# Sadece eksik olanları kur:
+#   !pip install -q datasets
 #
-# Or manually:
-#   !pip install -q trl==0.18.1 datasets==3.6.0
+# (trl artık gerekmiyor — training/train_wbot_v1.py transformers.Trainer kullanıyor)
 
-trl>=0.15.0
 datasets>=2.20.0
