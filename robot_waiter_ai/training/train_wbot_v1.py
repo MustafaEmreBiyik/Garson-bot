@@ -148,7 +148,7 @@ def load_model_and_tokenizer(base_model: str):
         quantization_config=make_bnb_config(),
         device_map="auto",
         trust_remote_code=True,
-        torch_dtype=torch.bfloat16,
+        dtype=torch.bfloat16,
     )
     model.config.use_cache = False
     model = prepare_model_for_kbit_training(model)
@@ -230,7 +230,7 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
         model=model,
         train_dataset=train_ds,
         eval_dataset=valid_ds,
-        tokenizer=tok,
+        processing_class=tok,
         args=training_args,
         data_collator=collator,
         max_seq_length=args.max_seq_len,
