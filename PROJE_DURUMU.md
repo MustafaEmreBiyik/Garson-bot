@@ -378,8 +378,38 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 **E05/diğer:** "Getireyim mi?" yasağı hâlâ ihlal ediliyor (fiyat ve öneri sorularında).
 
 ### Sonraki Eğitim: wbot_v2 Planı
-- Dataset: 970 → ~1500-2000 kayıt (tüm senaryolar kapsanacak)
-- Tüm veriyle sıfırdan eğitim (incremental değil)
+
+**Roadmap durumu (3 Haziran 2026):** Onaylandı — 12 kategori, +1250 kayıt, ~2220 toplam hedef.
+Detaylı yol haritası: `robot_waiter_ai/training/wbot_v2_dataset_roadmap_prompt.md`
+
+**wbot_finetune_v1 dataset analizi:**
+- 970 kayıt; 530 tek turlu, 440 çok turlu (4-10 turn) — multi-turn data zaten var
+- Dataset formatı: `{"messages": [...]}` — her kayıtta tam sistem promptu gömülü (uzun versiyon, ~2092 tok)
+- Menüde olmayan ürün (hamburger/pizza) yalnızca ~35 kayıt — kritik boşluk
+
+**Onaylanan 12 Kategori:**
+
+| # | Kategori | Öncelik | Mevcut | Eklenecek |
+|---|----------|---------|--------|-----------|
+| 1 | Genel Menü Soruları | 🔴 | ~95 | 100 |
+| 2 | Fiyat Karşılaştırma | 🟡 | ~100 | 80 |
+| 3 | Bileşik Siparişler | 🔴 | ~180 | 150 |
+| 4 | Çok Turlu Konuşmalar | 🔴 | 440 | 200 |
+| 5 | Diyet / İçerik (→ "bilgim yok") | 🟡 | ~100 | 100 |
+| 6 | Menüde Olmayan Ürün | 🔴 | ~35 | 120 |
+| 7 | Belirsiz / Kısmi Sorular | 🟡 | 0 | 80 |
+| 8 | Kapanış / Teşekkür | 🟢 | (karma) | 60 |
+| 9 | Restoran Hakkında Sorular | 🟡 | 0 | 80 |
+| 10 | Müşteri Modları | 🟢 | 0 | 80 |
+| 11 | Çoklu Tur Sipariş Değişikliği | 🔴 | ~60 | 120 |
+| 12 | Hesap Varyasyonları | 🟡 | (karma) | 80 |
+| **TOPLAM** | — | — | **970** | **+1250** |
+
+**Üretim yöntemi:** B — her kategori için üretim promptu manuel hazırlanacak, AI'a verilerek JSONL üretilecek.
+Üretim promptları: `robot_waiter_ai/training/wbot_v2_generation_prompts.md` (hazırlanacak)
+
+**Eğitim parametreleri:**
+- Tüm veriyle sıfırdan eğitim (incremental değil — catastrophic forgetting riski)
 - 2 epoch
 - Hedef: kısa promptla 14/14 (%100)
 
@@ -392,7 +422,7 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | wbot_v2 dataset genişletme (Codex ile senaryo üretimi) | 🟡 Orta | Planlama tamamlandı — üretim aşamasında |
+| 4 | wbot_v2 dataset üretim promptlarını hazırla (12 kategori) | 🟡 Orta | Roadmap onaylandı — `wbot_v2_generation_prompts.md` hazırlanacak |
 | 5 | wbot_v2 eğitimi (~1500-2000 kayıt, 2 epoch) | 🟡 Orta | Dataset hazır olunca |
 | 6 | Adapter → GGUF dönüşümü (Jetson deploy için) | 🟡 Orta | wbot_v2 eval geçtikten sonra |
 | 6 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ubuntu PC'de yapılacak (adaptör bekleniyor) |

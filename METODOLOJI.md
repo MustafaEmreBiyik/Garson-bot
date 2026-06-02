@@ -535,14 +535,11 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 - **Karşılama örnekleri kaldırıldı** — model artık örnek kopyalamıyor, gerçek varyasyon üretiyor (v4.8)
 - **Offline mod doğrulandı** — `HF_HUB_OFFLINE=1` + `local_files_only=True` ile ağ erişimi gerekmiyor; "Loading weights" mesajı sadece disk cache'den okuma progress bar'ıdır (v4.8)
 
-### Açık Sorunlar (Sonraki Sohbete Ertelendi)
+### Çözülen Sorunlar
 
-**W11 — Hesap tetikleyici hatası:** "Başka bir şey istemiyorum" gibi kapanış cümlelerinde bot bazen hesap istenmedeyken "Toplam X TL" söylüyor. `_is_bill_request()` veya farewell+totlam tetikleyicisi gereğinden geniş eşleşiyor olabilir; incelenmeli.
+**W11 — Hesap tetikleyici hatası (✅ v4.9):** "Başka bir şey istemiyorum" gibi kapanış cümlelerinde bot bazen hesap istenmedeyken "Toplam X TL" söylüyordu. `_is_bill_request()` gereğinden geniş eşleşiyordu. Çözüm: "BU DURUMDA TOPLAM SÖYLEME" + ara toplam ayrı kural olarak eklendi; farewell ve bill request tetikleyicileri birbirinden ayrıldı.
 
-**W12 — Robotik ton:** Sistem promptu kural listesi biçiminde yazılmış; model doğru kurallara uysa da cevaplar soğuk ve mekanik. Gerçek bir garsonla konuşulduğu hissi yok. Yaklaşım seçenekleri (sonraki sohbette tartışılacak):
-- Sistem promptuna "sen sıcakkanlı, güler yüzlü bir garsonsun" tarzı kişilik/ton yönergesi ekle
-- "Siparişinize eklemek istediğiniz var mı?" yerine "Başka bir şey alayım mı?" tarzı daha doğal kapanışlar
-- Az token'a sığarken bile doğal Türkçe konuşma örneklerini (few-shot) prompt'a ekle — fakat karşılama örneklerinde gördüğümüz ezberleme riskine dikkat
+**W12 — Robotik ton (✅ v4.9):** Sistem promptu kural listesi biçimindeydi; model doğru kurallara uysa da cevaplar soğuk ve mekanikti. Çözüm: persona paragrafı ("sıcakkanlı, güler yüzlü Türk garson"), "Harika seçim!" benzeri kısa olumlu kabul örnekleri, max_tokens 50→65 (ton için biraz daha yer), kalıp örnekleri kaldırıldı.
 
 ### Bekleyen ⏳
 | Görev | Engel |
@@ -551,4 +548,66 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | Uçtan uca tam demo | Ses adaptörüne bağlı |
 | Gürültülü ortam testi (restoran müziği + kalabalık) | Ses adaptörü gerekiyor |
 | Whisper medium kalite doğrulaması | Jetson 16 GB entegrasyonunda yapılacak (PC'de medium VRAM sığmıyor) |
-| VRAM kullanımı ölçümü (Ubuntu PC, Qwen3-4B) | Sonraki çalıştırmada ekrana basılacak |
+| wbot_v2 dataset üretimi + eğitim | Üretim promptları hazırlanıyor |
+
+---
+
+## 13. Fine-Tuning Metodolojisi (wbot_v1 / wbot_v2)
+
+### Neden Fine-Tune?
+
+Qwen3-4B base modeli Türkçe biliyor ancak restoran garson rolüne uygun davranışları (fiyat kuralları, "Getireyim mi?" yasağı, 2 cümle/25 kelime sınırı, "siz" formu) prompt mühendisliği ile kısmen öğrenebiliyor. Fine-tune bu kuralları model ağırlıklarına işleyerek:
+- Kısa sistem promptuyla yüksek doğruluk elde etmeyi sağlar (Jetson'da token bütçesi kritik)
+- Prompt'un görülmediği / yarı-görüldüğü edge case'lerde de tutarlı davranış üretir
+
+### Yöntem: QLoRA (Quantized LoRA)
+
+```
+Base model (Qwen3-4B, NF4 4-bit)
+    │
+    ├── Ağırlıklar dondurulur (gradient hesaplanmaz)
+    │
+    └── LoRA adapter (r=32, α=64) eklenir:
+            q_proj, k_proj, v_proj, o_proj    ← attention
+            gate_proj, up_proj, down_proj     ← FFN
+```
+
+- **NF4 4-bit quantization:** Model ~2.37 GB VRAM'de tutulur (Colab T4 16 GB'a sığar)
+- **LoRA r=32, α=64:** Eğitilebilir parametre sayısı toplam parametrelerin ~%1'i
+- **paged_adamw_8bit:** Optimizer state'leri CPU RAM'de tutulur, GPU baskısı düşer
+- **Completion-only SFT:** System + user tokenları -100 ile maskelenir, yalnızca assistant tokenlarında loss hesaplanır
+
+### Dataset Formatı
+
+Her kayıt tam bir konuşmayı içerir. Tek turlu ve çok turlu karışık:
+
+```json
+{"messages": [
+  {"role": "system", "content": "...~2092 tok uzun sistem promptu..."},
+  {"role": "user",      "content": "Merhaba"},
+  {"role": "assistant", "content": "Hoş geldiniz, çorba, ana yemek, tatlı ve içeceklerimizden ne arzu edersiniz?"},
+  {"role": "user",      "content": "Bir mercimek çorbası istiyorum."},
+  {"role": "assistant", "content": "Elbette, Mercimek Çorbası 85 TL. Başka bir şey alır mısınız?"}
+]}
+```
+
+- Fiyatlar rakamla: `85 TL` (kelimeyle değil)
+- Diyet/alerji soruları: `"Bu konuda bilgim yok, personelimize sorabilirsiniz."`
+- "Getireyim mi?" sipariş onayında kesinlikle yok
+- Tüm kayıtlarda aynı uzun sistem promptu — eğitim-inference tutarlılığı için
+
+### wbot_v1 Sonuçları
+
+| Parametre | Değer |
+|-----------|-------|
+| Eğitim verisi | 970 kayıt (A–H senaryoları) |
+| Süre | ~2.6 saat (Colab T4, 1 epoch) |
+| Train loss | 0.116 |
+| Eval loss | 0.1275 |
+| Eval (kısa prompt) | 12/14 (%85) — E02 ve E09 dataset boşluğu |
+| Eval (tam prompt) | 20/20 (%100) — hedef: kısa promptla da tam skor |
+
+### wbot_v2 Planı
+
+12 kategori, +1250 kayıt, ~2220 toplam. Yeniden sıfırdan eğitim (incremental değil).
+Detay: `PROJE_DURUMU.md` → Fine-Tuning Altyapısı → wbot_v2 Planı bölümü.
