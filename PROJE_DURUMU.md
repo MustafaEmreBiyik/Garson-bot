@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 1 Haziran 2026 | **Sürüm:** 4.8
+**Son güncelleme:** 1 Haziran 2026 | **Sürüm:** 4.9
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -232,7 +232,8 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | Prompt v4.1 | 16/16 (%100) | 0 | 1734 ms | — | — |
 | Prompt v4.1 (v4.3 kodu, 31 Mayıs 2026) | 16/16 (%100) | 0 | 1745 ms | 1219 ms | 2423 ms |
 | Prompt v4.6 (sampling açık — T=0.55, top_p=0.9, rep_pen=1.15) | 16/16 (%100) | 0 | 2330 ms | 1726 ms | 3050 ms |
-| **Prompt v4.8 (max_tok=50, top_k=40, rep_pen=1.2 — kısa yanıt)** | **16/16 (%100)** | **0** | **2195 ms** | — | — |
+| Prompt v4.8 (max_tok=50, top_k=40, rep_pen=1.2 — kısa yanıt) | 16/16 (%100) | 0 | 2195 ms | — | — |
+| **Prompt v4.9 (sıcak ton + W11 fix + max_tok=65 — 18 turn)** | **18/18 (%100)** | **0** | **2290 ms** | **1871 ms** | **3189 ms** |
 
 ---
 
@@ -250,8 +251,8 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | W8 | Her turda "hey garson" gerekliydi | Wake word algılandıktan sonra tek bir tur dinleyip wake word'e dönüyordu | Ana döngü tek-tur tasarlı | ✅ Düzeltildi (v4.7 — `CONVO_HOLD_S=10s` pencere; yanıt sonrası sessizlikte wake word'e dön) |
 | W9 | Öneri sorularında fiyat söyleniyordu | Müşteri "ne önerirsin" deyince robot fiyat dahil cevap veriyordu | Prompt'ta "isim ve fiyatıyla öner" kuralı vardı | ✅ Düzeltildi (v4.8 — TL kelimesi öneri/karşılama/açıklamada YASAK; sadece fiyat sorusu/sipariş onayı/hesapta geçer) |
 | W10 | Yanıt çok uzun (80 token aşımı) ve kalıplaşmış | Karşılamada ürün listesi sayıyordu, "Buyurun, menümüzde..." kalıbı | max_tokens=80 + prompt "1-2 cümle" + örnek cümleler ezberleniyordu | ✅ Düzeltildi (v4.8 — max_tokens=50, "1 cümle/20 kelime" zorunluluğu, karşılama örnekleri kaldırıldı, top_k=40 + rep_pen=1.2) |
-| W11 | Hesap sorulmadan toplam söylendi | Kullanıcı "Başka bir şey istemiyorum galiba" deyince bot "Toplam 85 TL" verdi | "Başka istemiyorum" + sipariş kapanışı tetikleyicisi yanlışlıkla hesap döngüsünü tetikliyor | ⏳ Sonraki sohbette düzeltilecek |
-| W12 | Robotik ve soğuk ton | Teknik doğru ama doğal, samimi Türkçe akışı yok; gerçek bir garsonla konuşulduğu hissi vermiyor | Sistem promptu kural listesi gibi yazılmış; kişilik/ton yönergesi eksik | ⏳ Sonraki sohbette kök neden analizi + çözüm |
+| W11 | Hesap sorulmadan toplam söylendi | Kullanıcı "Başka bir şey istemiyorum galiba" deyince bot "Toplam 85 TL" verdi | "Başka istemiyorum" + sipariş kapanışı tetikleyicisi yanlışlıkla hesap döngüsünü tetikliyor | ✅ Düzeltildi (v4.9 — "BU DURUMDA TOPLAM SÖYLEME" + ara toplam ayrı kural olarak eklendi) |
+| W12 | Robotik ve soğuk ton | Teknik doğru ama doğal, samimi Türkçe akışı yok; gerçek bir garsonla konuşulduğu hissi vermiyor | Sistem promptu kural listesi gibi yazılmış; kişilik/ton yönergesi eksik | ✅ Düzeltildi (v4.9 — persona paragrafı + "Harika seçim!" örnekleri + 2 cümle/25 kelime + max_tokens 50→65) |
 
 ---
 
@@ -340,8 +341,7 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
 | 4 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ubuntu PC'de yapılacak (adaptör bekleniyor) |
 | 5 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak (PC'de small kullanılıyor — VRAM dar) |
-| 6 | W11: Hesap sorulmadan toplam söylenmesi (kapanış tetikleyici hatası) | 🔴 Kritik | Sonraki sohbette fix |
-| 7 | W12: Doğal, samimi Türkçe ton (şu an robotik) | 🔴 Kritik | Sistem promptuna kişilik/ton katmanı + yanıt çeşitliliği arttırılacak — sonraki sohbette |
+| 6 | W11 + W12: Düzeltildi (v4.9) | ✅ Tamamlandı | — |
 
 ## Uzun Vade / Ertelenmiş
 

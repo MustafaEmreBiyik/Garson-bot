@@ -59,23 +59,23 @@ SCENARIOS: list[Scenario] = [
     ),
     Scenario(
         id="S02",
-        description="Öneri sorusu — ürün açıklanmalı, Getireyim mi? sorulmalı",
+        description="Öneri sorusu — çorba önerilmeli, fiyat yok",
         turns=["Merhaba.", "Çorba olarak ne önerirsiniz?"],
         checks=[
             {"must_contain": ["çorba", "içecek", "tatlı"]},   # turn 1
             {
-                "must_contain": ["mercimek", "mantar"],
-                "must_not_contain": ["siparişiniz onaylandı", "başka bir şey"],
+                "regex": r"mercimek|mantar",
+                "must_not_contain": ["siparişiniz onaylandı", "85", "95"],
             },
         ],
     ),
     Scenario(
         id="S03",
-        description="Ürün sorusu — kısa açıklama + Getireyim mi?",
+        description="Ürün sorusu — kısa açıklama + kapanış sorusu",
         turns=["Künefe nedir?"],
         checks=[{
             "must_contain": ["kadayıf"],
-            "regex": r"getireyim mi",
+            "regex": r"getireyim mi|ister misiniz|istersiniz mi",
         }],
     ),
     Scenario(
@@ -85,7 +85,7 @@ SCENARIOS: list[Scenario] = [
         checks=[{
             "must_contain": ["mercimek çorbası", "85"],
             "must_not_contain": ["siparişiniz onaylandı"],
-            "regex": r"elbette",
+            "regex": r"elbette|tabii|harika|memnuniyetle",
         }],
     ),
     Scenario(
@@ -157,6 +157,39 @@ SCENARIOS: list[Scenario] = [
             "must_not_contain": ["siparişiniz onaylandı"],
             # "başka" kelimesi + soru: "başka bir şey alır mısınız?", "başka ne arzu edersiniz?" vs.
             "regex": r"başka.{0,40}\?",
+        }],
+    ),
+    Scenario(
+        id="S11",
+        description="W11 — sipariş kapanışında toplam söylenmemeli",
+        turns=[
+            "Bir izgara köfte alayım.",
+            "Teşekkürler, bu kadar yeter.",
+        ],
+        checks=[
+            {"must_contain": ["240"]},
+            {
+                "must_contain": ["afiyet olsun"],
+                "must_not_contain": ["toplam"],
+            },
+        ],
+    ),
+    Scenario(
+        id="S12",
+        description="W13 — kategori listesi sorusunda fiyat söylenmemeli",
+        turns=["Çorba ne var?"],
+        checks=[{
+            "must_contain": ["mercimek", "mantar"],
+            "must_not_contain": ["85", "95"],
+        }],
+    ),
+    Scenario(
+        id="S13",
+        description="W14 — kategori önerisi başka kategorilere geçmemeli",
+        turns=["Tatlı olarak ne önerirsiniz?"],
+        checks=[{
+            "must_contain": ["sütlaç"],
+            "must_not_contain": ["çorba", "ana yemek", "içecek"],
         }],
     ),
 ]

@@ -1,0 +1,41 @@
+# wbot_v1_qlora.yaml — Qwen3-4B QLoRA fine-tuning config
+# Used as reference; train_wbot_v1.py uses these defaults by default.
+# Override via CLI args: --epochs 5 --lr 1e-4 etc.
+
+base_model: "Qwen/Qwen3-4B"
+dataset: "robot_waiter_ai/datasets/processed/wbot_finetune_v1.jsonl"
+output_dir: "artifacts/wbot_v1_qlora"
+
+# LoRA
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+# Training
+epochs: 3
+learning_rate: 2e-4
+batch_size: 1              # per-device; Colab T4 compat
+gradient_accumulation: 8   # effective batch = 8
+max_seq_length: 2400       # covers all dataset records (max measured: 2352 tokens)
+warmup_ratio: 0.05
+lr_scheduler: cosine
+eval_steps: 50
+save_steps: 100
+seed: 42
+valid_ratio: 0.10          # 10% → ~97 records
+
+# Notes:
+# - bnb: NF4 4-bit, double quant, bfloat16 compute
+# - completion-only training: system+user turns masked (-100 labels)
+# - response template: "<|im_start|>assistant\n"
+# - packing: False (variable-length conversations)
+# - optimizer: paged_adamw_8bit
+# - gradient_checkpointing: True
