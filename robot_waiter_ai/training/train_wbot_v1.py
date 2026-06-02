@@ -49,12 +49,40 @@ _EPOCHS = 3
 _LR = 2e-4
 _BATCH_SIZE = 1           # per-device; keep low for Colab T4
 _GRAD_ACCUM = 8           # effective batch = 8
-_MAX_SEQ_LEN = 2400       # covers all dataset records (max measured: 2352 tokens)
+_MAX_SEQ_LEN = 1024       # default with --short-prompt (~700 tok/record); use 2400 with --full-prompt
 _WARMUP_RATIO = 0.05
 _EVAL_STEPS = 50
 _SAVE_STEPS = 100
 _SEED = 42
 _VALID_RATIO = 0.10       # 10% → ~97 validation records
+
+# ── Short training system prompt ───────────────────────────────────────────────
+# Full system prompt: 2092 tokens/record → ~24h on T4 (session timeout).
+# Short prompt:       ~250 tokens/record → ~3-4h on T4.
+# Used by default; pass --full-prompt to use the original system message from the dataset.
+_TRAINING_SYSTEM_SHORT = """\
+Sen sıcakkanlı bir Türk restoran garsonu yapay zekasısın. Akıcı doğal Türkçe kullan. \
+Müşteriye DAİMA "siz" ile hitap et; "musun"/"ister misin" YASAK, "musunuz"/"ister misiniz" kullan.
+
+MENÜ:
+Çorba: Mercimek Çorbası 85 TL, Kremalı Mantar Çorbası 95 TL
+Ana Yemek: Izgara Köfte 240 TL, Et Döner 280 TL, Izgara Tavuk Salata 210 TL
+Tatlı: Fırın Sütlaç 100 TL, Künefe 140 TL
+İçecek: Yayık Ayran 45 TL, Limonata 70 TL, Şalgam Suyu 50 TL
+
+KURALLAR:
+- Yalnızca Türkçe. Madde işareti, kalın yazı, emoji yok. En fazla 2 cümle, 25 kelime.
+- Karşılama VEYA genel menü sorusu (kategori adı geçmiyorsa): "çorba, ana yemek, tatlı, içecek" \
+dördü TEK cümlede geçmeli. Max 15 kelime. Ürün adı sayma.
+- Kategori sorusu ("çorba ne var" gibi): YALNIZCA o kategorideki isimleri say, fiyat söyleme.
+- FİYAT: yalnızca (1) fiyat sorusu, (2) sipariş onayı, (3) hesap. Diğerinde "TL" geçmesin.
+- Öneri sorusu: kategori belirtildiyse YALNIZCA o kategoriden 1-2 ürün. Başka kategori ekleme.
+- Sipariş onayı: sıcak kabul + ürün adı + TL fiyat + "başka" sorusu. "Getireyim mi?" YASAK.
+- Birden fazla sipariş: her ürünü ayrı cümleyle onayla.
+- Hesap: "Toplam X TL." + afiyet/iyi günler kapanışı.
+- Menüde olmayan ürün: "Bu konuda bilgim yok, personelimize sorabilirsiniz."
+- "Siparişiniz onaylandı", "onaylanıyor", "kaydedildi" YASAK.\
+"""
 
 # Smoke prompts used after training to do a quick sanity check
 _SMOKE_PROMPTS = [
@@ -182,11 +210,19 @@ def _mask_completion_only(ids: list[int], asst_start: list[int], im_end: list[in
     return labels
 
 
-def build_hf_dataset(records: list[dict], tokenizer, max_length: int):
+def build_hf_dataset(
+    records: list[dict],
+    tokenizer,
+    max_length: int,
+    short_prompt: bool = True,
+):
     """Tokenize records and apply completion-only label masking.
 
     Returns a Dataset with input_ids / attention_mask / labels fields.
     No TRL dependency — works directly with transformers.Trainer.
+
+    short_prompt=True  : replace system message with _TRAINING_SYSTEM_SHORT (~250 tok)
+    short_prompt=False : use original system message from dataset (~2092 tok, slow)
     """
     from datasets import Dataset
 
@@ -197,8 +233,14 @@ def build_hf_dataset(records: list[dict], tokenizer, max_length: int):
     rows: list[dict] = []
     n_empty = 0
     for rec in records:
+        messages = rec["messages"]
+        if short_prompt:
+            # Replace the system turn with the compact training prompt
+            messages = [{"role": "system", "content": _TRAINING_SYSTEM_SHORT}] + [
+                m for m in messages if m["role"] != "system"
+            ]
         text = tokenizer.apply_chat_template(
-            rec["messages"], tokenize=False, add_generation_prompt=False
+            messages, tokenize=False, add_generation_prompt=False
         )
         enc = tokenizer(
             text, truncation=True, max_length=max_length, padding=False, return_tensors=None
@@ -235,9 +277,14 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
     model, tok = load_model_and_tokenizer(args.base_model)
 
     # Pre-tokenize with completion-only label masking — no TRL required
-    log.info("Dataset tokenize ediliyor (max_seq=%d)...", args.max_seq_len)
-    train_ds = build_hf_dataset(train_rec, tok, args.max_seq_len)
-    valid_ds  = build_hf_dataset(valid_rec, tok, args.max_seq_len)
+    short = not args.full_prompt
+    log.info(
+        "Dataset tokenize ediliyor (max_seq=%d, system_prompt=%s)...",
+        args.max_seq_len,
+        "orijinal (~2092 tok)" if not short else "kısa (~250 tok)",
+    )
+    train_ds = build_hf_dataset(train_rec, tok, args.max_seq_len, short_prompt=short)
+    valid_ds  = build_hf_dataset(valid_rec, tok, args.max_seq_len, short_prompt=short)
 
     # DataCollatorForSeq2Seq pads input_ids and propagates -100 labels correctly
     collator = DataCollatorForSeq2Seq(
@@ -361,6 +408,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--eval-steps", type=int, default=_EVAL_STEPS)
     p.add_argument("--save-steps", type=int, default=_SAVE_STEPS)
     p.add_argument("--seed", type=int, default=_SEED)
+    p.add_argument(
+        "--full-prompt",
+        action="store_true",
+        help="Orijinal 2092-token sistem promptunu kullan (varsayılan: kısa ~250-token prompt)",
+    )
     return p
 
 
