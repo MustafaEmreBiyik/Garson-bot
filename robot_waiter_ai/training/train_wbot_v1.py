@@ -173,10 +173,39 @@ def build_hf_dataset(records: list[dict], tokenizer):
 
 # ── Training ──────────────────────────────────────────────────────────────────
 
+def _import_collator():
+    """DataCollatorForCompletionOnlyLM was moved between TRL versions.
+    TRL < 0.16 : trl.DataCollatorForCompletionOnlyLM
+    TRL >= 0.16 : trl.data_utils.DataCollatorForCompletionOnlyLM
+    """
+    for module_path, attr in [
+        ("trl", "DataCollatorForCompletionOnlyLM"),
+        ("trl.data_utils", "DataCollatorForCompletionOnlyLM"),
+        ("trl.trainer.utils", "DataCollatorForCompletionOnlyLM"),
+    ]:
+        try:
+            import importlib
+            mod = importlib.import_module(module_path)
+            cls = getattr(mod, attr, None)
+            if cls is not None:
+                return cls
+        except ImportError:
+            continue
+    raise ImportError(
+        "DataCollatorForCompletionOnlyLM bulunamadı. "
+        "TRL sürümünü kontrol edin: pip install 'trl>=0.12'"
+    )
+
+
 def run_training(args: argparse.Namespace, output_dir: Path) -> None:
     import torch
-    from transformers import TrainingArguments
-    from trl import DataCollatorForCompletionOnlyLM, SFTTrainer
+    import trl
+    from trl import SFTTrainer
+
+    trl_ver = tuple(int(x) for x in trl.__version__.split(".")[:2])
+    log.info("TRL %s (parsed: %d.%d)", trl.__version__, *trl_ver)
+
+    DataCollatorForCompletionOnlyLM = _import_collator()
 
     records = load_jsonl(Path(args.dataset))
     log.info("Dataset: %d records", len(records))
@@ -200,7 +229,9 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
     collator = DataCollatorForCompletionOnlyLM(response_template_ids, tokenizer=tok)
 
     use_bf16 = torch.cuda.is_available() and torch.cuda.is_bf16_supported()
-    training_args = TrainingArguments(
+
+    # Common hyperparameters shared between TrainingArguments and SFTConfig
+    _hparams = dict(
         output_dir=str(output_dir),
         num_train_epochs=args.epochs,
         per_device_train_batch_size=args.batch_size,
@@ -226,17 +257,36 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
         dataloader_pin_memory=False,
     )
 
-    trainer = SFTTrainer(
-        model=model,
-        train_dataset=train_ds,
-        eval_dataset=valid_ds,
-        processing_class=tok,
-        args=training_args,
-        data_collator=collator,
-        max_seq_length=args.max_seq_len,
-        dataset_text_field="text",
-        packing=False,
-    )
+    # TRL >= 0.12: SFTConfig absorbs SFT-specific params; processing_class replaces tokenizer
+    if trl_ver >= (0, 12):
+        from trl import SFTConfig
+        sft_config = SFTConfig(
+            **_hparams,
+            max_seq_length=args.max_seq_len,
+            dataset_text_field="text",
+            packing=False,
+        )
+        trainer = SFTTrainer(
+            model=model,
+            train_dataset=train_ds,
+            eval_dataset=valid_ds,
+            processing_class=tok,
+            args=sft_config,
+            data_collator=collator,
+        )
+    else:
+        from transformers import TrainingArguments
+        trainer = SFTTrainer(
+            model=model,
+            train_dataset=train_ds,
+            eval_dataset=valid_ds,
+            tokenizer=tok,
+            args=TrainingArguments(**_hparams),
+            data_collator=collator,
+            max_seq_length=args.max_seq_len,
+            dataset_text_field="text",
+            packing=False,
+        )
 
     log.info(
         "Eğitim başlıyor — epochs=%d  eff_batch=%d  lr=%.1e  max_seq=%d",
