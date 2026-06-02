@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 1 Haziran 2026 | **Sürüm:** 4.9
+**Son güncelleme:** 2 Haziran 2026 | **Sürüm:** 5.0
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -233,7 +233,8 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | Prompt v4.1 (v4.3 kodu, 31 Mayıs 2026) | 16/16 (%100) | 0 | 1745 ms | 1219 ms | 2423 ms |
 | Prompt v4.6 (sampling açık — T=0.55, top_p=0.9, rep_pen=1.15) | 16/16 (%100) | 0 | 2330 ms | 1726 ms | 3050 ms |
 | Prompt v4.8 (max_tok=50, top_k=40, rep_pen=1.2 — kısa yanıt) | 16/16 (%100) | 0 | 2195 ms | — | — |
-| **Prompt v4.9 (sıcak ton + W11 fix + max_tok=65 — 18 turn)** | **18/18 (%100)** | **0** | **2290 ms** | **1871 ms** | **3189 ms** |
+| Prompt v4.9 (sıcak ton + W11 fix + max_tok=65 — 18 turn) | 18/18 (%100) | 0 | 2290 ms | 1871 ms | 3189 ms |
+| **Prompt v5.0 (W13 kategori fiyat yasağı + W14 öneri kural — 20 turn)** | **20/20 (%100)** | **0** | — | — | — |
 
 ---
 
@@ -253,6 +254,8 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | W10 | Yanıt çok uzun (80 token aşımı) ve kalıplaşmış | Karşılamada ürün listesi sayıyordu, "Buyurun, menümüzde..." kalıbı | max_tokens=80 + prompt "1-2 cümle" + örnek cümleler ezberleniyordu | ✅ Düzeltildi (v4.8 — max_tokens=50, "1 cümle/20 kelime" zorunluluğu, karşılama örnekleri kaldırıldı, top_k=40 + rep_pen=1.2) |
 | W11 | Hesap sorulmadan toplam söylendi | Kullanıcı "Başka bir şey istemiyorum galiba" deyince bot "Toplam 85 TL" verdi | "Başka istemiyorum" + sipariş kapanışı tetikleyicisi yanlışlıkla hesap döngüsünü tetikliyor | ✅ Düzeltildi (v4.9 — "BU DURUMDA TOPLAM SÖYLEME" + ara toplam ayrı kural olarak eklendi) |
 | W12 | Robotik ve soğuk ton | Teknik doğru ama doğal, samimi Türkçe akışı yok; gerçek bir garsonla konuşulduğu hissi vermiyor | Sistem promptu kural listesi gibi yazılmış; kişilik/ton yönergesi eksik | ✅ Düzeltildi (v4.9 — persona paragrafı + "Harika seçim!" örnekleri + 2 cümle/25 kelime + max_tokens 50→65) |
+| W13 | Kategori listesi sorusunda fiyat söylüyordu | "Çorba ne var?" sorusuna ürün adlarıyla birlikte "TL" fiyat da veriyordu | Kategori listesi için ayrı kural yoktu; genel fiyat yasağı bu durumu kapsamamıştı | ✅ Düzeltildi (v5.0 — kategori içeriği sorusuna özel kural: yalnızca ürün adı say, TL söyleme) |
+| W14 | Öneri sorusunda kategori dışına çıkıyordu | "Tavuk yesem ne yesem?" sorusuna tatlı ve çorba da öneriyordu | Öneri kuralı kategoriyi kısıtlamıyordu | ✅ Düzeltildi (v5.0 — öneri sorusunda kategori belirtildiyse YALNIZCA o kategoriden 1-2 ürün; başka kategori ekleme) |
 
 ---
 
@@ -332,6 +335,43 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 
 ---
 
+## Fine-Tuning Altyapısı (v5.0)
+
+### Dataset
+| Parametre | Değer |
+|-----------|-------|
+| Dosya | `robot_waiter_ai/datasets/processed/wbot_finetune_v1.jsonl` |
+| Kayıt sayısı | 970 (873 train / 97 valid, seed=42) |
+| Senaryo türleri | A–H: karşılama, sipariş, iptal, fiyat, öneri, alerji, konu dışı, hesap |
+| Format | `messages` (system/user/assistant), chat template uyumlu |
+
+### Eğitim Scripti (`robot_waiter_ai/training/train_wbot_v1.py`)
+| Parametre | Değer |
+|-----------|-------|
+| Base model | Qwen/Qwen3-4B |
+| Yöntem | QLoRA — NF4 4-bit + LoRA (r=32, α=64) |
+| Hedef modüller | q/k/v/o_proj + gate/up/down_proj (7 modül) |
+| Eğitim türü | Completion-only SFT (system+user tokenları -100 maskelenir) |
+| Sistem promptu (eğitim) | Kısa (~546 tok) — `--full-prompt` ile orijinal 2092 tok kullanılabilir |
+| Optimizer | paged_adamw_8bit (CPU RAM'de) |
+| Ortam | Google Colab T4 (16 GB) |
+
+### Eğitim Durumu (2 Haziran 2026)
+| Parametre | Değer |
+|-----------|-------|
+| Komut | `--batch-size 2 --epochs 1 --no-grad-checkpointing` |
+| Toplam adım | ~55 |
+| Tahmini süre | ~2 saat |
+| Durum | 🟡 Colab T4'te devam ediyor |
+| Checkpoint | `/content/drive/MyDrive/garsonbot_runs/wbot_v1_qlora` |
+
+### Eğitim Sonrası Adımlar (Henüz Yapılmadı)
+1. Smoke test çıktılarını incele (`smoke_generations.jsonl`)
+2. `eval_llm.py`'yi adapter ile çalıştır — 20/20 baseline ile karşılaştır
+3. Adapter kalitesi yeterliyse: base model + adapter merge → GGUF dönüşümü → Jetson deploy
+
+---
+
 ## Kısa Vadede Yapılacaklar
 
 | # | Görev | Öncelik | Durum |
@@ -339,9 +379,10 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ubuntu PC'de yapılacak (adaptör bekleniyor) |
-| 5 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak (PC'de small kullanılıyor — VRAM dar) |
-| 6 | W11 + W12: Düzeltildi (v4.9) | ✅ Tamamlandı | — |
+| 4 | Fine-tuned adapter değerlendirmesi (eval_llm.py + smoke test) | 🟡 Orta | Eğitim tamamlanınca |
+| 5 | Adapter → GGUF dönüşümü (Jetson deploy için) | 🟡 Orta | Eval geçtikten sonra |
+| 6 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ubuntu PC'de yapılacak (adaptör bekleniyor) |
+| 7 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak |
 
 ## Uzun Vade / Ertelenmiş
 
