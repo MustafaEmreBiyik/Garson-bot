@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 2 Haziran 2026 | **Sürüm:** 5.0
+**Son güncelleme:** 3 Haziran 2026 | **Sürüm:** 5.1
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -356,19 +356,32 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | Optimizer | paged_adamw_8bit (CPU RAM'de) |
 | Ortam | Google Colab T4 (16 GB) |
 
-### Eğitim Durumu (2 Haziran 2026)
+### wbot_v1 Eğitim Sonuçları (3 Haziran 2026)
 | Parametre | Değer |
 |-----------|-------|
 | Komut | `--batch-size 2 --epochs 1 --no-grad-checkpointing` |
-| Toplam adım | ~55 |
-| Tahmini süre | ~2 saat |
-| Durum | 🟡 Colab T4'te devam ediyor |
-| Checkpoint | `/content/drive/MyDrive/garsonbot_runs/wbot_v1_qlora` |
+| Toplam adım | 55 |
+| Süre | ~2.6 saat (Colab T4) |
+| Train loss (son) | 0.116 |
+| Eval loss | 0.1275 |
+| Durum | ✅ Tamamlandı |
+| Adapter | `/content/drive/MyDrive/garsonbot_runs/wbot_v1_qlora/adapter` |
 
-### Eğitim Sonrası Adımlar (Henüz Yapılmadı)
-1. Smoke test çıktılarını incele (`smoke_generations.jsonl`)
-2. `eval_llm.py`'yi adapter ile çalıştır — 20/20 baseline ile karşılaştır
-3. Adapter kalitesi yeterliyse: base model + adapter merge → GGUF dönüşümü → Jetson deploy
+### wbot_v1 Eval Sonuçları (scripts/eval_adapter.py)
+| Prompt | Skor | Notlar |
+|--------|------|--------|
+| KISA (~546 tok) | 12/14 (%85) | E02 ve E09 dataset boşluğu |
+| TAM (baseline) | 20/20 (%100) | Hedef: kısa promptla da %100 |
+
+**E02 başarısızlığı:** "Ne yiyebilirim?" genel menü sorusu varyantları dataset'te eksik → model öneri sorusu gibi davranıyor.
+**E09 başarısızlığı:** "Hamburger var mı?" menü dışı ürün tutarsız → sampling'e bağlı (smoke test'te doğru, eval'da "Anlayamadım").
+**E05/diğer:** "Getireyim mi?" yasağı hâlâ ihlal ediliyor (fiyat ve öneri sorularında).
+
+### Sonraki Eğitim: wbot_v2 Planı
+- Dataset: 970 → ~1500-2000 kayıt (tüm senaryolar kapsanacak)
+- Tüm veriyle sıfırdan eğitim (incremental değil)
+- 2 epoch
+- Hedef: kısa promptla 14/14 (%100)
 
 ---
 
@@ -379,8 +392,9 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | Fine-tuned adapter değerlendirmesi (eval_llm.py + smoke test) | 🟡 Orta | Eğitim tamamlanınca |
-| 5 | Adapter → GGUF dönüşümü (Jetson deploy için) | 🟡 Orta | Eval geçtikten sonra |
+| 4 | wbot_v2 dataset genişletme (Codex ile senaryo üretimi) | 🟡 Orta | Planlama tamamlandı — üretim aşamasında |
+| 5 | wbot_v2 eğitimi (~1500-2000 kayıt, 2 epoch) | 🟡 Orta | Dataset hazır olunca |
+| 6 | Adapter → GGUF dönüşümü (Jetson deploy için) | 🟡 Orta | wbot_v2 eval geçtikten sonra |
 | 6 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ubuntu PC'de yapılacak (adaptör bekleniyor) |
 | 7 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak |
 
