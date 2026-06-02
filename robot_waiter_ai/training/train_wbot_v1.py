@@ -368,6 +368,12 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
 def run_smoke_test(model, tok, system_content: str, output_dir: Path) -> None:
     import torch
 
+    # Switch model to inference mode: re-enable KV cache and disable grad checkpointing
+    model.config.use_cache = True
+    if hasattr(model, "gradient_checkpointing_disable"):
+        model.gradient_checkpointing_disable()
+    model.eval()
+
     log.info("Smoke test başlıyor (%d prompts)...", len(_SMOKE_PROMPTS))
     results = []
 
