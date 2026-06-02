@@ -342,7 +342,14 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
         args.lr,
         args.max_seq_len,
     )
-    trainer.train()
+    resume = getattr(args, "resume", None)
+    if resume:
+        from pathlib import Path as _P
+        resume_path = _P(resume) if resume != "auto" else True
+        log.info("Checkpoint'ten devam ediliyor: %s", resume)
+        trainer.train(resume_from_checkpoint=resume_path)
+    else:
+        trainer.train()
 
     adapter_dir = output_dir / "adapter"
     model.save_pretrained(str(adapter_dir))
@@ -417,6 +424,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--full-prompt",
         action="store_true",
         help="Orijinal 2092-token sistem promptunu kullan (varsayılan: kısa ~250-token prompt)",
+    )
+    p.add_argument(
+        "--resume",
+        default=None,
+        metavar="CHECKPOINT_DIR|auto",
+        help="Checkpoint'ten devam et. Dizin yolu ver ya da 'auto' (output-dir'deki son checkpoint).",
     )
     return p
 
