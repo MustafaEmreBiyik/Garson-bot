@@ -295,6 +295,11 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
     )
 
     use_bf16 = torch.cuda.is_available() and torch.cuda.is_bf16_supported()
+    # save_steps must be a multiple of eval_steps for load_best_model_at_end=True
+    import math
+    eff_save_steps = args.eval_steps * max(1, math.ceil(args.save_steps / args.eval_steps))
+    if eff_save_steps != args.save_steps:
+        logging.info("save_steps %d → %d (snapped to eval_steps multiple)", args.save_steps, eff_save_steps)
     training_args = TrainingArguments(
         output_dir=str(output_dir),
         num_train_epochs=args.epochs,
@@ -309,7 +314,7 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
         eval_strategy="steps",
         eval_steps=args.eval_steps,
         save_strategy="steps",
-        save_steps=args.save_steps,
+        save_steps=eff_save_steps,
         save_total_limit=3,
         load_best_model_at_end=True,
         metric_for_best_model="eval_loss",
