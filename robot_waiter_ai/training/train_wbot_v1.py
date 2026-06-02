@@ -322,7 +322,7 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
         report_to="none",
         seed=args.seed,
         optim="paged_adamw_8bit",
-        gradient_checkpointing=True,
+        gradient_checkpointing=not args.no_grad_checkpointing,
         dataloader_pin_memory=False,
         remove_unused_columns=False,
     )
@@ -424,6 +424,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--full-prompt",
         action="store_true",
         help="Orijinal 2092-token sistem promptunu kullan (varsayılan: kısa ~250-token prompt)",
+    )
+    p.add_argument(
+        "--no-grad-checkpointing",
+        action="store_true",
+        help="Gradient checkpointing'i kapat (~%%30 hızlı, daha fazla VRAM kullanır).",
     )
     p.add_argument(
         "--resume",
