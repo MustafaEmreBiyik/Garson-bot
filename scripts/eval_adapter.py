@@ -60,7 +60,13 @@ _SMOKE_PROMPTS = [
 # Her senaryo: (id, açıklama, kullanıcı mesajı, kontrol fonksiyonu)
 # Kontrol: f(yanıt: str) -> bool
 def _contains(*words):
+    """Tüm kelimeler yanıtta olmalı."""
     def check(r): return all(w.lower() in r.lower() for w in words)
+    return check
+
+def _any_of(*words):
+    """En az bir kelime yanıtta olmalı."""
+    def check(r): return any(w.lower() in r.lower() for w in words)
     return check
 
 def _not_contains(*words):
@@ -93,7 +99,7 @@ _EVAL_CASES = [
     # Sipariş iptali
     ("E04", "Sipariş iptali onayı",
      "Aslında çorbayı istemiyorum, iptal edin.",
-     _contains("çıkar", "iptal", "kaldır", "tamam", "anladım")),
+     _any_of("çıkar", "iptal", "kaldır", "tamam", "anladım")),
 
     # Fiyat sorusu — TL söylemeli
     ("E05", "Fiyat sorusu",
@@ -112,7 +118,7 @@ _EVAL_CASES = [
     ("E07", "Öneri — kategori dışına çıkma yasağı (W14)",
      "Tatlı olarak ne önerirsiniz?",
      _both(
-         _contains("sütlaç", "künefe"),
+         _any_of("sütlaç", "künefe"),
          _not_contains("köfte", "döner", "çorba", "ayran"),
      )),
 
@@ -145,6 +151,14 @@ _EVAL_CASES = [
     ("E13", "Markdown yasağı",
      "Menünüzde neler var?",
      _not_contains("**", "##", "- ", "* ")),
+
+    # "Getireyim mi?" yasağı — sipariş onayında kullanılmamalı
+    ("E14", '"Getireyim mi?" yasağı',
+     "Bir ayran alabilir miyim?",
+     _both(
+         _contains("45"),
+         _not_contains("getireyim mi"),
+     )),
 ]
 
 
