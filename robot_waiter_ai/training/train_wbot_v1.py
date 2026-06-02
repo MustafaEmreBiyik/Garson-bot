@@ -159,7 +159,7 @@ def make_lora_config():
     )
 
 
-def load_model_and_tokenizer(base_model: str):
+def load_model_and_tokenizer(base_model: str, use_gradient_checkpointing: bool = True):
     import torch
     from transformers import AutoModelForCausalLM, AutoTokenizer
     from peft import get_peft_model, prepare_model_for_kbit_training
@@ -179,7 +179,9 @@ def load_model_and_tokenizer(base_model: str):
         dtype=torch.bfloat16,
     )
     model.config.use_cache = False
-    model = prepare_model_for_kbit_training(model)
+    model = prepare_model_for_kbit_training(
+        model, use_gradient_checkpointing=use_gradient_checkpointing
+    )
     model = get_peft_model(model, make_lora_config())
     model.print_trainable_parameters()
     return model, tok
@@ -274,7 +276,8 @@ def run_training(args: argparse.Namespace, output_dir: Path) -> None:
 
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    model, tok = load_model_and_tokenizer(args.base_model)
+    use_gc = not args.no_grad_checkpointing
+    model, tok = load_model_and_tokenizer(args.base_model, use_gradient_checkpointing=use_gc)
 
     # Pre-tokenize with completion-only label masking — no TRL required
     short = not args.full_prompt
