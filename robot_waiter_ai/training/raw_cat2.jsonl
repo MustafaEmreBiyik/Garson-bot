@@ -1,0 +1,80 @@
+{"messages": [{"role":"user","content":"En ucuz çorba hangisi?"}, {"role":"assistant","content":"Mercimek Çorbası 85 TL ile en hesaplısıdır. Başka bir arzunuz var mı?"}]}
+{"messages": [{"role":"user","content":"Menüdeki en pahalı yemek nedir?"}, {"role":"assistant","content":"En pahalı yemeğimiz 280 TL ile Et Döner. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"100 liram var ne yiyebilirim?"}, {"role":"assistant","content":"100 TL'ye Fırın Sütlaç veya Kremalı Mantar Çorbası alabilirsiniz. Ne dersiniz?"}]}
+{"messages": [{"role":"user","content":"300 liraya karın doyar mı ne önerirsiniz?"}, {"role":"assistant","content":"280 TL'ye Et Döner veya 240 TL'ye Izgara Köfte alabilirsiniz. Hangisini seçersiniz?"}]}
+{"messages": [{"role":"user","content":"En hesaplı tatlınız nedir?"}, {"role":"assistant","content":"Fırın Sütlaç 100 TL. Tatlı olarak arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"İçeceklerden en ucuzu ne kadar?"}, {"role":"assistant","content":"Yayık Ayran 45 TL. İçecek olarak onu ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"50 TL bütçem var ne içebilirim?"}, {"role":"assistant","content":"50 TL'ye Şalgam Suyu veya 45 TL'ye Yayık Ayranımız var. Hangisini istersiniz?"}]}
+{"messages": [{"role":"user","content":"En pahalı tatlı kaç para?"}, {"role":"assistant","content":"Künefe 140 TL. Tatlı olarak onu arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"250 liram var ana yemek olarak ne alabilirim?"}, {"role":"assistant","content":"240 TL'ye Izgara Köfte veya 210 TL'ye Izgara Tavuk Salata verebilirim. Ne alırdınız?"}]}
+{"messages": [{"role":"user","content":"Çorba fiyatları nasıl?"}, {"role":"assistant","content":"Mercimek Çorbası 85 TL, Kremalı Mantar Çorbası 95 TL. Hangisini istersiniz?"}]}
+{"messages": [{"role":"user","content":"150 TL ile tatlı yiyebilir miyim?"}, {"role":"assistant","content":"Evet, 140 TL'ye Künefe veya 100 TL'ye Fırın Sütlaç alabilirsiniz. Hangisi olsun?"}]}
+{"messages": [{"role":"user","content":"Hangi çorba daha hesaplı?"}, {"role":"assistant","content":"Mercimek Çorbası 85 TL ile daha hesaplı. Denemek ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Et döner mi köfte mi daha pahalı?"}, {"role":"assistant","content":"Et Döner 280 TL, Izgara Köfte 240 TL. Hangisinden alırdınız?"}]}
+{"messages": [{"role":"user","content":"En ucuz ana yemeğiniz hangisi?"}, {"role":"assistant","content":"Izgara Tavuk Salata 210 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Menüdeki en uygun içecek ne?"}, {"role":"assistant","content":"Yayık Ayran 45 TL. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"200 TL'ye kadar ne yiyebilirim?"}, {"role":"assistant","content":"95 TL'ye Mantar Çorbası ve 100 TL'ye Sütlaç tercih edebilirsiniz. Nasıl olur?"}]}
+{"messages": [{"role":"user","content":"400 liram var en iyi menüyü kur."}, {"role":"assistant","content":"240 TL'ye Izgara Köfte, 100 TL'ye Sütlaç ve 45 TL'ye Ayran alabilirsiniz. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Tatlı fiyatlarınız nelerdir?"}, {"role":"assistant","content":"Fırın Sütlaç 100 TL, Künefe 140 TL. Ne tercih edersiniz?"}]}
+{"messages": [{"role":"user","content":"Limonata mı şalgam mı daha pahalı?"}, {"role":"assistant","content":"Limonata 70 TL, Şalgam Suyu 50 TL. Hangisini istersiniz?"}]}
+{"messages": [{"role":"user","content":"Sadece 85 liram var yemek var mı?"}, {"role":"assistant","content":"Tam 85 TL'ye Mercimek Çorbası alabilirsiniz. İkram edelim mi?"}]}
+{"messages": [{"role":"user","content":"100 TL bütçem var."}, {"role":"assistant","content":"100 TL'ye Fırın Sütlaç alabilirsiniz. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"En uygun fiyatlı ürününüz hangisi?"}, {"role":"assistant","content":"En uygun ürünümüz 45 TL ile Yayık Ayran. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"En pahalı çorbanız nedir?"}, {"role":"assistant","content":"Kremalı Mantar Çorbası 95 TL. Denemek ister misiniz?"}]}
+{"messages": [{"role":"user","content":"200 liraya karnım doyar mı?"}, {"role":"assistant","content":"95 TL'ye Kremalı Mantar Çorbası ve 100 TL'ye Fırın Sütlaç alabilirsiniz. Uygun mudur?"}]}
+{"messages": [{"role":"user","content":"Hangi tatlı daha uygun fiyatlı?"}, {"role":"assistant","content":"Fırın Sütlaç 100 TL ile daha uygun. Ne dersiniz?"}]}
+{"messages": [{"role":"user","content":"Ana yemeklerin fiyatı nedir?"}, {"role":"assistant","content":"Köfte 240 TL, Döner 280 TL, Tavuk Salata 210 TL. Hangisini istersiniz?"}]}
+{"messages": [{"role":"user","content":"500 TL bütçem var iki kişi doyar mıyız?"}, {"role":"assistant","content":"İki Izgara Köfte toplam 480 TL tutar. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"İçecek fiyatları ne kadar?"}, {"role":"assistant","content":"Ayran 45 TL, Şalgam 50 TL, Limonata 70 TL. Ne içerdiniz?"}]}
+{"messages": [{"role":"user","content":"140 liraya tatlı yiyebilir miyim?"}, {"role":"assistant","content":"Tam 140 TL'ye Künefe yiyebilirsiniz. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"70 liram var ne içebilirim?"}, {"role":"assistant","content":"70 TL'ye Limonata alabilirsiniz. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"En hesaplı salatanız hangisi?"}, {"role":"assistant","content":"Izgara Tavuk Salata 210 TL. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"En pahalı içecek ne kadar?"}, {"role":"assistant","content":"En pahalı içeceğimiz 70 TL ile Limonata. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"350 liram var köfte ve sütlaç alabilir miyim?"}, {"role":"assistant","content":"Köfte 240 TL, Sütlaç 100 TL, toplam 340 TL tutar. Onaylıyor musunuz?"}]}
+{"messages": [{"role":"user","content":"45 liraya ayran var mı?"}, {"role":"assistant","content":"Evet, Yayık Ayran tam 45 TL. Siparişinize ekleyeyim mi?"}]}
+{"messages": [{"role":"user","content":"Dönerin fiyatı köfteden ne kadar fazla?"}, {"role":"assistant","content":"Döner 280 TL, Köfte 240 TL. Hangisini arzu edersiniz?"}]}
+{"messages": [{"role":"user","content":"150 liraya menüde neler var?"}, {"role":"assistant","content":"140 TL'ye Künefe veya 95 TL'ye Mantar Çorbası ve 45 TL'ye Ayran alabilirsiniz. Ne dersiniz?"}]}
+{"messages": [{"role":"user","content":"Hangi çorbanın fiyatı daha yüksek?"}, {"role":"assistant","content":"Kremalı Mantar Çorbası 95 TL ile daha yüksek. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"210 TL'ye tavuk salata mı var?"}, {"role":"assistant","content":"Evet, Izgara Tavuk Salata 210 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"90 TL bütçem var, ne alabilirim?"}, {"role":"assistant","content":"85 TL'ye Mercimek Çorbası alabilirsiniz. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"En ucuz ne yiyebilirim?"}, {"role":"assistant","content":"Yiyecek olarak en uygun 85 TL'ye Mercimek Çorbası var. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Tatlı ve içecek için 200 liram var."}, {"role":"assistant","content":"140 TL'ye Künefe ve 45 TL'ye Ayran alabilirsiniz. Nasıl olur?"}]}
+{"messages": [{"role":"user","content":"280 liraya ne veriyorsunuz?"}, {"role":"assistant","content":"Tam 280 TL'ye Et Döner yiyebilirsiniz. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Çorbalar ne kadar?"}, {"role":"assistant","content":"Mercimek Çorbası 85 TL, Kremalı Mantar Çorbası 95 TL. Hangisinden alırdınız?"}]}
+{"messages": [{"role":"user","content":"60 liram var, şalgam yeter mi?"}, {"role":"assistant","content":"Evet, Şalgam Suyu 50 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Künefe mi pahalı sütlaç mı?"}, {"role":"assistant","content":"Künefe 140 TL, Sütlaç 100 TL. Hangisini tercih edersiniz?"}]}
+{"messages": [{"role":"user","content":"120 liraya çorba ve ayran gelir mi?"}, {"role":"assistant","content":"Hayır, Mercimek Çorbası 85 TL, Ayran 45 TL toplam 130 TL tutar. Onaylar mısınız?"}]}
+{"messages": [{"role":"user","content":"Hangi yemek bütçemi yormaz?"}, {"role":"assistant","content":"85 TL'ye Mercimek Çorbası en uygun seçeneğimizdir. Ne dersiniz?"}]}
+{"messages": [{"role":"user","content":"En pahalı şey nedir?"}, {"role":"assistant","content":"Menümüzde en pahalı ürün 280 TL ile Et Döner. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Dönerin porsiyonu ne kadar?"}, {"role":"assistant","content":"Et Döner 280 TL. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Tatlılardan hangisi cebime uygun?"}, {"role":"assistant","content":"Fırın Sütlaç 100 TL ile en uygun tatlımız. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Köfte kaç lira?"}, {"role":"assistant","content":"Izgara Köfte 240 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"70 TL ile sadece limonata mı alınır?"}, {"role":"assistant","content":"70 TL'ye Limonata veya 50 TL'ye Şalgam Suyu alabilirsiniz. Hangisini seçersiniz?"}]}
+{"messages": [{"role":"user","content":"Mantar çorbası kaç para?"}, {"role":"assistant","content":"Kremalı Mantar Çorbası 95 TL. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"En yüksek fiyatlı içeceğiniz nedir?"}, {"role":"assistant","content":"En yüksek fiyatlı içeceğimiz 70 TL ile Limonata. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Salatanın fiyatı etten ucuz mu?"}, {"role":"assistant","content":"Evet, Izgara Tavuk Salata 210 TL, Et Döner ise 280 TL. Ne tercih edersiniz?"}]}
+{"messages": [{"role":"user","content":"Bütçem 240 TL, köfte alabilir miyim?"}, {"role":"assistant","content":"Evet, Izgara Köfte tam 240 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Sütlaç ne kadar?"}, {"role":"assistant","content":"Fırın Sütlaç 100 TL. Tatlı olarak ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Ayranın fiyatı nedir?"}, {"role":"assistant","content":"Yayık Ayran 45 TL. Siparişinize ekleyeyim mi?"}]}
+{"messages": [{"role":"user","content":"Künefenin porsiyonu kaç TL?"}, {"role":"assistant","content":"Künefe 140 TL. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Şalgam suyu ne kadar?"}, {"role":"assistant","content":"Şalgam Suyu 50 TL. Yanına yiyecek de ister misiniz?"}]}
+{"messages": [{"role":"user","content":"300 liraya döner ve ayran gelir mi?"}, {"role":"assistant","content":"Hayır, Et Döner 280 TL, Ayran 45 TL toplam 325 TL tutar. Onaylıyor musunuz?"}]}
+{"messages": [{"role":"user","content":"En ucuz ne içebilirim?"}, {"role":"assistant","content":"En ucuz 45 TL'ye Yayık Ayran içebilirsiniz. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Limonatanın fiyatı nedir?"}, {"role":"assistant","content":"Limonata 70 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Mercimek çorbası kaç TL?"}, {"role":"assistant","content":"Mercimek Çorbası 85 TL. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Tavuk salata kaç para?"}, {"role":"assistant","content":"Izgara Tavuk Salata 210 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Hangi ürün 100 TL?"}, {"role":"assistant","content":"Tam 100 TL'ye Fırın Sütlaç yiyebilirsiniz. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Bütçem 150 TL, künefe yiyebilir miyim?"}, {"role":"assistant","content":"Evet, Künefe 140 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Menüdeki fiyatlar nasıl?"}, {"role":"assistant","content":"Çorbalar 85-95 TL, ana yemekler 210-280 TL arasıdır. Ne arzu edersiniz?"}]}
+{"messages": [{"role":"user","content":"Köftenin fiyatı dönerden ne kadar az?"}, {"role":"assistant","content":"Köfte 240 TL, Döner 280 TL. Hangisini arzu edersiniz?"}]}
+{"messages": [{"role":"user","content":"400 liraya tatlı ve döner yenir mi?"}, {"role":"assistant","content":"Hayır, Et Döner 280 TL, Künefe 140 TL toplam 420 TL tutar. Onaylar mısınız?"}]}
+{"messages": [{"role":"user","content":"En ucuz tatlı hangisi?"}, {"role":"assistant","content":"Fırın Sütlaç 100 TL ile en ucuz tatlımızdır. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"110 liraya ne verebilirsiniz?"}, {"role":"assistant","content":"100 TL'ye Fırın Sütlaç veya 95 TL'ye Mantar Çorbası alabilirsiniz. Ne dersiniz?"}]}
+{"messages": [{"role":"user","content":"Et döner fiyatı nedir?"}, {"role":"assistant","content":"Et Döner 280 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Sütlaç ve ayran toplam ne kadar?"}, {"role":"assistant","content":"Sütlaç 100 TL, Ayran 45 TL toplam 145 TL tutar. Onaylıyor musunuz?"}]}
+{"messages": [{"role":"user","content":"250 liraya köfte alınır mı?"}, {"role":"assistant","content":"Evet, Izgara Köfte 240 TL. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"80 liraya limonata içilir mi?"}, {"role":"assistant","content":"Evet, Limonata 70 TL. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Mantar çorbasının fiyatı yüksek mi?"}, {"role":"assistant","content":"Kremalı Mantar Çorbası 95 TL'dir. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"130 liraya künefe gelir mi?"}, {"role":"assistant","content":"Hayır, Künefe 140 TL. Farklı bir tatlı düşünür müsünüz?"}]}
+{"messages": [{"role":"user","content":"Hangi ana yemek en pahalı?"}, {"role":"assistant","content":"En pahalı ana yemeğimiz 280 TL ile Et Döner. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"300 TL bütçem var, ne tavsiye edersin?"}, {"role":"assistant","content":"280 TL'ye Et Döner alabilirsiniz. Arzu eder misiniz?"}]}

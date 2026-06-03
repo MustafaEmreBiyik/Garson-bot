@@ -1,0 +1,100 @@
+{"messages": [{"role":"user","content":"Mercimek çorbası vegan mı?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Çorbalarınız vegan mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Menüde etsiz vegan yemek var mı?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Vegan seçenekleriniz neler?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tatlılarınızdan hangisi vegan?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Ayran vegan mı acaba?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Künefede hayvansal ürün var mı, vegan mı?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Köfte vegan alternatifle yapılır mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Döner vegan mıdır?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Vegan menünüz var mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Hangi çorba vegan öğün sayılır?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Fırın sütlaç vegan mı?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Salata vegan mı?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"İçecekleriniz vegan onayı taşıyor mu?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Mantar çorbası vejetaryen mi?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Vejetaryen yemeği var mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Vejetaryen köfte yapıyor musunuz?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tavuk salatası etsiz istense vejetaryen olur mu?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Sütlacı vejetaryenler tüketebilir mi?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Vejetaryen bir menü seçeneği var mı?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Et döner yerine vejetaryen alternatif var mı?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tatlılardaki peynir mayası vejetaryen mi?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tüm tatlılar vejetaryen midir?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Diğer yemekler vejetaryen mi?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Hangi çorba tam vejetaryen?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Vejetaryen bir porsiyon hazırlar mısınız?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"İçeceklerin hepsi vejetaryen dostu mu?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Bana vejetaryen bir öğün sunar mısınız?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Çorbalarda glüten bulunuyor mu?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Izgara köfte glütensiz mi hazırlanıyor?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Dönerin sosunda glüten var mı?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Ekmekleriniz glütensiz mi?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Künefenin kadayıfında glüten var mı?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Sütlaç glüten içerir mi?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Izgara tavuk salata glütensiz mi?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Glütensiz yemek seçeneğiniz var mı?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Glütensiz bir tatlı var mıdır?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"İçeceklerde glüten riski var mı?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Ayran tamamen glütensiz mi?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Limonatada glüten bulunur mu?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Çölyak hastaları için yemekler uygun mu?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Menünüzde özel glütensiz bölüm var mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yemeklerde kıvam artırıcı un var mı?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Sütlaç laktozsuz sütle mi yapılıyor?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Kremalı mantar çorbasında laktoz var mı?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Ayran laktozsuz mu?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Künefe peynirinde laktoz oranı nedir?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Izgara köfte harcında süt var mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Mercimek çorbasında tereyağı var mı?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Laktozsuz herhangi bir içecek var mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Laktozsuz tatlı olarak ne alabilirim?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Laktoz alerjisi olan biri ne yiyebilir?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Sütsüz bir tatlı mevcut mu?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Salatadaki soslarda laktoz var mı?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yemekler genel olarak laktozsuz mu?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Et dönerde süt terbiyesi kullanılıyor mu?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Izgara tavuk salatada peynir var mı?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tamamen laktozsuz bir menü oluşturulur mu?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Izgara köfte tahmini kaç kalori?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Et dönerin kalori değeri nedir?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Fırın sütlaç kalorisi yüksek mi?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Bir porsiyon künefe kaç kalori?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Mantar çorbası kalori olarak nasıldır?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Mercimek çorbasının kalorisini biliyor musunuz?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tavuk salata diyete uygun mu kaç kalori?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Limonata çok kalorili mi?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Şalgam suyunun kalorisi ne kadar?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Düşük kalorili bir yemek önerebilir misiniz?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yayık ayran kaç kalori?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tatlılarınızın besin ve kalori değerleri nedir?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Standart porsiyonlarınız ortalama kaç kalori?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Diyet yemek seçenekleriniz var mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Etler helal kesim mi?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Köfte etiniz helal mi?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Dönerde kullanılan et helal mi?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tavuk ürünleriniz helal kesim midir?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"İçecekleriniz helal gıda standartlarına uygun mu?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Restoranınızın helal sertifikası var mı?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Ürünleriniz tamamen helal gıda mı?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tüm yemekleriniz helal mi?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Kullanılan jelatin helal mi?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yemeklerde domuz yağı veya katkısı var mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Gıda katkı maddeleriniz helal mi?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tüm et ürünleri helal menşeli mi?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Özel bir helal menünüz var mı?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Helal kesim sertifikanızı görebilir miyim?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Fıstık alerjim var, künefe yiyebilir miyim?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Çorbalarınızda fındık veya kuruyemiş var mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yumurta alerjisi olanlar köfte yiyebilir mi?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Köfte harcında yumurta bulunuyor mu?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Sütlaç üzerinde ceviz veya fındık kırıntısı var mı?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Salata sosunda susam kullanılıyor mu?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Soya alerjim var ne yiyebilirim?"}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yemeklerinizde soya yağı var mı?"}, {"role":"assistant","content":"Özür dilerim, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tatlandırıcılarda msg var mı?"}, {"role":"assistant","content":"Affedersiniz, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Tavalarda deniz ürünü bulaşığı kalıyor mu?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Mutfakta çapraz bulaşma fıstık izi olur mu?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Alerjen tablonuz menüde var mı?"}, {"role":"assistant","content":"Maalesef, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"İçeceklerinizde kimyasal koruyucu alerjen var mı?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Gıdalarınızda alerji yapacak renklendirici var mı?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}

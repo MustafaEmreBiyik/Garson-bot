@@ -1,0 +1,80 @@
+{"messages": [{"role":"user","content":"Çabuk bir şeyler ver işe yetişmem lazım."}, {"role":"assistant","content":"Hızlıca Mercimek Çorbası hazırlayabiliriz. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Vaktim yok hızlı ne var?"}, {"role":"assistant","content":"Çok hızlı olarak Fırın Sütlaç veya Yayık Ayran sunabiliriz. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Otobüs kalkacak hemen yiyeceğim ne var?"}, {"role":"assistant","content":"Hemen Izgara Tavuk Salata verebilirim. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Acelem var çorba hemen gelir mi?"}, {"role":"assistant","content":"Evet, Mercimek Çorbası hemen hazır olur. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Çok açım bana en hızlı ne yaparsın?"}, {"role":"assistant","content":"En hızlı Kremalı Mantar Çorbası servis edebiliriz. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Hemen bir şeyler atıştırmam lazım çabuk olsun."}, {"role":"assistant","content":"Hızlıca Izgara Köfte hazırlayabiliriz. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Koşturuyorum hiç vaktim yok hızlıca ne yiyebilirim?"}, {"role":"assistant","content":"Hemen hazır Fırın Sütlaç verebilirim. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Çok acelem var bir şeyler ver."}, {"role":"assistant","content":"Hızlı servis için Izgara Tavuk Salata öneririm. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Bekleyecek vaktim yok çabuk ne çıkar?"}, {"role":"assistant","content":"En hızlı Mercimek Çorbası sunabiliriz. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Hadi çabuk olun açlıktan ölüyorum."}, {"role":"assistant","content":"Hemen Kremalı Mantar Çorbası servis edebiliriz. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Hızlı servis yapın işim gücüm var."}, {"role":"assistant","content":"Hızlıca Izgara Köfte hazırlarız efendim. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Vaktim dar çabuk bir menü say."}, {"role":"assistant","content":"En hızlı Mercimek Çorbası ve Ayran verebiliriz. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Acil bir şeyler yiyip kalkmam lazım."}, {"role":"assistant","content":"Hemen Izgara Tavuk Salata sunabiliriz. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Hızlıca karnımı doyurmam lazım ne önerirsin?"}, {"role":"assistant","content":"Mercimek Çorbası çok hızlı hazırdır. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Bekletmeyin beni çabuk ne vereceksiniz verin."}, {"role":"assistant","content":"Hızlıca Kremalı Mantar Çorbası verebiliriz. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Acelem var çok hızlı ne yiyebilirim?"}, {"role":"assistant","content":"Hemen hazır Fırın Sütlaç verebiliriz. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Hadi ustam çabuk bir döner sar."}, {"role":"assistant","content":"Hızlıca Et Döner hazırlıyoruz. Başka bir arzunuz var mı?"}]}
+{"messages": [{"role":"user","content":"Çok bekleyemem hemen içecek bir şeyler ver."}, {"role":"assistant","content":"Hemen soğuk bir Limonata verebiliriz. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Uçağım kaçacak çabuk ne varsa söyle."}, {"role":"assistant","content":"Hızlıca Mercimek Çorbası servis edebilirim. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Acil durum hemen bir şeyler yemem lazım."}, {"role":"assistant","content":"Hızlıca Izgara Tavuk Salata sunabilirim. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Bilmiyorum ki ne alsam."}, {"role":"assistant","content":"En sevilen yemeğimiz Izgara Köfte. Denemek ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Karar veremedim çorba mı içsem."}, {"role":"assistant","content":"Kremalı Mantar Çorbası çok lezzetlidir. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"İkisinden biri ama hangisi bilemedim."}, {"role":"assistant","content":"Et Döner en çok tercih edilenlerden. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Et döner mi köfte mi alsam çok kararsızım."}, {"role":"assistant","content":"Izgara Köfte çok lezzetlidir, denemek ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Tatlı olarak ne seçsem karar veremiyorum."}, {"role":"assistant","content":"Künefe sıcak ve tatmin edicidir. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Ne yesem bilemiyorum bana yardımcı ol."}, {"role":"assistant","content":"Mercimek Çorbası çok güzeldir, başlangıç için ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Çok çeşit var aklım karıştı ne önerirsin?"}, {"role":"assistant","content":"Izgara Tavuk Salata oldukça hafiftir. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Sütlaç mı yesem künefe mi kararsız kaldım."}, {"role":"assistant","content":"Hafif bir tatlı isterseniz Fırın Sütlaç önerebilirim. Ne dersiniz?"}]}
+{"messages": [{"role":"user","content":"İçeceklerden hangisini alsam acaba bilemedim."}, {"role":"assistant","content":"Serinletici bir Limonata alabilirsiniz. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Canım hem çorba hem et çekiyor karar veremedim."}, {"role":"assistant","content":"Mercimek Çorbası ve Izgara Köfte güzel bir menü olur. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Karnım çok aç ama ne yesem bilmiyorum."}, {"role":"assistant","content":"Doyurucu bir Et Döner tercih edebilirsiniz. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Tavuk mu et mi yesem kararsızım."}, {"role":"assistant","content":"Et Döner çok sevilen bir yemeğimizdir. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Hiçbir fikrim yok ne tavsiye edersen onu yiyeceğim."}, {"role":"assistant","content":"Size lezzetli bir Izgara Köfte hazırlayalım. Ne dersiniz?"}]}
+{"messages": [{"role":"user","content":"Menüye bakıyorum ama karar veremiyorum."}, {"role":"assistant","content":"Hafif bir başlangıç için Kremalı Mantar Çorbası ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Ne içeceğime bir türlü karar veremedim."}, {"role":"assistant","content":"Yemeklerin yanına Yayık Ayran çok yakışır. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Aç mıyım değil miyim emin olamadım çorba mı alsam."}, {"role":"assistant","content":"Sıcacık bir Mercimek Çorbası iyi gelebilir. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Tatlıya yer kalsın istiyorum ama karar veremedim."}, {"role":"assistant","content":"Hafif bir Izgara Tavuk Salata tercih edebilirsiniz. Ne dersiniz?"}]}
+{"messages": [{"role":"user","content":"Bilemiyorum bugün canım ne istiyor."}, {"role":"assistant","content":"Size harika bir Fırın Sütlaç getirebilirim. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Seçmekte çok zorlanıyorum yardımcı olun."}, {"role":"assistant","content":"En çok tercih edilen Izgara Köfte yemeğimizi deneyebilirsiniz. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Şalgam mı ayran mı içsem bilemedim."}, {"role":"assistant","content":"Yayık Ayran yemeklerle çok uyumludur. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Bugün çok yoruldum, sabahtan beri koşturuyorum, bari güzel bir şeyler yiyeyim..."}, {"role":"assistant","content":"Yorgunluğunuza Et Döner çok iyi gelir. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Hava çok sıcak, otobüste bunaldım, şöyle serin bir şeyler içmek istiyorum, ne önerirsin?"}, {"role":"assistant","content":"Limonata tam size göre, serinletir. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Akşam arkadaşlarla buluşacağız ama ben şimdiden çok acıktım, hafif bir şeyler mi yesem bilemedim."}, {"role":"assistant","content":"Izgara Tavuk Salata çok hafiftir. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Sabah erkenden kalktım hiç kahvaltı yapmadım, şimdi canım sulu bir şeyler istiyor sıcak sıcak..."}, {"role":"assistant","content":"Sıcacık bir Mercimek Çorbası çok iyi gelir. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Bütün gün toplantıdaydım başım çatlıyor tatlı bir şeyler yiyip kendime gelmem lazım ne var?"}, {"role":"assistant","content":"Künefe size enerji verecektir. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Dün akşam çok ağır yemişim bugün midem rahatsız bana hafif dokunmayacak bir çorba verebilir misin?"}, {"role":"assistant","content":"Kremalı Mantar Çorbası midenizi rahatlatır. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Ben çok et seviyorum aslında ama bugün biraz daha salata türü şeyler yemek istiyorum ne dersin?"}, {"role":"assistant","content":"Izgara Tavuk Salata tam size göre. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Çocukları okuldan alacağım daha çok vaktim var oturup uzun uzun keyif yapabileceğim bir yemek arıyorum."}, {"role":"assistant","content":"Izgara Köfte keyifle yiyebileceğiniz bir yemektir. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Hava buz gibi dışarıda dondum, içimi ısıtacak güzel bir şeyler istiyorum ne tavsiye edersin?"}, {"role":"assistant","content":"Sıcak bir Mercimek Çorbası içinizi ısıtır. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Uzun zamandır memlekete gitmiyorum canım şöyle yöresel ev yemeği gibi bir şeyler çekti ne yapalım?"}, {"role":"assistant","content":"Fırın Sütlaç tam ev yapımı lezzetindedir. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Bugün spordan çıktım protein ağırlıklı beslenmem lazım kasları besleyecek sağlam bir et menüsü kuralım."}, {"role":"assistant","content":"Bol proteinli Et Döner tam size göre. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Annemlerle buluşacağım öncesinde bir şeyler atıştırayım diyorum çok ağır olmasın akşam da yiyeceğiz."}, {"role":"assistant","content":"Hafif bir Kremalı Mantar Çorbası alabilirsiniz. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Ben şalgamı çok severim ama acılı mı acısız mı mideme dokunur mu bilemiyorum ne dersin?"}, {"role":"assistant","content":"Şalgam Suyu oldukça lezzetlidir, denemek ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Uzun yoldan geldim direksiyon sallamaktan kollarım uyuştu bana şöyle kendine getirecek bir ayran ver."}, {"role":"assistant","content":"Serin Yayık Ayran çok iyi gelecektir. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Gündüz çok telaşlıydı hiçbir şey yiyemedim gözüm döndü açlıktan en doyurucu ne varsa getir."}, {"role":"assistant","content":"Et Döner çok doyurucudur. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Bugün canım çok sıkkın moralim bozuk tatlı krizine girdim bana bol şerbetli ne verebilirsin?"}, {"role":"assistant","content":"Sıcak Künefe moralinize çok iyi gelir. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Ben diyetteyim ama bugün kendimi ödüllendireceğim ufak bir kaçamak yapmak istiyorum sence ne yesem?"}, {"role":"assistant","content":"Fırın Sütlaç harika bir kaçamak olur. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Eşimle kavga ettim canım hiç yemek istemiyor ama midem de kazınıyor şöyle hafif bir salata yap."}, {"role":"assistant","content":"Izgara Tavuk Salata sizi yormaz. Arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Yaşlandık artık her şey dokunuyor bana hafif yağsız güzel bir çorba verebilir misin evladım?"}, {"role":"assistant","content":"Mercimek Çorbası midenize çok iyi gelecektir. İster misiniz?"}]}
+{"messages": [{"role":"user","content":"Çok susadım dışarısı yanıyor adeta, asitli bir şey istemiyorum doğal serin ne içebilirim sence?"}, {"role":"assistant","content":"Doğal ve serinletici Limonata verebiliriz. Siparişinize ekleyelim mi?"}]}
+{"messages": [{"role":"user","content":"Köfte."}, {"role":"assistant","content":"Izgara Köfte 240 TL. Başka bir arzunuz var mı?"}]}
+{"messages": [{"role":"user","content":"Sadece döner."}, {"role":"assistant","content":"Et Döner 280 TL. Yanında bir şey ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Ayran ver."}, {"role":"assistant","content":"Yayık Ayran 45 TL. Başka bir isteğiniz var mı?"}]}
+{"messages": [{"role":"user","content":"Künefe."}, {"role":"assistant","content":"Künefe 140 TL. Üzerine içecek alır mısınız?"}]}
+{"messages": [{"role":"user","content":"İki çorba."}, {"role":"assistant","content":"Mercimek Çorbası mı Kremalı Mantar Çorbası mı tercih edersiniz?"}]}
+{"messages": [{"role":"user","content":"Tavuk salata."}, {"role":"assistant","content":"Izgara Tavuk Salata 210 TL. Başka bir arzunuz var mı?"}]}
+{"messages": [{"role":"user","content":"Mercimek."}, {"role":"assistant","content":"Mercimek Çorbası 85 TL. Yanına başka bir şey ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Şalgam."}, {"role":"assistant","content":"Şalgam Suyu 50 TL. Başka bir isteğiniz var mı?"}]}
+{"messages": [{"role":"user","content":"Limonata olsun."}, {"role":"assistant","content":"Limonata 70 TL. Eklemek istediğiniz bir şey var mı?"}]}
+{"messages": [{"role":"user","content":"Sütlaç."}, {"role":"assistant","content":"Fırın Sütlaç 100 TL. Başka bir arzunuz var mı?"}]}
+{"messages": [{"role":"user","content":"Mantar çorbası."}, {"role":"assistant","content":"Kremalı Mantar Çorbası 95 TL. İlaveten bir şey ister misiniz?"}]}
+{"messages": [{"role":"user","content":"Bir köfte."}, {"role":"assistant","content":"Izgara Köfte 240 TL. Başka bir arzunuz var mı?"}]}
+{"messages": [{"role":"user","content":"Döner."}, {"role":"assistant","content":"Et Döner 280 TL. Yanına içecek arzu eder misiniz?"}]}
+{"messages": [{"role":"user","content":"Ayran."}, {"role":"assistant","content":"Yayık Ayran 45 TL. Başka bir isteğiniz var mı?"}]}
+{"messages": [{"role":"user","content":"Salata."}, {"role":"assistant","content":"Izgara Tavuk Salata 210 TL. Ekleyeceğimiz bir şey var mı?"}]}
+{"messages": [{"role":"user","content":"İki künefe."}, {"role":"assistant","content":"İki Künefe 280 TL. Başka bir arzunuz var mı?"}]}
+{"messages": [{"role":"user","content":"Limonata."}, {"role":"assistant","content":"Limonata 70 TL. Başka bir isteğiniz var mı?"}]}
+{"messages": [{"role":"user","content":"Çorba."}, {"role":"assistant","content":"Mercimek veya Kremalı Mantar Çorbası seçeneklerinden hangisini alırdınız?"}]}
+{"messages": [{"role":"user","content":"Şalgam ver."}, {"role":"assistant","content":"Şalgam Suyu 50 TL. Başka bir arzunuz var mı?"}]}
+{"messages": [{"role":"user","content":"Tamam döner."}, {"role":"assistant","content":"Et Döner 280 TL. Eklemek istediğiniz bir şey var mı?"}]}

@@ -1,0 +1,80 @@
+{"messages": [{"role":"user","content":"Hesap lütfen."}, {"role":"assistant","content":"Hemen hesabınızı getiriyorum efendim."}]}
+{"messages": [{"role":"user","content":"Hesabı alabilir miyiz?"}, {"role":"assistant","content":"Birazdan hesabınızı masanıza getiriyorum."}]}
+{"messages": [{"role":"user","content":"Hesabı getirir misin?"}, {"role":"assistant","content":"Şimdi hesabınızı çıkartıyorum, lütfen bekleyin."}]}
+{"messages": [{"role":"user","content":"Biz kalkıyoruz hesabı alalım."}, {"role":"assistant","content":"Kasiyerimiz hesabınızla hemen ilgilenecek efendim."}]}
+{"messages": [{"role":"user","content":"Hesabımız ne kadardı ödeyelim."}, {"role":"assistant","content":"Hesabınızı hemen masanıza yönlendiriyorum."}]}
+{"messages": [{"role":"user","content":"Borcumuz ne kadar hesabı getir."}, {"role":"assistant","content":"Birazdan hesabınızı getiriyorum efendim."}]}
+{"messages": [{"role":"user","content":"Hesabı isteyecektik."}, {"role":"assistant","content":"Hemen hesabınızı hazırlatıp getiriyorum."}]}
+{"messages": [{"role":"user","content":"Ödeme yapacağız hesap lütfen."}, {"role":"assistant","content":"Kasiyerimiz hemen sizinle ilgilenecek."}]}
+{"messages": [{"role":"user","content":"Hesap alabilir miyim?"}, {"role":"assistant","content":"Şimdi hesabınızı çıkartıp masanıza getiriyorum."}]}
+{"messages": [{"role":"user","content":"Hesaba bakar mısın?"}, {"role":"assistant","content":"Birazdan hesabınızı iletiyorum efendim."}]}
+{"messages": [{"role":"user","content":"Bize hesabı gönderir misin?"}, {"role":"assistant","content":"Hemen hesabınızı masanıza gönderiyorum."}]}
+{"messages": [{"role":"user","content":"Hesap alalım biz."}, {"role":"assistant","content":"Kasiyerimiz ödemeniz için hemen ilgilenecek."}]}
+{"messages": [{"role":"user","content":"Kalkacağız hesap lütfen."}, {"role":"assistant","content":"Hesabınızı hemen çıkartıyorum, birazdan getireceğim."}]}
+{"messages": [{"role":"user","content":"Hesabı ödemek istiyoruz."}, {"role":"assistant","content":"Hemen hesabınızı masanıza yönlendiriyorum."}]}
+{"messages": [{"role":"user","content":"Bize hesabı çıkarır mısın?"}, {"role":"assistant","content":"Birazdan hesabınızı çıkartıp getiriyorum efendim."}]}
+{"messages": [{"role":"user","content":"Hesap rica edebilir miyim?"}, {"role":"assistant","content":"Hemen hesabınızı hazırlıyorum."}]}
+{"messages": [{"role":"user","content":"Ödemeyi alabilir misiniz?"}, {"role":"assistant","content":"Kasiyerimiz hemen yanınıza gelecektir efendim."}]}
+{"messages": [{"role":"user","content":"Hesap keser misin?"}, {"role":"assistant","content":"Şimdi hesabınızı masanıza yönlendiriyorum."}]}
+{"messages": [{"role":"user","content":"Bizi hesaplar mısın?"}, {"role":"assistant","content":"Hemen hesabınızı çıkartıp masanıza gönderiyorum."}]}
+{"messages": [{"role":"user","content":"Adisyonu getirir misin?"}, {"role":"assistant","content":"Birazdan adisyonunuzu masanıza getiriyorum efendim."}]}
+{"messages": [{"role":"user","content":"Ne kadar hesap ödeyeceğiz?"}, {"role":"assistant","content":"Toplam tutarı hemen kasanızdan kontrol edip iletiyorum."}]}
+{"messages": [{"role":"user","content":"Şimdiye kadar ne kadar yedik?"}, {"role":"assistant","content":"Hesabınızın detayını hemen masanıza getiriyorum."}]}
+{"messages": [{"role":"user","content":"Toplam ne kadar tuttu?"}, {"role":"assistant","content":"Net tutarı öğrenmek için hesabınızı hemen çıkartıyorum."}]}
+{"messages": [{"role":"user","content":"Ne kadar borçlandık acaba?"}, {"role":"assistant","content":"Hesabınızın toplam tutarını hemen kontrol edip getiriyorum."}]}
+{"messages": [{"role":"user","content":"Hesap ne kadar çıktı?"}, {"role":"assistant","content":"Detaylı hesabınızı hemen çıkartıp masanıza iletiyorum."}]}
+{"messages": [{"role":"user","content":"Toplam borcumuzu öğrenebilir miyim?"}, {"role":"assistant","content":"Toplam tutarı hemen kasadan teyit edip size bildiriyorum."}]}
+{"messages": [{"role":"user","content":"Bizim hesap ne kadar yapıyor?"}, {"role":"assistant","content":"Hesabınızın net tutarını hemen masanıza getiriyorum."}]}
+{"messages": [{"role":"user","content":"Acaba kaç para yedik?"}, {"role":"assistant","content":"Hesap özetinizi hemen çıkartıp size iletiyorum efendim."}]}
+{"messages": [{"role":"user","content":"Toplamda ne kadarlık yemişiz?"}, {"role":"assistant","content":"Toplam tutarı öğrenmeniz için hesabınızı hemen yönlendiriyorum."}]}
+{"messages": [{"role":"user","content":"Ne kadar ödeyeceğiz hesap belli mi?"}, {"role":"assistant","content":"Hesabınızın tutarını kasadan kontrol edip hemen getiriyorum."}]}
+{"messages": [{"role":"user","content":"Fatura ne kadar çıkmış?"}, {"role":"assistant","content":"Net tutarı hemen masanıza çıkartıyorum efendim."}]}
+{"messages": [{"role":"user","content":"Tutar ne kadar oldu?"}, {"role":"assistant","content":"Toplam hesabınızı hemen hazırlatıp masanıza iletiyorum."}]}
+{"messages": [{"role":"user","content":"Borcumuz ne kadardır?"}, {"role":"assistant","content":"Hesabınızın detaylarını birazdan masanıza getiriyorum."}]}
+{"messages": [{"role":"user","content":"Bizim ne kadar tuttu öğrenebilir miyiz?"}, {"role":"assistant","content":"Toplam tutarı hemen kasadan çıkartıp getiriyorum."}]}
+{"messages": [{"role":"user","content":"Acaba ne kadar hesap geldi?"}, {"role":"assistant","content":"Hemen hesabınızın detaylı dökümünü çıkartıp size iletiyorum."}]}
+{"messages": [{"role":"user","content":"Şu ana kadar kaç liralık yedik?"}, {"role":"assistant","content":"Tutarınızı hemen kasadan öğrenip masanıza getiriyorum efendim."}]}
+{"messages": [{"role":"user","content":"Toplam hesabımızı söyler misiniz?"}, {"role":"assistant","content":"Detaylı toplam hesabınızı hemen masanıza yönlendiriyorum."}]}
+{"messages": [{"role":"user","content":"Hesap tahmini ne kadardır?"}, {"role":"assistant","content":"Net hesabı hemen kasanızdan çıkartıp iletiyorum efendim."}]}
+{"messages": [{"role":"user","content":"Bakalım ne kadar yemişiz?"}, {"role":"assistant","content":"Hemen hesabınızın tutarını çıkartıp size ulaştırıyorum."}]}
+{"messages": [{"role":"user","content":"Kaç para ödeyeceğiz toplam?"}, {"role":"assistant","content":"Hesabınızın toplamını birazdan çıkartıp masanıza iletiyorum."}]}
+{"messages": [{"role":"user","content":"Fiş alabilir miyiz?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Fatura kesilir mi?"}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"E-fatura var mı?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Şirkete fatura istiyorum."}, {"role":"assistant","content":"Anlıyorum, ancak bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yemek fişi verecek misiniz?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Fatura kesebiliyor musunuz?"}, {"role":"assistant","content":"Bu konuda bilgim yok, fatura için personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Bize bir fiş verir misiniz?"}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, kasiyer personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Kurumsal fatura alabilir miyiz?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Adıma fatura keser misiniz?"}, {"role":"assistant","content":"Bu konuda bilgim yok, lütfen personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yazar kasa fişi lazım bana."}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Fiş kesiyor musunuz?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Gider pusulası veya fatura var mı?"}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Fişleri ayrı ayrı verebilir misiniz?"}, {"role":"assistant","content":"Bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"E-arşiv fatura kesebilir misiniz?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Fatura kestirmek istiyoruz."}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Bana bir fiş ayarlar mısınız?"}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, lütfen personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Faturayı şirkete keseceğiz."}, {"role":"assistant","content":"Bu konuda bilgim yok, detaylar için personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yemekten sonra fiş alacağım."}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"KDV dahil fatura alabilir miyim?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Ayrı fatura almamız mümkün mü?"}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"İki ayrı hesap olur mu?"}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Hesabı bölebilir miyiz?"}, {"role":"assistant","content":"Bu konuda bilgim yok, lütfen personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Her kişi ayrı ödesek?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Hesapları ayırabilir misiniz?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Alman usulü yapsak hesabı?"}, {"role":"assistant","content":"Anlıyorum ancak bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Biz hesapları ayrı ayrı ödeyeceğiz."}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, kasiyer personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"İkiye bölelim mi hesabı?"}, {"role":"assistant","content":"Bu konuda bilgim yok, ödeme detaylarını personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Parça parça ödeyebilir miyiz?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Herkes kendi yediğini ödesin."}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Hesabı dörde bölebilir misiniz?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Ayrı ayrı ödeme alıyor musunuz?"}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Çorbaları ayrı, etleri ayrı ödeyelim."}, {"role":"assistant","content":"Bu konuda bilgim yok, lütfen personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Hesabı bölüşeceğiz nasıl yaparız?"}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Ayrı kartlardan çekebilir misiniz?"}, {"role":"assistant","content":"Anlıyorum, ancak bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Hesap ayrımı yapıyor musunuz?"}, {"role":"assistant","content":"Ne yazık ki bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Bizim hesapları ikiye böler misin?"}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Kendi hesabımı ayrı ödeyeceğim."}, {"role":"assistant","content":"Bu konuda bilgim yok, ödeme işlemleri için personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Yemekleri ayrı tatlıları ayrı ödeyelim."}, {"role":"assistant","content":"Kusura bakmayın, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Üçe bölelim bu hesabı."}, {"role":"assistant","content":"Anlıyorum, bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
+{"messages": [{"role":"user","content":"Ayrı ayrı hesap kesebilir misiniz?"}, {"role":"assistant","content":"Maalesef bu konuda bilgim yok, personelimize sorabilirsiniz."}]}
