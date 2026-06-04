@@ -86,6 +86,10 @@ _TAG_TR = {
 }
 
 
+def _build_system_prompt() -> str:
+    return _SYSTEM_TEMPLATE.format(menu_text=_build_menu_text())
+
+
 def _build_menu_text() -> str:
     if not _MENU_YAML.exists():
         return "(Menü dosyası bulunamadı)"
