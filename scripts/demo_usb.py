@@ -507,7 +507,7 @@ async def _detect_wakeword(ww_model, tts_active: threading.Event,
 # Ana döngü
 # ---------------------------------------------------------------------------
 
-async def run_demo() -> None:
+async def run_demo(adapter_dir: str | None = None) -> None:
     print("\n" + "=" * 55)
     print("  W-BOT USB Demo  —  Ctrl+C ile çıkış")
     print("=" * 55)
@@ -532,8 +532,9 @@ async def run_demo() -> None:
         print("LLM: llama-cpp-python GGUF (GPU)")
     except Exception as _llama_err:
         from robot_waiter_ai.inference.qwen3_backend import Qwen3Backend
-        llm = Qwen3Backend()
-        print("LLM: Qwen3Backend (transformers)")
+        llm = Qwen3Backend(adapter_dir=adapter_dir)
+        label = f"Qwen3Backend + adapter ({adapter_dir})" if adapter_dir else "Qwen3Backend (base)"
+        print(f"LLM: {label}")
 
     # KV cache ön ısıtma — sistem promptu (944 tok) bir kez işle, tüm müşterilerin
     # ilk turn'ü soğuk start yerine sıcak (~0.25s TTFT) olsun.
@@ -751,8 +752,13 @@ async def run_demo() -> None:
 
 
 def main() -> None:
+    import argparse
+    parser = argparse.ArgumentParser(description="W-BOT demo")
+    parser.add_argument("--adapter-dir", default=None,
+                        help="LoRA adapter dizini (opsiyonel, sadece PC/transformers backend)")
+    args = parser.parse_args()
     try:
-        asyncio.run(run_demo())
+        asyncio.run(run_demo(adapter_dir=args.adapter_dir))
     except KeyboardInterrupt:
         print("\n\nDemo sonlandırıldı.")
 

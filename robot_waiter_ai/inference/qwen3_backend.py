@@ -120,8 +120,9 @@ def _build_menu_text() -> str:
 class Qwen3Backend:
     """Qwen3-4B 4-bit chat backend. Thread-safe after __init__ completes."""
 
-    def __init__(self, model_id: str = MODEL_ID) -> None:
+    def __init__(self, model_id: str = MODEL_ID, adapter_dir: str | None = None) -> None:
         self._model_id = model_id
+        self._adapter_dir = adapter_dir
         self._model = None
         self._tokenizer = None
         self._history: list[dict] = []
@@ -156,6 +157,15 @@ class Qwen3Backend:
                 self._model_id, quantization_config=bnb, device_map="auto",
                 trust_remote_code=True,
             )
+
+        if self._adapter_dir:
+            from peft import PeftModel
+            logger.info("LoRA adapter yükleniyor: %s", self._adapter_dir)
+            print(f"  Adapter: {self._adapter_dir}")
+            self._model = PeftModel.from_pretrained(
+                self._model, self._adapter_dir, is_trainable=False
+            )
+
         self._model.eval()
         if torch.cuda.is_available():
             used  = torch.cuda.memory_allocated() / 1024 ** 3
