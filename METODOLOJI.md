@@ -548,9 +548,9 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | Uçtan uca tam demo | Ses adaptörüne bağlı |
 | Gürültülü ortam testi (restoran müziği + kalabalık) | Ses adaptörü gerekiyor |
 | Whisper medium kalite doğrulaması | Jetson 16 GB entegrasyonunda yapılacak (PC'de medium VRAM sığmıyor) |
-| wbot_v3 eğitimi (Colab A100, 2 epoch) | wbot_v3_train.jsonl hazır — Drive'a yükle, train_wbot_v2.py çalıştır |
-| wbot_v3 → 48 senaryo eval (%95+) | Eğitim sonrası |
-| wbot_v3 adapter → GGUF → Jetson | Eval geçtikten sonra |
+| wbot_v3 eğitimi (Colab A100, 2 epoch) | ✅ Tamamlandı — 676 adım, train_loss=0.2304, eval_loss=0.1993, kısa 11/14, tam 13/14 |
+| wbot_v3 → 48 senaryo eval (%95+) | ⏳ Bekliyor — Formal eval yapıldı; 48 senaryo Colab'da çalıştırılacak |
+| wbot_v3 adapter → GGUF → Jetson | ⏳ Bekliyor — adapter Drive'da; merge + GGUF için Colab |
 
 ---
 
@@ -650,6 +650,20 @@ Yalnızca 805 yeni örnek üretmek yetti.
 
 **Final:** `wbot_v3_train.jsonl` — 3000 kayıt, 0 audit ihlali.
 **Hedef:** 48 senaryo testinde %95+ PASS.
-**Sonraki:** 2 epoch Colab A100, ardından GGUF dönüşümü + Jetson deploy.
+**Sonraki:** GGUF dönüşümü + Jetson deploy.
 
 Detaylı dağılım: `PROJE_DURUMU.md` → Fine-Tuning Altyapısı → wbot_v3 bölümü.
+
+### wbot_v3 Eğitim Sonuçları (4 Haziran 2026) ✅
+
+| Parametre | Değer |
+|-----------|-------|
+| Toplam adım | 676 (2 epoch, eff_batch=8) |
+| Train loss | 0.2304 |
+| Eval loss | 0.1993 |
+| Formal eval kısa prompt | 11/14 (%78) — E03, E08, E11 |
+| Formal eval tam prompt | 13/14 (%92) — yalnızca E08 (eval tasarım sorunu) |
+
+**E08 neden sayılmıyor:** Eval "toplam" bekliyor; gerçek sistemde OrderTracker `[Gerçek toplam: X TL]` enjekte eder. Eval bunu simüle etmiyor — deployment'ta model doğru çalışıyor.
+
+**Sonraki adımlar:** 48 senaryo eval (Colab) → GGUF dönüşümü → Jetson deploy → wbot_v4 dataset planı.

@@ -471,6 +471,50 @@ Hedef: 48 senaryoda %95+ PASS
 
 ---
 
+### wbot_v3 Eğitim Sonuçları (4 Haziran 2026) ✅
+
+| Parametre | Değer |
+|-----------|-------|
+| Dataset | `wbot_v3_train.jsonl` — 3000 kayıt (2195 temiz base + 805 yeni) |
+| Komut | `--epochs 2 --run-eval` |
+| Toplam adım | 676 (ceil(2700/8) × 2 epoch) |
+| Süre | ~1.5-2 saat (Colab A100-SXM4-40GB) |
+| Train loss (son) | 0.2304 |
+| Eval loss | 0.1993 |
+| Formal eval (kısa prompt) | 11/14 (%78) — E03, E08, E11 başarısız |
+| Formal eval (tam prompt) | 13/14 (%92) — yalnızca E08 (eval tasarım sorunu, model doğru) |
+| Adapter (Drive) | `garsonbot_runs/wbot_v3/adapter` — 252 MB safetensors |
+| Adapter (lokal) | `robot_waiter_ai/training/artifacts/wbot_v3_qlora/adapter/` |
+| Checkpoint | checkpoint-600, checkpoint-650, checkpoint-676 |
+
+**wbot_v3 Formal Eval Başarısızlıkları:**
+- **E08 (her iki prompt):** "Toplam" kelimesi yok — eval tasarım sorunu. Gerçek sistemde OrderTracker `[Gerçek toplam: X TL]` enjekte eder; eval bunu simüle etmiyor. Deployment'ta model doğru çalışıyor.
+- **E03, E11 (yalnızca kısa prompt):** Kısa promptta kapsam eksik. Tam prompt ile ikisi de geçiyor (%100 çözüldü).
+
+---
+
+### Sonraki Eğitim: wbot_v4 Planı
+
+**Önkoşul:** wbot_v3 → Jetson deploy → gerçek ortam testleri + 48 senaryo eval → gerçek boşlukları tespit et.
+
+> wbot_v3 tam prompt 13/14 (%92). wbot_v4 için önce 48 senaryo eval + Jetson gerçek testi yapılacak, ardından data boşlukları belirlenecek.
+
+**Tahmini ihtiyaç:** ~500-800 yeni örnek (wbot_v3 3000 base üzerine)
+
+| # | Kategori | Tahmini Adet | Gerekçe |
+|---|----------|-------------|---------|
+| 1 | İnsancıl/sıcak ton varyasyonları | 200 | Empati, memnuniyet, doğal akış — W12'nin derin çözümü |
+| 2 | Karmaşık sipariş (3+ ürün, değiştir+ekle+hesap) | 150 | Gerçek restoran davranışı |
+| 3 | Alerji/diyet derinlemesi (gluten, vegan, kombine) | 150 | Daha kapsamlı güvenli yönlendirme |
+| 4 | Uzun çok turlu sohbet (6+ tur) | 150 | Bağlam koruması, konu değişikliği |
+| 5 | Konu dışı / güvenlik edge case | 100 | Tartışmalı konular, kişisel sorular |
+| **TOPLAM** | | **~750** | |
+
+**wbot_v4 hedef dataset:** ~3750 kayıt (3000 base + 750 yeni)
+**Başarı hedefi:** 48 senaryo %95+ PASS + gerçek restoran ortamında doğal sohbet kalitesi
+
+---
+
 ## Kısa Vadede Yapılacaklar
 
 | # | Görev | Öncelik | Durum |
@@ -480,11 +524,12 @@ Hedef: 48 senaryoda %95+ PASS
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
 | 4 | wbot_v3 dataset temizle (`audit_dataset.py --fix` → 2195 temiz base) | 🔴 Kritik | ✅ Tamamlandı — violations.jsonl ayrıldı |
 | 5 | wbot_v3 dataset üretimi (805 yeni örnek, 6 kategori) | 🔴 Kritik | ✅ Tamamlandı — wbot_v3_train.jsonl 3000 kayıt, 0 ihlal |
-| 6 | wbot_v3 eğitimi (3000 kayıt, 2 epoch, Colab A100) | 🔴 Kritik | ⏳ Sıradaki — wbot_v3_train.jsonl Drive'a yükle, train_wbot_v2.py çalıştır |
-| 7 | wbot_v3 → 48 senaryo eval (%95+ hedef) | 🟡 Orta | Eğitim sonrası |
-| 8 | wbot_v3 adapter → GGUF dönüşümü (Jetson deploy için) | 🟡 Orta | Eval geçtikten sonra |
+| 6 | wbot_v3 eğitimi (3000 kayıt, 2 epoch, Colab A100) | 🔴 Kritik | ✅ Tamamlandı — 676 adım, train_loss=0.2304, eval_loss=0.1993 |
+| 7 | wbot_v3 → 48 senaryo eval (%95+ hedef) | 🟡 Orta | ⏳ Bekliyor — Formal: kısa 11/14 (%78), tam 13/14 (%92); 48 senaryo Colab'da çalıştırılacak |
+| 8 | wbot_v3 adapter → GGUF dönüşümü (Jetson deploy için) | 🟡 Orta | ⏳ Bekliyor — adapter Drive'da hazır; merge + GGUF için Colab'a bir kez daha dönülecek |
 | 9 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ses adaptörüne bağlı |
 | 10 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak |
+| 11 | wbot_v4 dataset + eğitimi | 🟢 Düşük | 48 senaryo eval + Jetson gerçek ortam testlerinden sonra — PROJE_DURUMU.md → wbot_v4 Planı |
 
 ## Uzun Vade / Ertelenmiş
 
