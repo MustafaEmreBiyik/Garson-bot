@@ -1,8 +1,26 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 4 Haziran 2026 | **Sürüm:** 5.5
+**Son güncelleme:** 4 Haziran 2026 | **Sürüm:** 5.6
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
+
+---
+
+## Bir Sonraki Oturum — Hızlı Özet
+
+**Neredeyiz:** wbot_v3 eğitimi tamamlandı (13/14 %92 tam prompt). Adapter hem Drive'da hem Windows'ta lokal var.
+
+**Sıradaki görevler (öncelik sırasıyla):**
+
+1. **wbot_v3 → GGUF dönüşümü** (Colab'da) — adapter + base model merge → GGUF Q4_K_M export → Drive'a kaydet → Jetson'a kopyala
+2. **wbot_v3 48-senaryo eval** (Colab'da) — `eval_adapter.py` üzerinde genişletilmiş test; wbot_v4 için neyin eksik olduğunu görmek
+3. **USB ses adaptörü** (~100 TL, USB→3.5mm) — bu geldikten sonra Jetson'da tam uçtan uca demo mümkün
+4. **wbot_v4** — 48 senaryo + Jetson gerçek ortam testinden sonra; ~750 yeni örnek (bkz. wbot_v4 Planı)
+
+**wbot_v3 adapter konumu:**
+- Google Drive: `garsonbot_runs/wbot_v3/adapter/`
+- Windows lokal: `robot_waiter_ai/training/artifacts/wbot_v3_qlora/adapter/` *(git'te değil — 264 MB)*
+- Ubuntu'da gerekirse Drive'dan indir veya Windows'tan kopyala
 
 ---
 
@@ -29,26 +47,47 @@ Müşterilerle doğal konuşma, sipariş alma ve menü bilgisi sunma hedeflenmek
 
 ```
 Garson-bot/
+├── PROJE_DURUMU.md               ✅ Bu dosya — yeni sohbette ilk oku
+├── METODOLOJI.md                 ✅ Mimari ve teknik kararlar
 ├── scripts/
-│   ├── demo_usb.py               ✅ Ana demo — wake word → VAD kayıt → STT → LLM → Piper TTS
-│   ├── eval_llm.py               ✅ LLM kalite + performans eval (10 senaryo, 16 turn)
+│   ├── demo_usb.py               ✅ Ana demo — wake word → VAD → STT → LLM → Piper TTS
+│   ├── eval_llm.py               ✅ LLM kalite + performans eval (prompt bazlı, 20 turn)
+│   ├── eval_adapter.py           ✅ Fine-tune adapter eval (14 formal + 7 smoke; --full-prompt desteği)
+│   ├── audit_dataset.py          ✅ Dataset ihlal denetimi (TL bağlam, başka, getireyim mi...)
+│   ├── gen_karsilama.py          ✅ wbot_v3 dataset üretim — karşılama (200 kayıt)
+│   ├── gen_siparis_baska.py      ✅ wbot_v3 dataset üretim — sipariş+başka (150 kayıt)
+│   ├── gen_hesap.py              ✅ wbot_v3 dataset üretim — hesap varyasyonları (100 kayıt)
+│   ├── gen_cotturlu.py           ✅ wbot_v3 dataset üretim — çok turlu (150 kayıt)
+│   ├── gen_iptal.py              ✅ wbot_v3 dataset üretim — iptal/değişiklik (100 kayıt)
+│   ├── gen_oneri.py              ✅ wbot_v3 dataset üretim — öneri+TL yasağı (105 kayıt)
 │   ├── compare_models.py         ✅ Model karşılaştırma scripti (4B vs 1.7B)
 │   ├── train_wakeword.py         ✅ openWakeWord eğitim (MMS-TTS + gürültü)
 │   └── test_wakeword_usb.py      ✅ USB mikrofon ile gerçek zamanlı wake word testi
 └── robot_waiter_ai/
     ├── inference/
     │   ├── qwen3_backend.py      ✅ PC için — Qwen3-4B transformers 4-bit NF4
+    │   │                            _build_system_prompt() export'u var (eval_adapter.py kullanır)
     │   └── llama_cpp_backend.py  ✅ Jetson için — Qwen3-4B GGUF Q4_K_M + CUDA
     ├── speech/
     │   ├── stt.py                ✅ faster-whisper STT wrapper (model: small)
     │   ├── tts.py                ✅ edge-tts + PiperTTS (Piper birincil, edge-tts fallback)
     │   └── mic.py                ✅ ReSpeaker Mic Array wrapper
-    └── data/
-        ├── menu.yaml             ✅ Menü tanımları (name, category, price, description, aliases)
-        └── restaurant_info.yaml
-    models/
-        ├── hey_garson.onnx       ✅ Wake word modeli (openWakeWord, 789 KB)
-        └── tr_TR-fahrettin-medium.onnx  ✅ Piper TTS Türkçe sesi
+    ├── data/
+    │   ├── menu.yaml             ✅ Menü tanımları (name, category, price, description, aliases)
+    │   └── restaurant_info.yaml
+    ├── models/
+    │   ├── hey_garson.onnx       ✅ Wake word modeli (openWakeWord, 789 KB)
+    │   └── tr_TR-fahrettin-medium.onnx  ✅ Piper TTS Türkçe sesi
+    ├── training/
+    │   ├── train_wbot_v2.py      ✅ QLoRA fine-tune scripti (wbot_v3 destekli, varsayılan dataset: wbot_v3_train.jsonl)
+    │   ├── requirements_train.txt ✅ Colab bağımlılıkları (transformers>=4.43.0 zorunlu — Qwen3 chat template)
+    │   └── artifacts/
+    │       └── wbot_v3_qlora/
+    │           └── adapter/      ⚠️ lokal — git'te değil (264 MB); Drive: garsonbot_runs/wbot_v3/adapter/
+    └── datasets/
+        └── processed/
+            ├── wbot_v3_train.jsonl          ✅ 3000 kayıt, 0 audit ihlali (wbot_v3 eğitim dataseti)
+            └── wbot_finetune_v1_violations.jsonl  ✅ 21 ihlalli kayıt (wbot_v2'den ayrıldı)
 ```
 
 ---
@@ -530,6 +569,57 @@ Hedef: 48 senaryoda %95+ PASS
 | 9 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ses adaptörüne bağlı |
 | 10 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak |
 | 11 | wbot_v4 dataset + eğitimi | 🟢 Düşük | 48 senaryo eval + Jetson gerçek ortam testlerinden sonra — PROJE_DURUMU.md → wbot_v4 Planı |
+
+## GGUF Dönüşümü — Colab Hücreleri
+
+wbot_v3 adapter'ı Jetson'a deploy edebilmek için base model ile merge edilip GGUF'a dönüştürülmesi gerekiyor.
+
+```python
+# Hücre 1 — Kurulum
+!pip install -q transformers peft accelerate
+!apt-get install -q -y build-essential cmake
+!git clone https://github.com/ggml-org/llama.cpp /content/llama.cpp
+!cd /content/llama.cpp && cmake -B build -DGGML_CUDA=ON && cmake --build build --config Release -j4
+
+# Hücre 2 — Drive mount + adapter yükle
+from google.colab import drive
+drive.mount('/content/drive')
+ADAPTER_DIR = "/content/drive/MyDrive/garsonbot_runs/wbot_v3/adapter"
+MERGED_DIR  = "/content/wbot_v3_merged"
+GGUF_PATH   = "/content/drive/MyDrive/garsonbot_runs/wbot_v3/Qwen3-4B-wbot_v3-Q4_K_M.gguf"
+
+# Hücre 3 — Merge (adapter + base model)
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import PeftModel
+
+print("Base model yükleniyor...")
+model = AutoModelForCausalLM.from_pretrained(
+    "Qwen/Qwen3-4B", torch_dtype=torch.float16, device_map="cpu"
+)
+model = PeftModel.from_pretrained(model, ADAPTER_DIR)
+print("Merge ediliyor...")
+model = model.merge_and_unload()
+model.save_pretrained(MERGED_DIR)
+AutoTokenizer.from_pretrained(ADAPTER_DIR).save_pretrained(MERGED_DIR)
+print("Merge tamam:", MERGED_DIR)
+
+# Hücre 4 — GGUF dönüşümü
+!python /content/llama.cpp/convert_hf_to_gguf.py {MERGED_DIR} \
+    --outtype q4_k_m \
+    --outfile {GGUF_PATH}
+print("GGUF kaydedildi:", GGUF_PATH)
+```
+
+**Jetson'a kopyalamak için:**
+```bash
+# Jetson'da (Drive'dan doğrudan veya scp ile):
+scp user@ubuntu_pc:/path/to/Qwen3-4B-wbot_v3-Q4_K_M.gguf /home/emk/llama.cpp/
+# llama_cpp_backend.py'deki MODEL_PATH'i güncelle:
+# MODEL_PATH = "/home/emk/llama.cpp/Qwen3-4B-wbot_v3-Q4_K_M.gguf"
+```
+
+---
 
 ## Uzun Vade / Ertelenmiş
 
