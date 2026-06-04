@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-train_wbot_v2.py — Qwen3-4B QLoRA SFT v2 (2 epoch, ~2216 kayıt, sıfırdan)
+train_wbot_v2.py — Qwen3-4B QLoRA SFT v3 (2 epoch, ~3000 kayıt, sıfırdan)
 
 Colab quick-start:
     # 1. Runtime > Change runtime type > T4 GPU (ücretsiz) veya A100 (Pro)
@@ -13,7 +13,7 @@ Colab quick-start:
     #      !pip install -q torch transformers datasets accelerate peft bitsandbytes
     # 5. Eğitimi başlat:
     #      !python robot_waiter_ai/training/train_wbot_v2.py \\
-    #              --drive-dir /content/drive/MyDrive/garsonbot_runs/wbot_v2
+    #              --drive-dir /content/drive/MyDrive/garsonbot_runs/wbot_v3
 
 Lokal dry-run (torch gerekmez):
     python train_wbot_v2.py --dry-run
@@ -39,8 +39,8 @@ log = logging.getLogger(__name__)
 # ── Paths ─────────────────────────────────────────────────────────────────────
 _HERE      = Path(__file__).resolve().parent
 _REPO_ROOT = _HERE.parent.parent
-_DATASET_DEFAULT = _REPO_ROOT / "robot_waiter_ai/datasets/processed/wbot_finetune_v1.jsonl"
-_OUTPUT_DEFAULT  = _REPO_ROOT / "artifacts/wbot_v2_qlora"
+_DATASET_DEFAULT = _REPO_ROOT / "robot_waiter_ai/datasets/processed/wbot_v3_train.jsonl"
+_OUTPUT_DEFAULT  = _REPO_ROOT / "artifacts/wbot_v3_qlora"
 _EVAL_SCRIPT     = _REPO_ROOT / "scripts/eval_adapter.py"
 
 # ── Hyperparameters ───────────────────────────────────────────────────────────

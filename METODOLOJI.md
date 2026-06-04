@@ -548,11 +548,13 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | Uçtan uca tam demo | Ses adaptörüne bağlı |
 | Gürültülü ortam testi (restoran müziği + kalabalık) | Ses adaptörü gerekiyor |
 | Whisper medium kalite doğrulaması | Jetson 16 GB entegrasyonunda yapılacak (PC'de medium VRAM sığmıyor) |
-| wbot_v2 dataset üretimi + eğitim | Üretim promptları hazırlanıyor |
+| wbot_v3 eğitimi (Colab A100, 2 epoch) | wbot_v3_train.jsonl hazır — Drive'a yükle, train_wbot_v2.py çalıştır |
+| wbot_v3 → 48 senaryo eval (%95+) | Eğitim sonrası |
+| wbot_v3 adapter → GGUF → Jetson | Eval geçtikten sonra |
 
 ---
 
-## 13. Fine-Tuning Metodolojisi (wbot_v1 / wbot_v2)
+## 13. Fine-Tuning Metodolojisi (wbot_v1 / wbot_v2 / wbot_v3)
 
 ### Neden Fine-Tune?
 
@@ -605,9 +607,49 @@ Her kayıt tam bir konuşmayı içerir. Tek turlu ve çok turlu karışık:
 | Train loss | 0.116 |
 | Eval loss | 0.1275 |
 | Eval (kısa prompt) | 12/14 (%85) — E02 ve E09 dataset boşluğu |
-| Eval (tam prompt) | 20/20 (%100) — hedef: kısa promptla da tam skor |
+| Eval (tam prompt) | 20/20 (%100) |
 
-### wbot_v2 Planı
+### wbot_v2 Sonuçları (3 Haziran 2026) ✅
 
-12 kategori, +1250 kayıt, ~2220 toplam. Yeniden sıfırdan eğitim (incremental değil).
-Detay: `PROJE_DURUMU.md` → Fine-Tuning Altyapısı → wbot_v2 Planı bölümü.
+| Parametre | Değer |
+|-----------|-------|
+| Eğitim verisi | 2216 kayıt, 2 epoch, Colab A100-SXM4-40GB |
+| Toplam adım | 500 (early stop tetiklenmedi — loss tüm eğitim boyunca düştü) |
+| Formal eval (14 senaryo) | 12/14 (%85) |
+| Kapsamlı eval (48 senaryo) | 38/45 (%84, test hataları düzeltilince) |
+| Adapter | `Drive: garsonbot_runs/wbot_v2/adapter` (252 MB safetensors) |
+
+### Dataset Denetim Metodolojisi (scripts/audit_dataset.py)
+
+wbot_v2 sonuçları analiz edilince modelin %84'te takılmasının sebebi veri kirliliği olduğu anlaşıldı. Otomatik denetim şu kuralları kontrol eder:
+
+- **Karşılama-4kategori:** Karşılama/genel menü yanıtında "çorba, ana yemek, tatlı, içecek" dördü birden geçmeli
+- **Sipariş-başka:** Sipariş onayı yanıtında "başka" kelimesi zorunlu
+- **Getireyim-mi yasağı:** Sipariş onayında "Getireyim mi?" geçmemeli
+- **TL-yanlış bağlam:** Fiyat/sipariş/hesap dışı bağlamda `\btl\b` veya menü fiyatları geçmemeli
+- **Yasak ifade:** "onaylandı/onaylanıyor/kaydedildi" geçmemeli
+- **Hesap-toplam:** Hesap yanıtında "toplam" geçmeli
+
+**wbot_v2 denetim sonucu:** 883/2216 kayıt (%40) ihlalli — TL bağlam (618), başka eksik (353), karşılama (97), hesap (50), getireyim mi (4).
+
+### wbot_v3 Dataset (4 Haziran 2026) ✅
+
+**Strateji (revize edildi):** Audit scripti düzeltmesiyle 883 → 21 gerçek ihlal; 1333 → 2195 temiz base.
+Yalnızca 805 yeni örnek üretmek yetti.
+
+**Üretim yöntemi:** Her kategori için Python scripti (gen_*.py), her script ilk çalıştırmada 0 ihlal.
+
+| Kategori | Script | Kayıt | Önemli Audit Kuralı |
+|---------|--------|-------|---------------------|
+| Karşılama | gen_karsilama.py | 200 | GREET_BOT 4 kategori |
+| Sipariş-başka | gen_siparis_baska.py | 150 | `_is_specific_order_turn` → başka |
+| Hesap | gen_hesap.py | 100 | `_is_bill_turn` → "toplam" |
+| Çok turlu | gen_cotturlu.py | 150 | MID_QA: TL yasak, food token safe |
+| İptal/takas | gen_iptal.py | 100 | CANCEL_TRIGGER → başka gerekmez; SWAP_TRIGGER → başka zorunlu |
+| Öneri | gen_oneri.py | 105 | `_is_valid_price_context`=False → TL yasak |
+
+**Final:** `wbot_v3_train.jsonl` — 3000 kayıt, 0 audit ihlali.
+**Hedef:** 48 senaryo testinde %95+ PASS.
+**Sonraki:** 2 epoch Colab A100, ardından GGUF dönüşümü + Jetson deploy.
+
+Detaylı dağılım: `PROJE_DURUMU.md` → Fine-Tuning Altyapısı → wbot_v3 bölümü.

@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 3 Haziran 2026 | **Sürüm:** 5.1
+**Son güncelleme:** 4 Haziran 2026 | **Sürüm:** 5.5
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -335,83 +335,139 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 
 ---
 
-## Fine-Tuning Altyapısı (v5.0)
+## Fine-Tuning Altyapısı (v5.3)
 
-### Dataset
-| Parametre | Değer |
-|-----------|-------|
-| Dosya | `robot_waiter_ai/datasets/processed/wbot_finetune_v1.jsonl` |
-| Kayıt sayısı | 970 (873 train / 97 valid, seed=42) |
-| Senaryo türleri | A–H: karşılama, sipariş, iptal, fiyat, öneri, alerji, konu dışı, hesap |
-| Format | `messages` (system/user/assistant), chat template uyumlu |
-
-### Eğitim Scripti (`robot_waiter_ai/training/train_wbot_v1.py`)
+### Eğitim Scripti (`robot_waiter_ai/training/train_wbot_v2.py`)
 | Parametre | Değer |
 |-----------|-------|
 | Base model | Qwen/Qwen3-4B |
 | Yöntem | QLoRA — NF4 4-bit + LoRA (r=32, α=64) |
 | Hedef modüller | q/k/v/o_proj + gate/up/down_proj (7 modül) |
 | Eğitim türü | Completion-only SFT (system+user tokenları -100 maskelenir) |
-| Sistem promptu (eğitim) | Kısa (~546 tok) — `--full-prompt` ile orijinal 2092 tok kullanılabilir |
+| Sistem promptu (eğitim) | Kısa (~250 tok) — `--full-prompt` ile orijinal 2092 tok kullanılabilir |
 | Optimizer | paged_adamw_8bit (CPU RAM'de) |
-| Ortam | Google Colab T4 (16 GB) |
+| Ortam | Google Colab A100-SXM4-40GB |
+
+---
 
 ### wbot_v1 Eğitim Sonuçları (3 Haziran 2026)
 | Parametre | Değer |
 |-----------|-------|
+| Dataset | `wbot_finetune_v1.jsonl` — 970 kayıt |
 | Komut | `--batch-size 2 --epochs 1 --no-grad-checkpointing` |
 | Toplam adım | 55 |
 | Süre | ~2.6 saat (Colab T4) |
 | Train loss (son) | 0.116 |
 | Eval loss | 0.1275 |
-| Durum | ✅ Tamamlandı |
-| Adapter | `/content/drive/MyDrive/garsonbot_runs/wbot_v1_qlora/adapter` |
+| Formal eval (kısa prompt) | 12/14 (%85) |
+| Formal eval (tam prompt) | 20/20 (%100) |
+| Adapter | `Drive: garsonbot_runs/wbot_v1_qlora/adapter` |
 
-### wbot_v1 Eval Sonuçları (scripts/eval_adapter.py)
-| Prompt | Skor | Notlar |
-|--------|------|--------|
-| KISA (~546 tok) | 12/14 (%85) | E02 ve E09 dataset boşluğu |
-| TAM (baseline) | 20/20 (%100) | Hedef: kısa promptla da %100 |
+---
 
-**E02 başarısızlığı:** "Ne yiyebilirim?" genel menü sorusu varyantları dataset'te eksik → model öneri sorusu gibi davranıyor.
-**E09 başarısızlığı:** "Hamburger var mı?" menü dışı ürün tutarsız → sampling'e bağlı (smoke test'te doğru, eval'da "Anlayamadım").
-**E05/diğer:** "Getireyim mi?" yasağı hâlâ ihlal ediliyor (fiyat ve öneri sorularında).
+### wbot_v2 Eğitim Sonuçları (3 Haziran 2026) ✅
+| Parametre | Değer |
+|-----------|-------|
+| Dataset | `wbot_finetune_v1.jsonl` — 2216 kayıt (1994 train / 222 valid) |
+| Komut | `--epochs 2 --run-eval` |
+| Toplam adım | 500 (250/epoch × 2 epoch, early stop tetiklenmedi) |
+| Süre | ~1.5-2 saat (Colab A100-SXM4-40GB) |
+| Formal eval (14 senaryo) | 12/14 (%85) |
+| Kapsamlı eval (48 senaryo) | 34/48 (%70) — düzeltilmiş: 38/45 (%84) |
+| Adapter | `Drive: garsonbot_runs/wbot_v2/adapter` (252 MB) |
+| Checkpoint | checkpoint-400, checkpoint-450, checkpoint-500 |
 
-### Sonraki Eğitim: wbot_v2 Planı
+**wbot_v2 Formal Eval Başarısızlıkları:**
+- **E01:** Karşılama yanıtı 4 kategori içermiyor (dataset boşluğu)
+- **E08:** Hesap yanıtında "Toplam X TL." formatı yok
 
-**Roadmap durumu (3 Haziran 2026):** Onaylandı — 12 kategori, +1250 kayıt, ~2220 toplam hedef.
-Detaylı yol haritası: `robot_waiter_ai/training/wbot_v2_dataset_roadmap_prompt.md`
+**wbot_v2 Kapsamlı Eval Başarısızlıkları (48 senaryo):**
+- A01-A04: Karşılama/genel menü — 4 kategori kuralı öğrenilmemiş
+- D01-D03, E02: Sipariş onayında "başka" yerine "Ekleyeceğimiz" kullanılıyor
+- F03: Tam sipariş iptali senaryosu eksik
+- H01-H03: Hesap bağlamı yok (sistem tasarımı — OrderTracker enjeksiyonu gereken)
+- L03: Fiyat yasağı ihlali ("en ucuz" sorusunda TL söylüyor)
+- G02, G04: "Getireyim mi?" gizli ihlali (PASS geçti ama kural çiğneniyor)
 
-**wbot_finetune_v1 dataset analizi:**
-- 970 kayıt; 530 tek turlu, 440 çok turlu (4-10 turn) — multi-turn data zaten var
-- Dataset formatı: `{"messages": [...]}` — her kayıtta tam sistem promptu gömülü (uzun versiyon, ~2092 tok)
-- Menüde olmayan ürün (hamburger/pizza) yalnızca ~35 kayıt — kritik boşluk
+---
 
-**Onaylanan 12 Kategori:**
+### wbot_v2 Dataset Denetimi (scripts/audit_dataset.py)
 
-| # | Kategori | Öncelik | Mevcut | Eklenecek |
-|---|----------|---------|--------|-----------|
-| 1 | Genel Menü Soruları | 🔴 | ~95 | 100 |
-| 2 | Fiyat Karşılaştırma | 🟡 | ~100 | 80 |
-| 3 | Bileşik Siparişler | 🔴 | ~180 | 150 |
-| 4 | Çok Turlu Konuşmalar | 🔴 | 440 | 200 |
-| 5 | Diyet / İçerik (→ "bilgim yok") | 🟡 | ~100 | 100 |
-| 6 | Menüde Olmayan Ürün | 🔴 | ~35 | 120 |
-| 7 | Belirsiz / Kısmi Sorular | 🟡 | 0 | 80 |
-| 8 | Kapanış / Teşekkür | 🟢 | (karma) | 60 |
-| 9 | Restoran Hakkında Sorular | 🟡 | 0 | 80 |
-| 10 | Müşteri Modları | 🟢 | 0 | 80 |
-| 11 | Çoklu Tur Sipariş Değişikliği | 🔴 | ~60 | 120 |
-| 12 | Hesap Varyasyonları | 🟡 | (karma) | 80 |
-| **TOPLAM** | — | — | **970** | **+1250** |
+`python scripts/audit_dataset.py` ile 2216 kayıt otomatik denetlendi.
 
-**Üretim yöntemi:** B — her kategori için üretim promptu manuel hazırlanacak, AI'a verilerek JSONL üretilecek.
-Üretim promptları: `robot_waiter_ai/training/wbot_v2_generation_prompts.md` (hazırlanacak)
+**Audit scripti revision geçmişi (3 Haziran 2026):**
 
-**Eğitim parametreleri:**
-- Tüm veriyle sıfırdan eğitim (incremental değil — catastrophic forgetting riski)
-- 2 epoch
-- Hedef: kısa promptla 14/14 (%100)
+| Kural | Ham Sayı | Gerçek İhlal | Yanlış Pozitif Kaynağı |
+|-------|----------|--------------|------------------------|
+| TL yanlış bağlam | 618 | **0** ✅ | Bütçe/takas/adet bağlamları hariç tutulmadı |
+| Sipariş onayında "başka" | 353 | **7** ✅ | `_is_specific_order_turn` dar tanım + eşdeğerler eklendi |
+| Hesap yanıtında "toplam" | 78 | **0** ✅ | Deferral/redirect/hesaplı false match |
+| Karşılamada 4 kategori | 97 | **13** ✅ | Diyet/bütçe/veda/acele sorguları hariç tutulmadı |
+| "Getireyim mi?" | 4 | **4** | Gerçek ihlal |
+
+**Düzeltme sonrası final audit:**
+
+| Kural | İhlal |
+|-------|-------|
+| Karşılama-4kategori | 13 |
+| Sipariş-başka | 7 |
+| Getireyim-mi yasağı | 4 |
+| TL-yanlış bağlam | 0 |
+| Yasak ifade | 0 |
+| Markdown | 0 |
+| Sen formu | 0 |
+| Hesap-toplam | 0 |
+| **İhlalli kayıt** | **21 / 2216 (1%)** |
+| **Temiz kayıt** | **2195 / 2216 (99%)** |
+
+İhlalli 21 kayıt: `wbot_finetune_v1_violations.jsonl` olarak ayrıldı.
+
+---
+
+### wbot_v3 Dataset Üretimi (4 Haziran 2026) ✅
+
+**Üretim scriptleri** (`scripts/`):
+
+| Script | Kategori | Kayıt | Audit |
+|--------|---------|-------|-------|
+| gen_karsilama.py | Karşılama 4-kategori | 200 | 0 ihlal |
+| gen_siparis_baska.py | Sipariş-başka | 150 | 0 ihlal |
+| gen_hesap.py | Hesap varyasyonları | 100 | 0 ihlal |
+| gen_cotturlu.py | Çok turlu | 150 | 0 ihlal |
+| gen_iptal.py | Sipariş iptali/değişiklik | 100 | 0 ihlal |
+| gen_oneri.py | Öneri + TL yasağı | 105 | 0 ihlal |
+
+Birleştirme: `python -c "..."` ile 2195 temiz base + 805 yeni → shuffle → `wbot_v3_train.jsonl`
+
+---
+
+### Sonraki Eğitim: wbot_v3 Planı
+
+**Strateji:** İhlalli 21 kaydı çıkar → **2195 temiz base** + ~805 yeni kural-uyumlu örnek = 3000 kayıt.
+
+> Audit script düzeltmesi sayesinde base **1333 → 2195** oldu (+862 kayıt kurtarıldı).
+> Artık 1667 değil yalnızca ~805 yeni örnek üretmek yeterli.
+
+| # | Kategori | Dosya | Adet | Durum |
+|---|----------|-------|------|-------|
+| 1 | Karşılama — 4 kategori zorunlu | wbot_v3_karsilama.jsonl | 200 | ✅ |
+| 2 | Sipariş onayı — "başka" pekiştirme | wbot_v3_siparis_baska.jsonl | 150 | ✅ |
+| 3 | Hesap varyasyonları (toplam formatı) | wbot_v3_hesap.jsonl | 100 | ✅ |
+| 4 | Çok turlu konuşmalar | wbot_v3_cotturlu.jsonl | 150 | ✅ |
+| 5 | Sipariş iptali / değişiklik | wbot_v3_iptal.jsonl | 100 | ✅ |
+| 6 | Öneri + kategori sorgusu (TL yasağı) | wbot_v3_oneri.jsonl | 105 | ✅ |
+| **TOPLAM** | | | **805** | **✅** |
+
+**Final dataset:** `wbot_v3_train.jsonl` — 3000 kayıt, **0 audit ihlali** (4 Haziran 2026)
+
+```
+2195 temiz base + 805 yeni = 3000 kayıt → wbot_v3_train.jsonl
+Konum: robot_waiter_ai/datasets/processed/wbot_v3_train.jsonl
+Hedef: 48 senaryoda %95+ PASS
+```
+
+**Üretim yöntemi:** Her kategori için gen_*.py scripti yazıldı, `audit_dataset.py` ile doğrulandı. Tüm 805 örnek ilk çalıştırmada temiz.
+**Eğitim parametreleri:** Sıfırdan eğitim (incremental değil), 2 epoch, Colab A100.
 
 ---
 
@@ -422,11 +478,13 @@ Detaylı yol haritası: `robot_waiter_ai/training/wbot_v2_dataset_roadmap_prompt
 | 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
 | 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
 | 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | wbot_v2 dataset üretim promptlarını hazırla (12 kategori) | 🟡 Orta | Roadmap onaylandı — `wbot_v2_generation_prompts.md` hazırlanacak |
-| 5 | wbot_v2 eğitimi (~1500-2000 kayıt, 2 epoch) | 🟡 Orta | Dataset hazır olunca |
-| 6 | Adapter → GGUF dönüşümü (Jetson deploy için) | 🟡 Orta | wbot_v2 eval geçtikten sonra |
-| 6 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ubuntu PC'de yapılacak (adaptör bekleniyor) |
-| 7 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak |
+| 4 | wbot_v3 dataset temizle (`audit_dataset.py --fix` → 2195 temiz base) | 🔴 Kritik | ✅ Tamamlandı — violations.jsonl ayrıldı |
+| 5 | wbot_v3 dataset üretimi (805 yeni örnek, 6 kategori) | 🔴 Kritik | ✅ Tamamlandı — wbot_v3_train.jsonl 3000 kayıt, 0 ihlal |
+| 6 | wbot_v3 eğitimi (3000 kayıt, 2 epoch, Colab A100) | 🔴 Kritik | ⏳ Sıradaki — wbot_v3_train.jsonl Drive'a yükle, train_wbot_v2.py çalıştır |
+| 7 | wbot_v3 → 48 senaryo eval (%95+ hedef) | 🟡 Orta | Eğitim sonrası |
+| 8 | wbot_v3 adapter → GGUF dönüşümü (Jetson deploy için) | 🟡 Orta | Eval geçtikten sonra |
+| 9 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ses adaptörüne bağlı |
+| 10 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak |
 
 ## Uzun Vade / Ertelenmiş
 
