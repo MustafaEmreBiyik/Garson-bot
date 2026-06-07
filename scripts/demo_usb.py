@@ -786,7 +786,20 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 llm_input = f"{user_text} [Gerçek toplam: {order_tracker.total} TL]"
         _t_llm = _time.perf_counter()
         try:
-            reply = await _speak_streaming(tts, llm, llm_input, tts_active)
+            if _is_bill_request(user_text) and order_tracker.total > 0:
+                # Hesap: streaming değil — toplam üretildikten sonra regex override
+                import re as _re
+                from robot_waiter_ai.inference.llama_cpp_backend import _strip_markdown as _sm
+                raw = await asyncio.to_thread(llm.generate_reply, llm_input)
+                raw = _sm(raw)
+                correct = order_tracker.total
+                raw = _re.sub(r'[Tt]oplam\s+\d[\d.\s]*TL', f'Toplam {correct} TL', raw)
+                if 'oplam' not in raw:
+                    raw = raw.rstrip('.!') + f'. Toplam {correct} TL.'
+                await _speak(tts, raw, tts_active)
+                reply = raw
+            else:
+                reply = await _speak_streaming(tts, llm, llm_input, tts_active)
         except Exception as e:
             print(f"  ✗ LLM/TTS hatası: {e}")
             if ww_model:
