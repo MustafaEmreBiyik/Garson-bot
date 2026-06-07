@@ -1,0 +1,51 @@
+# wbot_v3_qlora.yaml — Qwen3-4B QLoRA fine-tuning config
+# Eğitim: 4 Haziran 2026, Colab A100-SXM4-40GB
+# Sonuç: train_loss=0.2304, eval_loss=0.1993, formal eval 13/14 (%92)
+
+base_model: "Qwen/Qwen3-4B"
+dataset: "robot_waiter_ai/datasets/processed/wbot_v3_train.jsonl"
+output_dir: "artifacts/wbot_v3_qlora"
+
+# LoRA
+lora_r: 32
+lora_alpha: 64
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+# Training
+epochs: 2
+learning_rate: 2e-4
+batch_size: 4              # A100-SXM4-40GB compat (T4'te 1 yeterli)
+gradient_accumulation: 8   # effective batch = 32 (A100) veya 8 (T4)
+max_seq_length: 2400       # dataset max ölçülen: ~2352 token
+warmup_ratio: 0.05
+lr_scheduler: cosine
+eval_steps: 50
+save_steps: 50
+seed: 42
+valid_ratio: 0.10          # 10% → 300 kayıt valid, 2700 train
+
+# Sonuçlar
+# Toplam adım: 676  (ceil(2700/8) * 4 grad_accum * 2 epoch — A100 batch 4)
+# Süre: ~1.5-2 saat (Colab A100)
+# Train loss (son): 0.2304
+# Eval loss: 0.1993
+# Formal eval (kısa prompt): 11/14 (%78)
+# Formal eval (tam prompt):  13/14 (%92) — E08 eval tasarım sorunu
+# GGUF: Qwen3-4B-wbot_v3-Q4_K_M.gguf (~2.38 GB, Drive'da)
+
+# Notlar:
+# - bnb: NF4 4-bit, double quant, bfloat16 compute
+# - completion-only training: system+user turns masked (-100 labels)
+# - response template: "<|im_start|>assistant\n"
+# - packing: False (variable-length conversations)
+# - optimizer: paged_adamw_8bit
+# - gradient_checkpointing: True
+# - Adapter: Drive garsonbot_runs/wbot_v3/adapter/ (252 MB)

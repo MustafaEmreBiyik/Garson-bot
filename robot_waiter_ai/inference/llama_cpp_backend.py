@@ -15,7 +15,7 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-GGUF_4B  = Path("/home/emk/llama.cpp/Qwen3-4B-Q4_K_M.gguf")
+GGUF_4B  = Path("/home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf")
 GGUF_17B = Path("/home/emk/llama.cpp/Qwen3-1.7B-Q8_0.gguf")
 
 # 4B kalite açısından üstün — 1.7B test edildi, yetersiz bulundu
