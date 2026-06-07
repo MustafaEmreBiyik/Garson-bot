@@ -16,6 +16,7 @@ from __future__ import annotations
 
 import asyncio
 import collections
+from typing import Any
 import io
 import logging
 import re
@@ -187,11 +188,65 @@ def _is_bill_request(text: str) -> bool:
 
 
 def _find_input_device() -> int | None:
-    """USB ses giriş cihazının sounddevice index'ini döndür, bulamazsa None."""
-    for i, d in enumerate(sd.query_devices()):
+    """USB ses giriş cihazının sounddevice index'ini döndür, bulamazsa None.
+
+    "USB PnP" / "PnP Sound" cihazını önceliklendir — Jetson'da bu genellikle
+    gerçek mikrofondur; USB Audio Device ise hoparlör+mikrofon adapttörü olup
+    giriş kalitesi daha düşük olabilir.
+    """
+    devices = list(enumerate(sd.query_devices()))
+    # Önce USB PnP / standalone mic ara
+    for i, d in devices:
+        if "USB" in d["name"] and "PnP" in d["name"] and d["max_input_channels"] > 0:
+            return i
+    # Bulamazsa ilk USB giriş cihazına dön
+    for i, d in devices:
         if "USB" in d["name"] and d["max_input_channels"] > 0:
             return i
     return None
+
+
+class _OpenAIWhisperSTT:
+    """openai-whisper CPU fallback — faster-whisper/CTranslate2 SGEMM yoksa kullan."""
+
+    def __init__(self, model_size: str = "small") -> None:
+        import whisper as _ow
+        print(f"  STT: openai-whisper '{model_size}' yükleniyor (CPU)...")
+        self._model = _ow.load_model(model_size)
+
+    async def transcribe(
+        self,
+        audio_bytes: bytes,
+        *,
+        language: str = "tr",
+        initial_prompt: str | None = None,
+        use_vad: bool = True,
+    ) -> dict:
+        import os as _os, tempfile as _tmp
+        if not audio_bytes:
+            return {"text": "", "segments": [], "language": language,
+                    "language_probability": 0.0, "low_confidence": True}
+        fd, tmp = _tmp.mkstemp(suffix=".wav")
+        _os.close(fd)
+        try:
+            Path(tmp).write_bytes(audio_bytes)
+            kw: dict = {"language": language, "fp16": False}
+            if initial_prompt:
+                kw["initial_prompt"] = initial_prompt
+            result = await asyncio.to_thread(self._model.transcribe, tmp, **kw)
+        finally:
+            try:
+                _os.unlink(tmp)
+            except OSError:
+                pass
+        return {
+            "text": result.get("text", ""),
+            "segments": [{"start": s["start"], "end": s["end"], "text": s["text"]}
+                         for s in result.get("segments", [])],
+            "language": result.get("language", language),
+            "language_probability": 1.0,
+            "low_confidence": False,
+        }
 
 
 # ---------------------------------------------------------------------------
@@ -559,21 +614,18 @@ async def run_demo(adapter_dir: str | None = None) -> None:
     def _stt_backend():
         import os as _os
         override = _os.environ.get("W_BOT_STT_DEVICE", "").lower()
+        if override != "cpu":
+            # CTranslate2 CUDA'yı PyTorch'tan bağımsız sorgula (Jetson driver uyumu için)
+            try:
+                import ctranslate2 as _ct2
+                if _ct2.get_supported_compute_types("cuda"):
+                    print("  STT: CTranslate2 CUDA seçildi")
+                    return "cuda", "float16"
+            except Exception:
+                pass
         try:
-            import torch as _t
-            if _t.cuda.is_available() and override != "cpu":
-                total_gb = _t.cuda.get_device_properties(0).total_memory / (1024 ** 3)
-                if override == "cuda" or total_gb >= _STT_VRAM_THRESHOLD_GB:
-                    import ctranslate2
-                    if ctranslate2.get_supported_compute_types("cuda"):
-                        print(f"  STT: CUDA seçildi (toplam VRAM {total_gb:.1f} GB)")
-                        return "cuda", "float16"
-                print(f"  STT: VRAM dar ({total_gb:.1f} GB < {_STT_VRAM_THRESHOLD_GB:.0f} GB) → CPU int8")
-        except Exception:
-            pass
-        try:
-            import ctranslate2
-            if "int8" in ctranslate2.get_supported_compute_types("cpu"):
+            import ctranslate2 as _ct2
+            if "int8" in _ct2.get_supported_compute_types("cpu"):
                 return "cpu", "int8"
         except Exception:
             pass
@@ -581,11 +633,24 @@ async def run_demo(adapter_dir: str | None = None) -> None:
 
     _stt_dev, _stt_ct = _stt_backend()
     print(f"STT modeli yükleniyor... ({_stt_dev})")
-    stt = SpeechToText(model_size=WHISPER_MODEL, device=_stt_dev, compute_type=_stt_ct)
+    stt: Any = SpeechToText(model_size=WHISPER_MODEL, device=_stt_dev, compute_type=_stt_ct)
     silence_wav = _numpy_to_wav(np.zeros(SAMPLE_RATE, dtype=np.int16), SAMPLE_RATE)
-    await stt.transcribe(silence_wav, language="tr",
-                         initial_prompt=STT_INITIAL_PROMPT)  # modeli ısıt
-    print("STT: hazır\n")
+    # SGEMM testi: gerçek ses benzeri küçük gürültüyle CTranslate2'yi doğrula
+    _test_wav = _numpy_to_wav(
+        (np.random.rand(SAMPLE_RATE // 4) * 200 - 100).astype(np.int16), SAMPLE_RATE
+    )
+    try:
+        await stt.transcribe(_test_wav, language="tr")
+        await stt.transcribe(silence_wav, language="tr", initial_prompt=STT_INITIAL_PROMPT)
+        print("STT: hazır\n")
+    except Exception as _stt_err:
+        if "SGEMM" in str(_stt_err) or "backend" in str(_stt_err).lower() or "cuda" in str(_stt_err).lower():
+            print(f"  ⚠ CTranslate2 hatası ({_stt_err}) → openai-whisper fallback")
+            stt = _OpenAIWhisperSTT(model_size=WHISPER_MODEL)
+            await stt.transcribe(silence_wav, language="tr")
+            print("STT: openai-whisper hazır\n")
+        else:
+            raise
 
     # USB mikrofon cihazını otomatik bul
     input_device = _find_input_device()
