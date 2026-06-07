@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 4 Haziran 2026 | **Sürüm:** 5.6
+**Son güncelleme:** 7 Haziran 2026 | **Sürüm:** 5.7
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -8,19 +8,19 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 
 ## Bir Sonraki Oturum — Hızlı Özet
 
-**Neredeyiz:** wbot_v3 eğitimi tamamlandı (13/14 %92 tam prompt). Adapter hem Drive'da hem Windows'ta lokal var.
+**Neredeyiz:** Jetson'da uçtan uca demo başarıyla tamamlandı (7 Haziran 2026). wbot_v3 GGUF Jetson'da çalışıyor. 32-senaryo eval: 30/32 (%93), gerçek başarısız: yalnızca E19.
 
 **Sıradaki görevler (öncelik sırasıyla):**
 
-1. **wbot_v3 → GGUF dönüşümü** (Colab'da) — adapter + base model merge → GGUF Q4_K_M export → Drive'a kaydet → Jetson'a kopyala
-2. **wbot_v3 48-senaryo eval** (Colab'da) — `eval_adapter.py` üzerinde genişletilmiş test; wbot_v4 için neyin eksik olduğunu görmek
-3. **USB ses adaptörü** (~100 TL, USB→3.5mm) — bu geldikten sonra Jetson'da tam uçtan uca demo mümkün
-4. **wbot_v4** — 48 senaryo + Jetson gerçek ortam testinden sonra; ~750 yeni örnek (bkz. wbot_v4 Planı)
+1. **Whisper medium testi** (Jetson'da) — 16GB VRAM'e sığıp sığmadığı + latency ölçümü
+2. **E19 post-processing fix** (PC'de) — "nasıl bir şey?" yanıtı "?" ile bitmiyorsa `demo_usb.py`'de "Getireyim mi?" ekle
+3. **wbot_v4 dataset üretimi** — ~750 yeni örnek: açıklama+soru (E19), alerji+öneri (E28), anti-hallüsinasyon
+4. **wbot_v4 eğitimi** (Colab A100, 3 epoch) → GGUF → Jetson deploy
 
-**wbot_v3 adapter konumu:**
-- Google Drive: `garsonbot_runs/wbot_v3/adapter/`
-- Windows lokal: `robot_waiter_ai/training/artifacts/wbot_v3_qlora/adapter/` *(git'te değil — 264 MB)*
-- Ubuntu'da gerekirse Drive'dan indir veya Windows'tan kopyala
+**Sistem durumu (7 Haziran 2026):**
+- Jetson: ✅ tam çalışıyor — wake word → STT CUDA → LLM GGUF → Piper TTS → USB hoparlör
+- GGUF: `/home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf` (2.38 GB)
+- Eval: `scripts/eval_gguf.py` — 32 senaryo, çok-turlu destekli, Jetson'da çalıştır
 
 ---
 
@@ -39,7 +39,7 @@ Müşterilerle doğal konuşma, sipariş alma ve menü bilgisi sunma hedeflenmek
 | Ortam | İşlemci | LLM Backend | Durum |
 |-------|---------|-------------|-------|
 | Ubuntu PC (geliştirme) | RTX 4050 | qwen3_backend.py (transformers, 4-bit NF4) | ✅ Çalışıyor |
-| Jetson Orin NX 16GB | Orin GPU (SM87) | llama_cpp_backend.py (GGUF, llama-cpp-python) | ⚠️ Ses adaptörü eksik |
+| Jetson Orin NX 16GB | Orin GPU (SM87) | llama_cpp_backend.py (GGUF, llama-cpp-python) | ✅ Tam çalışıyor (7 Haziran 2026) |
 
 ---
 
@@ -53,6 +53,7 @@ Garson-bot/
 │   ├── demo_usb.py               ✅ Ana demo — wake word → VAD → STT → LLM → Piper TTS
 │   ├── eval_llm.py               ✅ LLM kalite + performans eval (prompt bazlı, 20 turn)
 │   ├── eval_adapter.py           ✅ Fine-tune adapter eval (14 formal + 7 smoke; --full-prompt desteği)
+│   ├── eval_gguf.py              ✅ Jetson GGUF eval — 32 senaryo, çok-turlu (seeded history) destekli
 │   ├── audit_dataset.py          ✅ Dataset ihlal denetimi (TL bağlam, başka, getireyim mi...)
 │   ├── gen_karsilama.py          ✅ wbot_v3 dataset üretim — karşılama (200 kayıt)
 │   ├── gen_siparis_baska.py      ✅ wbot_v3 dataset üretim — sipariş+başka (150 kayıt)
@@ -114,7 +115,8 @@ OrderTracker — kullanıcı metnini parse et, sipariş toplamını takip et
     │  Takas: "X yerine Y" → X çıkar, Y ekle
     │  Per-item adet tespiti: alias önceki 1-2 kelimeye bakılır
     │  Türkçe İ fix: "İ".lower() → "i̇" birleştirme noktası temizlenir
-    │  Hesap istenince LLM girdisine "[Gerçek toplam: X TL]" ekle
+    │  Hesap istenince: non-streaming generate_reply + regex override
+    │  (LLM çıktısındaki toplam order_tracker.total ile değiştirilir)
     ▼
 LLM — otomatik seçim:
     │  llama_cpp_backend.py varsa → Qwen3-4B Q4_K_M GGUF (Jetson)
@@ -139,17 +141,17 @@ Piper TTS → WAV → aplay subprocess (ALSA_OUTPUT_DEVICE ile)
 ### Jetson — llama_cpp_backend.py
 | Parametre | Değer |
 |-----------|-------|
-| Model | Qwen3-4B-Q4_K_M.gguf |
-| Konum | /home/emk/llama.cpp/Qwen3-4B-Q4_K_M.gguf |
+| Model | Qwen3-4B-wbot_v3-Q4_K_M.gguf |
+| Konum | /home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf |
 | Backend | llama-cpp-python 0.3.23 (CUDA SM87) |
 | GPU offload | 37/37 katman (tam GPU) |
-| VRAM | ~2.37 GB / 15.6 GB |
+| VRAM | ~2.38 GB / 15.6 GB |
 | Hız | ~12-15 tok/s |
 | Thinking | Kapalı — _format_prompt() `<think>\n\n</think>` prefix ekler |
-| n_ctx | **1536** |
-| max_tokens | **50** (v4.8 — yanıtlar daha özlü; 1 cümle / 20 kelime hedefi) |
-| Decoding | temperature=0.55, top_p=0.9, top_k=40, repeat_penalty=1.2 (v4.8) |
-| _MAX_HIST_CHARS | **1400** — aşılınca en eski user+assistant turu silinir |
+| n_ctx | **4096** (sistem prompt ~2100 tok olduğundan 1536 yetersizdi) |
+| max_tokens | **65** |
+| Decoding | temperature=0.55, top_p=0.9, top_k=40, repeat_penalty=1.2 |
+| _MAX_HIST_CHARS | **4000** — aşılınca en eski user+assistant turu silinir |
 
 ### PC — qwen3_backend.py
 | Parametre | Değer |
@@ -166,10 +168,10 @@ Piper TTS → WAV → aplay subprocess (ALSA_OUTPUT_DEVICE ile)
 ### Sistem Prompt Token Bütçesi (Jetson)
 | Öğe | Token |
 |-----|-------|
-| Sistem prompt (sabit metin) | ~944 |
-| n_ctx | 1536 |
-| max_tokens | 80 |
-| Konuşmaya kalan | ~512 (~5-6 tur) |
+| Sistem prompt (sabit metin) | ~2100 |
+| n_ctx | 4096 |
+| max_tokens | 65 |
+| Konuşmaya kalan | ~1931 (~10-12 tur) |
 
 **_trim_history():** Toplam geçmiş karakter sayısı _MAX_HIST_CHARS'ı aşınca en eski
 user+assistant ikilisi silinir. Billing bu mekanizmadan etkilenmez — OrderTracker
@@ -274,6 +276,9 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | Prompt v4.8 (max_tok=50, top_k=40, rep_pen=1.2 — kısa yanıt) | 16/16 (%100) | 0 | 2195 ms | — | — |
 | Prompt v4.9 (sıcak ton + W11 fix + max_tok=65 — 18 turn) | 18/18 (%100) | 0 | 2290 ms | 1871 ms | 3189 ms |
 | **Prompt v5.0 (W13 kategori fiyat yasağı + W14 öneri kural — 20 turn)** | **20/20 (%100)** | **0** | — | — | — |
+| **GGUF eval — eval_gguf.py (32 senaryo, Jetson, 7 Haziran 2026)** | **30/32 (%93)** | **2** | — | — | — |
+
+*GGUF eval başarısızları: E19 (açıklama sonrası soru yok — gerçek model hatası), E21 (eval tasarım sorunu — düzeltildi)*
 
 ---
 
@@ -295,6 +300,8 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | W12 | Robotik ve soğuk ton | Teknik doğru ama doğal, samimi Türkçe akışı yok; gerçek bir garsonla konuşulduğu hissi vermiyor | Sistem promptu kural listesi gibi yazılmış; kişilik/ton yönergesi eksik | ✅ Düzeltildi (v4.9 — persona paragrafı + "Harika seçim!" örnekleri + 2 cümle/25 kelime + max_tokens 50→65) |
 | W13 | Kategori listesi sorusunda fiyat söylüyordu | "Çorba ne var?" sorusuna ürün adlarıyla birlikte "TL" fiyat da veriyordu | Kategori listesi için ayrı kural yoktu; genel fiyat yasağı bu durumu kapsamamıştı | ✅ Düzeltildi (v5.0 — kategori içeriği sorusuna özel kural: yalnızca ürün adı say, TL söyleme) |
 | W14 | Öneri sorusunda kategori dışına çıkıyordu | "Tavuk yesem ne yesem?" sorusuna tatlı ve çorba da öneriyordu | Öneri kuralı kategoriyi kısıtlamıyordu | ✅ Düzeltildi (v5.0 — öneri sorusunda kategori belirtildiyse YALNIZCA o kategoriden 1-2 ürün; başka kategori ekleme) |
+| W15 | Ürün açıklaması sonrası soru yok | "Kremalı mantar çorbası nasıl?" → açıklama yapıyor ama "Getireyim mi?" demiyor | wbot_v3 dataseti açıklama+soru örneklerini yeterince içermiyor | ⏳ wbot_v4 |
+| W16 | Alerji yanıtı anlamsız | "Süt alerjim var, ne yiyebilirim?" → "Süt ürünü içermeyen menüümüz var mı?" (model kendine soruyor) | Yetersiz alerji+öneri kombinasyon örneği | ⏳ wbot_v4 |
 
 ---
 
@@ -534,19 +541,20 @@ Hedef: 48 senaryoda %95+ PASS
 
 ### Sonraki Eğitim: wbot_v4 Planı
 
-**Önkoşul:** wbot_v3 → Jetson deploy → gerçek ortam testleri + 48 senaryo eval → gerçek boşlukları tespit et.
+**Önkoşul:** ✅ Jetson deploy tamamlandı. 32-senaryo eval (%93) yapıldı. Gerçek boşluklar tespit edildi.
 
-> wbot_v3 tam prompt 13/14 (%92). wbot_v4 için önce 48 senaryo eval + Jetson gerçek testi yapılacak, ardından data boşlukları belirlenecek.
+> Başlıca eksikler: W15 (açıklama+soru), W16 (alerji+öneri), hallüsinasyon (E34). Gürültülü ortam testinden ek boşluklar çıkabilir.
 
 **Tahmini ihtiyaç:** ~500-800 yeni örnek (wbot_v3 3000 base üzerine)
 
 | # | Kategori | Tahmini Adet | Gerekçe |
 |---|----------|-------------|---------|
-| 1 | İnsancıl/sıcak ton varyasyonları | 200 | Empati, memnuniyet, doğal akış — W12'nin derin çözümü |
-| 2 | Karmaşık sipariş (3+ ürün, değiştir+ekle+hesap) | 150 | Gerçek restoran davranışı |
-| 3 | Alerji/diyet derinlemesi (gluten, vegan, kombine) | 150 | Daha kapsamlı güvenli yönlendirme |
-| 4 | Uzun çok turlu sohbet (6+ tur) | 150 | Bağlam koruması, konu değişikliği |
-| 5 | Konu dışı / güvenlik edge case | 100 | Tartışmalı konular, kişisel sorular |
+| 1 | Ürün açıklaması + "Getireyim mi?" soru | 150 | W15 — E19 başarısızlığının kök nedeni |
+| 2 | Alerji + öneri kombinasyonları | 150 | W16 — "süt alerjim var, ne yiyebilirim?" → somut yanıt |
+| 3 | Anti-hallüsinasyon (menüde olmayan detay) | 100 | E34 — "elma dilim patates" gibi uydurma açıklamalar |
+| 4 | Karmaşık sipariş (3+ ürün, değiştir+ekle+hesap) | 150 | Gerçek restoran davranışı |
+| 5 | Uzun çok turlu sohbet (6+ tur) | 100 | Bağlam koruması, konu değişikliği |
+| 6 | Gürültülü ortam testinden çıkan edge case'ler | ~100 | Gerçek test sonrası eklenecek |
 | **TOPLAM** | | **~750** | |
 
 **wbot_v4 hedef dataset:** ~3750 kayıt (3000 base + 750 yeni)
@@ -558,17 +566,16 @@ Hedef: 48 senaryoda %95+ PASS
 
 | # | Görev | Öncelik | Durum |
 |---|-------|---------|-------|
-| 1 | USB ses adaptörü temin et (~100 TL, USB→3.5mm) | 🔴 Kritik | Donanım yok — tüm ses testleri buna bağlı |
-| 2 | ALSA_OUTPUT_DEVICE ayarla (`aplay -l` ile USB adaptörünü bul) | 🔴 Kritik | Adaptör geldikten sonra |
-| 3 | Tam uçtan uca demo (wake word→STT→LLM→TTS→hoparlör) | 🔴 Kritik | Adaptöre bağlı |
-| 4 | wbot_v3 dataset temizle (`audit_dataset.py --fix` → 2195 temiz base) | 🔴 Kritik | ✅ Tamamlandı — violations.jsonl ayrıldı |
-| 5 | wbot_v3 dataset üretimi (805 yeni örnek, 6 kategori) | 🔴 Kritik | ✅ Tamamlandı — wbot_v3_train.jsonl 3000 kayıt, 0 ihlal |
-| 6 | wbot_v3 eğitimi (3000 kayıt, 2 epoch, Colab A100) | 🔴 Kritik | ✅ Tamamlandı — 676 adım, train_loss=0.2304, eval_loss=0.1993 |
-| 7 | wbot_v3 → 48 senaryo eval (%95+ hedef) | 🟡 Orta | ⏳ Bekliyor — Formal: kısa 11/14 (%78), tam 13/14 (%92); 48 senaryo Colab'da çalıştırılacak |
-| 8 | wbot_v3 adapter → GGUF dönüşümü (Jetson deploy için) | 🟡 Orta | ⏳ Bekliyor — adapter Drive'da hazır; merge + GGUF için Colab'a bir kez daha dönülecek |
-| 9 | Gürültülü ortamda uçtan uca test (restoran müziği + kalabalık) | 🟡 Orta | Ses adaptörüne bağlı |
-| 10 | Whisper medium kalite doğrulaması | 🟡 Orta | Jetson 16 GB entegrasyonunda yapılacak |
-| 11 | wbot_v4 dataset + eğitimi | 🟢 Düşük | 48 senaryo eval + Jetson gerçek ortam testlerinden sonra — PROJE_DURUMU.md → wbot_v4 Planı |
+| 1 | USB ses adaptörü temin et | 🔴 Kritik | ✅ Tamamlandı — card 3 USB Audio Device |
+| 2 | Jetson uçtan uca demo | 🔴 Kritik | ✅ Tamamlandı — 7 Haziran 2026 |
+| 3 | wbot_v3 GGUF Jetson deploy | 🔴 Kritik | ✅ Tamamlandı — /home/emk/models/ |
+| 4 | 3 bug fix (hesap toplam, karşılama soru, kapanış çeşitliliği) | 🔴 Kritik | ✅ Tamamlandı — commit 933a362 |
+| 5 | 32-senaryo GGUF eval | 🟡 Orta | ✅ Tamamlandı — 30/32 (%93), eval_gguf.py |
+| 6 | Whisper medium testi (Jetson'da) | 🟡 Orta | ⏳ Bekliyor |
+| 7 | E19 post-processing fix — açıklama yanıtı "?" ile bitmiyorsa "Getireyim mi?" ekle | 🟡 Orta | ⏳ Bekliyor |
+| 8 | Gürültülü ortam testi (restoran müziği + kalabalık) | 🟡 Orta | ⏳ Bekliyor |
+| 9 | wbot_v4 dataset üretimi (~750 yeni örnek) | 🟢 Düşük | ⏳ Bekliyor |
+| 10 | wbot_v4 eğitimi (Colab A100, 3 epoch) → GGUF → Jetson | 🟢 Düşük | ⏳ Bekliyor |
 
 ## GGUF Dönüşümü — Colab Hücreleri
 
@@ -617,6 +624,28 @@ print("GGUF kaydedildi:", GGUF_PATH)
 scp user@ubuntu_pc:/path/to/Qwen3-4B-wbot_v3-Q4_K_M.gguf /home/emk/llama.cpp/
 # llama_cpp_backend.py'deki MODEL_PATH'i güncelle:
 # MODEL_PATH = "/home/emk/llama.cpp/Qwen3-4B-wbot_v3-Q4_K_M.gguf"
+```
+
+---
+
+## Gelecek Yol Haritası
+
+```
+[ŞU AN] Jetson demo çalışıyor (wbot_v3, %93 eval)
+    ↓
+Whisper medium testi + E19 post-processing fix
+    ↓
+Gürültülü ortam testi (restoran müziği, çoklu konuşmacı)
+    ↓
+wbot_v4 dataset (~750 yeni örnek: açıklama+soru, alerji+öneri, anti-hallüsinasyon)
+    ↓
+Colab A100 — wbot_v4 eğitimi (3 epoch, ~2 saat)
+    ↓
+GGUF dönüşüm → Jetson deploy → 32+ senaryo eval (%95+ hedef)
+    ↓
+ReSpeaker Mic Array entegrasyonu (daha iyi gürültü bastırma)
+    ↓
+Fiziksel robot (W-BOT) entegrasyonu
 ```
 
 ---
@@ -671,6 +700,4 @@ LLM kalite (eval_llm.py):  16/16 PASS (%100)                                    
 8. **UTF-8 zorunlu** — tüm dosya okuma/yazma `encoding='utf-8'`
 9. **OrderTracker kullanıcı metnini parse eder** — LLM çıktısını değil
 10. **Türkçe İ fix** — `user_text.lower().replace('̇', '')` (U+0307 birleştirme noktası)
-11. **scipy kullanma** — NumPy 2.x uyumsuz, np.interp yeterli
-12. **KV cache ön ısıtma** — startup'ta `generate_reply("Merhaba.") + reset_history()`
-13. **Sampling (v4.6)** — `temperature=0.55, top_p=0.9, repetition_penalty=1.15` her iki backend'de. Greedy decoding kalıplaşmaya yol açıyordu; sampling ile yanıtlar tur-tur farklılaşıyor. Eval %100 korunuyor (sıkı zorunluluk kelimeleri prompt'ta vurgulu).
+11. **scipy kullanma** — NumP
