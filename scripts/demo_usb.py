@@ -178,7 +178,7 @@ class OrderTracker:
         self._total = 0
 
 
-_BILL_KEYWORDS = ["hesab", "ödeyeyim", "ödüyorum", "parayı öde", "hesap lütfen",
+_BILL_KEYWORDS = ["hesab", "hesap", "ödeyeyim", "ödüyorum", "parayı öde",
                   "toplam", "tutar", "ne kadar tut", "kaç tl", "kaç lira"]
 
 
