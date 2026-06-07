@@ -78,7 +78,7 @@ WAKEWORD_THRESHOLD = 0.7   # 0.5 çok hassastı — yanlış pozitifler azaltıl
 WAKEWORD_CHUNK     = 1280   # 80 ms @ 16 kHz — openWakeWord beklentisi
 
 # ALSA çıkış cihazı — None → sistem varsayılanı, "plughw:2,0" → Jetson APE jack çıkışı
-ALSA_OUTPUT_DEVICE: str | None = None
+ALSA_OUTPUT_DEVICE: str | None = "plughw:3,0"  # Jetson USB Audio Device (card 3)
 
 # Cümle sonu tespiti: nokta/ünlem/soru işaretinden sonra boşluk veya newline
 _SENT_RE = re.compile(r'(?<=[.!?])[ \t\n]')
