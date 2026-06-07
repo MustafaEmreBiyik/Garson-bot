@@ -68,7 +68,7 @@ _EVAL_CASES = [
      _any_of("elbette", "tabii", "memnuniyetle", "harika"), None),
 
     ("E21", "İki ürün siparişi — her ikisi de onaylanmalı",
-     "Bir çorba ve bir köfte istiyorum.",
+     "Bir mercimek çorbası ve bir ızgara köfte istiyorum.",
      _both(_contains("85"), _contains("240")), None),
 
     ("E22", "Miktar — iki köfte → 480 TL",
