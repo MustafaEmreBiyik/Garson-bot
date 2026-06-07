@@ -131,7 +131,7 @@ class LlamaCppBackend:
         self._llm = Llama(
             model_path=str(self._gguf_path),
             n_gpu_layers=-1,
-            n_ctx=1536,
+            n_ctx=4096,
             verbose=False,
         )
         logger.info("LlamaCppBackend hazır.")
@@ -150,8 +150,8 @@ class LlamaCppBackend:
         parts.append("<|im_start|>assistant\n<think>\n\n</think>\n\n")
         return "".join(parts)
 
-    # n_ctx(1536) - sistem_prompt(~950 tok) - max_tokens(80) ≈ 506 tok → ~1500 karakter
-    _MAX_HIST_CHARS = 1400
+    # n_ctx(4096) - sistem_prompt(~2100 tok) - max_tokens(80) ≈ 1916 tok → ~5700 karakter
+    _MAX_HIST_CHARS = 4000
 
     def _trim_history(self) -> None:
         """Bağlam penceresi dolmadan önce en eski user+assistant turlarını at."""
