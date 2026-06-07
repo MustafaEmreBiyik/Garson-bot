@@ -63,7 +63,7 @@ VAD_MAX_S          = 12    # güvenlik kapağı — en fazla bu kadar kayıt yap
 VAD_ENERGY_THRESH  = 300   # webrtcvad yoksa enerji eşiği (0–32767 arası int16 RMS)
 CONVO_HOLD_S       = 10    # bot yanıtından sonra wake word'süz dinleme penceresi
 
-WHISPER_MODEL = "small"  # Ubuntu host icin stabil; Jetson entegrasyonunda medium tekrar acilabilir.
+WHISPER_MODEL = "medium"  # Jetson 16GB CUDA — 1.7s latency, small'dan daha iyi Türkçe kalitesi
 PIPER_MODEL   = None  # None → otomatik bul
 
 # Whisper'a Türkçe restoran bağlamı ver → menü kelimelerini daha iyi tanır

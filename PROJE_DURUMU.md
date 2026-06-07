@@ -195,8 +195,8 @@ Sistem promptunun (~944 tok) KV cache'e yazılmasını sağlar.
 | Parametre | Değer |
 |-----------|-------|
 | Motor | faster-whisper |
-| Model (PC) | **small** (v4.6 — host VRAM 5.64 GB; Qwen3-4B + Whisper medium birlikte OOM oluyordu) |
-| Model (Jetson hedefi) | **medium** (16 GB VRAM ile birlikte sığar; entegrasyonda açılacak) |
+| Model (PC) | **small** (host VRAM 5.64 GB; Qwen3-4B + Whisper medium birlikte OOM oluyordu) |
+| Model (Jetson) | **medium** ✅ — 16GB CUDA, 1.7s latency (7 Haziran 2026 doğrulandı) |
 | Device seçimi | Toplam VRAM ≥ 8 GB → CUDA float16; aksi halde CPU int8. `W_BOT_STT_DEVICE` env'i ile override edilebilir. |
 | Latency (PC CPU int8, small) | ~130-300ms |
 | Latency (Jetson CUDA float16, medium hedefi) | ~1500-2000ms |
@@ -376,6 +376,7 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 | TTFT (sıcak — KV cache dolu) | ~0.25 sn |
 | STT (Whisper small, CPU ARM) | ~1.9 sn (ölçüldü) |
 | STT (Whisper small, CUDA) | ~0.85-1.1 sn (ölçüldü) |
+| STT (Whisper medium, CUDA) | ~1.7 sn (7 Haziran 2026 ölçüldü) |
 | Piper TTS (CPU) | ~0.60 sn |
 | **İlk ses çıkana kadar (sıcak, CUDA STT)** | **~2.2-2.7 sn** |
 
@@ -571,7 +572,7 @@ Hedef: 48 senaryoda %95+ PASS
 | 3 | wbot_v3 GGUF Jetson deploy | 🔴 Kritik | ✅ Tamamlandı — /home/emk/models/ |
 | 4 | 3 bug fix (hesap toplam, karşılama soru, kapanış çeşitliliği) | 🔴 Kritik | ✅ Tamamlandı — commit 933a362 |
 | 5 | 32-senaryo GGUF eval | 🟡 Orta | ✅ Tamamlandı — 30/32 (%93), eval_gguf.py |
-| 6 | Whisper medium testi (Jetson'da) | 🟡 Orta | ⏳ Bekliyor |
+| 6 | Whisper medium testi (Jetson'da) | 🟡 Orta | ✅ Tamamlandı — 1.7s CUDA, demo_usb.py güncellendi |
 | 7 | E19 post-processing fix — açıklama yanıtı "?" ile bitmiyorsa "Getireyim mi?" ekle | 🟡 Orta | ⏳ Bekliyor |
 | 8 | Gürültülü ortam testi (restoran müziği + kalabalık) | 🟡 Orta | ⏳ Bekliyor |
 | 9 | wbot_v4 dataset üretimi (~750 yeni örnek) | 🟢 Düşük | ⏳ Bekliyor |
