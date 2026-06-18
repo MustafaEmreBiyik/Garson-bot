@@ -121,7 +121,49 @@ pip install -r requirements-llm.txt
 
 ---
 
-## 4. Piper TTS
+## 4. Google Drive'dan İndirilecek Dosyalar
+
+> Repo klonlandıktan sonra bu dosyaları Drive'dan indirip aşağıdaki dizinlere koy.
+
+### 4.1 wbot_v3 Adapter (fine-tuned model ağırlıkları)
+
+**Drive klasörü:** [adapter](https://drive.google.com/drive/folders/1_0IDHoP7LZHJ2RzN4392Q89y85D68iU7)
+
+İndirilecek dosyalar ve hedef dizin:
+
+```
+~/Garson-bot/robot_waiter_ai/training/artifacts/wbot_v3_qlora/adapter/
+├── adapter_model.safetensors   ← 253 MB
+├── adapter_config.json
+├── tokenizer.json
+├── tokenizer_config.json
+├── chat_template.jinja
+└── README.md
+```
+
+```bash
+mkdir -p ~/Garson-bot/robot_waiter_ai/training/artifacts/wbot_v3_qlora/adapter
+# Dosyaları indirip bu dizine koy
+```
+
+### 4.2 GGUF Modeli (opsiyonel — sadece WSL2'de eval çalıştırmak istersen)
+
+**Drive klasörü:** [wbot_v3](https://drive.google.com/drive/folders/1uUkr2DlBo7lnDE9rBQWF3mfzHrCgj_9D)
+
+İndirilecek dosya: `Qwen3-4B-wbot_v3-Q4_K_M.gguf` (2.33 GB)
+
+```bash
+mkdir -p ~/models
+# Dosyayı ~/models/ dizinine koy
+```
+
+> **Not:** Demo (demo_usb.py) Jetson'da çalışır, GGUF orada zaten var. WSL2'de sadece `eval_gguf.py` çalıştıracaksan gerekli.
+
+---
+
+## 5. Piper TTS
+
+### 5.1 Piper Binary
 
 Piper binary'si repo içinde `piper/` dizininde bulunuyor (Linux ARM binary değil, x86_64 binary gerekiyor).
 
@@ -134,15 +176,39 @@ Eğer çalışmazsa (farklı mimari):
 ```bash
 # x86_64 Linux binary indir
 wget https://github.com/rhasspy/piper/releases/download/2023.11.14-2/piper_linux_x86_64.tar.gz
-tar -xzf piper_linux_x86_64.tar.gz
-# Eski piper/ dizinini bu binary ile değiştir
+tar -xzf piper_linux_x86_64.tar.gz -C piper/ --strip-components=1
 ```
 
-Türkçe ses modeli (`tr_TR-fahrettin-medium.onnx`) repo içinde mevcut olmalı.
+### 5.2 Piper Türkçe Ses Modeli
+
+Ses modeli `.gitignore`'da olduğundan repoda yok, manuel indirilmesi gerekiyor.
+
+**Hedef dizin:**
+```
+~/Garson-bot/robot_waiter_ai/models/
+├── tr_TR-fahrettin-medium.onnx       ← 61 MB
+└── tr_TR-fahrettin-medium.onnx.json  ← config
+```
+
+```bash
+cd ~/Garson-bot/robot_waiter_ai/models
+
+# Ses modelini indir
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/tr/tr_TR/fahrettin/medium/tr_TR-fahrettin-medium.onnx
+wget https://huggingface.co/rhasspy/piper-voices/resolve/main/tr/tr_TR/fahrettin/medium/tr_TR-fahrettin-medium.onnx.json
+```
+
+Kontrol et:
+```bash
+echo "test" | ~/Garson-bot/piper/piper \
+  --model ~/Garson-bot/robot_waiter_ai/models/tr_TR-fahrettin-medium.onnx \
+  --output_file /tmp/test.wav
+# /tmp/test.wav oluştuysa TTS çalışıyor
+```
 
 ---
 
-## 5. Günlük Kullanım İş Akışı
+## 6. Günlük Kullanım İş Akışı
 
 ### WSL2'de başlat
 
@@ -188,7 +254,7 @@ python3 scripts/eval_gguf.py --model /path/to/Qwen3-4B-wbot_v3-Q4_K_M.gguf
 
 ---
 
-## 6. VS Code Entegrasyonu (Önerilen)
+## 7. VS Code Entegrasyonu (Önerilen)
 
 Windows'ta VS Code kur, WSL2 eklentisi ile WSL içindeki projeyi doğrudan düzenle:
 
@@ -198,7 +264,7 @@ Windows'ta VS Code kur, WSL2 eklentisi ile WSL içindeki projeyi doğrudan düze
 
 ---
 
-## 7. Sık Karşılaşılan Sorunlar
+## 8. Sık Karşılaşılan Sorunlar
 
 | Sorun | Çözüm |
 |---|---|
@@ -210,7 +276,7 @@ Windows'ta VS Code kur, WSL2 eklentisi ile WSL içindeki projeyi doğrudan düze
 
 ---
 
-## 8. Ne Jetson'da Yapılır, Ne WSL2'de
+## 9. Ne Jetson'da Yapılır, Ne WSL2'de
 
 | Görev | Ortam |
 |---|---|
@@ -224,7 +290,7 @@ Windows'ta VS Code kur, WSL2 eklentisi ile WSL içindeki projeyi doğrudan düze
 
 ---
 
-## 9. Proje Özet Bilgileri
+## 10. Proje Özet Bilgileri
 
 - **Repo:** https://github.com/MustafaEmreBiyik/Garson-bot
 - **Model (GGUF):** `Qwen3-4B-wbot_v3-Q4_K_M.gguf` — Jetson'da `/home/emk/models/`
