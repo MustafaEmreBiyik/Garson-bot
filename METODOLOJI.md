@@ -1,7 +1,7 @@
 # W-BOT Metodoloji Belgesi
 
 **Proje:** Türkçe Konuşan Restoran Garson Robotu (W-BOT)
-**Tarih:** 1 Haziran 2026 (v4.8)
+**Tarih:** 18 Haziran 2026 (v5.8)
 **Hedef:** Fiziksel servis robotuna entegre edilecek, gerçek zamanlı Türkçe sesli yapay zeka asistanı
 
 ---
@@ -174,7 +174,7 @@ OpenAI'ın Whisper modelinin CTranslate2 motoruyla optimize edilmiş versiyonu.
 | small | 244M | İyi — restoran ortamı için yeterli | ~850ms |
 | **medium** | 769M | **Çok iyi — Türkçe kalitesi belirgin yüksek** | **~1500-2000ms** |
 
-v4.5'te `small`'dan `medium`'a geçildi: gürültülü restoran ortamında Türkçe menü kelimelerini daha güvenilir tanıması için. v4.6'da PC tarafında **small'a geri dönüldü**: 5.64 GB GPU'da (RTX 4050) Qwen3-4B + Whisper medium CUDA workspace birlikte sığmıyor (`CUDA failed with error out of memory`). Jetson 16 GB entegrasyonunda medium tekrar açılacak.
+**Jetson'da medium** aktif (7 Haziran 2026 doğrulandı, 1.7s CUDA). **PC'de small** kullanılıyor: 5.64 GB GPU'da (RTX 4050) Qwen3-4B + Whisper medium CUDA workspace birlikte sığmıyor (`CUDA failed with error out of memory`). `demo_usb.py`'deki `_stt_backend()` toplam VRAM'e bakarak otomatik seçer: ≥8 GB → CUDA float16 (Jetson), <8 GB → CPU int8 (PC).
 
 ### STT Cihaz Seçimi (v4.6)
 
@@ -312,12 +312,12 @@ v4.6'da sampling tabanlı decoding'e geçildi:
 Aynı parametreler `qwen3_backend.py` (HuggingFace transformers `model.generate`) ve `llama_cpp_backend.py` (`llm.create_completion`) için ortak. Eval suite 16/16 (%100) PASS oranı korundu; ortalama latency 1745 ms → 2330 ms (greedy → sampling overhead'i).
 
 ### Konuşma Geçmişi Yönetimi
-Jetson'da bağlam penceresi (n_ctx) 1536 token ile sınırlıdır. Sistem prompt (~944 token) + max yanıt (80 token) = ~512 token konuşma geçmişi için kalır. Bu ~5-6 tura karşılık gelir.
+Jetson'da bağlam penceresi (n_ctx) **4096 token** (sistem prompt ~2100 tok olduğundan 1536 yetersizdi). Konuşmaya kalan: ~1931 token (~10-12 tur).
 
 `_trim_history()` fonksiyonu toplam geçmiş boyutu eşiği aşınca en eski user+assistant çiftini siler:
 
 ```python
-_MAX_HIST_CHARS = 1400  # Jetson: karakter cinsinden (~350 token)
+_MAX_HIST_CHARS = 4000  # Jetson: karakter cinsinden
 # PC (qwen3_backend): 12000 karakter — uzun oturumlar için geniş bağlam
 
 def _trim_history(self):
@@ -499,10 +499,10 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | LLM VRAM kullanımı | ~2.37 GB / 15.6 GB |
 | LLM token üretim hızı | ~12-15 tok/s |
 | LLM ilk token (sıcak cache) | ~250ms |
-| STT latency (CUDA float16, medium) | ~1500-2000ms |
+| STT latency (Whisper medium, CUDA float16) | ~1700-2100ms (ölçüldü, 7 Haziran 2026) |
 | TTS sentez (Piper, CPU) | ~500-800ms |
-| **Müşteriye ilk ses (TTFA)** | **~2.2-2.7 saniye** |
-| LLM eval başarı | 16/16 (%100) |
+| **Müşteriye ilk ses (TTFA)** | **~5-7 saniye** (VAD 1.5s + STT 1.7s + LLM+TTS ~2s) |
+| LLM eval başarı (GGUF, Jetson) | 30/32 (%93) |
 
 ---
 
@@ -541,16 +541,22 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 
 **W12 — Robotik ton (✅ v4.9):** Sistem promptu kural listesi biçimindeydi; model doğru kurallara uysa da cevaplar soğuk ve mekanikti. Çözüm: persona paragrafı ("sıcakkanlı, güler yüzlü Türk garson"), "Harika seçim!" benzeri kısa olumlu kabul örnekleri, max_tokens 50→65 (ton için biraz daha yer), kalıp örnekleri kaldırıldı.
 
+### Tamamlananlar (Ek — 7 Haziran 2026)
+- ✅ USB ses adaptörü temin edildi (card 3 USB Audio Device)
+- ✅ Jetson uçtan uca demo: wake word → STT → LLM → TTS → hoparlör
+- ✅ wbot_v3 GGUF Jetson'a deploy edildi (`/home/emk/models/`)
+- ✅ Whisper medium CUDA Jetson'da aktif (1.7s latency)
+- ✅ 32-senaryo eval: 30/32 (%93, `eval_gguf.py`)
+- ✅ 3 bug fix: hesap toplam override, karşılama soru işareti, hesap keyword ("hesap" yalın)
+- ✅ Geliştirme ortamı Windows 11 WSL2'ye taşındı (18 Haziran 2026)
+
 ### Bekleyen ⏳
-| Görev | Engel |
-|-------|-------|
-| Hoparlörden ses çıkışı | USB ses adaptörü (~100 TL) gerekiyor |
-| Uçtan uca tam demo | Ses adaptörüne bağlı |
-| Gürültülü ortam testi (restoran müziği + kalabalık) | Ses adaptörü gerekiyor |
-| Whisper medium kalite doğrulaması | Jetson 16 GB entegrasyonunda yapılacak (PC'de medium VRAM sığmıyor) |
-| wbot_v3 eğitimi (Colab A100, 2 epoch) | ✅ Tamamlandı — 676 adım, train_loss=0.2304, eval_loss=0.1993, kısa 11/14, tam 13/14 |
-| wbot_v3 → 48 senaryo eval (%95+) | ⏳ Bekliyor — Formal eval yapıldı; 48 senaryo Colab'da çalıştırılacak |
-| wbot_v3 adapter → GGUF → Jetson | ⏳ Bekliyor — adapter Drive'da; merge + GGUF için Colab |
+| Görev | Not |
+|-------|-----|
+| E19 post-processing fix | Açıklama yanıtı "?" ile bitmiyorsa "Getireyim mi?" ekle (kod değişikliği) |
+| Gürültülü ortam testi | Restoran müziği + kalabalık ortamda wake word + STT kalitesi |
+| wbot_v4 dataset üretimi | ~750 yeni örnek: W15 (açıklama+soru), W16 (alerji+öneri), anti-hallüsinasyon |
+| wbot_v4 eğitimi | Colab A100, 3 epoch → GGUF → Jetson deploy → %95+ hedef |
 
 ---
 
