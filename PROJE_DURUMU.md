@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 7 Haziran 2026 | **Sürüm:** 5.7
+**Son güncelleme:** 18 Haziran 2026 | **Sürüm:** 5.8
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -8,19 +8,20 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 
 ## Bir Sonraki Oturum — Hızlı Özet
 
-**Neredeyiz:** Jetson'da uçtan uca demo başarıyla tamamlandı (7 Haziran 2026). wbot_v3 GGUF Jetson'da çalışıyor. 32-senaryo eval: 30/32 (%93), gerçek başarısız: yalnızca E19.
+**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor (7 Haziran 2026). Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). Tüm yedekler GitHub + Drive'da.
 
 **Sıradaki görevler (öncelik sırasıyla):**
 
-1. **Whisper medium testi** (Jetson'da) — 16GB VRAM'e sığıp sığmadığı + latency ölçümü
-2. **E19 post-processing fix** (PC'de) — "nasıl bir şey?" yanıtı "?" ile bitmiyorsa `demo_usb.py`'de "Getireyim mi?" ekle
-3. **wbot_v4 dataset üretimi** — ~750 yeni örnek: açıklama+soru (E19), alerji+öneri (E28), anti-hallüsinasyon
-4. **wbot_v4 eğitimi** (Colab A100, 3 epoch) → GGUF → Jetson deploy
+1. **E19 post-processing fix** — "nasıl bir şey?" yanıtı `?` ile bitmiyorsa `demo_usb.py`'de `"Getireyim mi?"` ekle (kod değişikliği, eğitim gerekmez)
+2. **Gürültülü ortam testi** — restoran müziği + kalabalık ortamda Jetson'da wake word + STT kalitesi
+3. **wbot_v4 dataset üretimi** — ~750 yeni örnek: açıklama+soru (W15), alerji+öneri (W16), anti-hallüsinasyon
+4. **wbot_v4 eğitimi** (Colab A100, 3 epoch) → GGUF → Jetson deploy → %95+ hedef
 
-**Sistem durumu (7 Haziran 2026):**
-- Jetson: ✅ tam çalışıyor — wake word → STT CUDA → LLM GGUF → Piper TTS → USB hoparlör
-- GGUF: `/home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf` (2.38 GB)
-- Eval: `scripts/eval_gguf.py` — 32 senaryo, çok-turlu destekli, Jetson'da çalıştır
+**Sistem durumu (18 Haziran 2026):**
+- Jetson: ✅ tam çalışıyor — wake word → Whisper medium CUDA → LLM GGUF → Piper TTS → USB hoparlör
+- GGUF: `/home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf` (2.38 GB) — Drive'da da yedek var
+- Eval: `scripts/eval_gguf.py` — 32 senaryo, %93 (30/32), çok-turlu destekli
+- Geliştirme: Windows 11 WSL2 — kurulum kılavuzu: `WSL2_KURULUM.md`
 
 ---
 
@@ -38,7 +39,7 @@ Müşterilerle doğal konuşma, sipariş alma ve menü bilgisi sunma hedeflenmek
 
 | Ortam | İşlemci | LLM Backend | Durum |
 |-------|---------|-------------|-------|
-| Ubuntu PC (geliştirme) | RTX 4050 | qwen3_backend.py (transformers, 4-bit NF4) | ✅ Çalışıyor |
+| Windows 11 WSL2 (geliştirme) | RTX 4050 | qwen3_backend.py (transformers, 4-bit NF4) | ✅ Çalışıyor — Ubuntu dual-boot kaldırıldı (18 Haziran 2026) |
 | Jetson Orin NX 16GB | Orin GPU (SM87) | llama_cpp_backend.py (GGUF, llama-cpp-python) | ✅ Tam çalışıyor (7 Haziran 2026) |
 
 ---
@@ -323,7 +324,7 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 ## demo_usb.py Yapılandırma Sabitleri
 
 ```python
-WHISPER_MODEL      = "small"   # PC için (v4.6); Jetson 16 GB'da "medium"a geri dönülebilir
+WHISPER_MODEL      = "medium"  # Jetson — 1.7s CUDA (7 Haziran 2026); PC'de "small" kullan (VRAM)
 SAMPLE_RATE        = 16_000
 CHANNELS           = 1
 
