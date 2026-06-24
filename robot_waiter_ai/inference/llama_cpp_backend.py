@@ -15,7 +15,11 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-GGUF_4B  = Path("/home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf")
+_GGUF_FILENAME = "Qwen3-4B-wbot_v3-Q4_K_M.gguf"
+_JETSON_GGUF   = Path("/home/emk/models") / _GGUF_FILENAME
+_REPO_GGUF     = Path(__file__).resolve().parent.parent / "models" / _GGUF_FILENAME
+
+GGUF_4B  = _JETSON_GGUF if _JETSON_GGUF.exists() else _REPO_GGUF
 GGUF_17B = Path("/home/emk/llama.cpp/Qwen3-1.7B-Q8_0.gguf")
 
 # 4B kalite açısından üstün — 1.7B test edildi, yetersiz bulundu
