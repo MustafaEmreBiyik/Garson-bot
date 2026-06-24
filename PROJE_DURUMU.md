@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 18 Haziran 2026 | **Sürüm:** 5.8
+**Son güncelleme:** 24 Haziran 2026 | **Sürüm:** 5.9
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -8,7 +8,7 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 
 ## Bir Sonraki Oturum — Hızlı Özet
 
-**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor (7 Haziran 2026). Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). Tüm yedekler GitHub + Drive'da.
+**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor (7 Haziran 2026). Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. Yeni eval: 31/32 (%96). Tüm yedekler GitHub + Drive'da.
 
 **Sıradaki görevler (öncelik sırasıyla):**
 
@@ -20,7 +20,7 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 **Sistem durumu (18 Haziran 2026):**
 - Jetson: ✅ tam çalışıyor — wake word → Whisper medium CUDA → LLM GGUF → Piper TTS → USB hoparlör
 - GGUF: `/home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf` (2.38 GB) — Drive'da da yedek var
-- Eval: `scripts/eval_gguf.py` — 32 senaryo, %93 (30/32), çok-turlu destekli
+- Eval: `scripts/eval_gguf.py` — 32 senaryo, %96 (31/32), çok-turlu destekli
 - Geliştirme: Windows 11 WSL2 — kurulum kılavuzu: `WSL2_KURULUM.md`
 
 ---
@@ -277,9 +277,9 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | Prompt v4.8 (max_tok=50, top_k=40, rep_pen=1.2 — kısa yanıt) | 16/16 (%100) | 0 | 2195 ms | — | — |
 | Prompt v4.9 (sıcak ton + W11 fix + max_tok=65 — 18 turn) | 18/18 (%100) | 0 | 2290 ms | 1871 ms | 3189 ms |
 | **Prompt v5.0 (W13 kategori fiyat yasağı + W14 öneri kural — 20 turn)** | **20/20 (%100)** | **0** | — | — | — |
-| **GGUF eval — eval_gguf.py (32 senaryo, Jetson, 7 Haziran 2026)** | **30/32 (%93)** | **2** | — | — | — |
+| **GGUF eval — eval_gguf.py (32 senaryo, Jetson, 22 Haziran 2026)** | **31/32 (%96)** | **1** | — | — | — |
 
-*GGUF eval başarısızları: E19 (açıklama sonrası soru yok — gerçek model hatası), E21 (eval tasarım sorunu — düzeltildi)*
+*GGUF eval başarısızları: E19 (açıklama sonrası soru yok — gerçek model hatası). E21 düzeltildi — artık geçiyor.*
 
 ---
 
@@ -572,7 +572,7 @@ Hedef: 48 senaryoda %95+ PASS
 | 2 | Jetson uçtan uca demo | 🔴 Kritik | ✅ Tamamlandı — 7 Haziran 2026 |
 | 3 | wbot_v3 GGUF Jetson deploy | 🔴 Kritik | ✅ Tamamlandı — /home/emk/models/ |
 | 4 | 3 bug fix (hesap toplam, karşılama soru, kapanış çeşitliliği) | 🔴 Kritik | ✅ Tamamlandı — commit 933a362 |
-| 5 | 32-senaryo GGUF eval | 🟡 Orta | ✅ Tamamlandı — 30/32 (%93), eval_gguf.py |
+| 5 | 32-senaryo GGUF eval | 🟡 Orta | ✅ Tamamlandı — 31/32 (%96), eval_gguf.py (22 Haziran 2026) |
 | 6 | Whisper medium testi (Jetson'da) | 🟡 Orta | ✅ Tamamlandı — 1.7s CUDA, demo_usb.py güncellendi |
 | 7 | E19 post-processing fix — açıklama yanıtı "?" ile bitmiyorsa "Getireyim mi?" ekle | 🟡 Orta | ⏳ Bekliyor |
 | 8 | Gürültülü ortam testi (restoran müziği + kalabalık) | 🟡 Orta | ⏳ Bekliyor |

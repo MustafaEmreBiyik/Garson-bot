@@ -1,7 +1,7 @@
 # W-BOT Metodoloji Belgesi
 
 **Proje:** Türkçe Konuşan Restoran Garson Robotu (W-BOT)
-**Tarih:** 18 Haziran 2026 (v5.8)
+**Tarih:** 24 Haziran 2026 (v5.9)
 **Hedef:** Fiziksel servis robotuna entegre edilecek, gerçek zamanlı Türkçe sesli yapay zeka asistanı
 
 ---
@@ -502,7 +502,7 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | STT latency (Whisper medium, CUDA float16) | ~1700-2100ms (ölçüldü, 7 Haziran 2026) |
 | TTS sentez (Piper, CPU) | ~500-800ms |
 | **Müşteriye ilk ses (TTFA)** | **~5-7 saniye** (VAD 1.5s + STT 1.7s + LLM+TTS ~2s) |
-| LLM eval başarı (GGUF, Jetson) | 30/32 (%93) |
+| LLM eval başarı (GGUF, Jetson) | 31/32 (%96) |
 
 ---
 
@@ -549,6 +549,9 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 - ✅ 32-senaryo eval: 30/32 (%93, `eval_gguf.py`)
 - ✅ 3 bug fix: hesap toplam override, karşılama soru işareti, hesap keyword ("hesap" yalın)
 - ✅ Geliştirme ortamı Windows 11 WSL2'ye taşındı (18 Haziran 2026)
+- ✅ WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026)
+- ✅ Jetson SSH kuruldu — 192.168.1.65 (USB device mode üzerinden)
+- ✅ 32-senaryo eval güncellendi: 31/32 (%96) — E21 artık geçiyor, yalnızca E19 kaldı (22 Haziran 2026)
 
 ### Bekleyen ⏳
 | Görev | Not |

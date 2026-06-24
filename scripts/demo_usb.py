@@ -91,6 +91,7 @@ _ORDER_VERBS  = {"istiyorum", "alayım", "alabilir", "getirir", "lütfen",
                  "tane", "adet", "istiyom", "alalım", "getir", "ver"}
 _CANCEL_VERBS = {"istemiyorum", "istemiyom", "iptal", "çıkar", "çıkarın", "kaldır"}
 _QUANTITIES   = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
+_DESCRIPTION_TRIGGERS = {"nasıl", "nedir", "ne gibi", "tarif", "anlat", "hakkında"}
 
 
 def _load_menu_lookup() -> list[tuple[list[str], str, int]]:
@@ -185,6 +186,18 @@ _BILL_KEYWORDS = ["hesab", "hesap", "ödeyeyim", "ödüyorum", "parayı öde",
 def _is_bill_request(text: str) -> bool:
     t = text.lower()
     return any(k in t for k in _BILL_KEYWORDS)
+
+
+def _is_description_question(user_text: str, lookup: list) -> bool:
+    """Kullanıcı menüdeki bir ürün hakkında açıklama soruyor mu? (E19 fix)"""
+    t = user_text.lower().replace('̇', '')
+    if not any(w in t for w in _DESCRIPTION_TRIGGERS):
+        return False
+    for aliases, _, _ in lookup:
+        for alias in aliases:
+            if alias in t:
+                return True
+    return False
 
 
 def _find_input_device() -> int | None:
@@ -800,6 +813,12 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 reply = raw
             else:
                 reply = await _speak_streaming(tts, llm, llm_input, tts_active)
+                # E19 fix: ürün açıklaması sorusuna yanıt "?" ile bitmiyorsa ekle
+                if (not reply.rstrip().endswith("?")
+                        and _is_description_question(user_text, order_tracker._lookup)):
+                    addition = "Getireyim mi?"
+                    await _speak(tts, addition, tts_active)
+                    reply = reply.rstrip() + " " + addition
         except Exception as e:
             print(f"  ✗ LLM/TTS hatası: {e}")
             if ww_model:
