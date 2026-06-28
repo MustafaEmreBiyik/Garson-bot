@@ -117,9 +117,9 @@ def _build_menu_text() -> str:
         if allergens:
             extra_parts.append(f"içerir: {', '.join(allergens)}")
         extra = f" [{'; '.join(extra_parts)}]" if extra_parts else ""
-        cal_str = f", ~{calories} kcal" if calories else ""
+        cal_note = f" Yaklaşık {calories} kcal." if calories else ""
         pairs_str = f" [iyi gider: {', '.join(pairs)}]" if pairs else ""
-        lines.append(f"  - {name}: {price} TL{cal_str}  ({desc}){extra}{pairs_str}")
+        lines.append(f"  - {name}: {price} TL  ({desc}{cal_note}){extra}{pairs_str}")
     return "\n".join(lines).strip()
 
 
