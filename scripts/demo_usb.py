@@ -100,7 +100,7 @@ _CONFIRM_STARTS      = {"evet", "hayır", "tabii", "tamam", "olur", "olmaz", "pe
 _OFFENSIVE_TERMS     = {
     "salak", "gerizekalı", "geri zekalı", "aptal", "ahmak",
     "mankafa", "embesil", "şerefsiz", "piç", "orospu",
-    "siktir", "oç", "göt",
+    "siktir", "oç", "göt", "defol",
 }
 
 
@@ -246,7 +246,10 @@ def _is_off_menu_order(text: str, lookup: list, *, in_convo: bool) -> bool:
     if not words or words[0] in _CONFIRM_STARTS:
         return False
     _STOPWORDS = {"bir", "de", "da", "ile", "ve", "mi", "mı", "mu", "mü",
-                  "lütfen", "acaba", "bana", "bize", "buraya"}
+                  "lütfen", "acaba", "bana", "bize", "buraya",
+                  "sipariş", "siparişi", "siparişim", "siparişimi",
+                  "bitirmek", "bitir", "bitsin", "tamamlamak", "tamamla",
+                  "kapatmak", "kapat", "yeter", "bırak", "bırakın"}
     noise = _ORDER_VERBS | set(_QUANTITIES.keys()) | _STOPWORDS
     content_words = [w for w in words if w not in noise]
     return len(content_words) >= 1
