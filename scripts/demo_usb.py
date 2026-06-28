@@ -79,7 +79,7 @@ WAKEWORD_THRESHOLD = 0.7   # 0.5 çok hassastı — yanlış pozitifler azaltıl
 WAKEWORD_CHUNK     = 1280   # 80 ms @ 16 kHz — openWakeWord beklentisi
 
 # ALSA çıkış cihazı — None → sistem varsayılanı, "plughw:2,0" → Jetson APE jack çıkışı
-ALSA_OUTPUT_DEVICE: str | None = "plughw:0,0"  # Jetson USB Audio Device (card 0)
+ALSA_OUTPUT_DEVICE: str | None = "plughw:3,0"  # Jetson USB Audio Device (card 3)
 
 # Cümle sonu tespiti: nokta/ünlem/soru işaretinden sonra boşluk veya newline
 _SENT_RE = re.compile(r'(?<=[.!?])[ \t\n]')
@@ -92,6 +92,11 @@ _ORDER_VERBS  = {"istiyorum", "alayım", "alabilir", "getirir", "lütfen",
 _CANCEL_VERBS = {"istemiyorum", "istemiyom", "iptal", "çıkar", "çıkarın", "kaldır"}
 _QUANTITIES   = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
 _DESCRIPTION_TRIGGERS = {"nasıl", "nedir", "ne gibi", "tarif", "anlat", "hakkında"}
+
+_STT_LANG_PROB_MIN   = 0.50   # Guard 1: Whisper dil güven eşiği
+_STT_MIN_WORDS_FRESH = 2      # Guard 1: Fresh turn'de ≤ bu kadar kelime → VAD kesimi şüpheli
+_VAGUE_TERMS         = {"şey", "şeyler", "birşey", "birşeyler"}
+_CONFIRM_STARTS      = {"evet", "hayır", "tabii", "tamam", "olur", "olmaz", "peki", "kesinlikle"}
 
 
 def _load_menu_lookup() -> list[tuple[list[str], str, int]]:
@@ -198,6 +203,48 @@ def _is_description_question(user_text: str, lookup: list) -> bool:
             if alias in t:
                 return True
     return False
+
+
+def _stt_low_confidence(result: dict, text: str, *, in_convo: bool) -> bool:
+    """Guard 1: STT güvensizse True döndür.
+
+    (a) language_probability eşiğin altındaysa — Whisper Türkçe'den emin değil.
+    (b) Fresh turn (in_convo=False) VE çok kısa metin — VAD erken kesti.
+    Conversation hold'da kelime sayısı koşulu uygulanmaz: "evet", "tamam" geçerli.
+    """
+    lang_prob = result.get("language_probability", 1.0)
+    if lang_prob < _STT_LANG_PROB_MIN:
+        return True
+    if not in_convo and len(text.split()) <= _STT_MIN_WORDS_FRESH:
+        return True
+    return False
+
+
+def _is_off_menu_order(text: str, lookup: list, *, in_convo: bool) -> bool:
+    """Guard 2: Sipariş fiili var ama menü eşleşmiyorsa True döndür.
+
+    Tüm koşullar aynı anda doğru olmalı:
+      1. _ORDER_VERBS metinde var
+      2. _match_items() boş döndü
+      3. _VAGUE_TERMS yok ("birşey istiyorum" → LLM'e bırak)
+      4. İlk kelime _CONFIRM_STARTS'ta değil ("evet, alayım" → LLM'e bırak)
+      5. Fiil/miktar/stopword çıktıktan sonra en az 1 içerik kelimesi kalıyor
+    """
+    t = text.lower().replace('̇', '')
+    if not any(v in t for v in _ORDER_VERBS):
+        return False
+    if _match_items(t, lookup):
+        return False
+    if any(vague in t for vague in _VAGUE_TERMS):
+        return False
+    words = t.split()
+    if not words or words[0] in _CONFIRM_STARTS:
+        return False
+    _STOPWORDS = {"bir", "de", "da", "ile", "ve", "mi", "mı", "mu", "mü",
+                  "lütfen", "acaba", "bana", "bize", "buraya"}
+    noise = _ORDER_VERBS | set(_QUANTITIES.keys()) | _STOPWORDS
+    content_words = [w for w in words if w not in noise]
+    return len(content_words) >= 1
 
 
 def _find_input_device() -> int | None:
@@ -782,6 +829,28 @@ async def run_demo(adapter_dir: str | None = None) -> None:
 
         print(f"\nMüşteri: {user_text}")
         print(f"  ⏱  STT: {_stt_ms:.0f}ms", flush=True)
+
+        # --- Guard 1: STT düşük güven ---
+        if _stt_low_confidence(result, user_text, in_convo=conversation_active):
+            print("  ⚠  STT güven düşük — tekrar dinleniyor", flush=True)
+            _guard1_msg = "Özür dilerim, tam anlayamadım. Tekrar söyler misiniz?"
+            try:
+                await _speak(tts, _guard1_msg, tts_active)
+            except Exception as _g1e:
+                logger.warning("Guard1 TTS hatası: %s", _g1e)
+            conversation_active = True
+            continue
+
+        # --- Guard 2: Menü-dışı sipariş ---
+        if _is_off_menu_order(user_text, order_tracker._lookup, in_convo=conversation_active):
+            print("  ⚠  Menü-dışı ürün tespit edildi", flush=True)
+            _guard2_msg = "Maalesef bu ürün menümüzde yok. Başka bir şey söyleyebilir miyim?"
+            try:
+                await _speak(tts, _guard2_msg, tts_active)
+            except Exception as _g2e:
+                logger.warning("Guard2 TTS hatası: %s", _g2e)
+            conversation_active = True
+            continue
 
         # 3+5. Streaming: LLM üretim + TTS sentez + oynatma paralel pipeline
         print("  ⏳ Yanıt üretiliyor...", flush=True)
