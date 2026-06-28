@@ -19,6 +19,7 @@ import collections
 from typing import Any
 import io
 import logging
+import random
 import re
 import sys
 import threading
@@ -75,7 +76,7 @@ STT_INITIAL_PROMPT = (
 WAKEWORD_MODEL_PATH = (
     Path(__file__).resolve().parent.parent / "robot_waiter_ai" / "models" / "hey_garson.onnx"
 )
-WAKEWORD_THRESHOLD = 0.7   # 0.5 çok hassastı — yanlış pozitifler azaltıldı
+WAKEWORD_THRESHOLD = 0.85  # 0.7'de yanlış pozitif görüldü — yükseltildi
 WAKEWORD_CHUNK     = 1280   # 80 ms @ 16 kHz — openWakeWord beklentisi
 
 # ALSA çıkış cihazı — None → sistem varsayılanı, "plughw:2,0" → Jetson APE jack çıkışı
@@ -100,7 +101,8 @@ _CONFIRM_STARTS      = {"evet", "hayır", "tabii", "tamam", "olur", "olmaz", "pe
 _OFFENSIVE_TERMS     = {
     "salak", "gerizekalı", "geri zekalı", "aptal", "ahmak",
     "mankafa", "embesil", "şerefsiz", "piç", "orospu",
-    "siktir", "oç", "göt", "defol",
+    "siktir", "sikerim", "sikeyim", "sikiyor", "oç", "göt",
+    "defol", "amk", "bok", "orospu",
 }
 
 
@@ -259,6 +261,41 @@ def _is_offensive(text: str) -> bool:
     """Guard 3: Hakaret veya küfür içeriyorsa True döndür."""
     t = text.lower().replace('̇', '')
     return any(term in t for term in _OFFENSIVE_TERMS)
+
+
+_FAREWELL_TRIGGERS = {
+    "güle güle", "görüşürüz", "hoşça kal", "elveda",
+    "teşekkürler", "teşekkür ederim", "teşekkür", "sağ olun", "sağ ol",
+    "iyi günler", "iyi akşamlar", "iyi geceler",
+}
+_FAREWELL_TEMPLATES = [
+    "Güle güle! Tekrar bekleriz.",
+    "Teşekkürler, iyi günler! Tekrar görüşmek üzere.",
+    "Kolay gelsin, tekrar bekleriz!",
+]
+
+
+def _fast_path_reply(text: str) -> str | None:
+    """Veda/kapanış intenti için LLM'i atlayıp şablon yanıt döndür.
+
+    Yalnızca kısa (≤6 kelime) ve sadece veda/teşekkür içeren girişlerde tetiklenir.
+    Sipariş fiili veya soru işareti varsa LLM'e bırakılır.
+    """
+    t = text.lower().strip().replace('̇', '')
+    if len(t.split()) > 6:
+        return None
+    if any(v in t for v in _ORDER_VERBS):
+        return None
+    if "?" in t:
+        return None
+    if any(fw in t for fw in _FAREWELL_TRIGGERS):
+        return random.choice(_FAREWELL_TEMPLATES)
+    return None
+
+
+def _greet() -> str:
+    """Karşılama cümlesi — wake word ve ROS 'geldim' sinyali için tek nokta."""
+    return "Merhaba, hoş geldiniz! Ben W-BOT. Nasıl yardımcı olabilirim?"
 
 
 def _find_input_device() -> int | None:
@@ -771,8 +808,6 @@ async def run_demo(adapter_dir: str | None = None) -> None:
 
     print("\n✓ Tüm modeller hazır!\n")
 
-    GREETING = "Merhaba, hoş geldiniz! Ben W-BOT. Size nasıl yardımcı olabilirim?"
-
     # Wake word modunda karşılamayı ilk seslenişe bırak
     ww_task: "asyncio.Task | None" = None
     if ww_model:
@@ -780,9 +815,10 @@ async def run_demo(adapter_dir: str | None = None) -> None:
         ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
     else:
         # ENTER modunda karşılamayı hemen söyle
-        print(f"W-BOT: {GREETING}")
+        _greeting = _greet()
+        print(f"W-BOT: {_greeting}")
         try:
-            await _speak(tts, GREETING, tts_active)
+            await _speak(tts, _greeting, tts_active)
         except Exception as e:
             logger.warning("Karşılama TTS hatası: %s", e)
 
@@ -829,9 +865,10 @@ async def run_demo(adapter_dir: str | None = None) -> None:
             # Yeni müşteri oturumunda karşıla, ardından direkt kayda geç
             if new_customer and ww_model:
                 new_customer = False
-                print(f"W-BOT: {GREETING}")
+                _greeting = _greet()
+                print(f"W-BOT: {_greeting}")
                 try:
-                    await _speak(tts, GREETING, tts_active)
+                    await _speak(tts, _greeting, tts_active)
                 except Exception as e:
                     logger.warning("Karşılama TTS hatası: %s", e)
 
@@ -901,6 +938,20 @@ async def run_demo(adapter_dir: str | None = None) -> None:
             except Exception as _g3e:
                 logger.warning("Guard3 TTS hatası: %s", _g3e)
             conversation_active = True
+            continue
+
+        # --- Fast-path: Veda / kapanış şablonu (LLM'i atlar) ---
+        _fp = _fast_path_reply(user_text)
+        if _fp:
+            print(f"W-BOT:   {_fp}", flush=True)
+            try:
+                await _speak(tts, _fp, tts_active)
+            except Exception as _fpe:
+                logger.warning("Fast-path TTS hatası: %s", _fpe)
+            pending_reset = True
+            conversation_active = True
+            if ww_model:
+                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
 
         # 3+5. Streaming: LLM üretim + TTS sentez + oynatma paralel pipeline
