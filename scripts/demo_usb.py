@@ -918,8 +918,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
             conversation_active = True
             continue
 
-        # --- Guard 2: Menü-dışı sipariş ---
-        if _is_off_menu_order(user_text, order_tracker._lookup, in_convo=conversation_active):
+        # --- Guard 2: Menü-dışı sipariş (hesap isteklerini atla) ---
+        if not _is_bill_request(user_text) and _is_off_menu_order(user_text, order_tracker._lookup, in_convo=conversation_active):
             print("  ⚠  Menü-dışı ürün tespit edildi", flush=True)
             _guard2_msg = "Maalesef bu ürün menümüzde yok. Başka bir şey söyleyebilir miyim?"
             try:
@@ -949,7 +949,7 @@ async def run_demo(adapter_dir: str | None = None) -> None:
             except Exception as _fpe:
                 logger.warning("Fast-path TTS hatası: %s", _fpe)
             pending_reset = True
-            conversation_active = True
+            conversation_active = False  # _record ve ww açık kalmasın — doğrudan wake word'e dön
             if ww_model:
                 ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
             continue
