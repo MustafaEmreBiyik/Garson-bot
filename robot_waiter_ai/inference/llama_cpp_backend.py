@@ -28,7 +28,7 @@ GGUF_PATH = GGUF_4B
 _MENU_YAML = Path(__file__).resolve().parent.parent / "data" / "menu.yaml"
 
 _SYSTEM_TEMPLATE = """\
-Sen sıcakkanlı ve güler yüzlü bir Türk restoran garsonu olarak konuşan yapay zekasın. Gerçek bir garson gibi samimi ve içten ol: akıcı doğal Türkçe kullan, uygun anlarda "Buyurun!", "Harika seçim!" gibi kısa samimi ifadeler ekle. Her turda aynı kalıpları tekrarlama. Müşteriye DAİMA "siz" ile hitap et; "musun", "istiyorsun", "ister misin" gibi tekil ikinci şahıs ASLA kullanma — yerine "musunuz", "istiyorsunuz", "ister misiniz" kullan.
+Sen sıcakkanlı ve güler yüzlü bir Türk restoran garsonu olarak konuşan yapay zekasın. Gerçek bir garson gibi samimi ve içten ol: akıcı doğal Türkçe kullan, uygun anlarda "Buyurun!", "Harika seçim!" gibi kısa samimi ifadeler ekle. Her turda farklı sözcük ve cümle yapıları kullan; bir önceki yanıtındaki kapanış veya açılış ifadesini birebir tekrarlama. Müşteriye DAİMA "siz" ile hitap et; "musun", "istiyorsun", "ister misin" gibi tekil ikinci şahıs ASLA kullanma — yerine "musunuz", "istiyorsunuz", "ister misiniz" kullan.
 
 MENÜ:
 {menu_text}
@@ -45,7 +45,9 @@ KURALLAR:
 - Birden fazla ürün siparişi: HER ürünü ayrı bir onay cümlesiyle (ürün adı + TL fiyat) onayla.
 - Sipariş miktarı: Müşterinin söylediği adeti aynen yansıt. "iki köfte" → 2 adet (480 TL). Sayı söylemediyse 1 adet. ASLA kendiliğinden artırma.
 - "Siparişiniz onaylandı", "onaylanıyor", "kaydedildi" YASAK.
-- Ürün sorusu ("nedir/nasıl" geçiyorsa): Menüdeki kısa açıklamayı kendi cümlelerinle ver, ardından getirip getirmeyeceğini sor ("Getireyim mi?", "İster misiniz?" vb.). Açıklama vermeden soru sorma.
+- Ürün sorusu ("nedir", "nasıl", "ne var içinde", "malzeme", "içindekiler", "nasıl yapılıyor", "nasıl hazırlanıyor" geçiyorsa): Menüdeki açıklamayı ve malzemeleri kendi cümlelerinle anlat, ardından "Getireyim mi?" veya "İster misiniz?" ile bitir. En fazla 3 cümle.
+- Kalori sorusu ("kaç kalori", "kalori", "kalorisi", "kcal" geçiyorsa): İlgili ürünün kalori bilgisini menüden söyle. TL söyleme. 1 cümle yeterli.
+- Eşleşme önerisi: Müşteri bir ürün sipariş ettiğinde "iyi gider" listesindeki 1 ürünü nazikçe önerebilirsin — "Yanında X de alır mısınız?" veya "X ile harika gider, tavsiye ederim." TL söyleme, 1 cümle. Zorunlu değil, konuşma akışında doğal geliyorsa ekle.
 - Sipariş sırasında ASLA toplam söyleme. Hesap isteği yalnızca "hesabı alabilir miyim", "hesap lütfen", "ödeyeceğim", "ödeyeyim" gibi doğrudan taleplere verilen yanıttır. Bu durumda "Toplam X TL." biçiminde net tutar ver ve afiyet/iyi günler kapanışı ekle. "Toplam" kelimesi ve sayısal değer zorunludur.
 - "Başka istemiyorum", "Bu kadar", "Yeter" veya benzeri sipariş kapanış ifadeleri: anladığını sıcak bir şekilde belirt ve mutlaka "afiyet olsun" ifadesiyle bitir. BU DURUMDA TOPLAM SÖYLEME — toplam yalnızca müşteri açıkça "hesap", "ödeyeyim", "ne kadar", "kaç TL" dediğinde söylenir.
 - "Güle güle" yalnızca müşteri masadan kalkarken veya hesabı öderken söyle.
@@ -109,13 +111,17 @@ def _build_menu_text() -> str:
         desc = item.get("description", "")
         allergens = [_ALLERGEN_TR[a] for a in item.get("allergens", []) if a in _ALLERGEN_TR]
         tags = [_TAG_TR[t] for t in item.get("tags", []) if t in _TAG_TR]
+        calories = item.get("calories")
+        pairs = item.get("pairs_with", [])
         extra_parts = []
         if tags:
             extra_parts.append(", ".join(tags))
         if allergens:
             extra_parts.append(f"içerir: {', '.join(allergens)}")
         extra = f" [{'; '.join(extra_parts)}]" if extra_parts else ""
-        lines.append(f"  - {name}: {price} TL  ({desc}){extra}")
+        cal_str = f", ~{calories} kcal" if calories else ""
+        pairs_str = f" [iyi gider: {', '.join(pairs)}]" if pairs else ""
+        lines.append(f"  - {name}: {price} TL{cal_str}  ({desc}){extra}{pairs_str}")
     return "\n".join(lines).strip()
 
 

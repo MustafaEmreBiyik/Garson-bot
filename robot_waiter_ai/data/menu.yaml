@@ -3,92 +3,118 @@ menu:
     name: Mercimek Çorbası
     category: Çorba
     price: 85
+    calories: 220
     description: Kırmızı mercimek, soğan ve havuç ile günlük hazırlanır.
     allergens: [gluten]
     availability: true
     tags: [vegetarian, traditional]
     aliases: ["mercimek", "mercimek çorbası", "mercimek corbasi"]
+    pairs_with: ["Izgara Köfte", "Et Döner"]
+
   - id: soup_2
     name: Kremalı Mantar Çorbası
     category: Çorba
     price: 95
+    calories: 280
     description: Taze dağ mantarları ve kremanın eşsiz uyumu.
     allergens: [dairy, gluten]
     availability: true
     tags: [vegetarian]
     aliases: ["mantar çorbası", "mantar corbasi"]
-    
+    pairs_with: ["Izgara Tavuk Salata", "Limonata"]
+
   - id: main_1
     name: Izgara Köfte
     category: Ana Yemek
     price: 240
+    calories: 480
     description: Kasap köfte, elma dilim patates ve köz biber ile servis edilir.
     allergens: [gluten]
     availability: true
     tags: [meat, traditional]
     aliases: ["köfte", "kofte"]
+    pairs_with: ["Yayık Ayran", "Şalgam Suyu", "Mercimek Çorbası"]
+
   - id: main_2
     name: Et Döner
     category: Ana Yemek
     price: 280
+    calories: 550
     description: İnce dilimlenmiş dana eti, özel soslu lavaş ve sumaklı soğan ile.
     allergens: [gluten]
     availability: true
     tags: [meat]
     aliases: ["döner", "doner"]
+    pairs_with: ["Yayık Ayran", "Şalgam Suyu"]
+
   - id: main_3
     name: Izgara Tavuk Salata
     category: Ana Yemek
     price: 210
-    description: Özel marineli tavuk, taze yeşillikler.
+    calories: 290
+    description: Özel marineli tavuk göğsü, taze roka, domates ve zeytinyağı sosu ile.
     allergens: []
     availability: true
     tags: [chicken, light]
     aliases: ["tavuk salata", "tavuklu salata"]
+    pairs_with: ["Limonata", "Yayık Ayran"]
 
   - id: dessert_1
     name: Fırın Sütlaç
     category: Tatlı
     price: 100
-    description: Fırında üzeri kızarmış günlük taze sütlaç.
+    calories: 350
+    description: Fırında üzeri kızarmış, günlük taze sütle hazırlanan geleneksel sütlaç.
     allergens: [dairy]
     availability: true
     tags: [traditional, sweet]
     aliases: ["sütlaç", "sutlac"]
+    pairs_with: ["Limonata"]
+
   - id: dessert_2
     name: Künefe
     category: Tatlı
     price: 140
-    description: Özel Hatay peyniri ve ince tel kadayıf, sıcak servis.
+    calories: 480
+    description: Özel Hatay peyniri ve ince tel kadayıf, şerbetle sıcak servis edilir.
     allergens: [dairy, gluten, nuts]
     availability: true
     tags: [sweet, hot]
     aliases: ["kunefe"]
+    pairs_with: ["Şalgam Suyu"]
 
   - id: drink_1
     name: Yayık Ayran
     category: İçecek
     price: 45
-    description: Ev yapımı köpüklü soğuk ayran.
+    calories: 60
+    description: Ev yapımı, köpüklü, soğuk servis ayran.
     allergens: [dairy]
     availability: true
     tags: [cold]
     aliases: ["ayran"]
+    pairs_with: ["Izgara Köfte", "Et Döner"]
+
   - id: drink_2
     name: Limonata
     category: İçecek
     price: 70
-    description: Taze nane yaprakları ile naneli limonata.
+    calories: 90
+    description: Taze nane yaprakları ve limon ile hazırlanan soğuk limonata.
     allergens: []
     availability: true
     tags: [cold, refreshing]
     aliases: ["limonata"]
+    pairs_with: ["Izgara Tavuk Salata", "Fırın Sütlaç"]
+
   - id: drink_3
     name: Şalgam Suyu
     category: İçecek
     price: 50
-    description: Acılı veya acısız seçenekleri ile soğuk şalgam.
+    calories: 25
+    description: Acılı veya acısız seçenekleri ile soğuk, sindirimi kolaylaştıran şalgam.
     allergens: []
     availability: true
     tags: [cold, traditional]
     aliases: ["şalgam", "salgam"]
+    pairs_with: ["Et Döner", "Izgara Köfte", "Künefe"]
