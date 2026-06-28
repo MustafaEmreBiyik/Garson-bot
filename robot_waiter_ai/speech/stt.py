@@ -226,6 +226,12 @@ class SpeechToText:
                 initial_prompt=initial_prompt,
                 vad_filter=vad_enabled,
                 vad_parameters={"min_silence_duration_ms": _VAD_MIN_SILENCE_MS},
+                beam_size=5,
+                temperature=0.0,
+                condition_on_previous_text=False,
+                compression_ratio_threshold=2.4,
+                log_prob_threshold=-1.0,
+                no_speech_threshold=0.6,
                 word_timestamps=False,
             )
             # Consume the generator fully inside the worker thread.

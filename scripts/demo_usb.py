@@ -97,6 +97,11 @@ _STT_LANG_PROB_MIN   = 0.50   # Guard 1: Whisper dil güven eşiği
 _STT_MIN_WORDS_FRESH = 2      # Guard 1: Fresh turn'de ≤ bu kadar kelime → VAD kesimi şüpheli
 _VAGUE_TERMS         = {"şey", "şeyler", "birşey", "birşeyler"}
 _CONFIRM_STARTS      = {"evet", "hayır", "tabii", "tamam", "olur", "olmaz", "peki", "kesinlikle"}
+_OFFENSIVE_TERMS     = {
+    "salak", "gerizekalı", "geri zekalı", "aptal", "ahmak",
+    "mankafa", "embesil", "şerefsiz", "piç", "orospu",
+    "siktir", "oç", "göt",
+}
 
 
 def _load_menu_lookup() -> list[tuple[list[str], str, int]]:
@@ -247,6 +252,12 @@ def _is_off_menu_order(text: str, lookup: list, *, in_convo: bool) -> bool:
     return len(content_words) >= 1
 
 
+def _is_offensive(text: str) -> bool:
+    """Guard 3: Hakaret veya küfür içeriyorsa True döndür."""
+    t = text.lower().replace('̇', '')
+    return any(term in t for term in _OFFENSIVE_TERMS)
+
+
 def _find_input_device() -> int | None:
     """USB ses giriş cihazının sounddevice index'ini döndür, bulamazsa None.
 
@@ -263,6 +274,23 @@ def _find_input_device() -> int | None:
     for i, d in devices:
         if "USB" in d["name"] and d["max_input_channels"] > 0:
             return i
+    return None
+
+
+def _find_output_device() -> str | None:
+    """USB hoparlörün ALSA cihaz string'ini ('plughw:X,Y') döndür.
+
+    sounddevice cihaz isimlerindeki '(hw:KART,CİHAZ)' ifadesini ayrıştırır.
+    "USB Audio" içeren ama "PnP" içermeyen (= hoparlör) ve çıkış kanalı olan
+    cihazı bulur. Kart numarası replug/boot'ta değişse de isim sabit kalır.
+    Bulamazsa None (ALSA_OUTPUT_DEVICE sabiti fallback olarak kalır).
+    """
+    for d in sd.query_devices():
+        name = d["name"]
+        if "USB Audio" in name and "PnP" not in name and d["max_output_channels"] > 0:
+            m = re.search(r"hw:(\d+),(\d+)", name)
+            if m:
+                return f"plughw:{m.group(1)},{m.group(2)}"
     return None
 
 
@@ -719,6 +747,15 @@ async def run_demo(adapter_dir: str | None = None) -> None:
     else:
         print("Mikrofon: varsayılan cihaz")
 
+    # USB hoparlörü isimle oto-tespit — kart numarası replug/boot'ta kayabilir
+    global ALSA_OUTPUT_DEVICE
+    _detected_out = _find_output_device()
+    if _detected_out:
+        ALSA_OUTPUT_DEVICE = _detected_out
+        print(f"Hoparlör: {_detected_out} (oto-tespit)")
+    else:
+        print(f"Hoparlör: {ALSA_OUTPUT_DEVICE} (sabit fallback)")
+
     order_tracker = OrderTracker()
 
     # Wake word
@@ -849,6 +886,17 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 await _speak(tts, _guard2_msg, tts_active)
             except Exception as _g2e:
                 logger.warning("Guard2 TTS hatası: %s", _g2e)
+            conversation_active = True
+            continue
+
+        # --- Guard 3: Hakaret / küfür ---
+        if _is_offensive(user_text):
+            print("  ⚠  Uygunsuz dil tespit edildi", flush=True)
+            _guard3_msg = "Yalnızca sipariş ve menü konularında yardımcı olabilirim. Başka bir şey söyleyebilir misiniz?"
+            try:
+                await _speak(tts, _guard3_msg, tts_active)
+            except Exception as _g3e:
+                logger.warning("Guard3 TTS hatası: %s", _g3e)
             conversation_active = True
             continue
 
