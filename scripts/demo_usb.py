@@ -263,7 +263,8 @@ def _is_off_menu_order(text: str, lookup: list, *, in_convo: bool) -> bool:
       5. Fiil/miktar/stopword çıktıktan sonra en az 1 içerik kelimesi kalıyor
     """
     t = text.lower().replace('̇', '')
-    if not any(v in t for v in _ORDER_VERBS):
+    # Kelime sınırı ile eşleştir — "verdim" içindeki "ver" substring'i tetiklemesin
+    if not any(re.search(r'\b' + re.escape(v) + r'\b', t) for v in _ORDER_VERBS):
         return False
     if _match_items(t, lookup):
         return False

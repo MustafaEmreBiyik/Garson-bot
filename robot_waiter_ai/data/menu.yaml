@@ -32,7 +32,7 @@ menu:
     allergens: [gluten]
     availability: true
     tags: [meat, traditional]
-    aliases: ["köfte", "kofte"]
+    aliases: ["köfte", "kofte", "ızgara köfte", "izgara köfte"]
     pairs_with: ["Yayık Ayran", "Şalgam Suyu", "Mercimek Çorbası"]
 
   - id: main_2
@@ -44,7 +44,7 @@ menu:
     allergens: [gluten]
     availability: true
     tags: [meat]
-    aliases: ["döner", "doner"]
+    aliases: ["döner", "doner", "et döner", "et doner"]
     pairs_with: ["Yayık Ayran", "Şalgam Suyu"]
 
   - id: main_3
@@ -56,7 +56,7 @@ menu:
     allergens: []
     availability: true
     tags: [chicken, light]
-    aliases: ["tavuk salata", "tavuklu salata"]
+    aliases: ["tavuk salata", "tavuklu salata", "izgara tavuk", "ızgara tavuk"]
     pairs_with: ["Limonata", "Yayık Ayran"]
 
   - id: dessert_1
