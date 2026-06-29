@@ -17,6 +17,15 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 3. **wbot_v4 dataset üretimi** — ~750 yeni örnek: açıklama+soru (W15), alerji+öneri (W16), anti-hallüsinasyon
 4. **wbot_v4 eğitimi** (Colab A100, 3 epoch) → GGUF → Jetson deploy → %95+ hedef
 
+> 📋 **Yeni — toplanti.md (26 Haziran 2026) ses/AI görevleri:** fast-path intent
+> yönlendirme, açılış cümlesi standardizasyonu, menü-dışı/düşük-güven girdi guard'ları,
+> sipariş-ekran yapısal verisi, AI↔ROS sinyal arayüzü tasarımı. Detay: aşağıdaki
+> "Faz 1 / Faz 2 — Ses/AI Görev Planı" bölümü.
+>
+> 🗺️ **Konsolide yol haritası (toplanti + acil + persona/lisans):** [YOL_HARITASI.md](YOL_HARITASI.md)
+> — 3 dalgalı sıralı plan + yeni sohbet başlangıç promptu. İlgili: PERSONA_TON_FIZIBILITE.md,
+> TTS_LISANS_ARASTIRMASI.md.
+
 **Sistem durumu (18 Haziran 2026):**
 - Jetson: ✅ tam çalışıyor — wake word → Whisper medium CUDA → LLM GGUF → Piper TTS → USB hoparlör
 - GGUF: `/home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf` (2.38 GB) — Drive'da da yedek var
@@ -578,6 +587,51 @@ Hedef: 48 senaryoda %95+ PASS
 | 8 | Gürültülü ortam testi (restoran müziği + kalabalık) | 🟡 Orta | ⏳ Bekliyor |
 | 9 | wbot_v4 dataset üretimi (~750 yeni örnek) | 🟢 Düşük | ⏳ Bekliyor |
 | 10 | wbot_v4 eğitimi (Colab A100, 3 epoch) → GGUF → Jetson | 🟢 Düşük | ⏳ Bekliyor |
+
+---
+
+## Faz 1 / Faz 2 — Ses/AI Görev Planı (toplanti.md, 26 Haziran 2026)
+
+26 Haziran 2026 ekip toplantısı kararlarının **yalnızca ses/AI tarafını** etkileyen
+maddeleri, mevcut kod tabanına eşlenerek aşağıya çıkarıldı. ROS/donanım maddeleri
+(QR/2D masa haritalama, depth kamera, hareketli engel kaçınma, ROS 2 Humble geçişi,
+anten/USB 3.0 kamera) **kapsam dışıdır**. Her görev bir toplanti.md maddesine bağlıdır.
+
+> Faz tanımı: **Faz 1** = tek kişi, tek dil (Türkçe), wake word + QR çağırma, temel
+> sesli sipariş. **Faz 2** = çoklu kişi/masa ayrımı, çoklu dil, 360° ses kaynağı,
+> gelişmiş senaryolar.
+
+### FAZ 1
+
+| Görev | Tip | Dosya(lar) | Kaynak | Bağımlılık |
+|-------|-----|-----------|--------|-----------|
+| **Yanıt hızı segmentasyonu (intent fast-path)** — rutin intent'lerde (selam, net tek-ürün onay, kapanış, hesap) template/kısa yol; açık uçlu sorular LLM'e. Hesap zaten fast-path benzeri, desen genelleştirilir. | YENİ | `demo_usb.py` (yönlendirme), ops. `llama_cpp_backend.py` | madde 2 | Yok — `detect_order` template onayda da çağrılmalı |
+| **Açılış cümlesi standardizasyonu** — `GREETING` sabitini tek `_greet()` giriş noktasına topla; wake-word ve (ileride) ROS "geldim" aynı yeri çağırsın. | DEĞİŞTİR | `demo_usb.py` (`GREETING`, satır ~687, 743-749) | madde 2+3 | ROS "geldim" sinyali (şimdilik yalnız wake-word) |
+| **Kötü niyetli / anlamsız / menü-dışı girdi davranışı** — (1) menü-dışı sipariş guard (`_ORDER_VERBS` var + `_match_items` boş → "bilgim yok"), (2) düşük-güven guard (≤2 kelime / düşük `language_probability` → "tekrar eder misiniz?"), (3) eval kategorisi. acil.md reçeteleri. | DEĞİŞTİR | `demo_usb.py` (guard'lar), `eval_gguf.py` (senaryo), `*_backend.py` (prompt) | madde 2 + 10.1 | Yok; wbot_v4 pekiştirir |
+| **Sipariş-ekran senkronizasyonu** — OrderTracker'a yapısal sipariş listesi (`[{name, category, qty, price}]`) + JSON/event emisyonu; `_total` bundan türetilir (geriye uyumlu). Ekran render ROS/UI tarafında. | DEĞİŞTİR | `demo_usb.py` (`OrderTracker`) | madde 5 | Ekran render = ROS/UI iş paketi (kapsam dışı) |
+| **AI ↔ ROS sinyal arayüzü (tasarım/stub)** — `arrived` (→ `_greet()`), `moving`/`stopped` (→ dinleme + wake word duraklat). Mevcut `tts_active`/`conversation_active` deseni; yeni `robot_moving` Event. En az karmaşık transport (flag dosyası / yerel socket). | YENİ | `demo_usb.py`, ops. `robot_waiter_ai/integration/ros_signals.py` | madde 3 + 6 | ⚠️ **ROS'tan beklenir** — mesaj formatı/transport ortak karar; sinyali ROS üretir |
+| **Persona/ses tonu örnek onayı** — *kod değil*. Metin/persona W12 (v4.9) ile çözüldü; kalan iş 2-3 örnek TTS sesi üretip ekibe onaylatma. | İNSAN | (ses üretimi) | madde 2 | Ekip onayı |
+
+### FAZ 2
+
+| Görev | Tip | Durum | Kaynak |
+|-------|-----|-------|--------|
+| **Çoklu dil desteği** — model switch / bekletme mesajı / çeviri-yönlendirme; hiçbiri seçilmedi. Şimdilik kod yok, METODOLOJI.md notu. | YENİ | Karar bekliyor | madde 4 + 8 |
+| **Restoran tipine göre ses/persona paketleri** — kebapçı ↔ a la carte farklı ton; `_SYSTEM_TEMPLATE` + TTS sesi konfig parametresi. Tasarım notu. | YENİ | Faz 2 | madde 1 + 2 |
+| **Sürekli öğrenme / saha logu toplama** — log → sunucuda periyodik güncelleme (internet bağlı). Kod yok, METODOLOJI.md vizyon notu. | YENİ | Faz 2+ | madde 7 |
+| **360° ses kaynağı + masa ayrımı + çoklu kişi** — mic array donanımı gerektirir (büyük ölçüde ROS/donanım); AI tarafı ileride çoklu-konuşmacı diyalog mantığı. | NOT | Faz 2 | madde 3 + 8 |
+
+### acil.md Kaynaklı — Toplantı Dışı Acil Düzeltmeler (ayrı izlenir)
+
+> toplanti.md maddesi değil; saf altyapı/kalite hotfix'leri. (Kötü-niyetli-girdi
+> guard'ları yukarıdaki Faz 1 maddesine taşındı.)
+
+- **🔴 P0 ALSA çıkış oto-tespiti** — `_find_output_device()` ile `demo_usb.py:82`
+  sabit `plughw:0,0` yerine isimle oto-tespit; replug/boot'a dayanıklı.
+- **🟠 P1 STT kalite/gecikme** — faster-whisper `beam_size=5`, `temperature=0.0`,
+  `condition_on_previous_text=False` + erken-eleme eşikleri (`stt.py`);
+  `STT_INITIAL_PROMPT` zenginleştirme; `VAD_SILENCE_S` 1.5→1.8-2.0.
+- **🟢 P3 log gürültüsü** — torch CUDA / onnxruntime uyarıları (zararsız, opsiyonel).
 
 ## GGUF Dönüşümü — Colab Hücreleri
 

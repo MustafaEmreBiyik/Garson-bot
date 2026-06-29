@@ -676,3 +676,38 @@ Detaylı dağılım: `PROJE_DURUMU.md` → Fine-Tuning Altyapısı → wbot_v3 b
 **E08 neden sayılmıyor:** Eval "toplam" bekliyor; gerçek sistemde OrderTracker `[Gerçek toplam: X TL]` enjekte eder. Eval bunu simüle etmiyor — deployment'ta model doğru çalışıyor.
 
 **Sonraki adımlar:** 48 senaryo eval (Colab) → GGUF dönüşümü → Jetson deploy → wbot_v4 dataset planı.
+
+---
+
+## 14. Çoklu Dil — Değerlendirilen Alternatifler (karar verilmedi)
+
+26 Haziran 2026 toplantısında (toplanti.md madde 4) çoklu dil desteği için üç
+alternatif tartışıldı, **hiçbiri seçilmedi**. Faz 1 pratikte **sadece Türkçe**
+kalır; çoklu dil Faz 2'ye işaretlendi.
+
+| # | Alternatif | Mantık | Açık sorun |
+|---|-----------|--------|-----------|
+| 1 | **Dil algıla + model switch** | Her dil için ayrı küçük model; dil değişimi algılanınca modeli yükleyip geç | Model yükleme süresi gecikme yaratıyor |
+| 2 | **Sabit bekletme mesajı** | "Dil değişikliği için lütfen bekleyiniz" + 5-30 sn bekleme, sonra ilgili dil modeli | Uzun ve sabit bekleme; UX zayıf |
+| 3 | **Çeviri tabanlı yönlendirme** | Yabancı dildeki isteği anlayıp arka planda bir görevliye/panele ilet | Sistemde "garson" kavramı yok (sadece robot+müşteri); net değil, muhtemelen POS yönlendirmesi |
+
+**Neden henüz reddedilmedi/seçilmedi:** Offline + küçük model kısıtı nedeniyle çoklu
+dil eklemek **Türkçe odaklı eğitim kalite kaybı riski** taşıyor. Karar bir sonraki
+karar toplantısına bırakıldı. Şimdilik **kod değişikliği önerilmiyor**.
+
+---
+
+## 15. Sürekli Öğrenme / Saha Logları — Gelecek Vizyon (internet bağlı senaryo)
+
+26 Haziran 2026 toplantısında (toplanti.md madde 7) konuşulan uzun vadeli vizyon:
+saha kullanımından **log toplama**, beğenilmeyen cevapların geri bildirimle
+iletilmesi ve bu verilerle **sunucuda periyodik model güncellemesi** (robotun pasif
+olduğu anlarda).
+
+- **Geçerlilik:** Yalnızca **internet bağlantısı olan** senaryolar için. Mevcut
+  offline mimariyle doğrudan ilgili değil.
+- **İşaret:** Mevcut manuel wbot_v4/v5 döngüsünün (Colab eğitimi → GGUF dönüşümü →
+  Jetson deploy) gelecekte **yarı-otomatik bir pipeline'a** dönüşmesi gerektiğine
+  işaret ediyor.
+- **Durum:** Şimdilik somut görev üretilmiyor; **gelecek vizyon notu** olarak
+  kaydedildi. Mevcut manuel süreç yeterli.

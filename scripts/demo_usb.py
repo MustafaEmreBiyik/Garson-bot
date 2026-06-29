@@ -58,10 +58,11 @@ CHANNELS       = 1
 # VAD kayıt parametreleri
 VAD_AGGRESSIVENESS = 3     # webrtcvad sertliği 0-3 (3 = en agresif, gürültülü ortam)
 VAD_CHUNK_MS       = 30    # webrtcvad geçerli değerleri: 10, 20, 30
-VAD_SILENCE_S      = 1.5   # konuşma bittikten sonra bu kadar sessizlik → kaydı bitir
+VAD_SILENCE_S      = 1.8   # konuşma bittikten sonra bu kadar sessizlik → kaydı bitir (1.5→1.8: cümle ortasında kesme azalır)
 VAD_PRE_ROLL       = 5     # konuşma başlamadan önce tutulacak chunk (5×30ms = 150ms)
 VAD_MAX_S          = 12    # güvenlik kapağı — en fazla bu kadar kayıt yap
 VAD_ENERGY_THRESH  = 300   # webrtcvad yoksa enerji eşiği (0–32767 arası int16 RMS)
+VAD_MIN_SPEECH_MS  = 400   # bu kadardan kısa kayıt STT'ye gönderilmez (gürültü/nefes)
 CONVO_HOLD_S       = 10    # bot yanıtından sonra wake word'süz dinleme penceresi
 
 WHISPER_MODEL = "medium"  # Jetson 16GB CUDA — 1.7s latency, small'dan daha iyi Türkçe kalitesi
@@ -70,7 +71,9 @@ PIPER_MODEL   = None  # None → otomatik bul
 # Whisper'a Türkçe restoran bağlamı ver → menü kelimelerini daha iyi tanır
 STT_INITIAL_PROMPT = (
     "Türkçe restoran siparişi. Menü: mercimek çorbası, mantar çorbası, "
-    "ızgara köfte, et döner, tavuk salata, sütlaç, künefe, ayran, limonata, şalgam."
+    "ızgara köfte, et döner, tavuk salata, sütlaç, künefe, ayran, limonata, şalgam. "
+    "Yaygın ifadeler: bir tane, iki tane, porsiyon, ana yemek olarak ne var, "
+    "hesabı alabilir miyim, toplam ne kadar, iptal etmek istiyorum."
 )
 
 WAKEWORD_MODEL_PATH = (
@@ -142,14 +145,27 @@ def _match_items(t: str, lookup: list) -> list[tuple[str, int, int]]:
 
 
 class OrderTracker:
-    """Kullanıcı metninden menü ürünü tespit eder, toplamı takip eder."""
+    """Kullanıcı metninden menü ürünü tespit eder, siparişi yapısal tutar."""
 
     def __init__(self) -> None:
-        self._total = 0
+        self._items: dict[str, dict] = {}  # name → {"price": int, "qty": int}
         self._lookup = _load_menu_lookup()
 
+    def _add_item(self, name: str, price: int, qty: int) -> None:
+        if name in self._items:
+            self._items[name]["qty"] += qty
+        else:
+            self._items[name] = {"price": price, "qty": qty}
+
+    def _remove_item(self, name: str, price: int, qty: int) -> None:
+        if name not in self._items:
+            return
+        self._items[name]["qty"] = max(0, self._items[name]["qty"] - qty)
+        if self._items[name]["qty"] == 0:
+            del self._items[name]
+
     def detect_order(self, user_text: str) -> None:
-        """Sipariş/iptal/takas niyetini tespit et ve toplamı güncelle.
+        """Sipariş/iptal/takas niyetini tespit et ve sepeti güncelle.
 
         Üç durum:
           - "X yerine Y": X'i çıkar, Y'yi ekle.
@@ -163,32 +179,34 @@ class OrderTracker:
         is_swap   = "yerine" in t
 
         if is_swap:
-            # "X yerine Y istiyorum" — sol: iptal, sağ: ekle
             before, after = t.split("yerine", 1)
-            for _, price, qty in _match_items(before, self._lookup):
-                self._total = max(0, self._total - price * qty)
-            for _, price, qty in _match_items(after, self._lookup):
-                self._total += price * qty
+            for name, price, qty in _match_items(before, self._lookup):
+                self._remove_item(name, price, qty)
+            for name, price, qty in _match_items(after, self._lookup):
+                self._add_item(name, price, qty)
             return
 
         if is_cancel:
-            # "X iptal" / "X istemiyorum" — eşleşen ürünleri çıkar
-            for _, price, qty in _match_items(t, self._lookup):
-                self._total = max(0, self._total - price * qty)
+            for name, price, qty in _match_items(t, self._lookup):
+                self._remove_item(name, price, qty)
             return
 
-        # Normal sipariş — eylem fiili yoksa dikkate alma
         if not any(v in t for v in _ORDER_VERBS):
             return
-        for _, price, qty in _match_items(t, self._lookup):
-            self._total += price * qty
+        for name, price, qty in _match_items(t, self._lookup):
+            self._add_item(name, price, qty)
+
+    @property
+    def items(self) -> list[tuple[str, int, int]]:
+        """Aktif siparişler: [(name, price, qty)]."""
+        return [(name, d["price"], d["qty"]) for name, d in self._items.items()]
 
     @property
     def total(self) -> int:
-        return self._total
+        return sum(d["price"] * d["qty"] for d in self._items.values())
 
     def reset(self) -> None:
-        self._total = 0
+        self._items = {}
 
 
 _BILL_KEYWORDS = ["hesab", "hesap", "ödeyeyim", "ödüyorum", "parayı öde",
@@ -622,6 +640,10 @@ def _record(input_device: int | None = None, *,
     if not voiced_16k:
         return b""  # konuşma yoktu — çağıran "sessizlik / timeout" diye değerlendirir
 
+    # Çok kısa kayıtları (gürültü/nefes/kazara gürültü) STT'ye gönderme
+    if len(voiced_16k) * VAD_CHUNK_MS < VAD_MIN_SPEECH_MS:
+        return b""
+
     audio = np.frombuffer(b"".join(voiced_16k), dtype=np.int16)
     return _numpy_to_wav(audio, SAMPLE_RATE)
 
@@ -958,16 +980,23 @@ async def run_demo(adapter_dir: str | None = None) -> None:
         print("  ⏳ Yanıt üretiliyor...", flush=True)
         # Siparişi ÖNCE işle; aynı cümlede "sütlaç alayım + hesap" varsa doğru toplam gider
         order_tracker.detect_order(user_text)
+        if order_tracker.items:
+            _cart = ", ".join(f"{qty}× {name}" for name, _, qty in order_tracker.items)
+            print(f"  🛒 Sepet: {_cart} → {order_tracker.total} TL", flush=True)
         llm_input = user_text
         if _is_bill_request(user_text) and order_tracker.total > 0:
             t_lower = user_text.lower()
             has_new_order = any(v in t_lower for v in _ORDER_VERBS)
+            _item_lines = ", ".join(
+                f"{qty}× {name} ({d_price * qty} TL)"
+                for name, d_price, qty in order_tracker.items
+            )
             if has_new_order:
-                # Hem yeni sipariş hem hesap: yanıtın sonu toplamla bitmeli
                 llm_input = (f"{user_text} [Yanıtın sonu şöyle bitmeli: "
                              f"Toplam {order_tracker.total} TL. Afiyet olsun!]")
             else:
-                llm_input = f"{user_text} [Gerçek toplam: {order_tracker.total} TL]"
+                llm_input = (f"{user_text} [Sipariş: {_item_lines}. "
+                             f"Gerçek toplam: {order_tracker.total} TL]")
         _t_llm = _time.perf_counter()
         try:
             if _is_bill_request(user_text) and order_tracker.total > 0:
