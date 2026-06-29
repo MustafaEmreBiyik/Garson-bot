@@ -137,22 +137,34 @@ class Qwen3Backend:
 
     def _load(self) -> None:
         import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+        from transformers import AutoModelForCausalLM, AutoTokenizer
 
         logger.info("Qwen3-4B yükleniyor (%s) …", self._model_id)
-        bnb = BitsAndBytesConfig(
-            load_in_4bit=True,
-            bnb_4bit_quant_type="nf4",
-            bnb_4bit_compute_dtype=torch.float16,
-            bnb_4bit_use_double_quant=True,
-        )
+
+        _cuda = torch.cuda.is_available()
+        if _cuda:
+            from transformers import BitsAndBytesConfig
+            quant_kwargs: dict = dict(
+                quantization_config=BitsAndBytesConfig(
+                    load_in_4bit=True,
+                    bnb_4bit_quant_type="nf4",
+                    bnb_4bit_compute_dtype=torch.float16,
+                    bnb_4bit_use_double_quant=True,
+                ),
+                device_map="auto",
+            )
+        else:
+            # CPU modunda 4-bit quantization desteklenmez; float32 ile yükle.
+            logger.warning("CUDA yok — Qwen3 CPU modunda yükleniyor (yavaş olabilir).")
+            quant_kwargs = dict(torch_dtype=torch.float32, device_map="cpu")
+
         # local_files_only=True: ilk indirimden sonra HF Hub'a istek atmaz; ağ gerekmez.
         # Model cache'te yoksa OSError → tekrar dene (ilk çalıştırma).
         _shared = dict(trust_remote_code=True, local_files_only=True)
         try:
             self._tokenizer = AutoTokenizer.from_pretrained(self._model_id, **_shared)
             self._model = AutoModelForCausalLM.from_pretrained(
-                self._model_id, quantization_config=bnb, device_map="auto", **_shared
+                self._model_id, **quant_kwargs, **_shared
             )
         except OSError:
             logger.warning("Model cache'te yok, HuggingFace Hub'dan indiriliyor…")
@@ -160,8 +172,7 @@ class Qwen3Backend:
                 self._model_id, trust_remote_code=True
             )
             self._model = AutoModelForCausalLM.from_pretrained(
-                self._model_id, quantization_config=bnb, device_map="auto",
-                trust_remote_code=True,
+                self._model_id, **quant_kwargs, trust_remote_code=True,
             )
 
         if self._adapter_dir:

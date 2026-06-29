@@ -235,12 +235,16 @@ def _stt_low_confidence(result: dict, text: str, *, in_convo: bool) -> bool:
 
     (a) language_probability eşiğin altındaysa — Whisper Türkçe'den emin değil.
     (b) Fresh turn (in_convo=False) VE çok kısa metin — VAD erken kesti.
+    (c) Unique kelime oranı < %15 — Whisper hallüsinasyon döngüsü ("al, al, al...").
     Conversation hold'da kelime sayısı koşulu uygulanmaz: "evet", "tamam" geçerli.
     """
     lang_prob = result.get("language_probability", 1.0)
     if lang_prob < _STT_LANG_PROB_MIN:
         return True
-    if not in_convo and len(text.split()) <= _STT_MIN_WORDS_FRESH:
+    words = text.split()
+    if len(words) > 5 and len(set(words)) / len(words) < 0.15:
+        return True
+    if not in_convo and len(words) <= _STT_MIN_WORDS_FRESH:
         return True
     return False
 
@@ -1013,12 +1017,24 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 reply = raw
             else:
                 reply = await _speak_streaming(tts, llm, llm_input, tts_active)
-                # E19 fix: ürün açıklaması sorusuna yanıt "?" ile bitmiyorsa ekle
-                if (not reply.rstrip().endswith("?")
-                        and _is_description_question(user_text, order_tracker._lookup)):
-                    addition = "Getireyim mi?"
-                    await _speak(tts, addition, tts_active)
-                    reply = reply.rstrip() + " " + addition
+                # Post-processing: "?" ile bitmeyen yanıtlara soru ekle
+                # (veda, fallback ve "bilgim yok" yanıtları hariç)
+                if not reply.rstrip().endswith("?"):
+                    _rl = reply.lower()
+                    _is_farewell_reply = any(fw in _rl for fw in (
+                        "afiyet", "güle güle", "iyi günler", "görüşürüz",
+                        "hoşça kal", "tekrar bekle",
+                    ))
+                    _is_fallback_reply = any(fb in _rl for fb in (
+                        "bilgim yok", "personelimize",
+                    ))
+                    if not _is_farewell_reply and not _is_fallback_reply:
+                        if _is_description_question(user_text, order_tracker._lookup):
+                            addition = "Getireyim mi?"
+                        else:
+                            addition = "Ne istersiniz?"
+                        await _speak(tts, addition, tts_active)
+                        reply = reply.rstrip() + " " + addition
         except Exception as e:
             print(f"  ✗ LLM/TTS hatası: {e}")
             if ww_model:
