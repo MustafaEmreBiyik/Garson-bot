@@ -242,8 +242,11 @@ def _stt_low_confidence(result: dict, text: str, *, in_convo: bool) -> bool:
     if lang_prob < _STT_LANG_PROB_MIN:
         return True
     words = text.split()
-    if len(words) > 5 and len(set(words)) / len(words) < 0.15:
-        return True
+    if len(words) >= 3:
+        unique_ratio = len(set(words)) / len(words)
+        # Tekrar döngüsü: az unique kelime (al,al,al...) VEYA tek kelime 3+ kez
+        if unique_ratio < 0.15 or (len(set(words)) == 1 and len(words) >= 3):
+            return True
     if not in_convo and len(words) <= _STT_MIN_WORDS_FRESH:
         return True
     return False
