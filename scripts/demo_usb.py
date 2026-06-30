@@ -91,8 +91,9 @@ _SENT_RE = re.compile(r'(?<=[.!?])[ \t\n]')
 
 _MENU_YAML_PATH = Path(__file__).resolve().parent.parent / "robot_waiter_ai" / "data" / "menu.yaml"
 
-_ORDER_VERBS  = {"istiyorum", "alayım", "alabilir", "getirir", "lütfen",
-                 "tane", "adet", "istiyom", "alalım", "getir", "ver"}
+_ORDER_VERBS  = {"istiyorum", "istiyor", "isterim", "istiyom",
+                 "alayım", "alabilir", "alalım",
+                 "getirir", "getir", "lütfen", "ver"}
 _CANCEL_VERBS = {"istemiyorum", "istemiyom", "iptal", "çıkar", "çıkarın", "kaldır"}
 _QUANTITIES   = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
 _DESCRIPTION_TRIGGERS = {"nasıl", "nedir", "ne gibi", "tarif", "anlat", "hakkında"}
@@ -117,8 +118,10 @@ def _load_menu_lookup() -> list[tuple[list[str], str, int]]:
         data = yaml.safe_load(f)
     result = []
     for item in data.get("menu", []):
-        aliases = [a.lower() for a in item.get("aliases", [])]
-        aliases.append(item["name"].lower())
+        aliases = sorted(
+            [a.lower() for a in item.get("aliases", [])] + [item["name"].lower()],
+            key=len, reverse=True,
+        )
         result.append((aliases, item["name"], item["price"]))
     return result
 
@@ -187,8 +190,12 @@ class OrderTracker:
             return
 
         if is_cancel:
+            all_qty = any(w in t for w in {"hepsini", "hepsi", "tümünü", "tamamını"})
             for name, price, qty in _match_items(t, self._lookup):
-                self._remove_item(name, price, qty)
+                if all_qty:
+                    self._items.pop(name, None)
+                else:
+                    self._remove_item(name, price, qty)
             return
 
         if not any(v in t for v in _ORDER_VERBS):
