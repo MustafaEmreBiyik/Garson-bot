@@ -179,13 +179,25 @@ class OrderTracker:
         t = user_text.lower().replace('̇', '')
 
         is_cancel = any(v in t for v in _CANCEL_VERBS)
-        is_swap   = "yerine" in t
+        is_swap   = "yerine" in t or "değiştir" in t
 
         if is_swap:
-            before, after = t.split("yerine", 1)
-            for name, price, qty in _match_items(before, self._lookup):
+            if "yerine" in t:
+                before, after = t.split("yerine", 1)
+                remove_matches = _match_items(before, self._lookup)
+                add_matches    = _match_items(after, self._lookup)
+            else:
+                # "X, Y ile değiştir" → content önce "ile"ye kadar, X=ilk, Y=son ürün
+                content = t[:t.rfind(" ile ")] if " ile " in t else t.replace("değiştir", "")
+                all_m = _match_items(content, self._lookup)
+                if len(all_m) >= 2:
+                    remove_matches = [all_m[0]]
+                    add_matches    = [all_m[-1]]
+                else:
+                    remove_matches, add_matches = [], all_m
+            for name, price, qty in remove_matches:
                 self._remove_item(name, price, qty)
-            for name, price, qty in _match_items(after, self._lookup):
+            for name, price, qty in add_matches:
                 self._add_item(name, price, qty)
             return
 
@@ -999,6 +1011,13 @@ async def run_demo(adapter_dir: str | None = None) -> None:
             _cart = ", ".join(f"{qty}× {name}" for name, _, qty in order_tracker.items)
             print(f"  🛒 Sepet: {_cart} → {order_tracker.total} TL", flush=True)
         llm_input = user_text
+        # Sipariş niyeti varsa güncel sepeti LLM'e ver — menü dışı ürün uydurmayı önler
+        _t_lower = user_text.lower().replace('̇', '')
+        _has_order_intent = any(v in _t_lower for v in _ORDER_VERBS) or any(v in _t_lower for v in _CANCEL_VERBS)
+        if order_tracker.items and _has_order_intent and not _is_bill_request(user_text):
+            _cart_ctx = ", ".join(f"{qty}× {name}" for name, _, qty in order_tracker.items)
+            llm_input = (f"{user_text} [Güncel sepet: {_cart_ctx}. "
+                         f"Menüde olmayan ürünleri onaylama veya fiyat uydurma.]")
         if _is_bill_request(user_text) and order_tracker.total > 0:
             t_lower = user_text.lower()
             has_new_order = any(v in t_lower for v in _ORDER_VERBS)
@@ -1010,8 +1029,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 llm_input = (f"{user_text} [Yanıtın sonu şöyle bitmeli: "
                              f"Toplam {order_tracker.total} TL. Afiyet olsun!]")
             else:
-                llm_input = (f"{user_text} [Sipariş: {_item_lines}. "
-                             f"Gerçek toplam: {order_tracker.total} TL]")
+                llm_input = (f"{user_text} [Sepeti sesli oku: {_item_lines}. "
+                             f"Toplam {order_tracker.total} TL — bu rakamı değiştirme.]")
         _t_llm = _time.perf_counter()
         try:
             if _is_bill_request(user_text) and order_tracker.total > 0:
