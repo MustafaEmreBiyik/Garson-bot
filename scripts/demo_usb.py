@@ -63,7 +63,7 @@ VAD_PRE_ROLL       = 5     # konuşma başlamadan önce tutulacak chunk (5×30ms
 VAD_MAX_S          = 12    # güvenlik kapağı — en fazla bu kadar kayıt yap
 VAD_ENERGY_THRESH  = 300   # webrtcvad yoksa enerji eşiği (0–32767 arası int16 RMS)
 VAD_MIN_SPEECH_MS  = 400   # bu kadardan kısa kayıt STT'ye gönderilmez (gürültü/nefes)
-CONVO_HOLD_S       = 10    # bot yanıtından sonra wake word'süz dinleme penceresi
+CONVO_HOLD_S       = 60    # bot yanıtından sonra wake word'süz dinleme penceresi (müşteri menüye bakıyor olabilir)
 
 WHISPER_MODEL = "medium"  # Jetson 16GB CUDA — 1.7s latency, small'dan daha iyi Türkçe kalitesi
 PIPER_MODEL   = None  # None → otomatik bul
