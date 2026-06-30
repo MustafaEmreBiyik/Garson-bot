@@ -91,9 +91,17 @@ _SENT_RE = re.compile(r'(?<=[.!?])[ \t\n]')
 
 _MENU_YAML_PATH = Path(__file__).resolve().parent.parent / "robot_waiter_ai" / "data" / "menu.yaml"
 
-_ORDER_VERBS  = {"istiyorum", "istiyor", "isterim", "istiyom",
-                 "alayım", "alabilir", "alalım",
-                 "getirir", "getir", "lütfen", "ver"}
+_ORDER_VERBS  = {
+    # iste- gövdesi
+    "istiyorum", "istiyor", "isterim", "istiyom",
+    "istiyoruz", "istiyorlar", "isteriz", "isterler",
+    # al- gövdesi
+    "alayım", "alabilir", "alalım", "alın", "alıyorum", "alıyoruz", "alınız",
+    # getir- gövdesi
+    "getir", "getirir", "getirin", "getireyim", "getirelim",
+    # diğer
+    "lütfen", "ver", "verin",
+}
 _CANCEL_VERBS = {"istemiyorum", "istemiyom", "iptal", "çıkar", "çıkarın", "kaldır"}
 _QUANTITIES   = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
 _DESCRIPTION_TRIGGERS = {"nasıl", "nedir", "ne gibi", "tarif", "anlat", "hakkında"}
@@ -1017,7 +1025,9 @@ async def run_demo(adapter_dir: str | None = None) -> None:
         if order_tracker.items and _has_order_intent and not _is_bill_request(user_text):
             _cart_ctx = ", ".join(f"{qty}× {name}" for name, _, qty in order_tracker.items)
             llm_input = (f"{user_text} [Güncel sepet: {_cart_ctx}. "
-                         f"Menüde olmayan ürünleri onaylama veya fiyat uydurma.]")
+                         f"SADECE sepetteki ürünleri teyit et. "
+                         f"Menüde olmayan ürün varsa 'menümüzde bulunmuyor' de, "
+                         f"fiyat veya adet uydurma.]")
         if _is_bill_request(user_text) and order_tracker.total > 0:
             t_lower = user_text.lower()
             has_new_order = any(v in t_lower for v in _ORDER_VERBS)
