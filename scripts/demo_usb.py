@@ -104,6 +104,13 @@ _ORDER_VERBS  = {
 }
 _CANCEL_VERBS = {"istemiyorum", "istemiyom", "iptal", "çıkar", "çıkarın", "kaldır"}
 _QUANTITIES   = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
+# Guard 1 short-word check'ten muaf tek kelimeler — gerçek intent, VAD hatası değil
+_KNOWN_VALID_SINGLE = frozenset({
+    "merhaba", "selam", "hey", "günaydın", "iyi",      # selamlar
+    "evet", "hayır", "tamam", "peki", "olur", "olmaz",  # onaylar
+    "teşekkürler", "teşekkür", "eyvallah", "sağol",     # vedalar
+    "hesap",                                             # eylem
+})
 _DESCRIPTION_TRIGGERS = {"nasıl", "nedir", "ne gibi", "tarif", "anlat", "hakkında"}
 
 _STT_LANG_PROB_MIN   = 0.50   # Guard 1: Whisper dil güven eşiği
@@ -275,7 +282,9 @@ def _stt_low_confidence(result: dict, text: str, *, in_convo: bool) -> bool:
         if unique_ratio < 0.15 or (len(set(words)) == 1 and len(words) >= 3):
             return True
     if not in_convo and len(words) <= _STT_MIN_WORDS_FRESH:
-        return True
+        t_clean = text.lower().replace('̇', '').strip()
+        if t_clean not in _KNOWN_VALID_SINGLE:
+            return True
     return False
 
 
@@ -1025,7 +1034,7 @@ async def run_demo(adapter_dir: str | None = None) -> None:
             conversation_active = True
             continue
 
-        # --- Fast-path: Veda / kapanış şablonu (LLM'i atlar) ---
+        # --- Fast-path: Veda / selam / onay şablonu (LLM'i atlar) ---
         _fp = _fast_path_reply(user_text)
         if _fp:
             print(f"W-BOT:   {_fp}", flush=True)
@@ -1033,10 +1042,16 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 await _speak(tts, _fp, tts_active)
             except Exception as _fpe:
                 logger.warning("Fast-path TTS hatası: %s", _fpe)
-            pending_reset = True
-            conversation_active = False  # _record ve ww açık kalmasın — doğrudan wake word'e dön
-            if ww_model:
-                ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
+            # Veda → oturumu kapat; selam/onay → 10s pencere açık kalsın
+            _t_fp = user_text.lower().replace('̇', '').strip()
+            _is_farewell_fp = any(fw in _t_fp for fw in _FAREWELL_TRIGGERS)
+            if _is_farewell_fp:
+                pending_reset = True
+                conversation_active = False
+                if ww_model:
+                    ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
+            else:
+                conversation_active = True  # selam/onay → sohbet devam eder
             continue
 
         # 3+5. Streaming: LLM üretim + TTS sentez + oynatma paralel pipeline
