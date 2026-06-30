@@ -231,7 +231,7 @@ class Qwen3Backend:
                 temperature=0.55,
                 top_p=0.9,
                 top_k=40,
-                repetition_penalty=1.2,
+                repetition_penalty=1.3,
                 pad_token_id=self._tokenizer.eos_token_id,
             )
 
@@ -275,7 +275,7 @@ class Qwen3Backend:
                     do_sample=True,
                     temperature=0.55,
                     top_p=0.9,
-                    repetition_penalty=1.15,
+                    repetition_penalty=1.3,
                     pad_token_id=self._tokenizer.eos_token_id,
                     streamer=streamer,
                 ))

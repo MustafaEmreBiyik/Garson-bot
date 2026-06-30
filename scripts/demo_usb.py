@@ -320,6 +320,7 @@ _FAREWELL_TRIGGERS = {
     "güle güle", "görüşürüz", "hoşça kal", "elveda",
     "teşekkürler", "teşekkür ederim", "teşekkür", "sağ olun", "sağ ol",
     "iyi günler", "iyi akşamlar", "iyi geceler",
+    "eyvallah", "sağlıcakla", "kolay gelsin",
 }
 _FAREWELL_TEMPLATES = [
     "Güle güle! Tekrar bekleriz.",
@@ -327,22 +328,49 @@ _FAREWELL_TEMPLATES = [
     "Kolay gelsin, tekrar bekleriz!",
 ]
 
+# Selam / açılış — müşteri konuşmayı başlatıyor
+_GREETING_TRIGGERS = {"merhaba", "selam", "hey", "iyi günler", "iyi akşamlar", "günaydın"}
+_GREETING_TEMPLATES = [
+    "Merhaba! Nasıl yardımcı olabilirim?",
+    "Hoş geldiniz! Siparişinizi alabilir miyim?",
+    "Merhaba, buyurun!",
+]
+
+# Onay / teşekkür — müşteri sadece onay veriyor
+_CONFIRM_PHRASES = {"evet", "tamam", "olur", "peki", "anladım", "tamamdır", "süper", "harika", "güzel"}
+_CONFIRM_TEMPLATES = [
+    "Tabii efendim. Başka bir isteğiniz var mı?",
+    "Anlıyorum. Başka bir şey alır mısınız?",
+    "Peki efendim. Başka?",
+]
+
 
 def _fast_path_reply(text: str) -> str | None:
-    """Veda/kapanış intenti için LLM'i atlayıp şablon yanıt döndür.
+    """Veda/selam/onay intentleri için LLM'i atlayıp şablon yanıt döndür.
 
-    Yalnızca kısa (≤6 kelime) ve sadece veda/teşekkür içeren girişlerde tetiklenir.
-    Sipariş fiili veya soru işareti varsa LLM'e bırakılır.
+    Yalnızca kısa (≤5 kelime) ve tek intent içeren girişlerde tetiklenir.
+    Sipariş fiili, menü kelimesi veya soru işareti varsa LLM'e bırakılır.
     """
     t = text.lower().strip().replace('̇', '')
-    if len(t.split()) > 6:
+    words = t.split()
+    if len(words) > 5:
         return None
     if any(v in t for v in _ORDER_VERBS):
         return None
     if "?" in t:
         return None
+
     if any(fw in t for fw in _FAREWELL_TRIGGERS):
         return random.choice(_FAREWELL_TEMPLATES)
+
+    # Tek kelime selam (konuşma başlangıcında)
+    if len(words) <= 2 and any(g in t for g in _GREETING_TRIGGERS):
+        return random.choice(_GREETING_TEMPLATES)
+
+    # Tek kelime onay — sepet boş değilse veya sohbet aktifse anlamlı
+    if len(words) == 1 and words[0] in _CONFIRM_PHRASES:
+        return random.choice(_CONFIRM_TEMPLATES)
+
     return None
 
 
