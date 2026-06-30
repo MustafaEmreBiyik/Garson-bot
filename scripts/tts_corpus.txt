@@ -1,0 +1,340 @@
+# W-BOT TTS Corpus — Türkçe, 320 cümle
+# Piper/VITS eğitimi için referans ses kaydı
+# Format: tek cümle/satır | # = kategori başlığı (kayıt edilmez)
+# Hedef: 5-15 kelime, garson ağzından, gerçek menü ürünleri
+
+# ── 1. KATEGORİ: Karşılama / Hoş geldiniz (40 cümle) ─────────────────────────
+Merhaba, hoş geldiniz.
+Buyurun, nasıl yardımcı olabilirim?
+İyi akşamlar, sizi bekliyorduk.
+Hoş geldiniz, buyurun oturun.
+Merhaba, iyi günler.
+İyi akşamlar, nasıl yardımcı olabilirim?
+Merhaba, ne arzu edersiniz?
+Hoş geldiniz, masanızı hazırladım.
+Buyurun, menüyü getireyim mi?
+Merhaba, beklediniz mi, özür dilerim.
+Hoş geldiniz, oturun lütfen.
+Buyurun, siparişinizi alayım.
+İyi günler, menümüz çok zengin bu akşam.
+Merhaba, masanız hazır, buyurun.
+Hoş geldiniz efendim, nasıl yardımcı olabilirim?
+İyi akşamlar, ne içmek istersiniz önce?
+Buyurun, sofranız sizi bekliyor.
+Merhaba, yeni menümüzü gördünüz mü?
+Hoş geldiniz, bugün özel yemeklerimiz var.
+İyi akşamlar, harika bir gece olacak.
+Merhaba, sizi görmek çok güzel.
+Hoş geldiniz, yerinizi alın lütfen.
+Buyurun, su getirebilir miyim hemen?
+İyi günler, açsınız mı acaba?
+Merhaba, rezervasyonunuz var mıydı?
+Hoş geldiniz, bugün çok güzel hava.
+Buyurun, sizin için ne yapabilirim?
+İyi akşamlar, yoğun bir gün geçirdiniz mi?
+Merhaba, masanız şurada efendim.
+Hoş geldiniz, ailenizle mi geldiniz?
+Buyurun, menümüzü inceleyin.
+İyi günler, nasılsınız?
+Merhaba, uzaktan mı geldiniz?
+Hoş geldiniz, beklediniz mi uzun?
+İyi akşamlar, çok iyi bir seçim yaptınız.
+Merhaba, yardımcı olmaktan memnuniyet duyarım.
+Buyurun efendim, hoş geldiniz.
+Merhaba, masanız hazır efendim.
+Hoş geldiniz, ne arzu ederdiniz?
+İyi akşamlar, nasıl yardımcı olabilirim efendim?
+
+# ── 2. KATEGORİ: Sipariş alma & onay (65 cümle) ──────────────────────────────
+Buyurun, siparişinizi alıyorum.
+Elbette, mercimek çorbası eklendi.
+Başka bir şey almak ister misiniz?
+Siparişinizi tekrar edeyim, doğru mu?
+İki izgara köfte, bir mercimek çorbası.
+Evet, hemen hazırlıyorum.
+Et döner ekledim siparişinize.
+Ayran ister misiniz yanına?
+Tabii, fırın sütlaç da aldım.
+Siparişinizi aldım, teşekkür ederim.
+Başka bir isteğiniz var mı?
+Elbette, mantar çorbası da eklendi.
+Bir adet izgara köfte, doğru mu?
+Siparişiniz hazırlanıyor efendim.
+Evet, limonata da aldım.
+Suya ihtiyacınız var mı?
+Izgara tavuk salata eklendi.
+Kaç kişilik sipariş vereceksiniz?
+Tabii, iki adet ayran var.
+Siparişinizi not ettim.
+Künefe ekleyeyim mi?
+Başka bir şey var mı?
+Evet, şalgam suyu da aldım.
+Bir döner, bir de mercimek çorbası, doğru mu?
+Tabii efendim, hemen geliyor.
+Başka ne arzu edersiniz?
+İki kişilik sipariş aldım.
+Evet, tatlı olarak sütlaç var.
+Siparişinizi onaylıyorum.
+Bir mercimek çorbası ekliyorum.
+Döner için ekstrası var mı?
+Tabii, soğuk içecek getirebilirim.
+Siparişiniz tamam, teşekkürler.
+Başka bir şey istemez misiniz?
+İki adet limonata aldım.
+Sütlaç var mı diyorsunuz, evet var.
+Siparişiniz hazırlanmaya başladı.
+Bir köfte bir döner, toplamı not ettim.
+Evet efendim, hemen hazırlanıyor.
+Başka isteğiniz kalmadı mı?
+İki çorba, bir ana yemek aldım.
+Tabii, künefe sıcak servis edilir.
+Siparişinizi aldım, kısa sürede hazır.
+Bir tane daha ekleyeyim mi?
+Evet, soğuk su da getirebilirim.
+Siparişiniz yolda, biraz bekleyin.
+Başka bir ihtiyacınız var mı?
+İki kişilik sofra hazır.
+Tabii, hemen geliyor efendim.
+Siparişiniz tamamlandı.
+Bir şey daha ekleyebilirim mi?
+Evet, yapabilirim efendim.
+Başka isteğiniz olmadıysa hemen hazırlıyorum.
+Siparişiniz yakında hazır olacak.
+Tamam efendim, not ettim.
+Bir saniye lütfen, kontrol edeyim.
+Evet, var efendim.
+Tabii, yapılabilir.
+Siparişiniz alındı, teşekkür ederim.
+Bir tane değil mi, iki tane mi?
+Evet elbette, hemen.
+Başka bir şey ekleyeyim mi siparişinize?
+Tamam, siparişiniz hazırlanıyor.
+Bir saniye, doğru anladım mı?
+Peki efendim, siparişinizi kaydettim.
+
+# ── 3. KATEGORİ: Menü açıklaması — ürün bazlı (65 cümle) ────────────────────
+Mercimek çorbamız günlük taze hazırlanıyor.
+Izgara köfte kasap etinden, yanında patates var.
+Künefemiz Hatay peyniriyle sıcak servis edilir.
+Mantar çorbamızda taze dağ mantarı kullanılıyor.
+Et döner özel soslu lavaşla servis edilir.
+Izgara tavuk salatada taze roka ve domates var.
+Fırın sütlaç fırında üzeri kızartılmış, geleneksel tarif.
+Yayık ayranımız ev yapımı, köpüklü ve soğuk.
+Limonatamız taze sıkılmış, nane yapraklı.
+Şalgam suyumuzda acılı ve acısız seçenek var.
+Mercimek çorbası kırmızı mercimek ve havuçla yapılır.
+Köftemiz kasap kıymasından el yapımıdır.
+Sütlaç taze sütle, fırında günlük hazırlanıyor.
+Döner ince dilimlenmiş dana etinden oluşuyor.
+Tavuk salatamızda marineli tavuk göğsü kullanılıyor.
+Künefe özel tel kadayıfla yapılıyor, şerbetle servis edilir.
+Mantar çorbamız kremalı ve oldukça doyurucu.
+Köfte elma dilim patates ve köz biberle geliyor.
+Limonatamız taze limon ve nane ile çok ferahlatıcı.
+Şalgam sindirimi kolaylaştırıyor, et yemekleriyle harika.
+Mercimek çorbası gluten içeriyor, dikkat edin.
+Mantar çorbası süt ürünü içeriyor.
+Sütlaçta süt allerjenine dikkat edin.
+Künefede fındık ve süt var, allerjeniniz varsa söyleyin.
+Tavuk salatasında gluten yok, hafif bir seçenek.
+Izgara köftemiz çıtır dış, sulu iç, çok lezzetli.
+Et dönerimiz çıtır lavaşın içinde, sumaklı soğanla.
+Sütlaç fırında kızardığı için üstü hafif karamel gibi.
+Limonatamız günde iki kez taze hazırlanıyor.
+Şalgamımız geleneksel Adana tarifiyle yapılıyor.
+Mercimek çorbamız çok besleyici ve doyurucu.
+Köftemiz oldukça bol porsiyonlu.
+Tavuk salata hafif ve sağlıklı bir seçenek.
+Künefe sıcak yenmesi gereken bir tatlı.
+Mantar çorbamız kışın çok tercih edilen bir çorba.
+Sütlacımız her gün sınırlı sayıda hazırlanıyor.
+Köfte yanına ek sos isteyebilirsiniz.
+Limonata büyük boy da var isteyenler için.
+Şalgam soğuk servis edilir.
+Mercimek çorbası vejetaryenler için uygun.
+Tavuk salata zeytinyağlı, çok hafif.
+Künefemiz pişirilmesi on beş dakika sürer.
+Mantar çorbasına krema ekliyoruz, çok zengin.
+Köftemiz kasap garantili, günlük et.
+Döner porsiyon olarak oldukça bol.
+Sütlaç porsiyon büyük, iki kişi de yiyebilir.
+Şalgam acısız da olur, tercih ettiğinizi söyleyin.
+Mercimek çorbası kışın en çok satan çorbamız.
+Izgara köfte çocuklar için de ideal.
+Tavuk salata diyet yapanlar için çok uygun.
+Künefe Hatay usulü, peyniri özel.
+Mantar çorbası vejetaryen ama süt ürünü var.
+Et döner sucuklu versiyon değil, saf dana.
+Sütlaç tarçın istemiyorsanız söyleyin.
+Limonata şekersiz de yapabiliriz.
+Şalgam bardak veya şişe olarak var.
+Mercimek çorbamız her gün değişen baharatlıdır.
+Izgara köftenin yanında salata da var, ekleyebilirsiniz.
+Tavuk salatada sos ayrı geliyor.
+Künefe dinlendirilerek servis edilir, sıcak sıcak gelir.
+Mantar çorbamız ev yapımı tadında, fabrikasyon değil.
+Döner geç saatlerde bitebilir, erken siparişte avantaj.
+Sütlaç tatlı sevenler için mükemmel bir kapanış.
+Yayık ayranımız kaseden değil, çalkalanarak yapılır.
+Izgara tavuk salata zeytinyağı sosuyla hafif ve lezzetli.
+
+# ── 4. KATEGORİ: Öneri cümleleri (35 cümle) ──────────────────────────────────
+Bugün için ızgara köfteyi tavsiye ederim.
+Tatlı olarak fırın sütlaç harika bu mevsimde.
+Dönerle birlikte şalgam suyu çok yakışıyor.
+Mercimek çorbası soğuk havada çok iyi geliyor.
+Künefemizi mutlaka deneyin, pişmanlık duymayacaksınız.
+Izgara tavuk salata hafif ve çok lezzetli.
+Mantar çorbası içenler genellikle bir daha istiyor.
+Yayık ayran ile köfte mükemmel bir ikili.
+Limonata taze sıkılmış, kesinlikle tavsiye ederim.
+Sütlaç porsiyonu büyük, iki kişi de yiyebilir.
+Bu akşam özellikle köfte çok iyi geldi.
+Şalgam acısız alırsanız dönerle harika.
+Tavuk salata yemek isteyenler için çok uygun.
+Fırın sütlaç geleneksel tarif, tadına bayılacaksınız.
+Mercimek çorbası ile köfte klasik bir kombinasyon.
+Künefe sıcak servis edildiğinde en güzel hali.
+Izgara köfte bugün özellikle porsiyonlu geldi.
+Limonata sıcak havalarda çok iyi hissettiriyor.
+Mantar çorbası kremalı yapısıyla çok doyurucu.
+Yayık ayran ev yapımı, hiçbir yerde bu kadar iyi değil.
+Sütlaç fırın versiyonu dışarıdan bulunmaz kolayca.
+Döner sumaklı soğanla birlikte yemek şart.
+Tavuk salatası zeytinyağlı, çok hafif bir akşam yemeği.
+Şalgam sindirimi kolaylaştırıyor, ağır yemek sonrası ideal.
+Künefe ile kapanış yapmak harika bir deneyim.
+Bugünkü en popüler seçim ızgara köfte.
+Mercimek çorbası başlangıç için mükemmel.
+Limonatamız bu mevsimde en çok tercih edilen içecek.
+Izgara köfte ile ayran, sağlıklı ve doyurucu.
+Fırın sütlaç tatlı ama fazla ağır değil.
+Et döner hızlı ve doyurucu, çalışanlar çok seviyor.
+Yayık ayran soğuk ve köpüklü, çok ferahlatıcı.
+Künefe ısrarla tavsiye ediyorum, pişman olmayacaksınız.
+Tavuk salata hafif başlangıç veya ana yemek olabilir.
+Mantar çorbası soğuk algınlığına iyi geliyor, inanın.
+
+# ── 5. KATEGORİ: Fiyat & hesap bildirimi (30 cümle) ─────────────────────────
+Mercimek çorbası seksen beş lira.
+Toplam hesabınız dört yüz elli lira.
+Nakit mi, kart mı tercih edersiniz?
+Izgara köfte iki yüz kırk lira.
+Et döner iki yüz seksen lira.
+Fırın sütlaç yüz lira.
+Künefe yüz kırk lira.
+Yayık ayran kırk beş lira.
+Limonata yetmiş lira.
+Şalgam suyu elli lira.
+Mantar çorbası doksan beş lira.
+Izgara tavuk salata iki yüz on lira.
+Hesabınız şu an iki yüz yirmi beş lira.
+Siparişlerinizin toplamı beş yüz lira.
+Kart geçerli, pos makinesi masaya getirebilirim.
+Nakit alırsak üstünüzü veririz.
+Hesabınızı ayırmak ister misiniz?
+Toplam üç yüz elli lira ediyor.
+İki köfte bir çorba, toplamı söyleyeyim mi?
+Kahve dahil değil hesaba, istediniz mi?
+Hesabı şimdi mi çıkarayım?
+Bir döner bir limonata, üç yüz elli lira.
+Hesabı birlikte mi ayrı mı istersiniz?
+Toplam altı yüz yetmiş lira efendim.
+Kart varsa pos masaya gelsin hemen.
+İki çorba iki yüz elli lira tuttu.
+Bir sütlaç bir künefe iki yüz kırk lira.
+Hesabı sonra verelim mi, aceleniz yok mu?
+Toplam hesabınız yedi yüz lira.
+Ödeme için bekleyin, hemen getiriyorum.
+
+# ── 6. KATEGORİ: İptal & değiştirme (25 cümle) ──────────────────────────────
+Anladım, köfteyi iptal ediyorum.
+Ayran yerine limonata getirebilirim.
+Tabii, değişikliği yaptım, sorun değil.
+Döner istemiyorsanız çıkarayım mı?
+Tamam, mantar çorbasını iptal ettim.
+Yerine sütlaç ekleyeyim mi?
+Anladım, siparişinizi güncelliyorum.
+Tabii, değiştiriyorum hemen.
+Çorba yerine salata mı istersiniz?
+Tamam efendim, anlıyorum.
+Siparişten bir adet çıkarıyorum.
+İki yerine bir yapıyorum, doğru mu?
+Tabii, iptal ettim sorun değil.
+Değiştirmek istediğiniz başka bir şey var mı?
+Anladım, siparişiniz güncellendi.
+Künefe yerine sütlaç mı?
+Tamam, değiştirdim efendim.
+Ayran eklemedim, değiştireyim mi?
+İptal ettim, başka bir şey ekleyeyim mi?
+Tabii efendim, hemen halledelim.
+Bir köfte iptal ettim, iki yerine bir kaldı.
+Değişiklik tamam, hazırlıyorum.
+Sorun değil efendim, halledelim.
+Siparişiniz güncellendi, başka bir şey var mı?
+Tabii, limonatayı iptal ettim.
+
+# ── 7. KATEGORİ: Kibarlık & kapanış (30 cümle) ───────────────────────────────
+Afiyet olsun, iyi akşamlar.
+Teşekkür ederim, yine bekleriz.
+Siparişiniz hazırlandı, getiriyorum.
+İyi akşamlar efendim, güzel vakit geçirin.
+Güle güle, yine bekleriz.
+Afiyet olsun, tekrar görüşmek üzere.
+Yardımcı olabildiğim için mutlu oldum.
+İyi yemekler, güzel bir gece olsun.
+Sizi görmek çok güzeldi, yine gelin.
+Afiyet olsun, kendinize iyi bakın.
+Teşekkürler, görüşmek üzere.
+İyi akşamlar, kolay gelsin.
+Güle güle, sağlıcakla kalın.
+Afiyet olsun efendim.
+Yine bekliyoruz sizi.
+İyi geceler, güvenle gidin.
+Teşekkür ederiz, hoşça kalın.
+Sizi ağırlamak çok güzeldi.
+Afiyet olsun, güzel bir akşam oldu.
+İyi akşamlar, sağlıklı günler.
+Yine görüşmek üzere efendim.
+Güle güle, iyi haftalar.
+Afiyet olsun, yemekler beğendiniz mi?
+Teşekkür ederim, geldiğiniz için.
+İyi akşamlar dilerim.
+Sizi bekliyoruz her zaman.
+Afiyet olsun, hoşça kalın.
+Güle güle, iyi akşamlar.
+Teşekkürler efendim, yine bekleriz.
+İyi akşamlar, sağlıcakla.
+
+# ── 8. KATEGORİ: Fonetik denge — tüm Türkçe sesleri kapsar (30 cümle) ────────
+Şefin özel çorbasını hiç denediniz mi?
+Zeytinyağlı yemeklerimiz çok sağlıklı.
+Küçük çocuklar için özel menümüz var.
+Güzel bir akşam geçirmenizi dilerim.
+Şalgam suyu sindirimi kolaylaştırıyor.
+Özel künefemiz için şef teşekkür ediyor.
+Yeni menümüzde çok çeşit yemek var.
+Güçlü bir çorbayla güne başlamak iyi.
+Tüm malzemeler günlük taze geliyor.
+Sizi ağırlamaktan büyük memnuniyet duyuyorum.
+Fiyatlarımız makul ve kalitemiz yüksek.
+Özenle hazırlanan yemekler sizi bekliyor.
+Şubemiz her gün sabah dokuzda açılıyor.
+Güzel tatlar ve iyi servis bizim önceliğimiz.
+Taze malzeme, özenli hazırlık, iyi sunum.
+Öğle ve akşam menülerimiz farklıdır.
+Güzel bir akşam yemeği için doğru yerdesiniz.
+Tüm çorbalarımız günde iki kez taze yapılır.
+Sizi memnun etmek en büyük önceliğimiz.
+Özenle seçilmiş malzemeler kullanıyoruz.
+Güzel bir deneyim yaşamanızı umuyorum.
+Yemeklerimiz geleneksel Türk mutfağından ilham alır.
+Şeflerimiz her sabah taze hazırlık yapıyor.
+Tatlılarımız günlük yapılıyor, bayat hiç olmaz.
+Sizi en iyi şekilde ağırlamak istiyoruz.
+Özel gün ve kutlamalar için rezervasyon alıyoruz.
+Güzel lezzetler için doğru adrese geldiniz.
+Yemeklerimizden memnun kalacağınıza inanıyorum.
+Her cümleyi doğal ve akıcı söylemeye çalışıyorum.
+Şükranlarımızla, iyi akşamlar dilerim.
