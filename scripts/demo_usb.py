@@ -79,7 +79,7 @@ STT_INITIAL_PROMPT = (
 WAKEWORD_MODEL_PATH = (
     Path(__file__).resolve().parent.parent / "robot_waiter_ai" / "models" / "hey_garson.onnx"
 )
-WAKEWORD_THRESHOLD = 0.85  # 0.7'de yanlış pozitif görüldü — yükseltildi
+WAKEWORD_THRESHOLD = 0.90  # 0.85'de TTS echo false positive görüldü — yükseltildi
 WAKEWORD_CHUNK     = 1280   # 80 ms @ 16 kHz — openWakeWord beklentisi
 
 # ALSA çıkış cihazı — None → sistem varsayılanı, "plughw:2,0" → Jetson APE jack çıkışı
@@ -755,8 +755,8 @@ async def _detect_wakeword(ww_model, tts_active: threading.Event,
     native_chunk = int(native_sr * WAKEWORD_CHUNK / SAMPLE_RATE)
 
     # Stream açılırken buffer'da kalan ses kalıntısı ilk chunk'larda false positive yapar;
-    # 10 chunk (10×80ms = 800ms) atla — kullanıcıya gecikme hissettirmez.
-    _warm_up = [10]
+    # 25 chunk (25×80ms = 2000ms) atla — TTS echo odada ~1-2s sürebilir.
+    _warm_up = [25]
 
     def _cb(indata, frames, time_info, status):
         if _warm_up[0] > 0:
