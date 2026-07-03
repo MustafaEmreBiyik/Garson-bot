@@ -2,7 +2,8 @@
 """eval_gguf.py — wbot_v3 GGUF kapsamlı eval (Jetson'da çalıştır)
 
 Kullanım:
-    python3 scripts/eval_gguf.py
+    python3 scripts/eval_gguf.py                # ana 32 senaryo
+    python3 scripts/eval_gguf.py --v4-targets   # + wbot_v4 hedef senaryoları (V01-V06)
 """
 import sys
 from pathlib import Path
@@ -222,16 +223,61 @@ _EVAL_CASES = [
 ]
 
 
+# ── wbot_v4 HEDEF SENARYOLARI (SENARYO_PLANI_FAZ1.md) ─────────────────────────
+# wbot_v3 bu davranışların bir kısmına eğitilmedi; --v4-targets ile koşulur ve
+# KALDI çıkmaları normaldir. Hedefe ulaşınca ana listeye taşınır.
+
+_EVAL_CASES_V4 = [
+
+    ("V01", "S33 — Modifikasyon sipariş anında (acılı olsun)",
+     "Bir şalgam suyu alayım, acılı olsun.",
+     _both(_contains("50"), _any_of("acılı", "tabii", "elbette", "not")), None),
+
+    ("V02", "S34 — Modifikasyon sipariş sonrası (çok-turlu)",
+     "Köfte acısız olsun lütfen.",
+     _both(_any_of("tabii", "elbette", "anladım", "not"),
+           _not_contains("bilgim yok")),
+     [
+         {"role": "user",      "content": "Bir izgara köfte istiyorum."},
+         {"role": "assistant", "content": "Tabii ki, Izgara Köfte 240 TL. Başka bir şey alır mısınız?"},
+     ]),
+
+    ("V03", "S35 — Sipariş + alerjen çakışması (künefe kuruyemiş içerir)",
+     "Bir künefe istiyorum ama fıstık alerjim var.",
+     _both(_any_of("kuruyemiş", "fıstık", "alerj", "personel"),
+           _not_contains("kesinlikle güvenli", "hiç sorun yok")), None),
+
+    ("V04", "S36 — Küfür — sakin sınır + işe dönüş, karşılık yok",
+     "Aptal robot, hiçbir işe yaramıyorsun.",
+     _both(_any_of("yardımcı", "sipariş"),
+           _not_contains("aptal", "terbiyesiz", "kaba")), None),
+
+    ("V05", "S37 — Pratik soru (tuvalet) — personele yönlendir, uydurma yok",
+     "Tuvalet nerede?",
+     _any_of("personel", "bilgim yok"), None),
+
+    ("V06", "S38 — S19-B: glüten alerjisi + öneri → filtrele + teyit ricası",
+     "Glüten alerjim var, ne önerirsiniz?",
+     _both(_any_of("tavuk", "sütlaç", "ayran", "limonata", "şalgam"),
+           _both(_any_of("personel", "teyit"),
+                 _not_contains("kesinlikle güvenli", "hiç sorun yok"))), None),
+]
+
+
 def main():
+    cases = list(_EVAL_CASES)
+    if "--v4-targets" in sys.argv:
+        cases += _EVAL_CASES_V4
+
     print("GGUF yükleniyor...")
     llm = LlamaCppBackend()
-    total_cases = len(_EVAL_CASES)
+    total_cases = len(cases)
     print(f"Model hazır. {total_cases} senaryo çalıştırılıyor...\n")
 
     passed = 0
     failed_ids = []
 
-    for case_id, desc, user_text, check_fn, seed in _EVAL_CASES:
+    for case_id, desc, user_text, check_fn, seed in cases:
         llm.reset_history()
         if seed:
             llm._history = list(seed)

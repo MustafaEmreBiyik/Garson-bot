@@ -17,6 +17,10 @@ from pathlib import Path
 
 _DATASET_DEFAULT = Path("robot_waiter_ai/datasets/processed/wbot_finetune_v1.jsonl")
 
+# Sistem promptu uzunluk eşikleri (karakter). Kanonik prompt 5460 karakter.
+SYS_PROMPT_MIN_LEN = 1000            # altı: persona/kural içermeyen bozuk kayıt (ihlal)
+SYS_PROMPT_SHORT_VARIANT_MAX = 4000  # 1000-4000 arası: kısa ama kurallı wbot_v2 varyantı (bilgi amaçlı)
+
 # ── Kural tanımları ───────────────────────────────────────────────────────────
 
 # Karşılama tetikleyicileri (user mesajında geçiyorsa)
@@ -405,6 +409,28 @@ def check_hesap_format(user: str, asst: str) -> str | None:
     return None
 
 
+def check_system_prompt_length(record: dict) -> str | None:
+    """Sistem promptu minimum uzunlukta olmalı — persona/kural içermeyen bozuk kayıtları yakalar."""
+    messages = record.get("messages", [])
+    if not messages or messages[0].get("role") != "system":
+        return None
+    length = len(messages[0].get("content", ""))
+    if length < SYS_PROMPT_MIN_LEN:
+        return f"Sistem promptu çok kısa ({length} karakter, minimum {SYS_PROMPT_MIN_LEN} bekleniyor)"
+    return None
+
+
+def check_system_prompt_short_variant(record: dict) -> str | None:
+    """Bilgilendirici: kısa-ama-kurallı wbot_v2 varyantını ayrı raporlar, ihlal saymaz."""
+    messages = record.get("messages", [])
+    if not messages or messages[0].get("role") != "system":
+        return None
+    length = len(messages[0].get("content", ""))
+    if SYS_PROMPT_MIN_LEN <= length < SYS_PROMPT_SHORT_VARIANT_MAX:
+        return f"Kısa varyant sistem promptu ({length} karakter)"
+    return None
+
+
 CHECKS = [
     check_greeting_4cats,
     check_order_has_basit,
@@ -434,6 +460,18 @@ def audit_record(record: dict, rec_idx: int) -> list[dict]:
     """Bir kayıttaki tüm ihlalleri döndür."""
     violations = []
     messages = record.get("messages", [])
+
+    sys_result = check_system_prompt_length(record)
+    if sys_result:
+        violations.append({
+            "record":  rec_idx,
+            "turn":    "system",
+            "check":   "Sistem-promptu-uzunluk",
+            "detail":  sys_result,
+            "user":    "",
+            "asst":    messages[0]["content"][:120] if messages else "",
+        })
+
     for i, msg in enumerate(messages):
         if msg["role"] != "assistant":
             continue
@@ -510,6 +548,17 @@ def main():
         count = by_check.get(name, 0)
         bar = "█" * min(count // 5, 40)
         print(f"  {name:<25} {count:>4}  {bar}")
+
+    sys_len_count = by_check.get("Sistem-promptu-uzunluk", 0)
+    bar = "█" * min(sys_len_count // 5, 40)
+    print(f"  {'Sistem-promptu-uzunluk':<25} {sys_len_count:>4}  {bar}")
+
+    # ── Bilgi (ihlal sayılmaz): kısa-ama-kurallı wbot_v2 varyantı ───────────
+    short_variant_records: set[int] = {
+        i for i, rec in enumerate(records) if check_system_prompt_short_variant(rec)
+    }
+    print(f"\n[Bilgi] Kısa varyant sistem promptu (ihlal SAYILMAZ): "
+          f"{len(short_variant_records)} / {len(records)}")
 
     if args.verbose:
         print("\n" + "─" * 60)

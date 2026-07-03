@@ -21,15 +21,22 @@ MENU = {
     "Mantar Çorbası":         95,
     "Izgara Köfte":          240,
     "Et Döner":              280,
-    "Izgara Tavuk Salatası": 210,
+    "Izgara Tavuk Salata": 210,
     "Fırın Sütlaç":          100,
     "Künefe":                140,
-    "Ayran":                  45,
+    "Yayık Ayran":                  45,
     "Limonata":               70,
     "Şalgam Suyu":            50,
 }
 
-SYSTEM = "Sen W-BOT'sun, Türkçe konuşan bir restoran garson robotusun."
+# Kanonik sistem promptu — wbot_finetune_v1.jsonl'in ilk kaydından okunur
+# (gen_karsilama.py / gen_siparis_baska.py ile aynı desen).
+SYSTEM = json.loads(
+    open(
+        "robot_waiter_ai/datasets/processed/wbot_finetune_v1.jsonl",
+        encoding="utf-8",
+    ).readline()
+)["messages"][0]["content"]
 GREET_BOT = (
     "Hoş geldiniz! Menümüzde çorba, ana yemek, tatlı ve içecek "
     "çeşitlerimiz mevcuttur. Ne arzedersiniz?"
@@ -129,11 +136,11 @@ records = []
 PAIRS_A = [
     ("Mercimek Çorbası",      "Izgara Köfte"),
     ("Mantar Çorbası",        "Et Döner"),
-    ("Izgara Köfte",          "Ayran"),
+    ("Izgara Köfte",          "Yayık Ayran"),
     ("Et Döner",              "Limonata"),
-    ("Izgara Tavuk Salatası", "Şalgam Suyu"),
+    ("Izgara Tavuk Salata", "Şalgam Suyu"),
     ("Fırın Sütlaç",          "Mantar Çorbası"),
-    ("Künefe",                "Ayran"),
+    ("Künefe",                "Yayık Ayran"),
     ("Mercimek Çorbası",      "Fırın Sütlaç"),
 ]
 
@@ -171,16 +178,16 @@ SWAP_PAIRS = [
     ("Mantar Çorbası",        "Mercimek Çorbası"),
     ("Izgara Köfte",          "Et Döner"),
     ("Et Döner",              "Izgara Köfte"),
-    ("Izgara Tavuk Salatası", "Izgara Köfte"),
+    ("Izgara Tavuk Salata", "Izgara Köfte"),
     ("Fırın Sütlaç",          "Künefe"),
     ("Künefe",                "Fırın Sütlaç"),
-    ("Ayran",                 "Limonata"),
+    ("Yayık Ayran",                 "Limonata"),
     ("Limonata",              "Şalgam Suyu"),
-    ("Şalgam Suyu",           "Ayran"),
-    ("Izgara Köfte",          "Izgara Tavuk Salatası"),
-    ("Et Döner",              "Izgara Tavuk Salatası"),
+    ("Şalgam Suyu",           "Yayık Ayran"),
+    ("Izgara Köfte",          "Izgara Tavuk Salata"),
+    ("Et Döner",              "Izgara Tavuk Salata"),
     ("Mercimek Çorbası",      "Izgara Köfte"),
-    ("Ayran",                 "Şalgam Suyu"),
+    ("Yayık Ayran",                 "Şalgam Suyu"),
     ("Fırın Sütlaç",          "Limonata"),
 ]
 
@@ -225,14 +232,14 @@ for s_idx in range(2):
 # ══════════════════════════════════════════════════════════════
 
 CANCEL_REORDER_PAIRS = [
-    ("Mercimek Çorbası",      "Izgara Tavuk Salatası"),
+    ("Mercimek Çorbası",      "Izgara Tavuk Salata"),
     ("Mantar Çorbası",        "Künefe"),
     ("Izgara Köfte",          "Mercimek Çorbası"),
     ("Et Döner",              "Mantar Çorbası"),
-    ("Izgara Tavuk Salatası", "Fırın Sütlaç"),
+    ("Izgara Tavuk Salata", "Fırın Sütlaç"),
     ("Fırın Sütlaç",          "Limonata"),
     ("Künefe",                "Şalgam Suyu"),
-    ("Ayran",                 "Izgara Köfte"),
+    ("Yayık Ayran",                 "Izgara Köfte"),
     ("Limonata",              "Et Döner"),
     ("Şalgam Suyu",           "Künefe"),
 ]
@@ -275,14 +282,14 @@ for cr_idx in range(2):
 # ══════════════════════════════════════════════════════════════
 
 PAIRS_D = [
-    ("Mercimek Çorbası",      "Izgara Tavuk Salatası"),
+    ("Mercimek Çorbası",      "Izgara Tavuk Salata"),
     ("Mantar Çorbası",        "Künefe"),
     ("Izgara Köfte",          "Mercimek Çorbası"),
     ("Et Döner",              "Mantar Çorbası"),
-    ("Izgara Tavuk Salatası", "Fırın Sütlaç"),
+    ("Izgara Tavuk Salata", "Fırın Sütlaç"),
     ("Fırın Sütlaç",          "Limonata"),
     ("Künefe",                "Şalgam Suyu"),
-    ("Ayran",                 "Izgara Köfte"),
+    ("Yayık Ayran",                 "Izgara Köfte"),
     ("Limonata",              "Et Döner"),
     ("Şalgam Suyu",           "Künefe"),
 ]

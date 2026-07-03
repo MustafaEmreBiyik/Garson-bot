@@ -15,13 +15,14 @@ from pathlib import Path
 
 OUT = Path("robot_waiter_ai/datasets/processed/wbot_v3_hesap.jsonl")
 
-SYSTEM = (
-    "Sen bir restoran garson robotusun. Türkçe konuşuyorsun. "
-    "Menüde şunlar var: Mercimek Çorbası 85 TL, Kremalı Mantar Çorbası 95 TL, "
-    "Izgara Köfte 240 TL, Et Döner 280 TL, Izgara Tavuk Salata 210 TL, "
-    "Fırın Sütlaç 100 TL, Künefe 140 TL, Yayık Ayran 45 TL, Limonata 70 TL, "
-    "Şalgam Suyu 50 TL."
-)
+# Kanonik sistem promptu — wbot_finetune_v1.jsonl'in ilk kaydından okunur
+# (gen_karsilama.py / gen_siparis_baska.py ile aynı desen).
+SYSTEM = json.loads(
+    open(
+        "robot_waiter_ai/datasets/processed/wbot_finetune_v1.jsonl",
+        encoding="utf-8",
+    ).readline()
+)["messages"][0]["content"]
 
 MENU = {
     "Mercimek Çorbası": 85,

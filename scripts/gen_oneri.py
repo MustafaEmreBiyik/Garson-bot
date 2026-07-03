@@ -17,15 +17,22 @@ MENU = {
     "Mantar Çorbası":         95,
     "Izgara Köfte":          240,
     "Et Döner":              280,
-    "Izgara Tavuk Salatası": 210,
+    "Izgara Tavuk Salata": 210,
     "Fırın Sütlaç":          100,
     "Künefe":                140,
-    "Ayran":                  45,
+    "Yayık Ayran":                  45,
     "Limonata":               70,
     "Şalgam Suyu":            50,
 }
 
-SYSTEM = "Sen W-BOT'sun, Türkçe konuşan bir restoran garson robotusun."
+# Kanonik sistem promptu — wbot_finetune_v1.jsonl'in ilk kaydından okunur
+# (gen_karsilama.py / gen_siparis_baska.py ile aynı desen).
+SYSTEM = json.loads(
+    open(
+        "robot_waiter_ai/datasets/processed/wbot_finetune_v1.jsonl",
+        encoding="utf-8",
+    ).readline()
+)["messages"][0]["content"]
 GREET_BOT = (
     "Hoş geldiniz! Menümüzde çorba, ana yemek, tatlı ve içecek "
     "çeşitlerimiz mevcuttur. Ne arzedersiniz?"
@@ -102,11 +109,11 @@ ANA_Q = [
 ]
 
 ANA_A = [
-    "Ana yemek olarak Izgara Köfte, Et Döner ve Izgara Tavuk Salatası seçeneklerimiz mevcuttur.",
-    "Menümüzde Izgara Köfte, Et Döner ve Izgara Tavuk Salatası bulunmaktadır. Hepsi taze hazırlanır.",
-    "Ana yemeklerimiz: Izgara Köfte, Et Döner ve Izgara Tavuk Salatası. Hangisi ilginizi çeker?",
-    "Izgara Köfte, Et Döner ve Izgara Tavuk Salatası sunmaktayız. Et Döner özellikle tercih edilmektedir.",
-    "Üç ana yemek seçeneğimiz var: Izgara Köfte, Et Döner ve Izgara Tavuk Salatası.",
+    "Ana yemek olarak Izgara Köfte, Et Döner ve Izgara Tavuk Salata seçeneklerimiz mevcuttur.",
+    "Menümüzde Izgara Köfte, Et Döner ve Izgara Tavuk Salata bulunmaktadır. Hepsi taze hazırlanır.",
+    "Ana yemeklerimiz: Izgara Köfte, Et Döner ve Izgara Tavuk Salata. Hangisi ilginizi çeker?",
+    "Izgara Köfte, Et Döner ve Izgara Tavuk Salata sunmaktayız. Et Döner özellikle tercih edilmektedir.",
+    "Üç ana yemek seçeneğimiz var: Izgara Köfte, Et Döner ve Izgara Tavuk Salata.",
 ]
 
 TATLI_Q = [
@@ -138,10 +145,10 @@ ICECEK_Q = [
 ]
 
 ICECEK_A = [
-    "Ayran, Limonata ve Şalgam Suyu içecek seçeneklerimizdir.",
-    "Menümüzde Ayran, Limonata ve Şalgam Suyu bulunmaktadır. Limonata taze limonla hazırlanır.",
-    "İçeceklerimiz: Ayran, Limonata ve Şalgam Suyu. Taze Limonata çok tercih edilir.",
-    "Ayran, Limonata ve Şalgam Suyu sunmaktayız. Hangisini tercih edersiniz?",
+    "Yayık Ayran, Limonata ve Şalgam Suyu içecek seçeneklerimizdir.",
+    "Menümüzde Yayık Ayran, Limonata ve Şalgam Suyu bulunmaktadır. Limonata taze limonla hazırlanır.",
+    "İçeceklerimiz: Yayık Ayran, Limonata ve Şalgam Suyu. Taze Limonata çok tercih edilir.",
+    "Yayık Ayran, Limonata ve Şalgam Suyu sunmaktayız. Hangisini tercih edersiniz?",
 ]
 
 for i, q in enumerate(CORBA_Q):
@@ -206,14 +213,14 @@ GENEL_Q = [
 GENEL_A = [
     "Izgara Köfte'miz çok tercih edilmektedir. Taze ızgara ile hazırlanmakta, oldukça lezzetlidir.",
     "Et Döner'imiz oldukça popülerdir. Yumuşak ve lezzetli olup doyurucudur.",
-    "Izgara Tavuk Salatası özellikle tavsiye ettiğimiz bir seçenektir. Hem hafif hem doyurucudur.",
+    "Izgara Tavuk Salata özellikle tavsiye ettiğimiz bir seçenektir. Hem hafif hem doyurucudur.",
     "Künefe'miz çok beğenilmektedir. Sıcak servis edilen, enfes bir tatlıdır.",
     "Mercimek Çorbası her zaman tercih edilen klasik bir seçenektir. Besleyicidir.",
     "Izgara Köfte ve Et Döner en çok tercih edilen ana yemeklerimizdir.",
     "Fırın Sütlaç hafif bir tatlı olarak özellikle tavsiye edilmektedir.",
     "Mantar Çorbası ile başlayıp Izgara Köfte ile devam etmenizi öneririm.",
     "Et Döner oldukça doyurucu. Ana yemek olarak çok tercih edilmektedir.",
-    "Izgara Tavuk Salatası hem sağlıklı hem lezzetli. Ana yemek olarak tavsiye ederim.",
+    "Izgara Tavuk Salata hem sağlıklı hem lezzetli. Ana yemek olarak tavsiye ederim.",
 ]
 
 for i, q in enumerate(GENEL_Q):
@@ -238,39 +245,39 @@ assert len(records) == 70, len(records)
 FIRST_AND_CAT = [
     ("Mercimek Çorbası",      "ana yemek"),
     ("Mantar Çorbası",        "ana yemek"),
-    ("Ayran",                 "ana yemek"),
+    ("Yayık Ayran",                 "ana yemek"),
     ("Limonata",              "tatlı"),
     ("Şalgam Suyu",           "ana yemek"),
     ("Mercimek Çorbası",      "tatlı"),
     ("Mantar Çorbası",        "içecek"),
-    ("Ayran",                 "tatlı"),
+    ("Yayık Ayran",                 "tatlı"),
     ("Limonata",              "ana yemek"),
     ("Şalgam Suyu",           "tatlı"),
     ("Mercimek Çorbası",      "içecek"),
     ("Mantar Çorbası",        "tatlı"),
     ("Izgara Köfte",          "tatlı"),
     ("Et Döner",              "içecek"),
-    ("Izgara Tavuk Salatası", "içecek"),
+    ("Izgara Tavuk Salata", "içecek"),
     ("Izgara Köfte",          "içecek"),
     ("Et Döner",              "tatlı"),
-    ("Izgara Tavuk Salatası", "tatlı"),
+    ("Izgara Tavuk Salata", "tatlı"),
     ("Fırın Sütlaç",          "içecek"),
     ("Künefe",                "içecek"),
     ("Mercimek Çorbası",      "ana yemek"),
     ("Mantar Çorbası",        "ana yemek"),
     ("Izgara Köfte",          "çorba"),
     ("Et Döner",              "çorba"),
-    ("Izgara Tavuk Salatası", "çorba"),
+    ("Izgara Tavuk Salata", "çorba"),
     ("Fırın Sütlaç",          "çorba"),
     ("Künefe",                "çorba"),
-    ("Ayran",                 "çorba"),
+    ("Yayık Ayran",                 "çorba"),
     ("Limonata",              "çorba"),
     ("Şalgam Suyu",           "ana yemek"),
     ("Mercimek Çorbası",      "içecek"),
     ("Mantar Çorbası",        "içecek"),
     ("Izgara Köfte",          "çorba"),
     ("Et Döner",              "çorba"),
-    ("Izgara Tavuk Salatası", "çorba"),
+    ("Izgara Tavuk Salata", "çorba"),
 ]
 
 CAT_Q = {

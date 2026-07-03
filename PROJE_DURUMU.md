@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 24 Haziran 2026 | **Sürüm:** 5.9
+**Son güncelleme:** 3 Temmuz 2026 | **Sürüm:** 5.12
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -8,14 +8,24 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 
 ## Bir Sonraki Oturum — Hızlı Özet
 
-**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor (7 Haziran 2026). Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. Yeni eval: 31/32 (%96). Tüm yedekler GitHub + Drive'da.
+**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor (7 Haziran 2026). Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. Yeni eval: 31/32 (%96). wbot_v4_train.jsonl hazır (3605 kayıt, 0 audit ihlali — 3 Temmuz 2026). Tüm yedekler GitHub + Drive'da.
 
 **Sıradaki görevler (öncelik sırasıyla):**
 
 1. **E19 post-processing fix** — "nasıl bir şey?" yanıtı `?` ile bitmiyorsa `demo_usb.py`'de `"Getireyim mi?"` ekle (kod değişikliği, eğitim gerekmez)
 2. **Gürültülü ortam testi** — restoran müziği + kalabalık ortamda Jetson'da wake word + STT kalitesi
-3. **wbot_v4 dataset üretimi** — ~750 yeni örnek: açıklama+soru (W15), alerji+öneri (W16), anti-hallüsinasyon
-4. **wbot_v4 eğitimi** (Colab A100, 3 epoch) → GGUF → Jetson deploy → %95+ hedef
+3. **wbot_v4 eğitimi** — `wbot_v4_train.jsonl` hazır (3605 kayıt, Drive'a yüklendi), notebook hazır (`robot_waiter_ai/training/wbot_v4_colab_training.ipynb`)
+4. **wbot_v4 Jetson deploy + eval** → GGUF → Jetson → `eval_gguf.py` (%95+ hedef) + `--v4-targets` (V01-V06)
+
+> 📐 **Senaryo kararları (3 Temmuz 2026):** S19 alerji+öneri → filtrele+uyarı (Seçenek B),
+> S12 onay öncesi → her zaman özet+toplam (W11/E24 revizyonu gerekir), S29 küfür ve
+> S03 sessizlik politikaları netleşti. Yeni eval hedefleri `eval_gguf.py --v4-targets`
+> (V01-V06). Tamamı: [SENARYO_PLANI_FAZ1.md](SENARYO_PLANI_FAZ1.md)
+
+> 🔍 **Senaryo danışması (3 Temmuz 2026) — Codex 5.5, Gemini 2.5 Pro, Claude Fable:**
+> Üç model bağımsız olarak S01-S32 listesini değerlendirdi. Konsensüs: W16
+> hibrit yaklaşım, S12 koşulsuz özet, ~1100 örnek yeterli. Sonuç: S33-S41
+> eklendi, SENARYO_PLANI_FAZ1.md oluşturuldu.
 
 > 📋 **Yeni — toplanti.md (26 Haziran 2026) ses/AI görevleri:** fast-path intent
 > yönlendirme, açılış cümlesi standardizasyonu, menü-dışı/düşük-güven girdi guard'ları,
@@ -64,13 +74,13 @@ Garson-bot/
 │   ├── eval_llm.py               ✅ LLM kalite + performans eval (prompt bazlı, 20 turn)
 │   ├── eval_adapter.py           ✅ Fine-tune adapter eval (14 formal + 7 smoke; --full-prompt desteği)
 │   ├── eval_gguf.py              ✅ Jetson GGUF eval — 32 senaryo, çok-turlu (seeded history) destekli
-│   ├── audit_dataset.py          ✅ Dataset ihlal denetimi (TL bağlam, başka, getireyim mi...)
+│   ├── audit_dataset.py          ✅ Dataset ihlal denetimi — 10 kural (8 içerik + 2 sistem promptu; 3 Temmuz 2026)
 │   ├── gen_karsilama.py          ✅ wbot_v3 dataset üretim — karşılama (200 kayıt)
 │   ├── gen_siparis_baska.py      ✅ wbot_v3 dataset üretim — sipariş+başka (150 kayıt)
-│   ├── gen_hesap.py              ✅ wbot_v3 dataset üretim — hesap varyasyonları (100 kayıt)
-│   ├── gen_cotturlu.py           ✅ wbot_v3 dataset üretim — çok turlu (150 kayıt)
-│   ├── gen_iptal.py              ✅ wbot_v3 dataset üretim — iptal/değişiklik (100 kayıt)
-│   ├── gen_oneri.py              ✅ wbot_v3 dataset üretim — öneri+TL yasağı (105 kayıt)
+│   ├── gen_hesap.py              ✅ wbot_v3 dataset üretim — hesap varyasyonları (100 kayıt, kanonik sistem promptu — 3 Temmuz 2026 fix)
+│   ├── gen_cotturlu.py           ✅ wbot_v3 dataset üretim — çok turlu (150 kayıt, kanonik sistem promptu — 3 Temmuz 2026 fix)
+│   ├── gen_iptal.py              ✅ wbot_v3 dataset üretim — iptal/değişiklik (100 kayıt, kanonik sistem promptu + menü adı fix — 3 Temmuz 2026)
+│   ├── gen_oneri.py              ✅ wbot_v3 dataset üretim — öneri+TL yasağı (105 kayıt, kanonik sistem promptu + menü adı fix — 3 Temmuz 2026)
 │   ├── compare_models.py         ✅ Model karşılaştırma scripti (4B vs 1.7B)
 │   ├── train_wakeword.py         ✅ openWakeWord eğitim (MMS-TTS + gürültü)
 │   └── test_wakeword_usb.py      ✅ USB mikrofon ile gerçek zamanlı wake word testi
@@ -97,7 +107,8 @@ Garson-bot/
     │           └── adapter/      ⚠️ lokal — git'te değil (264 MB); Drive: garsonbot_runs/wbot_v3/adapter/
     └── datasets/
         └── processed/
-            ├── wbot_v3_train.jsonl          ✅ 3000 kayıt, 0 audit ihlali (wbot_v3 eğitim dataseti)
+            ├── wbot_v3_train.jsonl          ✅ 3000 kayıt, 0 audit ihlali (10 kural — 3 Temmuz 2026 itibariyle)
+            ├── wbot_v3_train_backup.jsonl   ⚠️ Sistem promptu fix öncesi yedek (diskte duruyor, git'te değil)
             └── wbot_finetune_v1_violations.jsonl  ✅ 21 ihlalli kayıt (wbot_v2'den ayrıldı)
 ```
 
@@ -312,6 +323,12 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | W14 | Öneri sorusunda kategori dışına çıkıyordu | "Tavuk yesem ne yesem?" sorusuna tatlı ve çorba da öneriyordu | Öneri kuralı kategoriyi kısıtlamıyordu | ✅ Düzeltildi (v5.0 — öneri sorusunda kategori belirtildiyse YALNIZCA o kategoriden 1-2 ürün; başka kategori ekleme) |
 | W15 | Ürün açıklaması sonrası soru yok | "Kremalı mantar çorbası nasıl?" → açıklama yapıyor ama "Getireyim mi?" demiyor | wbot_v3 dataseti açıklama+soru örneklerini yeterince içermiyor | ⏳ wbot_v4 |
 | W16 | Alerji yanıtı anlamsız | "Süt alerjim var, ne yiyebilirim?" → "Süt ürünü içermeyen menüümüz var mı?" (model kendine soruyor) | Yetersiz alerji+öneri kombinasyon örneği | ⏳ wbot_v4 |
+
+> 📌 **S12 kararı — Sipariş Özeti (onaylandı, 3 Temmuz 2026):** Koşulsuz
+> toplu özet. Ürün sayısından bağımsız, onay öncesi her zaman:
+> "Siparişiniz: [ürünler]. Toplam [X] TL. Onaylıyor musunuz?"
+> Afiyet olsun cümlesi toplamsız kalır (W11 kuralı burada geçerli).
+> E24 eval'i wbot_v4'te bu akışa göre revize edilecek.
 
 ---
 
@@ -550,13 +567,68 @@ Hedef: 48 senaryoda %95+ PASS
 
 ---
 
+### wbot_v3 Sistem Promptu Tutarsızlığı Fix (3 Temmuz 2026) ✅
+
+**Sorun:** `wbot_v3_train.jsonl`'deki 3000 kayıttan 455'i (`gen_hesap.py`,
+`gen_cotturlu.py`, `gen_iptal.py`, `gen_oneri.py` çıktıları) persona/kural
+içermeyen kısa hardcode sistem promptlarıyla (284 veya 60 karakter)
+üretilmişti — METODOLOJI.md'nin "tüm kayıtlarda aynı uzun sistem promptu"
+kuralına aykırı. `audit_dataset.py`'nin o zamanki 8 kuralı bunu hiç
+yakalamıyordu çünkü yalnızca `assistant` mesajlarını denetliyordu.
+
+**Düzeltme:**
+- `scripts/audit_dataset.py`'ye 2 yeni kural eklendi:
+  `check_system_prompt_length` (sistem promptu < 1000 karakter → ihlal) ve
+  `check_system_prompt_short_variant` (1000-4000 karakter → ihlal SAYILMAZ,
+  yalnızca bilgi amaçlı ayrı raporlanır).
+- 4 script (`gen_hesap.py`, `gen_cotturlu.py`, `gen_iptal.py`, `gen_oneri.py`)
+  hardcode sistem promptunu kaldırıp `gen_karsilama.py`/`gen_siparis_baska.py`
+  ile aynı yöntemle (`wbot_finetune_v1.jsonl`'in ilk kaydından oku) kanonik
+  5460 karakterlik prompta geçti.
+- Ek olarak `gen_iptal.py`/`gen_oneri.py`'de menü adı uyuşmazlığı düzeltildi:
+  "Izgara Tavuk Salatası" → "Izgara Tavuk Salata", "Ayran" → "Yayık Ayran"
+  (kanonik sistem promptunun menü bölümüyle eşleşecek şekilde).
+- 4 script yeniden çalıştırılıp tekil çıktı dosyaları yeniden üretildi,
+  `wbot_v3_train.jsonl` 2195 temiz base + düzeltilmiş 805 yeni kayıtla
+  yeniden birleştirildi (kayıt sayısı 3000 korundu). Önceki hâli
+  `wbot_v3_train_backup.jsonl` olarak yedeklendi.
+
+**Sonuç (audit_dataset.py, öncesi → sonrası):**
+
+| Kural | Öncesi | Sonrası |
+|---|---|---|
+| Sistem-promptu-uzunluk | 455 | **0** |
+| Mevcut 8 içerik kuralı | 0 | 0 (değişmedi) |
+| Toplam kayıt | 3000 | 3000 (değişmedi) |
+
+**Sistem promptu dağılımı (wbot_v3_train.jsonl, sonrası):**
+
+| Uzunluk | Kayıt | Durum |
+|---|---|---|
+| 5460 karakter (tam persona + kurallar + menü) | 1769 | ✅ Sağlam |
+| 1773 karakter (kısa ama kurallı, wbot_v2 §1-12 varyantı) | 1231 | ⚠️ Bilinen teknik borç (aşağıya bkz.) |
+| 284 / 60 karakter (bozuk) | 0 | ✅ Düzeltildi |
+
+#### Bilinen Teknik Borç — Kısa Varyant Sistem Promptu (Düşük Öncelik)
+
+`wbot_v3_train.jsonl` içinde 1231 kayıt (wbot_v2 §1-12 dönemi) 1773
+karakterlik kısa bir sistem promptuyla üretilmiş. Bu kayıtlar kural içeriyor
+(persona/format kuralları var) — bu yüzden `audit_dataset.py` bunları ihlal
+saymıyor, yalnızca bilgi amaçlı ayrı raporluyor. Eval sonuçlarını bugüne kadar
+bozmadı (32 senaryo %96 baz alındı). Ancak inference'ta kullanılan 5460
+karakterlik tam promptla eğitim zamanı tutarsızlığı hâlâ mevcut — wbot_v4 veya
+sonraki bir dataset döngüsünde bu 1231 kayıt da kanonik prompta geçirilerek
+yeniden üretilebilir.
+
+---
+
 ### Sonraki Eğitim: wbot_v4 Planı
 
 **Önkoşul:** ✅ Jetson deploy tamamlandı. 32-senaryo eval (%93) yapıldı. Gerçek boşluklar tespit edildi.
 
 > Başlıca eksikler: W15 (açıklama+soru), W16 (alerji+öneri), hallüsinasyon (E34). Gürültülü ortam testinden ek boşluklar çıkabilir.
 
-**Tahmini ihtiyaç:** ~500-800 yeni örnek (wbot_v3 3000 base üzerine)
+**Tahmini ihtiyaç:** ~1100 yeni örnek (wbot_v3 3000 base üzerine)
 
 | # | Kategori | Tahmini Adet | Gerekçe |
 |---|----------|-------------|---------|
@@ -566,10 +638,59 @@ Hedef: 48 senaryoda %95+ PASS
 | 4 | Karmaşık sipariş (3+ ürün, değiştir+ekle+hesap) | 150 | Gerçek restoran davranışı |
 | 5 | Uzun çok turlu sohbet (6+ tur) | 100 | Bağlam koruması, konu değişikliği |
 | 6 | Gürültülü ortam testinden çıkan edge case'ler | ~100 | Gerçek test sonrası eklenecek |
-| **TOPLAM** | | **~750** | |
+| 7 | Faz 1 danışma sonucu yeni senaryolar (S33-S41) | ~115 | Codex/Gemini/Claude konsensüsü — modifikasyon, alerjen çakışması, küfür, stok-yok, eskalasyon (bkz. SENARYO_PLANI_FAZ1.md) |
+| **TOPLAM** | | **~1100** | |
 
-**wbot_v4 hedef dataset:** ~3750 kayıt (3000 base + 750 yeni)
+**wbot_v4 hedef dataset:** ~4100 kayıt (3000 base + 1100 yeni)
 **Başarı hedefi:** 48 senaryo %95+ PASS + gerçek restoran ortamında doğal sohbet kalitesi
+
+---
+
+### wbot_v4 Dataset Üretimi (3 Temmuz 2026) ✅
+
+**A Paketi (490 kayıt, gen_*.py ile üretildi):**
+
+| Script | Çıktı | Kayıt | Senaryo |
+|--------|-------|-------|---------|
+| gen_aciklama.py     | wbot_v4_aciklama.jsonl     | 150 | E19/W15 fix — açıklama + "Getireyim mi?" |
+| gen_karmasik.py     | wbot_v4_karmasik.jsonl     | 150 | S12 koşulsuz özet — karmaşık/adetli sipariş |
+| gen_cokturlu_v4.py  | wbot_v4_cokturlu.jsonl     | 100 | Uzun çok turlu konuşma |
+| gen_kisa_onay.py    | wbot_v4_kisa_onay.jsonl    |  60 | S13 kısa onay senaryosu |
+| gen_duzeltme.py     | wbot_v4_duzeltme.jsonl     |  30 | S26 yanlış anlama → düzeltme |
+
+**B Paketi (115 kayıt, gen_*.py ile üretildi):**
+
+| Script | Çıktı | Kayıt | Senaryo |
+|--------|-------|-------|---------|
+| gen_belirsiz.py        | wbot_v4_belirsiz.jsonl        | 20 | S25/S27 — belirsiz/eksik girdi |
+| gen_kotu_niyet.py      | wbot_v4_kotu_niyet.jsonl      | 15 | S29/S30/S32 — küfür/kandırma/görev dışı |
+| gen_modifikasyon.py    | wbot_v4_modifikasyon.jsonl    | 20 | S33/V01 — sipariş anı modifikasyon |
+| gen_alerjen_cakisma.py | wbot_v4_alerjen_cakisma.jsonl | 15 | S35/V03 — sipariş+alerjen çakışması |
+| gen_pratik_soru.py     | wbot_v4_pratik_soru.jsonl     | 10 | S37/V05 — tuvalet/wifi vb. |
+| gen_alerji_oneri.py    | wbot_v4_alerji_oneri.jsonl    | 20 | S38/V06 — W16, S19-B kanonik kalıp |
+| gen_siparis_durumu.py  | wbot_v4_siparis_durumu.jsonl  | 15 | S40 — "ne zaman gelir" |
+
+**Birleştirme:** `scripts/rebuild_wbot_v4_train.py` — `wbot_v3_train.jsonl` (3000 temiz base) + A paketi (490) + B paketi (115) = 3605 kayıt, `random.Random(2027).shuffle()`.
+
+**`wbot_v4_train.jsonl` — 3605 kayıt, audit 0 ihlal (10 kural temiz):**
+
+| Bileşen | Kayıt |
+|---|---|
+| wbot_v3_train.jsonl (temiz base) | 3000 |
+| A paketi | 490 |
+| B paketi | 115 |
+| **Toplam** | **3605** |
+
+**Sistem promptu dağılımı:**
+
+| Uzunluk | Kayıt | Not |
+|---|---|---|
+| 5460 karakter (tam kanonik) | 2374 | base'deki 1769 + A/B paketindeki tüm 605 yeni kayıt |
+| 1773 karakter (kısa varyant) | 1231 | bilinen teknik borç, base'den değişmeden geldi — ihlal sayılmıyor |
+
+**Yedek:** `wbot_v4_base_backup.jsonl` (`wbot_v3_train.jsonl` birebir kopyası, birleştirmeden önce alındı)
+
+> **Not — C paketi kapsam dışı:** ~495 kayıt (Gemini/Claude API ile üretilecek) bu turda üretilmedi, farklı bir ortamda ayrıca ele alınacak. wbot_v4 eval sonuçlarına göre wbot_v5 için değerlendirilecek.
 
 ---
 
@@ -585,8 +706,17 @@ Hedef: 48 senaryoda %95+ PASS
 | 6 | Whisper medium testi (Jetson'da) | 🟡 Orta | ✅ Tamamlandı — 1.7s CUDA, demo_usb.py güncellendi |
 | 7 | E19 post-processing fix — açıklama yanıtı "?" ile bitmiyorsa "Getireyim mi?" ekle | 🟡 Orta | ⏳ Bekliyor |
 | 8 | Gürültülü ortam testi (restoran müziği + kalabalık) | 🟡 Orta | ⏳ Bekliyor |
-| 9 | wbot_v4 dataset üretimi (~750 yeni örnek) | 🟢 Düşük | ⏳ Bekliyor |
-| 10 | wbot_v4 eğitimi (Colab A100, 3 epoch) → GGUF → Jetson | 🟢 Düşük | ⏳ Bekliyor |
+| 9 | wbot_v4 dataset üretimi — A paketi (490) + B paketi (115) = 605 yeni kayıt | 🟢 Düşük | ✅ Tamamlandı — 3 Temmuz 2026 |
+| 10 | wbot_v4 eğitimi — Dataset: `wbot_v4_train.jsonl` (3605 kayıt, Drive'a yüklendi), Notebook: `wbot_v4_colab_training.ipynb`, Script: `train_wbot_v2.py`, Çıktı: `Qwen3-4B-wbot_v4-Q4_K_M.gguf` (Colab A100, 3 epoch) | 🟡 Orta | ⏳ Bekliyor |
+| 11 | Sistem promptu tutarsızlığı fix (audit_dataset.py 2 yeni kural + 4 gen script + 455 kayıt) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
+| 12 | Loglama sistemi — demo_usb.py'e oturum loglama (ses + metin + sipariş geçmişi); amaç: hukuki koruma (müşteri itirazları) + gelecekteki yeniden eğitim verisi; kapsam: session JSON (masa no, timestamp, konuşma, sipariş snapshot) + WAV kaydı | 🟡 Orta | ⏳ Tasarım aşamasında, henüz kod yok |
+| 13 | Senaryo planlaması tamamlandı (S01-S41, SENARYO_PLANI_FAZ1.md) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
+| 14 | eval_gguf.py — V01-V06 hedef senaryoları eklendi (--v4-targets) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
+| 15 | W16 ve S12 davranış kararları verildi | 🟡 Orta | ✅ Tamamlandı — 3 Temmuz 2026 |
+| 16 | E24 eval revizyonu (S12 koşulsuz özet akışına göre) | 🟡 Orta | ⏳ Bekliyor |
+| 17 | Eval: V01-V06 hedeflerini ana listeye taşı (wbot_v4 sonrası) | 🟢 Düşük | ⏳ Bekliyor |
+| 18 | Jetson deploy + eval (wbot_v4 sonrası) — `eval_gguf.py` hedef 32/32, `--v4-targets` ile V01-V06 ölçümü | 🟢 Düşük | ⏳ Bekliyor |
+| 19 | wbot_v4_train.jsonl birleştirme (3605 kayıt, 0 ihlal, seed=2027) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
 
 ---
 
@@ -693,7 +823,7 @@ Whisper medium testi + E19 post-processing fix
     ↓
 Gürültülü ortam testi (restoran müziği, çoklu konuşmacı)
     ↓
-wbot_v4 dataset (~750 yeni örnek: açıklama+soru, alerji+öneri, anti-hallüsinasyon)
+wbot_v4 dataset (~1100 yeni örnek: açıklama+soru, alerji+öneri, anti-hallüsinasyon)
     ↓
 Colab A100 — wbot_v4 eğitimi (3 epoch, ~2 saat)
     ↓
