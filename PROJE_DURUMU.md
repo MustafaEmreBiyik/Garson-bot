@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 3 Temmuz 2026 | **Sürüm:** 5.12
+**Son güncelleme:** 4 Temmuz 2026 | **Sürüm:** 5.13
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -624,7 +624,7 @@ yeniden üretilebilir.
 
 ### Sonraki Eğitim: wbot_v4 Planı
 
-**Önkoşul:** ✅ Jetson deploy tamamlandı. 32-senaryo eval (%93) yapıldı. Gerçek boşluklar tespit edildi.
+**Önkoşul:** ✅ Jetson deploy tamamlandı. 32-senaryo eval 31/32 (%96) yapıldı. Gerçek boşluklar tespit edildi.
 
 > Başlıca eksikler: W15 (açıklama+soru), W16 (alerji+öneri), hallüsinasyon (E34). Gürültülü ortam testinden ek boşluklar çıkabilir.
 
@@ -690,7 +690,15 @@ yeniden üretilebilir.
 
 **Yedek:** `wbot_v4_base_backup.jsonl` (`wbot_v3_train.jsonl` birebir kopyası, birleştirmeden önce alındı)
 
-> **Not — C paketi kapsam dışı:** ~495 kayıt (Gemini/Claude API ile üretilecek) bu turda üretilmedi, farklı bir ortamda ayrıca ele alınacak. wbot_v4 eval sonuçlarına göre wbot_v5 için değerlendirilecek.
+> **Not — C paketi kapsam dışı:** ~495 rakamı gerçek bir hedef değildi,
+> yalnızca "~1100 hedef − 605 üretilen" aritmetik kalıntısıydı. Gerçek
+> kapsam ~140 kayıt: S34/V02 (modifikasyon sipariş sonrası, ~20), S41
+> (iki ardışık anlaşamama → eskalasyon, ~20, yeni eval V07 taslağıyla
+> birlikte), anti-hallüsinasyon (~100). S39 (stok yok — kod ön koşulu
+> eksik) ve gürültülü-ortam edge case'leri (saha testi ön koşulu eksik)
+> kapsam dışı. Görev tanımı yazıldı, üretim wbot_v4 eğitim/eval
+> sonrasına ertelendi — bkz. [claude_code_prompt_C_paketi_dataset.md](claude_code_prompt_C_paketi_dataset.md)
+> (4 Temmuz 2026).
 
 ---
 
@@ -717,6 +725,7 @@ yeniden üretilebilir.
 | 17 | Eval: V01-V06 hedeflerini ana listeye taşı (wbot_v4 sonrası) | 🟢 Düşük | ⏳ Bekliyor |
 | 18 | Jetson deploy + eval (wbot_v4 sonrası) — `eval_gguf.py` hedef 32/32, `--v4-targets` ile V01-V06 ölçümü | 🟢 Düşük | ⏳ Bekliyor |
 | 19 | wbot_v4_train.jsonl birleştirme (3605 kayıt, 0 ihlal, seed=2027) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
+| 20 | C paketi görev tanımı — S34/V02 + S41/V07 (taslak) + anti-hallüsinasyon (~140 kayıt); üretim wbot_v4 eğitim/eval sonrasına ertelendi | 🟢 Düşük | ✅ Tamamlandı — 4 Temmuz 2026, bkz. `claude_code_prompt_C_paketi_dataset.md` |
 
 ---
 
@@ -817,13 +826,11 @@ scp user@ubuntu_pc:/path/to/Qwen3-4B-wbot_v3-Q4_K_M.gguf /home/emk/llama.cpp/
 ## Gelecek Yol Haritası
 
 ```
-[ŞU AN] Jetson demo çalışıyor (wbot_v3, %93 eval)
+[ŞU AN] Jetson demo çalışıyor (wbot_v3, 31/32 %96 eval), wbot_v4_train.jsonl hazır (3605 kayıt)
     ↓
 Whisper medium testi + E19 post-processing fix
     ↓
 Gürültülü ortam testi (restoran müziği, çoklu konuşmacı)
-    ↓
-wbot_v4 dataset (~1100 yeni örnek: açıklama+soru, alerji+öneri, anti-hallüsinasyon)
     ↓
 Colab A100 — wbot_v4 eğitimi (3 epoch, ~2 saat)
     ↓

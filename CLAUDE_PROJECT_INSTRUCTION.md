@@ -38,8 +38,8 @@ Ana dosya: `scripts/demo_usb.py`
 ## Aktif Model
 
 - **GGUF:** `Qwen3-4B-wbot_v3-Q4_K_M.gguf` — Jetson'da `/home/emk/models/`
-- **Eval:** 30/32 (%93) — 32-senaryo, çok-turlu, `eval_gguf.py`
-- **Sıradaki:** wbot_v4 (750 yeni örnek, Colab A100)
+- **Eval:** 31/32 (%96) — 32-senaryo, çok-turlu, `eval_gguf.py`
+- **Sıradaki:** wbot_v4 eğitimi — `wbot_v4_train.jsonl` hazır (3605 kayıt, Colab A100)
 
 ## Nasıl Yardım Edersin
 

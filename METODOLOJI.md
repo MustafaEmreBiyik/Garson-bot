@@ -558,8 +558,7 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 |-------|-----|
 | E19 post-processing fix | Açıklama yanıtı "?" ile bitmiyorsa "Getireyim mi?" ekle (kod değişikliği) |
 | Gürültülü ortam testi | Restoran müziği + kalabalık ortamda wake word + STT kalitesi |
-| wbot_v4 dataset üretimi | ~750 yeni örnek: W15 (açıklama+soru), W16 (alerji+öneri), anti-hallüsinasyon |
-| wbot_v4 eğitimi | Colab A100, 3 epoch → GGUF → Jetson deploy → %95+ hedef |
+| wbot_v4 eğitimi | `wbot_v4_train.jsonl` hazır (3605 kayıt — A paketi 490 + B paketi 115), Colab A100, 3 epoch → GGUF → Jetson deploy → %95+ hedef |
 
 ---
 
