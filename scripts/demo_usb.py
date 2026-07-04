@@ -103,6 +103,18 @@ _ORDER_VERBS  = {
     "lütfen", "ver", "verin",
 }
 _CANCEL_VERBS = {"istemiyorum", "istemiyom", "iptal", "çıkar", "çıkarın", "kaldır"}
+# "başka (bir şey) istemiyorum/istemem" kapanış kalıbıdır, ürün iptali değil —
+# cancel tespitinden önce metinden çıkarılır ("Bir de ayran, başka istemiyorum."
+# cümlesinde ayranın cancel dalına düşüp hiç eklenmemesini önler)
+_CLOSING_NEG_RE = re.compile(r"başka\s+(bir\s*şey\w*\s+)?(de\s+)?istem\w+")
+# Sipariş fiili içermeyen ekleme kalıpları (gen_karmasik.py ekle+kapat cümleleri):
+# "bir de X", "ayrıca bir X", "son olarak bir X", "bir X daha", "X daha olsun".
+# "olsun" tek başına ekleme DEĞİL — "Et Döner soğansız olsun." bir modifikasyon
+# isteğidir (S34/V02), ürünü ikinci kez eklememeli; yalnızca "daha" ile birlikte
+# ("bir künefe daha olsun") miktar artışı sayılır.
+_ADD_MARKERS_RE = re.compile(
+    r"\bbir\s?de\b|\bayrıca\b|\bson olarak\b|\bdaha\s+olsun\b|\bbir\s+\w+(\s+\w+){0,2}\s+daha\b"
+)
 _QUANTITIES   = {"iki": 2, "üç": 3, "dört": 4, "2": 2, "3": 3, "4": 4}
 # Guard 1 short-word check'ten muaf tek kelimeler — gerçek intent, VAD hatası değil
 _KNOWN_VALID_SINGLE = frozenset({
@@ -185,13 +197,17 @@ class OrderTracker:
     def detect_order(self, user_text: str) -> None:
         """Sipariş/iptal/takas niyetini tespit et ve sepeti güncelle.
 
-        Üç durum:
+        Dört durum:
           - "X yerine Y": X'i çıkar, Y'yi ekle.
           - "X iptal / X istemiyorum": X'i çıkar.
           - "X alayım / Y istiyorum": X'i ekle.
+          - "Bir de X, başka istemiyorum": X'i ekle (ekle+kapat —
+            "başka istemiyorum" kapanış kalıbıdır, X'in iptali değil).
         """
         # "İ".lower() → "i̇" (birleştirme noktası) → regex kopar; temizle
         t = user_text.lower().replace('̇', '')
+        # Kapanış kalıbını çıkar — kalıptaki "istemiyorum" iptal sayılmasın
+        t = _CLOSING_NEG_RE.sub(" ", t)
 
         is_cancel = any(v in t for v in _CANCEL_VERBS)
         is_swap   = "yerine" in t or "değiştir" in t
@@ -225,7 +241,8 @@ class OrderTracker:
                     self._remove_item(name, price, qty)
             return
 
-        if not any(v in t for v in _ORDER_VERBS):
+        # Sipariş fiili YOKSA ekleme kalıbı da ("bir de X", "bir X daha"...) ekleme sayılır
+        if not any(v in t for v in _ORDER_VERBS) and not _ADD_MARKERS_RE.search(t):
             return
         for name, price, qty in _match_items(t, self._lookup):
             self._add_item(name, price, qty)
