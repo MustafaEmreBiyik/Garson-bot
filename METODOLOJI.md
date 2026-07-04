@@ -311,6 +311,16 @@ v4.6'da sampling tabanlı decoding'e geçildi:
 
 Aynı parametreler `qwen3_backend.py` (HuggingFace transformers `model.generate`) ve `llama_cpp_backend.py` (`llm.create_completion`) için ortak. Eval suite 16/16 (%100) PASS oranı korundu; ortalama latency 1745 ms → 2330 ms (greedy → sampling overhead'i).
 
+**Seed (4 Temmuz 2026 notu):** `llama_cpp_backend.py`'nin `Llama()`
+çağrısında açık bir `seed=` parametresi yok. Buna rağmen wbot_v4
+eval'inde (`eval_gguf.py`) aynı 38 senaryoluk koşu iki kez birebir aynı
+sonucu verdi — llama-cpp-python'ın seed verilmediğinde kullandığı
+varsayılan davranış zamana/entropiye dayanmıyor gibi görünüyor, ama bu
+koda yazılı/garanti edilmiş değil. Öneri: `seed=42` gibi sabit bir değer
+açıkça geçilsin — hem tekrarlanabilirlik dokümante edilmiş olur hem de
+gelecekte llama-cpp-python sürüm değişikliğiyle varsayılan davranış
+değişirse sessiz bir regresyon riski önlenir.
+
 ### Konuşma Geçmişi Yönetimi
 Jetson'da bağlam penceresi (n_ctx) **4096 token** (sistem prompt ~2100 tok olduğundan 1536 yetersizdi). Konuşmaya kalan: ~1931 token (~10-12 tur).
 
@@ -428,6 +438,22 @@ Python'da `"İ".lower()` → `"i̇"` (i + birleştirme noktası U+0307) üretir.
 ```python
 t = user_text.lower().replace('̇', '')
 ```
+
+### Bilinen Sınırlama — Ekle+Kapat Çakışması (4 Temmuz 2026)
+**Sorun şüphesi (statik analiz, testle doğrulanmadı):** `detect_order()`
+önce "İptal" dalını kontrol ediyor (`is_cancel = any(v in t for v in
+_CANCEL_VERBS)`), bu da "ekleme" dalından ÖNCE çalışıyor. "Bir de ayran,
+başka istemiyorum." gibi bir cümlede "istemiyorum" `_CANCEL_VERBS`
+içinde olduğu için `is_cancel=True` oluyor; iptal dalı "ayran"ı bulup
+`_remove_item()` çağırıyor ama ayran sepette olmadığından bu no-op
+kalıyor, fonksiyon **erken `return` ediyor** — ayran hiçbir zaman
+`_add_item()` ile eklenmiyor. Yani aynı cümlede hem yeni bir ürün
+belirtilip hem de kapanış sinyali ("başka istemiyorum") verildiğinde,
+cancel dalı ekleme dalına hiç ulaşılmasını engelliyor.
+
+Bu, S12 (sipariş kapanışı özeti) runtime guard tasarımının önkoşulu
+olarak keşfedildi — henüz kod düzeltmesi yapılmadı, doğrulama ve
+düzeltme sırası: `claude_code_prompt_C_paketi_dataset.md` Bölüm 6.
 
 ### Hesap + Sipariş Aynı Cümlede
 **Sorun:** "Bir köfte alayım, toplam ne kadar?" → LLM sistem promptunda "sipariş sırasında toplam söyleme" kuralı olduğu için toplam vermiyordu.

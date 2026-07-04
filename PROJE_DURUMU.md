@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 4 Temmuz 2026 | **Sürüm:** 5.13
+**Son güncelleme:** 4 Temmuz 2026 | **Sürüm:** 5.14
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -8,19 +8,45 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 
 ## Bir Sonraki Oturum — Hızlı Özet
 
-**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor (7 Haziran 2026). Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. Yeni eval: 31/32 (%96). wbot_v4_train.jsonl hazır (3605 kayıt, 0 audit ihlali — 3 Temmuz 2026). Tüm yedekler GitHub + Drive'da.
+**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor. Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. **wbot_v4 eğitildi, GGUF'a dönüştürüldü, Jetson'a deploy edildi ve eval edildi (4 Temmuz 2026)** — 32 senaryo 30/32 (%93), `--v4-targets` 38 senaryo 32/38 (%84). Tüm yedekler GitHub + Drive'da.
 
 **Sıradaki görevler (öncelik sırasıyla):**
 
-1. **E19 post-processing fix** — "nasıl bir şey?" yanıtı `?` ile bitmiyorsa `demo_usb.py`'de `"Getireyim mi?"` ekle (kod değişikliği, eğitim gerekmez)
-2. **Gürültülü ortam testi** — restoran müziği + kalabalık ortamda Jetson'da wake word + STT kalitesi
-3. **wbot_v4 eğitimi** — `wbot_v4_train.jsonl` hazır (3605 kayıt, Drive'a yüklendi), notebook hazır (`robot_waiter_ai/training/wbot_v4_colab_training.ipynb`)
-4. **wbot_v4 Jetson deploy + eval** → GGUF → Jetson → `eval_gguf.py` (%95+ hedef) + `--v4-targets` (V01-V06)
+1. **`detect_order()` testi** — "Bir de ayran, başka istemiyorum." gibi ekle+kapat cümlelerinde `_CANCEL_VERBS` içindeki "istemiyorum" yüzünden yanlışlıkla cancel dalına düşüp düşmediği doğrulanmalı (statik kod analizi düşüyor gibi görünüyor — S12 guard'ından ÖNCE çözülmesi gereken öncelikli iş)
+2. **S12 runtime guard uygulaması** (düzeltilmiş tasarım) — `demo_usb.py`'ye kapanış özeti (TUR 1: özet+toplam+onay) ve onay sonrası kapanış (TUR 2: toplamsız afiyet olsun) için deterministik guard; ilk taslakta mantık hatası bulundu, detay: `claude_code_prompt_C_paketi_dataset.md`
+3. **Seed sabitleme** — `llama_cpp_backend.py`'nin `Llama()` çağrısında açık `seed=` parametresi yok, determinizm doğrulanmadı; `seed=42` gibi sabit bir değer eklenmesi öneriliyor
+4. **`gen_karmasik.py` veri incelemesi** — assistant örnekleri özet+onay+kapanışı tek turda birleştirmiş olabilir, ayrı bir onay turu üretmemiş olabilir; S12'nin eğitilmiş kalıpta bile eksik çıkmasının kök nedeni olabilir
+5. **Gürültülü ortam testi** — restoran müziği + kalabalık ortamda Jetson'da wake word + STT kalitesi
 
 > 📐 **Senaryo kararları (3 Temmuz 2026):** S19 alerji+öneri → filtrele+uyarı (Seçenek B),
 > S12 onay öncesi → her zaman özet+toplam (W11/E24 revizyonu gerekir), S29 küfür ve
 > S03 sessizlik politikaları netleşti. Yeni eval hedefleri `eval_gguf.py --v4-targets`
 > (V01-V06). Tamamı: [SENARYO_PLANI_FAZ1.md](SENARYO_PLANI_FAZ1.md)
+
+> 🎯 **wbot_v4 eval sonuçları (4 Temmuz 2026):** GGUF Jetson'a deploy edildi
+> (`/home/emk/models/Qwen3-4B-wbot_v4-Q4_K_M.gguf`), eval çalıştırıldı (2 kez,
+> birebir aynı sonuç — deterministik). 32 senaryo: 30/32 (%93), KALDI: E01,
+> E27. `--v4-targets` 38 senaryo: 32/38 (%84), KALDI: E01, E27, V01, V02, V04,
+> V06. **E01 ve E27 wbot_v3→v4 REGRESYONU** — wbot_v3'te ikisi de GEÇİYORDU
+> (31/32'nin parçasıydı), yeni bulgu değil. **Metodoloji notu:**
+> `eval_gguf.py`, `demo_usb.py`'nin Guard 1/2/3 + `_fast_path_reply()` +
+> post-processing katmanlarını tamamen atlayıp `LlamaCppBackend.generate_reply()`'i
+> doğrudan çağırıyor — V04 ham eval'de ciddi görünüyor ("Size çok kızarmak
+> istiyorum") ama Guard 3 (`_is_offensive`) zaten "aptal" gibi terimleri
+> yakalayıp LLM'e ulaşmadan sabit yanıt döndürüyor, üretimde risk düşük. V01
+> (fiyat eksik), V06 (alerjen halüsinasyonu) ve S12/E24 (aşağıda) ise gerçek,
+> korumasız boşluklar. Detay ve tam eval çıktıları: aşağıdaki "wbot_v4
+> Eğitim, GGUF ve Eval Sonuçları" bölümü.
+>
+> **S12 manuel test (2 tetikleyici):** (a) Saf kapanış ("Hayır, başka
+> istemiyorum, bu kadar.") → eski toplamsız kapanışa döndü, S12 hiç
+> tetiklenmedi. (b) Eğitilmiş ekle+kapat kalıbı ("Bir de ayran, başka
+> istemiyorum.") → özet+toplam üretti ama onay sorusu YOK, doğrudan "Afiyet
+> olsun"a atladı — S12 eğitilmiş kalıpta bile eksik. Bu yüzden runtime guard
+> kararlaştırıldı (kod, veri değil) — ama ilk guard taslağı bir mantık hatası
+> içeriyordu (`_is_closing_signal`'ın kendi ürün-eşleşme kontrolü, ekle+kapat
+> cümlesinde guard'ı yanlışlıkla devre dışı bırakıyordu). Düzeltilmiş
+> yaklaşım ve `detect_order()` ön koşulu: `claude_code_prompt_C_paketi_dataset.md`.
 
 > 🔍 **Senaryo danışması (3 Temmuz 2026) — Codex 5.5, Gemini 2.5 Pro, Claude Fable:**
 > Üç model bağımsız olarak S01-S32 listesini değerlendirdi. Konsensüs: W16
@@ -36,10 +62,10 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 > — 3 dalgalı sıralı plan + yeni sohbet başlangıç promptu. İlgili: PERSONA_TON_FIZIBILITE.md,
 > TTS_LISANS_ARASTIRMASI.md.
 
-**Sistem durumu (18 Haziran 2026):**
+**Sistem durumu (4 Temmuz 2026):**
 - Jetson: ✅ tam çalışıyor — wake word → Whisper medium CUDA → LLM GGUF → Piper TTS → USB hoparlör
-- GGUF: `/home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf` (2.38 GB) — Drive'da da yedek var
-- Eval: `scripts/eval_gguf.py` — 32 senaryo, %96 (31/32), çok-turlu destekli
+- GGUF: `/home/emk/models/Qwen3-4B-wbot_v4-Q4_K_M.gguf` (2.5 GB) — Drive'da da yedek var, byte-exact doğrulandı
+- Eval: `scripts/eval_gguf.py` — 32 senaryo %93 (30/32), `--v4-targets` 38 senaryo %84 (32/38)
 - Geliştirme: Windows 11 WSL2 — kurulum kılavuzu: `WSL2_KURULUM.md`
 
 ---
@@ -162,8 +188,8 @@ Piper TTS → WAV → aplay subprocess (ALSA_OUTPUT_DEVICE ile)
 ### Jetson — llama_cpp_backend.py
 | Parametre | Değer |
 |-----------|-------|
-| Model | Qwen3-4B-wbot_v3-Q4_K_M.gguf |
-| Konum | /home/emk/models/Qwen3-4B-wbot_v3-Q4_K_M.gguf |
+| Model | Qwen3-4B-wbot_v4-Q4_K_M.gguf (4 Temmuz 2026'da wbot_v3'ten değiştirildi) |
+| Konum | /home/emk/models/Qwen3-4B-wbot_v4-Q4_K_M.gguf |
 | Backend | llama-cpp-python 0.3.23 (CUDA SM87) |
 | GPU offload | 37/37 katman (tam GPU) |
 | VRAM | ~2.38 GB / 15.6 GB |
@@ -172,6 +198,7 @@ Piper TTS → WAV → aplay subprocess (ALSA_OUTPUT_DEVICE ile)
 | n_ctx | **4096** (sistem prompt ~2100 tok olduğundan 1536 yetersizdi) |
 | max_tokens | **65** |
 | Decoding | temperature=0.55, top_p=0.9, top_k=40, repeat_penalty=1.2 |
+| Seed | ⚠️ **Ayarlanmamış** — `Llama()` çağrısında açık `seed=` parametresi yok; determinizm ampirik olarak gözlendi (2 eval koşusu birebir aynı sonucu verdi) ama koda yazılı değil. Öneri: `seed=42` sabitlensin. |
 | _MAX_HIST_CHARS | **4000** — aşılınca en eski user+assistant turu silinir |
 
 ### PC — qwen3_backend.py
@@ -297,9 +324,15 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | Prompt v4.8 (max_tok=50, top_k=40, rep_pen=1.2 — kısa yanıt) | 16/16 (%100) | 0 | 2195 ms | — | — |
 | Prompt v4.9 (sıcak ton + W11 fix + max_tok=65 — 18 turn) | 18/18 (%100) | 0 | 2290 ms | 1871 ms | 3189 ms |
 | **Prompt v5.0 (W13 kategori fiyat yasağı + W14 öneri kural — 20 turn)** | **20/20 (%100)** | **0** | — | — | — |
-| **GGUF eval — eval_gguf.py (32 senaryo, Jetson, 22 Haziran 2026)** | **31/32 (%96)** | **1** | — | — | — |
+| **GGUF eval — eval_gguf.py (32 senaryo, Jetson, wbot_v3, 22 Haziran 2026)** | **31/32 (%96)** | **1** | — | — | — |
+| **GGUF eval — eval_gguf.py (32 senaryo, Jetson, wbot_v4, 4 Temmuz 2026)** | **30/32 (%93)** | **2** | — | — | — |
+| **GGUF eval — eval_gguf.py --v4-targets (38 senaryo, Jetson, wbot_v4, 4 Temmuz 2026)** | **32/38 (%84)** | **6** | — | — | — |
 
-*GGUF eval başarısızları: E19 (açıklama sonrası soru yok — gerçek model hatası). E21 düzeltildi — artık geçiyor.*
+*wbot_v3 GGUF eval başarısızları: E19 (açıklama sonrası soru yok — gerçek model hatası, wbot_v4'te düzeldi). E21 düzeltildi — artık geçiyor.*
+
+*wbot_v4 32-senaryo başarısızları: **E01, E27 — wbot_v3→v4 REGRESYONU** (wbot_v3'te ikisi de GEÇİYORDU, yeni bulgu değil). E19 artık GEÇİYOR (W15/A1 paketi hedefine ulaşıldı).*
+
+*wbot_v4 --v4-targets ek başarısızlıkları: V01 (modifikasyon onayında fiyat eksik — format), V02 (S34 verisi hiç yok — beklenen/dokümante), V04 (küfüre karşılık — ham eval'de görülüyor ama `demo_usb.py` Guard 3 zaten yakalıyor, üretim riski düşük), V06 (glütensiz listesine gluten içeren ürün ekleme — halüsinasyon). V03, V05 temiz geçti. Sonuçlar 2 ayrı koşuda birebir aynı çıktı — deterministik, örnekleme gürültüsü değil. Detay: `claude_code_prompt_C_paketi_dataset.md`.
 
 ---
 
@@ -690,15 +723,85 @@ yeniden üretilebilir.
 
 **Yedek:** `wbot_v4_base_backup.jsonl` (`wbot_v3_train.jsonl` birebir kopyası, birleştirmeden önce alındı)
 
-> **Not — C paketi kapsam dışı:** ~495 rakamı gerçek bir hedef değildi,
-> yalnızca "~1100 hedef − 605 üretilen" aritmetik kalıntısıydı. Gerçek
-> kapsam ~140 kayıt: S34/V02 (modifikasyon sipariş sonrası, ~20), S41
-> (iki ardışık anlaşamama → eskalasyon, ~20, yeni eval V07 taslağıyla
-> birlikte), anti-hallüsinasyon (~100). S39 (stok yok — kod ön koşulu
-> eksik) ve gürültülü-ortam edge case'leri (saha testi ön koşulu eksik)
-> kapsam dışı. Görev tanımı yazıldı, üretim wbot_v4 eğitim/eval
-> sonrasına ertelendi — bkz. [claude_code_prompt_C_paketi_dataset.md](claude_code_prompt_C_paketi_dataset.md)
-> (4 Temmuz 2026).
+> **Not — C paketi kapsam dışı (4 Temmuz 2026'da revize edildi):** ~495
+> rakamı gerçek bir hedef değildi, yalnızca "~1100 hedef − 605 üretilen"
+> aritmetik kalıntısıydı. wbot_v4 eval sonuçlarıyla gerçek kapsam netleşti
+> ve ~175-185 kayıt + 2 ayrı kod görevine çıktı: S34/V02 (~20), S41/V07
+> (~20), anti-hallüsinasyon (~100), küfür genişletme (~15-20, V04), alerji
+> kalıp/doğruluk düzeltmesi (~20-25, E27+V06). S39 ve gürültülü-ortam edge
+> case'leri hâlâ kapsam dışı (ön koşulları eksik). Üretim wbot_v4
+> S12-guard + kod düzeltmeleri sonrasına ertelendi — bkz.
+> [claude_code_prompt_C_paketi_dataset.md](claude_code_prompt_C_paketi_dataset.md).
+
+---
+
+### wbot_v4 Eğitim, GGUF Dönüşümü, Jetson Deploy ve Eval Sonuçları (4 Temmuz 2026) ✅
+
+**Eğitim:** Colab A100, 3 epoch, `train_wbot_v2.py` — adapter + GGUF Drive'a
+kaydedildi, yerel makineye ve Jetson'a taşındı; boyutlar Drive metadata'sıyla
+byte-exact doğrulandı (GGUF 2.497.280.288 byte, adapter zip 246.817.495 byte
+→ 6 dosya, `adapter_config.json` LoRA ayarları train_wbot_v2.py ile birebir
+eşleşti: r=32, alpha=64, dropout=0.05, 7 target module).
+
+**Deploy:** `Qwen3-4B-wbot_v4-Q4_K_M.gguf` → `/home/emk/models/` (Jetson),
+`llama_cpp_backend.py`'deki `_GGUF_FILENAME` wbot_v3→wbot_v4 güncellendi.
+
+**Eval (`eval_gguf.py`, 2 kez çalıştırıldı — birebir aynı sonuç, deterministik):**
+
+| Koşu | Sonuç | KALDI |
+|---|---|---|
+| 32 senaryo (temel) | 30/32 (%93) | E01, E27 |
+| 38 senaryo (`--v4-targets`) | 32/38 (%84) | E01, E27, V01, V02, V04, V06 |
+
+**Kazanımlar:** E19 (W15/A1 hedefi) artık GEÇİYOR. V03 (S35/B4), V05
+(S37/B5) temiz geçti.
+
+**E01, E27 — wbot_v3→v4 REGRESYONU:** Yeni bulgu değil — wbot_v3'te ikisi de
+GEÇİYORDU (31/32'nin parçasıydı). wbot_v4'ün yeni 605 kaydı içindeki bir
+etkileşim bu iki dar kalıbı seyreltmiş olabilir. Çözüm veri eklemek değil —
+`demo_usb.py`'de zaten var olan post-processing'e (E01 için "?" ekleme
+zaten mevcut, satır ~1097-1114) benzer, dar/tek-koşullu kod düzeltmesi.
+
+**Kritik metodoloji bulgusu:** `eval_gguf.py`, `LlamaCppBackend.generate_reply()`'i
+doğrudan çağırıyor — `demo_usb.py`'nin **Guard 1/2/3**, `_fast_path_reply()`
+ve post-processing katmanlarının HİÇBİRİ devreye girmiyor. Bu yüzden:
+- **V04 ham eval'de ciddi görünüyor** ("Aptal robot..." → "Size çok
+  kızarmak istiyorum, ne yapabilirim?") **ama üründe bu asla çıkmaz** —
+  `demo_usb.py`'nin mevcut Guard 3'ü (`_is_offensive`, `_OFFENSIVE_TERMS`
+  listesinde "aptal" zaten var) bu girdiyi LLM'e ulaşmadan yakalar. Üretim
+  riski düşük, ham model kalitesi sorunu.
+- **V01, V06 ve S12/E24 gerçek, korumasız boşluklar** — hiçbir guard
+  bunları karşılamıyor.
+
+**S12 manuel test (`llm.generate_reply()` ile 2 ayrı tetikleyici, Jetson'da):**
+
+| Tetikleyici | Beklenen | Gerçek | Sonuç |
+|---|---|---|---|
+| "Hayır, başka istemiyorum, bu kadar." (ürün adı yok, saf kapanış) | Özet+toplam+onay sorusu | "Hemen hazırlıyorum efendim, afiyet olsun." | S12 hiç tetiklenmedi — eski (S12-öncesi) davranış |
+| "Bir de ayran, başka istemiyorum." (eğitilmiş ekle+kapat kalıbı, `gen_karmasik.py`) | Özet+toplam+onay sorusu | Özet+toplam ÜRETTİ, ama onay sorusu YOK, doğrudan "Afiyet olsun" | S12 eğitilmiş kalıpta bile eksik |
+
+**Kök neden şüphesi:** `gen_karmasik.py`'nin assistant örnekleri özet+onay
+sorusunu ve kapanışı aynı turda birleştirmiş olabilir, TUR 2'de ayrı bir
+onay-sonrası kapanış üretmemiş olabilir — bu, veriye bakılarak
+doğrulanmalı (bkz. Sıradaki Görevler #4).
+
+**Runtime guard kararı:** Veri eklemek (E01/V01/V04 tecrübesi) tek başına
+güvenilir değil — S12 için de `demo_usb.py`'de `OrderTracker`'ın hesap
+override'ıyla aynı desende deterministik bir guard tasarlandı (TUR 1:
+özet+toplam+onay, TUR 2: toplamsız afiyet olsun). **İlk guard taslağında
+mantık hatası bulundu:** `_is_closing_signal`'ın kendi ürün-eşleşme kontrolü
+("cümlede menü ürünü var mı?"), tam olarak hedef senaryoda ("Bir de ayran,
+başka istemiyorum." — ayran YENİ eklenen ürün) guard'ı yanlışlıkla devre
+dışı bırakıyordu. Ayrıca statik kod analizi, `detect_order()`'ın bu tür
+ekle+kapat cümlelerinde `_CANCEL_VERBS` içindeki "istemiyorum" yüzünden
+yanlışlıkla cancel dalına düşüp erken `return` ettiğini, ayranın hiç sepete
+eklenmediğini gösteriyor — bu ayrı, ön koşul bir bug, guard'dan ÖNCE
+doğrulanmalı/düzeltilmeli. Düzeltilmiş tasarım: `claude_code_prompt_C_paketi_dataset.md`.
+
+**Seed:** `llama_cpp_backend.py`'nin `Llama()` çağrısında açık `seed=`
+parametresi yok. Determinizm ampirik gözlendi (2 eval koşusu birebir aynı
+sonuç) ama koda yazılı değil — `seed=42` gibi sabit bir değer eklenmesi
+öneriliyor.
 
 ---
 
@@ -712,10 +815,10 @@ yeniden üretilebilir.
 | 4 | 3 bug fix (hesap toplam, karşılama soru, kapanış çeşitliliği) | 🔴 Kritik | ✅ Tamamlandı — commit 933a362 |
 | 5 | 32-senaryo GGUF eval | 🟡 Orta | ✅ Tamamlandı — 31/32 (%96), eval_gguf.py (22 Haziran 2026) |
 | 6 | Whisper medium testi (Jetson'da) | 🟡 Orta | ✅ Tamamlandı — 1.7s CUDA, demo_usb.py güncellendi |
-| 7 | E19 post-processing fix — açıklama yanıtı "?" ile bitmiyorsa "Getireyim mi?" ekle | 🟡 Orta | ⏳ Bekliyor |
+| 7 | E19 post-processing fix — açıklama yanıtı "?" ile bitmiyorsa "Getireyim mi?" ekle | 🟡 Orta | ✅ Tamamlandı — `demo_usb.py` satır ~1097-1114'te mevcut, E19 eval'de GEÇİYOR |
 | 8 | Gürültülü ortam testi (restoran müziği + kalabalık) | 🟡 Orta | ⏳ Bekliyor |
 | 9 | wbot_v4 dataset üretimi — A paketi (490) + B paketi (115) = 605 yeni kayıt | 🟢 Düşük | ✅ Tamamlandı — 3 Temmuz 2026 |
-| 10 | wbot_v4 eğitimi — Dataset: `wbot_v4_train.jsonl` (3605 kayıt, Drive'a yüklendi), Notebook: `wbot_v4_colab_training.ipynb`, Script: `train_wbot_v2.py`, Çıktı: `Qwen3-4B-wbot_v4-Q4_K_M.gguf` (Colab A100, 3 epoch) | 🟡 Orta | ⏳ Bekliyor |
+| 10 | wbot_v4 eğitimi — Dataset: `wbot_v4_train.jsonl` (3605 kayıt), Notebook: `wbot_v4_colab_training.ipynb`, Script: `train_wbot_v2.py`, Çıktı: `Qwen3-4B-wbot_v4-Q4_K_M.gguf` (Colab A100, 3 epoch) | 🔴 Kritik | ✅ Tamamlandı — 4 Temmuz 2026, adapter+GGUF Drive metadata ile byte-exact doğrulandı |
 | 11 | Sistem promptu tutarsızlığı fix (audit_dataset.py 2 yeni kural + 4 gen script + 455 kayıt) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
 | 12 | Loglama sistemi — demo_usb.py'e oturum loglama (ses + metin + sipariş geçmişi); amaç: hukuki koruma (müşteri itirazları) + gelecekteki yeniden eğitim verisi; kapsam: session JSON (masa no, timestamp, konuşma, sipariş snapshot) + WAV kaydı | 🟡 Orta | ⏳ Tasarım aşamasında, henüz kod yok |
 | 13 | Senaryo planlaması tamamlandı (S01-S41, SENARYO_PLANI_FAZ1.md) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
@@ -723,9 +826,13 @@ yeniden üretilebilir.
 | 15 | W16 ve S12 davranış kararları verildi | 🟡 Orta | ✅ Tamamlandı — 3 Temmuz 2026 |
 | 16 | E24 eval revizyonu (S12 koşulsuz özet akışına göre) | 🟡 Orta | ⏳ Bekliyor |
 | 17 | Eval: V01-V06 hedeflerini ana listeye taşı (wbot_v4 sonrası) | 🟢 Düşük | ⏳ Bekliyor |
-| 18 | Jetson deploy + eval (wbot_v4 sonrası) — `eval_gguf.py` hedef 32/32, `--v4-targets` ile V01-V06 ölçümü | 🟢 Düşük | ⏳ Bekliyor |
+| 18 | Jetson deploy + eval (wbot_v4) — `eval_gguf.py` 30/32 (%93), `--v4-targets` 32/38 (%84) | 🔴 Kritik | ✅ Tamamlandı — 4 Temmuz 2026, detay yukarıda "wbot_v4 Eğitim, GGUF Dönüşümü, Jetson Deploy ve Eval Sonuçları" bölümünde |
 | 19 | wbot_v4_train.jsonl birleştirme (3605 kayıt, 0 ihlal, seed=2027) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
-| 20 | C paketi görev tanımı — S34/V02 + S41/V07 (taslak) + anti-hallüsinasyon (~140 kayıt); üretim wbot_v4 eğitim/eval sonrasına ertelendi | 🟢 Düşük | ✅ Tamamlandı — 4 Temmuz 2026, bkz. `claude_code_prompt_C_paketi_dataset.md` |
+| 20 | C paketi görev tanımı — S34/V02 + S41/V07 + anti-hallüsinasyon + küfür genişletme + alerji kalıp düzeltmesi (~175-185 kayıt + 2 kod görevi); üretim wbot_v4 sonrasına ertelendi | 🟢 Düşük | ✅ Tamamlandı — 4 Temmuz 2026, bkz. `claude_code_prompt_C_paketi_dataset.md` |
+| 21 | `detect_order()` testi — ekle+kapat cümlelerinde (`"Bir de ayran, başka istemiyorum."`) `_CANCEL_VERBS` yüzünden cancel dalına yanlış düşüp düşmediği | 🔴 Kritik | ⏳ Bekliyor — S12 guard'ından önce çözülmeli |
+| 22 | S12 runtime guard uygulaması (düzeltilmiş tasarım) — `demo_usb.py`'ye TUR 1 (özet+toplam+onay) + TUR 2 (toplamsız afiyet olsun) deterministik guard | 🔴 Kritik | ⏳ Bekliyor — tasarım hazır, `claude_code_prompt_C_paketi_dataset.md` |
+| 23 | Seed sabitleme — `llama_cpp_backend.py`'nin `Llama()` çağrısına `seed=42` ekle | 🟡 Orta | ⏳ Bekliyor |
+| 24 | `gen_karmasik.py` veri incelemesi — özet+onay+kapanışın tek turda birleştirilip birleştirilmediği (S12 eğitilmiş kalıpta eksik çıkmasının kök nedeni olabilir) | 🟡 Orta | ⏳ Bekliyor |
 
 ---
 
