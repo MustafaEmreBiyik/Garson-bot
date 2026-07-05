@@ -370,6 +370,61 @@ _CONFIRM_TEMPLATES = [
     "Peki efendim. Başka?",
 ]
 
+# --- S12/E24 kapanış guard'ı (görev #22) — deterministik, LLM'e sorulmaz ---
+# TUR 1: kapanış sinyali + dolu sepet → özet + toplam + onay sorusu.
+# TUR 2: onay bekleniyorken onay kelimesi → toplamsız sabit kapanış.
+# Hesap toplamı override'ıyla aynı güven düzeyi; model S12'yi eğitilmiş
+# kalıpta bile atlıyor (4 Temmuz 2026 manuel test), bu yüzden kod katmanı.
+_CLOSING_TRIGGERS = {
+    "bu kadar", "o kadar yeter", "yeter artık", "yeterli",
+    "hepsi bu", "başka bir şey yok", "başka yok",
+}
+_S12_CONFIRM_WORDS = {"evet", "tamam", "tamamdır", "olur", "tabii", "peki", "onaylıyorum", "aynen"}
+_S12_REJECT_HINTS  = {"hayır", "olmaz", "iptal", "istemiyorum", "değil", "yanlış", "eksik", "dur", "bekle"}
+_S12_CLOSING_REPLY = "Afiyet olsun!"
+
+
+def _is_closing_signal(text: str) -> bool:
+    """Kapanış kalıbı var mı? Ürün eşleşmesi YÜRÜTMEZ — bu fonksiyon
+    çağrılmadan önce detect_order() çalışmış, order_tracker.items güncellenmiş
+    olmalı (ilk guard taslağındaki ürün-eşleşme mantık hatasının düzeltilmiş hali).
+
+    Saf veda ("Teşekkürler.") da kapanış sayılır — S12 koşulsuz özet kararı:
+    dolu sepet özet+toplam+onay duyulmadan kapanmamalı (loglama/hukuki koruma,
+    görev #12, açısından da gerekli). Sepet boşken TUR 1 koşulu zaten
+    tetiklenmez, veda normal fast-path'e düşer.
+    """
+    t = text.lower().replace('̇', '')
+    if _CLOSING_NEG_RE.search(t):  # "başka (bir şey) istemiyorum/istemem"
+        return True
+    if any(fw in t for fw in _FAREWELL_TRIGGERS):
+        return True
+    return any(trigger in t for trigger in _CLOSING_TRIGGERS)
+
+
+def _is_order_confirmation(text: str) -> bool:
+    """TUR 2: kullanıcı sipariş özetini onaylıyor mu?
+
+    Kısa (≤3 kelime), onay kelimesiyle başlayan ve ret iması içermeyen
+    yanıt onay sayılır; gerisi normal akışa düşer. "Evet, başka istemiyorum."
+    da onaydır — kapanış kalıbı ret iması sayılmadan önce metinden çıkarılır.
+    """
+    t = text.lower().replace('̇', '')
+    t = _CLOSING_NEG_RE.sub(" ", t)
+    if any(r in t for r in _S12_REJECT_HINTS):
+        return False
+    words = [w.strip(".,!?") for w in t.split()]
+    words = [w for w in words if w]
+    if not words or len(words) > 3:
+        return False
+    return words[0] in _S12_CONFIRM_WORDS
+
+
+def _closing_summary(items: list, total: int) -> str:
+    """TUR 1 yanıtı: özet + toplam + onay sorusu (S12 koşulsuz özet kararı)."""
+    parts = ", ".join(f"{qty} {name}" for name, _price, qty in items)
+    return f"Siparişinizi özetliyorum: {parts}. Toplam {total} TL. Onaylıyor musunuz?"
+
 
 def _fast_path_reply(text: str) -> str | None:
     """Veda/selam/onay intentleri için LLM'i atlayıp şablon yanıt döndür.
@@ -938,6 +993,7 @@ async def run_demo(adapter_dir: str | None = None) -> None:
     new_customer       = True   # Her oturum başında karşıla
     conversation_active = False  # Yanıttan sonra wake word'süz dinleme penceresi açık mı?
     pending_reset      = False  # Farewell tespit edildi mi (10s sessizlik sonrası uygulanır)
+    awaiting_confirmation = False  # S12 TUR 1 özeti söylendi, onay bekleniyor
     while True:
         # Tetikleyici: conversation hold | wake word | ENTER
         if conversation_active:
@@ -1051,6 +1107,42 @@ async def run_demo(adapter_dir: str | None = None) -> None:
             conversation_active = True
             continue
 
+        # Siparişi ÖNCE işle — S12 guard'ı ve hesap toplamı güncel sepete güvenir.
+        # Fast-path'ten de önce: "Teşekkürler, bu kadar." gibi ≤5 kelimelik
+        # kapanışlar veda fast-path'ine düşmeden sepet/özet burada ele alınmalı.
+        order_tracker.detect_order(user_text)
+        if order_tracker.items:
+            _cart = ", ".join(f"{qty}× {name}" for name, _, qty in order_tracker.items)
+            print(f"  🛒 Sepet: {_cart} → {order_tracker.total} TL", flush=True)
+
+        # --- S12 guard TUR 2: özet onayı bekleniyor ---
+        if awaiting_confirmation:
+            awaiting_confirmation = False
+            if _is_order_confirmation(user_text):
+                print(f"W-BOT:   {_S12_CLOSING_REPLY}", flush=True)
+                try:
+                    await _speak(tts, _S12_CLOSING_REPLY, tts_active)
+                except Exception as _s12e:
+                    logger.warning("S12 TUR2 TTS hatası: %s", _s12e)
+                order_tracker.reset()
+                pending_reset = True        # sessizlikte LLM history + oturum sıfırlanır
+                conversation_active = True  # müşteri hâlâ konuşabilir (fikir değişikliği)
+                continue
+            # Onay gelmedi — normal akışa düş (kapanış sinyali aşağıda yeniden değerlendirilir)
+
+        # --- S12 guard TUR 1: kapanış sinyali + dolu sepet → deterministik özet ---
+        # Hesap istekleri hariç — onları mevcut deterministik hesap şablonu karşılar.
+        if order_tracker.items and not _is_bill_request(user_text) and _is_closing_signal(user_text):
+            _s12_reply = _closing_summary(order_tracker.items, order_tracker.total)
+            print(f"W-BOT:   {_s12_reply}", flush=True)
+            try:
+                await _speak(tts, _s12_reply, tts_active)
+            except Exception as _s12e:
+                logger.warning("S12 TUR1 TTS hatası: %s", _s12e)
+            awaiting_confirmation = True
+            conversation_active = True
+            continue
+
         # --- Fast-path: Veda / selam / onay şablonu (LLM'i atlar) ---
         _fp = _fast_path_reply(user_text)
         if _fp:
@@ -1072,12 +1164,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
             continue
 
         # 3+5. Streaming: LLM üretim + TTS sentez + oynatma paralel pipeline
+        # (detect_order() yukarıda, S12 guard'ından önce çalıştı — sepet güncel)
         print("  ⏳ Yanıt üretiliyor...", flush=True)
-        # Siparişi ÖNCE işle; aynı cümlede "sütlaç alayım + hesap" varsa doğru toplam gider
-        order_tracker.detect_order(user_text)
-        if order_tracker.items:
-            _cart = ", ".join(f"{qty}× {name}" for name, _, qty in order_tracker.items)
-            print(f"  🛒 Sepet: {_cart} → {order_tracker.total} TL", flush=True)
         llm_input = user_text
         # Sipariş niyeti varsa güncel sepeti LLM'e ver — menü dışı ürün uydurmayı önler
         _t_lower = user_text.lower().replace('̇', '')
