@@ -129,11 +129,28 @@ _STT_LANG_PROB_MIN   = 0.50   # Guard 1: Whisper dil güven eşiği
 _STT_MIN_WORDS_FRESH = 2      # Guard 1: Fresh turn'de ≤ bu kadar kelime → VAD kesimi şüpheli
 _VAGUE_TERMS         = {"şey", "şeyler", "birşey", "birşeyler"}
 _CONFIRM_STARTS      = {"evet", "hayır", "tabii", "tamam", "olur", "olmaz", "peki", "kesinlikle"}
+# Guard 3 (V04/S29) küfür/hakaret listesi — SUBSTRING eşleşir (_is_offensive).
+# Genişletme kuralı (C paketi 4-b): yalnızca TEK ANLAMLI kaba/küfür terimleri;
+# menü-sipariş sözlüğüyle substring örtüşebilecek sınır kelimeler bilinçli
+# DIŞARIDA: "hıyar" (sebze), "adi" ("adisyon" içinde), "sus" ("susam(lı)"
+# içinde), "lan"/"ulan" ("olan/planlı" içinde), "mal" ("malzeme/normal"
+# içinde — yalnız "mal mısın" kalıbı alındı), "hayvan" ("hayvan gibi
+# acıktım" meşru), "rezalet/berbat" (şikâyet dili, S29 değil şikâyet akışı).
 _OFFENSIVE_TERMS     = {
+    # hakaret — zeka/kişilik
     "salak", "gerizekalı", "geri zekalı", "aptal", "ahmak",
-    "mankafa", "embesil", "şerefsiz", "piç", "orospu",
-    "siktir", "sikerim", "sikeyim", "sikiyor", "oç", "göt",
-    "defol", "amk", "bok", "orospu",
+    "mankafa", "embesil", "gerzek", "dangalak", "budala",
+    "beyinsiz", "hödük", "avanak", "denyo", "mal mısın",
+    "beceriksiz", "işe yaramaz",
+    # hakaret — ağır
+    "şerefsiz", "piç", "orospu", "kahpe", "kaltak", "sürtük",
+    "yavşak", "puşt", "pezevenk", "gavat", "ibne",
+    "terbiyesiz", "ahlaksız",
+    # küfür — cinsel/argo
+    "siktir", "sikerim", "sikeyim", "sikiyor", "sikik",
+    "amk", "amına", "amcık", "yarrak", "yarak", "oç", "göt", "bok",
+    # kaba emir / kovma
+    "defol", "kes sesini", "kapa çeneni", "çeneni kapa",
 }
 
 
@@ -244,7 +261,10 @@ class OrderTracker:
         # Sipariş fiili YOKSA ekleme kalıbı da ("bir de X", "bir X daha"...) ekleme sayılır
         if not any(v in t for v in _ORDER_VERBS) and not _ADD_MARKERS_RE.search(t):
             return
+        polite_mod = _is_polite_modification(t)
         for name, price, qty in _match_items(t, self._lookup):
+            if polite_mod and name in self._items:
+                continue  # "Köfte acısız olsun lütfen" — mevcut ürünün modifikasyonu, ikileme yok
             self._add_item(name, price, qty)
 
     @property
@@ -305,6 +325,24 @@ def _has_modification_request(user_text: str) -> bool:
     """Cümlede modifikasyon sinyali var mı? ("soğansız", "acılı", "X olsun"...)"""
     t = user_text.lower().replace('̇', '')
     return any(term in t for term in _MODIFICATION_TERMS) or bool(_MOD_OLSUN_RE.search(t))
+
+
+def _is_polite_modification(user_text_lower: str) -> bool:
+    """Görev #25 yan bulgu (b): "Köfte acısız olsun lütfen" tarzı cümleler
+    ekleme değildir — tek sipariş tetikleyicisi "lütfen" ve cümlede
+    modifikasyon sinyali var ("olsun ekleme değildir" kararının devamı,
+    görev #21). detect_order() bu durumda SEPETTE ZATEN OLAN ürünü ikilemez;
+    ürün sepette yoksa yine eklenir ("Bir köfte lütfen, acısız olsun" gibi
+    modifikasyonlu YENİ sipariş bozulmaz).
+
+    user_text_lower: lower() + i̇-fix uygulanmış metin (detect_order içindeki t).
+    """
+    verbs = {v for v in _ORDER_VERBS if v in user_text_lower}
+    if verbs != {"lütfen"}:
+        return False
+    if _ADD_MARKERS_RE.search(user_text_lower):  # "bir X daha ... lütfen" miktar artışıdır
+        return False
+    return _has_modification_request(user_text_lower)
 
 
 def _modification_price_addition(user_text: str, reply: str,
@@ -477,11 +515,37 @@ def _closing_summary(items: list, total: int) -> str:
     return f"Siparişinizi özetliyorum: {parts}. Toplam {total} TL. Onaylıyor musunuz?"
 
 
-def _fast_path_reply(text: str) -> str | None:
+# "İyi günler"/"iyi akşamlar" hem _FAREWELL_TRIGGERS hem _GREETING_TRIGGERS
+# üyesi — bağlamsız çözülemez (görev #25 yan bulgu a)
+_AMBIGUOUS_SALUTATIONS = _FAREWELL_TRIGGERS & _GREETING_TRIGGERS
+
+
+def _salutation_intent(text: str, in_convo: bool) -> str | None:
+    """Selam mı veda mı? "greeting" / "farewell" / None döndürür (görev #25 a).
+
+    Çift anlamlı kalıplar ("iyi günler", "iyi akşamlar") oturum bağlamıyla
+    ayrışır: taze açılışta (in_convo=False) selam, yerleşik konuşmada veda.
+    Tek anlamlı vedalar ("görüşürüz", "güle güle"...) her bağlamda vedadır —
+    "İyi günler, görüşürüz" açılışta bile veda kalır.
+    """
+    t = text.lower().strip().replace('̇', '')
+    farewell_hits = {fw for fw in _FAREWELL_TRIGGERS if fw in t}
+    if farewell_hits - _AMBIGUOUS_SALUTATIONS:
+        return "farewell"
+    if farewell_hits:  # yalnızca çift anlamlı kalıp eşleşti
+        return "greeting" if not in_convo else "farewell"
+    if len(t.split()) <= 2 and any(g in t for g in _GREETING_TRIGGERS):
+        return "greeting"
+    return None
+
+
+def _fast_path_reply(text: str, in_convo: bool = False) -> str | None:
     """Veda/selam/onay intentleri için LLM'i atlayıp şablon yanıt döndür.
 
     Yalnızca kısa (≤5 kelime) ve tek intent içeren girişlerde tetiklenir.
     Sipariş fiili, menü kelimesi veya soru işareti varsa LLM'e bırakılır.
+    in_convo: "iyi günler" gibi çift anlamlı kalıpların selam/veda ayrımı
+    oturum bağlamına göre yapılır (görev #25 a).
     """
     t = text.lower().strip().replace('̇', '')
     words = t.split()
@@ -492,11 +556,10 @@ def _fast_path_reply(text: str) -> str | None:
     if "?" in t:
         return None
 
-    if any(fw in t for fw in _FAREWELL_TRIGGERS):
+    intent = _salutation_intent(text, in_convo)
+    if intent == "farewell":
         return random.choice(_FAREWELL_TEMPLATES)
-
-    # Tek kelime selam (konuşma başlangıcında)
-    if len(words) <= 2 and any(g in t for g in _GREETING_TRIGGERS):
+    if intent == "greeting":
         return random.choice(_GREETING_TEMPLATES)
 
     # Tek kelime onay — sepet boş değilse veya sohbet aktifse anlamlı
@@ -1202,16 +1265,16 @@ async def run_demo(adapter_dir: str | None = None) -> None:
             continue
 
         # --- Fast-path: Veda / selam / onay şablonu (LLM'i atlar) ---
-        _fp = _fast_path_reply(user_text)
+        _fp = _fast_path_reply(user_text, in_convo=conversation_active)
         if _fp:
             print(f"W-BOT:   {_fp}", flush=True)
             try:
                 await _speak(tts, _fp, tts_active)
             except Exception as _fpe:
                 logger.warning("Fast-path TTS hatası: %s", _fpe)
-            # Veda → oturumu kapat; selam/onay → 10s pencere açık kalsın
-            _t_fp = user_text.lower().replace('̇', '').strip()
-            _is_farewell_fp = any(fw in _t_fp for fw in _FAREWELL_TRIGGERS)
+            # Veda → oturumu kapat; selam/onay → 10s pencere açık kalsın.
+            # "İyi günler" açılışta selam sayılır, oturum KAPANMAZ (görev #25 a)
+            _is_farewell_fp = _salutation_intent(user_text, conversation_active) == "farewell"
             if _is_farewell_fp:
                 pending_reset = True
                 conversation_active = False

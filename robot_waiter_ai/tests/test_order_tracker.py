@@ -84,6 +84,43 @@ def test_modifikasyon_olsun_varyant():
     assert t.total == 240  # ÇİFT DEĞİL
 
 
+# --- 'lütfen' + modifikasyon çakışması (görev #25 yan bulgu b): ikilenMEmeli ---
+
+def test_lutfen_modifikasyon_ikilemez():
+    """'Köfte acısız olsun lütfen.' → sepetteki köfte İKİLENMEMELİ (görev #25 b)."""
+    t = _cart_after("Bir köfte alayım.", "Köfte acısız olsun lütfen.")
+    assert _names(t) == {"Izgara Köfte"}
+    assert t.total == 240  # ÇİFT DEĞİL
+
+
+def test_lutfen_modifikasyon_varyant_ikilemez():
+    """'Ayran buzsuz olsun lütfen.' → sepetteki ayran İKİLENMEMELİ."""
+    t = _cart_after("Bir ayran istiyorum.", "Ayran buzsuz olsun lütfen.")
+    assert _names(t) == {"Yayık Ayran"}
+    assert t.total == 45  # ÇİFT DEĞİL
+
+
+def test_lutfen_tek_tetikleyici_siparis():
+    """'Bir köfte lütfen.' → köfte EKLENMELİ (regresyon: 'lütfen' geçerli tetikleyici)."""
+    t = _cart_after("Bir köfte lütfen.")
+    assert _names(t) == {"Izgara Köfte"}
+    assert t.total == 240
+
+
+def test_lutfen_modifikasyonlu_yeni_siparis_eklenir():
+    """'Bir köfte lütfen, acısız olsun.' (boş sepet) → yeni sipariş EKLENMELİ."""
+    t = _cart_after("Bir köfte lütfen, acısız olsun.")
+    assert _names(t) == {"Izgara Köfte"}
+    assert t.total == 240
+
+
+def test_lutfen_daha_miktar_artisi_calisir():
+    """'Bir ayran daha lütfen.' → ekleme kalıbı ('daha') miktarı artırmalı."""
+    t = _cart_after("Bir ayran alayım.", "Bir ayran daha lütfen.")
+    assert _names(t) == {"Yayık Ayran"}
+    assert t.total == 90  # 2×45
+
+
 # --- Regresyon: mevcut davranışlar bozulmamalı ---
 
 def test_gercek_iptal():

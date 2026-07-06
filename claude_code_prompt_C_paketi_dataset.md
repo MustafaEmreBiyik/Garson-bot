@@ -112,7 +112,7 @@ sonuçlarıyla netleşen gerçek kapsam:
 | 5 | Alerji kalıp/doğruluk düzeltmesi | ~20-25 | E27 (regresyon) + V06 (kalıp-uyum, aşağıda reformüle) |
 | | **Toplam** | **~175-185** | |
 
-**+ 3 ayrı kod görevi (veri değil) — güncel durum (6 Temmuz 2026):**
+**+ 3 ayrı kod görevi (veri değil) — güncel durum (7 Temmuz 2026):**
 1. ~~S12/E24 runtime guard~~ — ✅ TAMAMLANDI (5 Temmuz, görev #21 ön koşul
    fix'i + görev #22 guard; E24 eval'i de revize edildi — görev #16).
 2. ~~E01/V01 post-processing~~ — ✅ TAMAMLANDI (6 Temmuz, görev #25).
@@ -120,7 +120,12 @@ sonuçlarıyla netleşen gerçek kapsam:
    karşılama → fast-path şablonu, LLM bypass; uzun karşılama → E19 "?"
    garantisi) — ham-model bilinen boşluğu olarak eval'de kalır. V01
    uygulandı: `_modification_price_addition()` + sepet deltası, 22 test.
-3. V04 runtime guard — ⏳ bekliyor (madde 4-b).
+3. ~~V04 runtime guard~~ — ✅ TAMAMLANDI (7 Temmuz, görev #26, madde 4-b).
+   `_OFFENSIVE_TERMS` ~29 tek-anlamlı terimle genişletildi; sınır kelimeler
+   (yanlış-pozitif riski: "hıyar", "adi", "sus", "lan", "mal", "hayvan")
+   bilinçli dışarıda. Guard 3 davranışı korundu; 44 test
+   (`test_offensive_guard.py`). Madde 4-a (veri, ~15-20 kayıt) C paketi
+   veri turunda ⏳.
 
 **Not — kapsam değişikliği:** Önceki taslakta "Alerji + öneri
 derinleştirmesi B'de zaten karşılandı, kapsam dışı" denmişti. Eval
