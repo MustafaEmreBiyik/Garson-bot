@@ -366,8 +366,8 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | W12 | Robotik ve soğuk ton | Teknik doğru ama doğal, samimi Türkçe akışı yok; gerçek bir garsonla konuşulduğu hissi vermiyor | Sistem promptu kural listesi gibi yazılmış; kişilik/ton yönergesi eksik | ✅ Düzeltildi (v4.9 — persona paragrafı + "Harika seçim!" örnekleri + 2 cümle/25 kelime + max_tokens 50→65) |
 | W13 | Kategori listesi sorusunda fiyat söylüyordu | "Çorba ne var?" sorusuna ürün adlarıyla birlikte "TL" fiyat da veriyordu | Kategori listesi için ayrı kural yoktu; genel fiyat yasağı bu durumu kapsamamıştı | ✅ Düzeltildi (v5.0 — kategori içeriği sorusuna özel kural: yalnızca ürün adı say, TL söyleme) |
 | W14 | Öneri sorusunda kategori dışına çıkıyordu | "Tavuk yesem ne yesem?" sorusuna tatlı ve çorba da öneriyordu | Öneri kuralı kategoriyi kısıtlamıyordu | ✅ Düzeltildi (v5.0 — öneri sorusunda kategori belirtildiyse YALNIZCA o kategoriden 1-2 ürün; başka kategori ekleme) |
-| W15 | Ürün açıklaması sonrası soru yok | "Kremalı mantar çorbası nasıl?" → açıklama yapıyor ama "Getireyim mi?" demiyor | wbot_v3 dataseti açıklama+soru örneklerini yeterince içermiyor | ⏳ wbot_v4 |
-| W16 | Alerji yanıtı anlamsız | "Süt alerjim var, ne yiyebilirim?" → "Süt ürünü içermeyen menüümüz var mı?" (model kendine soruyor) | Yetersiz alerji+öneri kombinasyon örneği | ⏳ wbot_v4 |
+| W15 | Ürün açıklaması sonrası soru yok | "Kremalı mantar çorbası nasıl?" → açıklama yapıyor ama "Getireyim mi?" demiyor | wbot_v3 dataseti açıklama+soru örneklerini yeterince içermiyor | ✅ Düzeltildi (wbot_v4 + E19 post-processing — E19 eval'de GEÇİYOR, 4 Temmuz 2026) |
+| W16 | Alerji yanıtı anlamsız | "Süt alerjim var, ne yiyebilirim?" → "Süt ürünü içermeyen menüümüz var mı?" (model kendine soruyor) | Yetersiz alerji+öneri kombinasyon örneği | ✅ Büyük ölçüde düzeltildi (wbot_v4 B paketi — V03/V05 geçiyor; kalan parça V06 alerjen halüsinasyonu, C paketi kapsamında) |
 
 > 📌 **S12 kararı — Sipariş Özeti (onaylandı, 3 Temmuz 2026):** Koşulsuz
 > toplu özet. Ürün sayısından bağımsız, onay öncesi her zaman:
