@@ -281,6 +281,57 @@ def _is_description_question(user_text: str, lookup: list) -> bool:
     return False
 
 
+# --- V01: modifikasyon onayında TL fiyat enjeksiyonu (S33, C paketi) ---
+# Sipariş + modifikasyon aynı cümlede ("Bir şalgam alayım, acılı olsun.")
+# geldiğinde onay yanıtı ürünün TL fiyatını içermeli; ham model bunu bazen
+# atlıyor (V01). Hesap toplamı override'ı ve E19 ekleme mekanizmasıyla aynı
+# desen: LLM yanıtı üretildikten SONRA post-processing katmanında çalışır,
+# Guard 1/2/3 → detect_order → S12 → fast-path sıralamasına dokunmaz.
+# "X olsun" burada modifikasyon SİNYALİdir, ekleme değil (görev #21) — sepet
+# yalnızca OKUNUR; added_items main loop'taki detect_order deltasından gelir,
+# ürün ikinci kez eklenmez. S34 (ürün önceki turda alınmış, yalnızca not
+# değişiyor) turlarında delta boş kalır → enjeksiyon tetiklenmez (tasarım
+# gereği: modifikasyon güncellemesinde yeni fiyat söylenmez).
+_MODIFICATION_TERMS = {
+    "soğansız", "soğanlı", "acılı", "acısız", "pişmiş",
+    "buzsuz", "buzlu", "şekersiz", "şekerli", "tuzsuz", "tuzlu",
+    "sossuz", "soslu", "sarımsaksız", "sarımsaklı", "limonsuz",
+    "naneli", "nanesiz", "ketçapsız", "mayonezsiz",
+}
+_MOD_OLSUN_RE = re.compile(r"\bolsun\b")
+
+
+def _has_modification_request(user_text: str) -> bool:
+    """Cümlede modifikasyon sinyali var mı? ("soğansız", "acılı", "X olsun"...)"""
+    t = user_text.lower().replace('̇', '')
+    return any(term in t for term in _MODIFICATION_TERMS) or bool(_MOD_OLSUN_RE.search(t))
+
+
+def _modification_price_addition(user_text: str, reply: str,
+                                 added_items: list[tuple[str, int, int]]) -> str | None:
+    """V01: bu turda eklenen ürün + modifikasyon sinyali varsa ve LLM yanıtı
+    ürünün TL fiyatını içermiyorsa söylenecek fiyat cümlesini döndür.
+
+    added_items: bu turda sepete EKLENEN ürünler [(name, unit_price, added_qty)]
+    — detect_order() öncesi/sonrası sepet farkı. Gerekmiyorsa None.
+    """
+    if not added_items:
+        return None
+    if not _has_modification_request(user_text):
+        return None
+    parts = []
+    for name, price, qty in added_items:
+        line_total = price * qty
+        # Fiyat zaten söylendiyse (birim veya satır toplamı) tekrarlanmaz.
+        # \b sınırı "150" içindeki "50"ye yanlış eşleşmeyi önler.
+        if re.search(rf"\b{price}\b", reply) or re.search(rf"\b{line_total}\b", reply):
+            continue
+        parts.append(f"{qty} {name} {line_total} TL" if qty > 1 else f"{name} {price} TL")
+    if not parts:
+        return None
+    return ", ".join(parts) + "."
+
+
 def _stt_low_confidence(result: dict, text: str, *, in_convo: bool) -> bool:
     """Guard 1: STT güvensizse True döndür.
 
@@ -1110,7 +1161,14 @@ async def run_demo(adapter_dir: str | None = None) -> None:
         # Siparişi ÖNCE işle — S12 guard'ı ve hesap toplamı güncel sepete güvenir.
         # Fast-path'ten de önce: "Teşekkürler, bu kadar." gibi ≤5 kelimelik
         # kapanışlar veda fast-path'ine düşmeden sepet/özet burada ele alınmalı.
+        _items_before_turn = {name: qty for name, _p, qty in order_tracker.items}
         order_tracker.detect_order(user_text)
+        # Bu turda eklenenler — V01 fiyat enjeksiyonu (post-processing) kullanır
+        _added_this_turn = [
+            (name, price, qty - _items_before_turn.get(name, 0))
+            for name, price, qty in order_tracker.items
+            if qty > _items_before_turn.get(name, 0)
+        ]
         if order_tracker.items:
             _cart = ", ".join(f"{qty}× {name}" for name, _, qty in order_tracker.items)
             print(f"  🛒 Sepet: {_cart} → {order_tracker.total} TL", flush=True)
@@ -1199,10 +1257,19 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 await _speak(tts, reply, tts_active)
             else:
                 reply = await _speak_streaming(tts, llm, llm_input, tts_active)
+                # E19 "?" kontrolü modelin KENDİ yanıt sonuna bakmalı — V01
+                # fiyat eki sonu kaydırıp gereksiz ikinci soru eklettirmesin
+                _model_reply = reply
+                # V01: modifikasyonlu siparişte eksik TL fiyatını enjekte et
+                _price_add = _modification_price_addition(
+                    user_text, reply, _added_this_turn)
+                if _price_add:
+                    await _speak(tts, _price_add, tts_active)
+                    reply = reply.rstrip() + " " + _price_add
                 # Post-processing: "?" ile bitmeyen yanıtlara soru ekle
                 # (veda, fallback ve "bilgim yok" yanıtları hariç)
-                if not reply.rstrip().endswith("?"):
-                    _rl = reply.lower()
+                if not _model_reply.rstrip().endswith("?"):
+                    _rl = _model_reply.lower()
                     _is_farewell_reply = any(fw in _rl for fw in (
                         "afiyet", "güle güle", "iyi günler", "görüşürüz",
                         "hoşça kal", "tekrar bekle",

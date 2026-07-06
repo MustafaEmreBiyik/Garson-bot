@@ -115,7 +115,11 @@ sonuçlarıyla netleşen gerçek kapsam:
 **+ 3 ayrı kod görevi (veri değil) — güncel durum (6 Temmuz 2026):**
 1. ~~S12/E24 runtime guard~~ — ✅ TAMAMLANDI (5 Temmuz, görev #21 ön koşul
    fix'i + görev #22 guard; E24 eval'i de revize edildi — görev #16).
-2. E01/V01 post-processing — ⏳ bekliyor (sıradaki iş).
+2. ~~E01/V01 post-processing~~ — ✅ TAMAMLANDI (6 Temmuz, görev #25).
+   E01'e kod YAZILMADI: üretimde zaten kapalı olduğu doğrulandı (kısa
+   karşılama → fast-path şablonu, LLM bypass; uzun karşılama → E19 "?"
+   garantisi) — ham-model bilinen boşluğu olarak eval'de kalır. V01
+   uygulandı: `_modification_price_addition()` + sepet deltası, 22 test.
 3. V04 runtime guard — ⏳ bekliyor (madde 4-b).
 
 **Not — kapsam değişikliği:** Önceki taslakta "Alerji + öneri
