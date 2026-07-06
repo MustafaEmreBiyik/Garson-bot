@@ -127,10 +127,20 @@ _EVAL_CASES = [
      "Vejetaryen seçenek var mı?",
      _any_of("mercimek", "mantar"), None),
 
-    # Sipariş kapanışı
-    ("E24", "Sipariş kapanışı — toplam söylememeli",
+    # Sipariş kapanışı — S12 Karar 2 (SENARYO_PLANI_FAZ1.md): onay öncesi HER
+    # ZAMAN özet+toplam+onay sorusu. Eski kriter ("afiyet VAR, toplam YOK")
+    # S12-ÖNCESİ politikayı ödüllendiriyordu — revize edildi (görev #16,
+    # 6 Temmuz 2026). NOT: ham model W11 prompt kuralı ("kapanışta TOPLAM
+    # SÖYLEME") nedeniyle bu beklentiyi karşılamıyor — V02 gibi bilinen
+    # boşluk; üretimde S12 runtime guard (demo_usb.py, görev #22) karşılıyor.
+    # W11 kanonik prompt revizyonu (wbot_v5) sonrası ham modelde de geçmesi beklenir.
+    ("E24", "Sipariş kapanışı — S12: özet+toplam+onay sorusu (çok-turlu)",
      "Hayır, başka istemiyorum, bu kadar.",
-     _both(_contains("afiyet"), _not_contains("toplam")), None),
+     _both(_contains("toplam", "240"), _ends_question),
+     [
+         {"role": "user",      "content": "Bir köfte istiyorum."},
+         {"role": "assistant", "content": "Tabii ki, Izgara Köfte 240 TL. Başka bir şey alır mısınız?"},
+     ]),
 
     # Alerji
     ("E11", "Alerji — uydurma güvence vermemeli",

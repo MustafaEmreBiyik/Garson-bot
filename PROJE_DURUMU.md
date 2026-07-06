@@ -8,7 +8,7 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 
 ## Bir Sonraki Oturum — Hızlı Özet
 
-**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor. Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. **wbot_v4 eğitildi, GGUF'a dönüştürüldü, Jetson'a deploy edildi ve eval edildi (4 Temmuz 2026)** — 32 senaryo 30/32 (%93), `--v4-targets` 38 senaryo 32/38 (%84). Tüm yedekler GitHub + Drive'da.
+**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor. Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. **wbot_v4 eğitildi, GGUF'a dönüştürüldü, Jetson'a deploy edildi ve eval edildi (4 Temmuz 2026)** — güncel baseline (6 Temmuz 2026, E24 revizyonu sonrası): 32 senaryo 29/32 (%90, KALDI: E01, E24, E27), `--v4-targets` 38 senaryo 31/38 (%81); E24 bilinen boşluk, üretimde S12 guard karşılıyor. Görev #21-24 tamamlandı (detect_order fix, S12 guard, seed=0xFFFFFFFF, gen_karmasik incelemesi) ve Jetson'a deploy edildi. Tüm yedekler GitHub + Drive'da.
 
 **Sıradaki görevler (öncelik sırasıyla):**
 
@@ -65,7 +65,7 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 **Sistem durumu (4 Temmuz 2026):**
 - Jetson: ✅ tam çalışıyor — wake word → Whisper medium CUDA → LLM GGUF → Piper TTS → USB hoparlör
 - GGUF: `/home/emk/models/Qwen3-4B-wbot_v4-Q4_K_M.gguf` (2.5 GB) — Drive'da da yedek var, byte-exact doğrulandı
-- Eval: `scripts/eval_gguf.py` — 32 senaryo %93 (30/32), `--v4-targets` 38 senaryo %84 (32/38)
+- Eval: `scripts/eval_gguf.py` — 32 senaryo %90 (29/32, KALDI: E01, E24, E27), `--v4-targets` 38 senaryo %81 (31/38) — 6 Temmuz 2026 E24 revizyonu sonrası yeni baseline; E24 bilinen boşluk (ham model, W11 kuralı), üretimde S12 guard karşılıyor. Eski baseline (30/32, %93) revizyon-öncesi E24 kriteriyle ölçülmüştü
 - Geliştirme: Windows 11 WSL2 — kurulum kılavuzu: `WSL2_KURULUM.md`
 
 ---
@@ -826,7 +826,7 @@ sonuç verdiği için REDDEDİLDİ. Detay: METODOLOJI.md "Seed" notu.
 | 13 | Senaryo planlaması tamamlandı (S01-S41, SENARYO_PLANI_FAZ1.md) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
 | 14 | eval_gguf.py — V01-V06 hedef senaryoları eklendi (--v4-targets) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
 | 15 | W16 ve S12 davranış kararları verildi | 🟡 Orta | ✅ Tamamlandı — 3 Temmuz 2026 |
-| 16 | E24 eval revizyonu (S12 koşulsuz özet akışına göre) | 🟡 Orta | ⏳ Bekliyor |
+| 16 | E24 eval revizyonu (S12 koşulsuz özet akışına göre) | 🟡 Orta | ✅ Tamamlandı — 6 Temmuz 2026. E24 çok-turluya çevrildi (köfte siparişi seed'li) ve PASS kriteri S12 Karar 2'ye hizalandı: özet+toplam ("toplam"+"240") + onay sorusu ("?" ile bitiş). Eski kriter ("afiyet VAR, toplam YOK") S12-öncesi politikayı ödüllendiriyordu. **Yeni baseline (Jetson, wbot_v4): 32 senaryo 29/32 (%90), KALDI: E01, E24, E27; `--v4-targets` 38 senaryo 31/38 (%81)** — skor düşüşü model regresyonu DEĞİL, ölçütün doğrulanması: ham model W11 prompt kuralı nedeniyle E24'te bilerek KALIYOR (V02 gibi bilinen boşluk), üretimde S12 guard (görev #22) karşılıyor; W11 kanonik prompt revizyonu (wbot_v5) sonrası ham modelde de geçmesi beklenir |
 | 17 | Eval: V01-V06 hedeflerini ana listeye taşı (wbot_v4 sonrası) | 🟢 Düşük | ⏳ Bekliyor |
 | 18 | Jetson deploy + eval (wbot_v4) — `eval_gguf.py` 30/32 (%93), `--v4-targets` 32/38 (%84) | 🔴 Kritik | ✅ Tamamlandı — 4 Temmuz 2026, detay yukarıda "wbot_v4 Eğitim, GGUF Dönüşümü, Jetson Deploy ve Eval Sonuçları" bölümünde |
 | 19 | wbot_v4_train.jsonl birleştirme (3605 kayıt, 0 ihlal, seed=2027) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
