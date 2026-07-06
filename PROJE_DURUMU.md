@@ -14,8 +14,8 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 
 1. ~~**`detect_order()` testi**~~ — ✅ Tamamlandı (5 Temmuz 2026, commit a82dcf3): bug doğrulandı ve düzeltildi, detay görev tablosu #21
 2. ~~**S12 runtime guard uygulaması**~~ — ✅ Tamamlandı (5 Temmuz 2026): TUR 1 + TUR 2 deterministik guard + saf veda kapsaması, detay görev tablosu #22
-3. **Seed sabitleme** — `llama_cpp_backend.py`'nin `Llama()` çağrısında açık `seed=` parametresi yok, determinizm doğrulanmadı; `seed=42` gibi sabit bir değer eklenmesi öneriliyor
-4. **`gen_karmasik.py` veri incelemesi** — assistant örnekleri özet+onay+kapanışı tek turda birleştirmiş olabilir, ayrı bir onay turu üretmemiş olabilir; S12'nin eğitilmiş kalıpta bile eksik çıkmasının kök nedeni olabilir
+3. ~~**Seed sabitleme**~~ — ✅ Tamamlandı (6 Temmuz 2026): `seed=0xFFFFFFFF` uygulandı (örtük varsayılan açıkça yazıldı, davranış değişmedi — Jetson'da 32/32 bit-exact doğrulandı); `seed=42` denendi ve reddedildi (davranışı değiştiriyor), detay görev tablosu #23 + METODOLOJI.md "Seed" notu
+4. ~~**`gen_karmasik.py` veri incelemesi**~~ — ✅ Tamamlandı (6 Temmuz 2026): şüphe çürüdü, veri 150/150 doğru yapıda; kök neden kanonik prompttaki S12-öncesi kural + model genellemesi; guard (görev #22) çözüyor, C paketine veri maddesi eklenmeyecek — detay görev tablosu #24
 5. **Gürültülü ortam testi** — restoran müziği + kalabalık ortamda Jetson'da wake word + STT kalitesi
 
 > 📐 **Senaryo kararları (3 Temmuz 2026):** S19 alerji+öneri → filtrele+uyarı (Seçenek B),
@@ -798,10 +798,12 @@ yanlışlıkla cancel dalına düşüp erken `return` ettiğini, ayranın hiç s
 eklenmediğini gösteriyor — bu ayrı, ön koşul bir bug, guard'dan ÖNCE
 doğrulanmalı/düzeltilmeli. Düzeltilmiş tasarım: `claude_code_prompt_C_paketi_dataset.md`.
 
-**Seed:** `llama_cpp_backend.py`'nin `Llama()` çağrısında açık `seed=`
-parametresi yok. Determinizm ampirik gözlendi (2 eval koşusu birebir aynı
-sonuç) ama koda yazılı değil — `seed=42` gibi sabit bir değer eklenmesi
-öneriliyor.
+**Seed (uygulandı — 6 Temmuz 2026):** `Llama()` çağrısına `seed=0xFFFFFFFF`
+(örtük varsayılan, açıkça yazılmış) eklendi. WSL2 + Jetson A/B testi (4
+karşılaştırma): seed'siz 2 koşu bit-bit aynı (determinizm teyit), Jetson
+baseline 30/32 E01+E27 birebir korundu, `0xFFFFFFFF` baseline'la bit-bit
+aynı, `seed=42` ise ~26 senaryoda yanıtı değiştirip ortama göre tutarsız
+sonuç verdiği için REDDEDİLDİ. Detay: METODOLOJI.md "Seed" notu.
 
 ---
 
@@ -831,8 +833,8 @@ sonuç) ama koda yazılı değil — `seed=42` gibi sabit bir değer eklenmesi
 | 20 | C paketi görev tanımı — S34/V02 + S41/V07 + anti-hallüsinasyon + küfür genişletme + alerji kalıp düzeltmesi (~175-185 kayıt + 2 kod görevi); üretim wbot_v4 sonrasına ertelendi | 🟢 Düşük | ✅ Tamamlandı — 4 Temmuz 2026, bkz. `claude_code_prompt_C_paketi_dataset.md` |
 | 21 | `detect_order()` testi — ekle+kapat cümlelerinde (`"Bir de ayran, başka istemiyorum."`) `_CANCEL_VERBS` yüzünden cancel dalına yanlış düşüp düşmediği | 🔴 Kritik | ✅ Tamamlandı — 5 Temmuz 2026, commit a82dcf3. Bug WSL2'de gerçek OrderTracker ile doğrulandı ve düzeltildi. Kapsam sanılandan genişti: `gen_karmasik.py`'nin 6 eğitilmiş ekle+kapat kalıbından 5'i etkileniyordu (#1 cancel dalı bug'ı, #2/#3/#4/#6 sipariş fiili içermediği için sessiz no-op; yalnızca "alayım" içeren #5 çalışıyordu). Çözüm: `_CLOSING_NEG_RE` ("başka (bir şey) istemiyorum/istemem" kapanış kalıbı cancel sayılmaz) + `_ADD_MARKERS_RE` (fiilsiz ekleme kalıpları: "bir de X", "ayrıca", "son olarak", "bir X daha", "X daha olsun"). "X olsun" modifikasyon çakışması (S34/V02 — "Et Döner soğansız olsun." döneri ikiletiyordu) ayrıca test edilip düzeltildi: "olsun" tek başına ekleme değil. 15 kalıcı test: `robot_waiter_ai/tests/test_order_tracker.py` (15/15 PASS) |
 | 22 | S12 runtime guard uygulaması (düzeltilmiş tasarım) — `demo_usb.py`'ye TUR 1 (özet+toplam+onay) + TUR 2 (toplamsız afiyet olsun) deterministik guard | 🔴 Kritik | ✅ Tamamlandı — 5 Temmuz 2026. Ana döngü sıralaması: Guard 1/2/3 → `detect_order()` (öne taşındı) → TUR 2 → TUR 1 → fast-path → LLM. `_is_closing_signal()` düzeltilmiş tasarıma uygun: ürün eşleşmesi yürütmez, `detect_order()` sonrası `order_tracker.items`'a güvenir. Saf veda + dolu sepet ("Teşekkürler." — sepette ürün varken) de TUR 1'e yönlenir (S12 koşulsuz özet; eskiden ≤5 kelimelik vedalar fast-path'e yutulup sepet özetlenmeden kapanıyordu). TUR 2 onayı: sabit "Afiyet olsun!" + `order_tracker.reset()` + `pending_reset`. 36 test: `robot_waiter_ai/tests/test_s12_guard.py`. **Bilinen sınırlamalar:** (a) TUR 2 onayı sepeti sıfırladığından hemen ardından gelen "hesap alabilir miyim" isteği `total=0` nedeniyle deterministik hesap şablonuna girmez, LLM'e düşer (onay = oturum sonu varsayımı — kod değişikliği şimdilik gerekmiyor); (b) guard yanıtları LLM history'sine yazılmıyor — TUR 1 özeti sonrası saf "Hayır" reddinde LLM özetten habersiz kalır (görev #16 E24 revizyonuyla birlikte ele alınmalı) |
-| 23 | Seed sabitleme — `llama_cpp_backend.py`'nin `Llama()` çağrısına `seed=42` ekle | 🟡 Orta | ⏳ Bekliyor |
-| 24 | `gen_karmasik.py` veri incelemesi — özet+onay+kapanışın tek turda birleştirilip birleştirilmediği (S12 eğitilmiş kalıpta eksik çıkmasının kök nedeni olabilir) | 🟡 Orta | ⏳ Bekliyor |
+| 23 | Seed sabitleme — `llama_cpp_backend.py`'nin `Llama()` çağrısına açık seed ekle | 🟡 Orta | ✅ Tamamlandı — 6 Temmuz 2026. `seed=0xFFFFFFFF` uygulandı (örtük varsayılan açıkça yazıldı — davranış değişmedi, dokümante edildi). WSL2 (0.3.31, 5 Temmuz) + Jetson (0.3.23, 6 Temmuz) A/B eval: seed'siz ×2 bit-bit aynı (MD5 eşit, determinizm teyit); Jetson baseline 30/32 KALDI E01+E27 birebir korundu; `0xFFFFFFFF` vs seed'siz iki ortamda da bit-bit AYNI; `seed=42` iki ortamda da FARKLI (~26 senaryoda yanıt değişti, WSL2'de E16'yı Jetson'da E19'u bozdu — ortama göre tutarsız) ve REDDEDİLDİ. Detay: METODOLOJI.md "Seed" notu |
+| 24 | `gen_karmasik.py` veri incelemesi — özet+onay+kapanışın tek turda birleştirilip birleştirilmediği (S12 eğitilmiş kalıpta eksik çıkmasının kök nedeni olabilir) | 🟡 Orta | ✅ Tamamlandı — 6 Temmuz 2026. Şüphe ÇÜRÜDÜ: 150/150 kayıt doğru yapıda (özet "Onaylıyor musunuz?" ile bitiyor + ayrı user-"Evet" turu + ayrı toplamsız "Afiyet olsun" turu; birleşik desen 0). Gerçek kök neden: kanonik sistem promptundaki S12-öncesi kapanış kuralı ("afiyet olsun ile bitir, TOPLAM SÖYLEME") eğitim verisiyle çelişiyor — model iki sinyali harmanlıyor. Guard (görev #22) üretimi zaten koruyor → C paketine veri maddesi EKLENMEYECEK; kalıcı hizalama W11 kural revizyonuyla (wbot_v5 döngüsü, görev #16 ile birlikte). Detay: `claude_code_prompt_C_paketi_dataset.md` kapanış notu |
 
 ---
 

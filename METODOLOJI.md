@@ -311,15 +311,24 @@ v4.6'da sampling tabanlı decoding'e geçildi:
 
 Aynı parametreler `qwen3_backend.py` (HuggingFace transformers `model.generate`) ve `llama_cpp_backend.py` (`llm.create_completion`) için ortak. Eval suite 16/16 (%100) PASS oranı korundu; ortalama latency 1745 ms → 2330 ms (greedy → sampling overhead'i).
 
-**Seed (4 Temmuz 2026 notu):** `llama_cpp_backend.py`'nin `Llama()`
-çağrısında açık bir `seed=` parametresi yok. Buna rağmen wbot_v4
-eval'inde (`eval_gguf.py`) aynı 38 senaryoluk koşu iki kez birebir aynı
-sonucu verdi — llama-cpp-python'ın seed verilmediğinde kullandığı
-varsayılan davranış zamana/entropiye dayanmıyor gibi görünüyor, ama bu
-koda yazılı/garanti edilmiş değil. Öneri: `seed=42` gibi sabit bir değer
-açıkça geçilsin — hem tekrarlanabilirlik dokümante edilmiş olur hem de
-gelecekte llama-cpp-python sürüm değişikliğiyle varsayılan davranış
-değişirse sessiz bir regresyon riski önlenir.
+**Seed (uygulandı — 6 Temmuz 2026, görev #23):** `llama_cpp_backend.py`'nin
+`Llama()` çağrısına **`seed=0xFFFFFFFF`** (llama.cpp'nin `LLAMA_DEFAULT_SEED`
+örtük varsayılanı, açıkça yazılmış) eklendi — davranışı değiştirmez, yalnızca
+dokümante eder ve gelecekte sürüm değişikliğiyle sessizce farklılaşmayı önler.
+
+Karar, iki ortamda A/B eval karşılaştırmasıyla verildi (32 senaryo,
+`eval_gguf.py`; WSL2 RTX 4050 + llama-cpp-python 0.3.31, 5 Temmuz 2026;
+Jetson Orin NX + 0.3.23, 6 Temmuz 2026 — dört karşılaştırma):
+1. **Seed'siz ×2:** her iki ortamda da iki koşu bit-bit aynı (MD5 eşit) —
+   default zaten deterministik, "determinizm ampirik" gözlemi teyit edildi.
+2. **Jetson baseline:** 30/32, KALDI: E01, E27 — bilinen baseline'la birebir.
+3. **`seed=0xFFFFFFFF` vs seed'siz:** iki ortamda da **bit-bit aynı** —
+   davranışı değiştirmeden koda sabitleme mümkün; bu uygulandı.
+4. **`seed=42` vs seed'siz:** iki ortamda da FARKLI (~26 senaryoda yanıt
+   değişti) ve etkisi ortama göre tutarsız (WSL2'de E16'yı, Jetson'da E19'u
+   bozdu; E01/E27'yi "geçirmesi" iyileşme değil, farklı örnekleme akışının
+   rastgele yan ürünü). **Reddedildi** — tüm eval baseline'larını geçersiz
+   kılardı.
 
 ### Konuşma Geçmişi Yönetimi
 Jetson'da bağlam penceresi (n_ctx) **4096 token** (sistem prompt ~2100 tok olduğundan 1536 yetersizdi). Konuşmaya kalan: ~1931 token (~10-12 tur).

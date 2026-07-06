@@ -142,6 +142,13 @@ class LlamaCppBackend:
             model_path=str(self._gguf_path),
             n_gpu_layers=-1,
             n_ctx=4096,
+            # llama.cpp'nin seed verilmediğinde kullandığı örtük varsayılan
+            # (LLAMA_DEFAULT_SEED) açıkça yazıldı — davranışı değiştirmez,
+            # yalnızca dokümante eder ve gelecekte sürüm değişikliğiyle sessizce
+            # farklılaşmasını önler. WSL2 + Jetson'da 32/32 senaryoda bit-bit
+            # doğrulandı (WSL2: 5 Temmuz, Jetson: 6 Temmuz 2026). seed=42
+            # denendi ve REDDEDİLDİ: davranışı değiştiriyor (görev #23).
+            seed=0xFFFFFFFF,
             verbose=False,
         )
         logger.info("LlamaCppBackend hazır.")

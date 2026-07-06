@@ -405,6 +405,31 @@ yeni ürün ekleme) normal akışa (LLM/`detect_order()`) düşülür.
 
 ---
 
+## KAPANIŞ NOTU — gen_karmasik.py İncelemesi (6 Temmuz 2026): Veri Maddesi GEREKSİZ
+
+**Görev #24 araştırıldı ve kapatıldı.** Şüphe, `gen_karmasik.py`'nin assistant
+örneklerinin özet+onay+kapanışı tek turda birleştirdiğiydi — **çürütüldü**:
+150 kaydın programatik sayımı, 150/150'sinin doğru yapıda olduğunu gösterdi
+(özet turu "Onaylıyor musunuz?" ile bitiyor, ardından AYRI user-"Evet" turu,
+ardından AYRI ve toplamsız "Afiyet olsun" asistan turu; birleşik desen: 0).
+
+Kök neden veri değil, **model genellemesi + kanonik sistem promptu çelişkisi**:
+5460 karakterlik kanonik promptun kapanış kuralı hâlâ S12-öncesi politikayı
+("...mutlaka 'afiyet olsun' ifadesiyle bitir. BU DURUMDA TOPLAM SÖYLEME")
+emrediyor — hem tüm eğitim kayıtlarının system mesajında hem inference'ta
+(`llama_cpp_backend.py` `_SYSTEM_TEMPLATE`). Model iki çelişen sinyali
+harmanlıyor: fine-tune'dan özet+toplam, prompttan afiyet-kapanışı → onay
+sorusu düşüyor.
+
+**Sonuç:** S12/E24 runtime guard (görev #22) bu davranışı LLM'den bağımsız,
+deterministik olarak garanti ettiği için **C paketine gen_karmasik türü yeni
+veri maddesi EKLENMEYECEK** — veri zaten doğru, fazlası çelişen promptu
+yenemez. Kalıcı hizalama istenirse doğru adres W11 kural revizyonu (kanonik
+prompt güncellemesi, wbot_v5 döngüsünde; görev #16 E24 eval revizyonuyla
+birlikte ele alınmalı) — veri üretimi değil.
+
+---
+
 ## Üretim Ortamı ve Kalite Kontrol
 
 - **Şablon script (Python, `gen_*.py`) ile üretilebilir:** S34/V02 (madde

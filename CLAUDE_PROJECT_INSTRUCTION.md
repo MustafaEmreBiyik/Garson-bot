@@ -38,16 +38,16 @@ Ana dosya: `scripts/demo_usb.py`
 ## Aktif Model
 
 - **GGUF:** `Qwen3-4B-wbot_v4-Q4_K_M.gguf` — Jetson'da `/home/emk/models/` (4 Temmuz 2026'da wbot_v3'ten değiştirildi)
-- **Eval:** 32-senaryo 30/32 (%93), `--v4-targets` 38-senaryo 32/38 (%84) — `eval_gguf.py`, deterministik (seed yazılı değil ama sonuçlar tekrarlanabilir)
+- **Eval:** 32-senaryo 30/32 (%93), `--v4-targets` 38-senaryo 32/38 (%84) — `eval_gguf.py`, deterministik (`seed=0xFFFFFFFF` açıkça yazılı — örtük varsayılan sabitlendi, Jetson'da 32/32 bit-exact doğrulandı, 6 Temmuz 2026; `seed=42` denendi ve davranışı değiştirdiği için reddedildi)
 - **Dataset:** `wbot_v4_train.jsonl` — 3605 kayıt (3000 base + A paketi 490 + B paketi 115), 0 audit ihlali
-- **C paketi (ertelendi):** ~175-185 yeni kayıt + 2 kod görevi planlandı (S34/V02, S41/V07, anti-hallüsinasyon, küfür genişletme, alerji kalıp düzeltmesi) — üretim, aşağıdaki açık sorunlar (özellikle S12 guard) çözülene kadar ertelendi. Detay: `claude_code_prompt_C_paketi_dataset.md`
-- **Sıradaki:** `detect_order()` ekle+kapat bug testi → S12 runtime guard → seed sabitleme → `gen_karmasik.py` veri incelemesi (öncelik sırasıyla, detay PROJE_DURUMU.md)
+- **C paketi (ertelendi):** ~175-185 yeni kayıt + kod görevleri planlandı (S34/V02, S41/V07, anti-hallüsinasyon, küfür genişletme, alerji kalıp düzeltmesi) — gen_karmasik türü veri maddesi KAPSAM DIŞI bırakıldı (görev #24 bulgusu: veri doğruydu, S12 guard çözüyor). Detay: `claude_code_prompt_C_paketi_dataset.md` (kapanış notu dahil)
+- **Sıradaki:** E24 eval revizyonu (görev #16, S12 guard'lı akışa göre) → E01/V01 post-processing → gürültülü ortam testi → C paketi üretimi (detay PROJE_DURUMU.md)
 
 ## Nasıl Yardım Edersin
 
 **Kod değişikliği önerilirken:**
 - `demo_usb.py` ana demo dosyası — değişiklikler Jetson'da `git pull` ile test edilir
-- `llama_cpp_backend.py` → Jetson LLM ayarları (n_ctx=4096, max_tokens=65, seed yok — sabitlenmesi öneriliyor)
+- `llama_cpp_backend.py` → Jetson LLM ayarları (n_ctx=4096, max_tokens=65, seed=0xFFFFFFFF — örtük varsayılan açıkça sabitlendi, değiştirme)
 - `qwen3_backend.py` → PC/WSL2 LLM ayarları
 - Dataset scriptleri → `scripts/gen_*.py` (wbot_v4 için)
 - Eval → `scripts/eval_gguf.py` (32+ senaryo). **Önemli:** bu script `demo_usb.py`'nin Guard 1/2/3 + `_fast_path_reply()` + post-processing katmanlarını atlayıp LLM'i doğrudan çağırıyor — ham eval sonucu üretim davranışından daha kötü görünebilir (örn. küfür zaten Guard 3'te yakalanıyor, ham eval'de LLM'e ulaşıyor).
@@ -69,15 +69,18 @@ Ana dosya: `scripts/demo_usb.py`
 
 ## Bilinen Açık Sorunlar (Öncelik Sırasıyla)
 
-1. **`detect_order()` bug (kritik, S12 guard'ından önce):** "Bir de ayran, başka istemiyorum." gibi ekle+kapat cümlelerinde `_CANCEL_VERBS` içindeki "istemiyorum" yüzünden cancel dalına düşüp yeni ürünü hiç eklemiyor olabilir (statik analiz düşüyor gösteriyor, testle doğrulanmalı).
-2. **S12/E24 — sipariş kapanışında özet+toplam+onay eksik:** Manuel testte iki tetikleyicide de (saf kapanış VE eğitilmiş ekle+kapat kalıbı) çalışmadı. Runtime guard tasarlandı, ilk taslakta mantık hatası bulundu — düzeltilmiş tasarım `claude_code_prompt_C_paketi_dataset.md`'de.
-3. **E01, E27 — wbot_v3→v4 regresyonu:** wbot_v3'te GEÇİYORDU, wbot_v4'te bozuldu. Veri eklemek değil, dar kod-seviyesi post-processing öneriliyor.
-4. **V01:** Modifikasyon onayında fiyat (TL) söylenmiyor — format eksikliği.
-5. **V04:** Küfüre karşılık veriyor ("Size çok kızarmak istiyorum") — ama `demo_usb.py` Guard 3 (`_is_offensive`) zaten bunu üretime ulaşmadan yakalıyor, üretim riski düşük.
-6. **V06:** Glütensiz ürün önerisinde gluten içeren ürünü listeye ekliyor — halüsinasyon, C paketi kapsamında.
-7. **Seed:** `llama_cpp_backend.py`'de `Llama()` çağrısında `seed=` yok — sabitlenmesi öneriliyor.
-8. **Gürültülü ortam:** Henüz test edilmedi — Jetson'da gerçek restoran ortamı gerekiyor.
+1. **E24 eval revizyonu (görev #16):** S12 guard'lı yeni akışa göre eval güncellenmeli; guard yanıtları LLM history'sine yazılmıyor (bilinen sınırlama, görev #22 notu).
+2. **E01, E27 — wbot_v3→v4 regresyonu:** wbot_v3'te GEÇİYORDU, wbot_v4'te bozuldu. Veri eklemek değil, dar kod-seviyesi post-processing öneriliyor.
+3. **V01:** Modifikasyon onayında fiyat (TL) söylenmiyor — format eksikliği.
+4. **V04:** Küfüre karşılık veriyor ("Size çok kızarmak istiyorum") — ama `demo_usb.py` Guard 3 (`_is_offensive`) zaten bunu üretime ulaşmadan yakalıyor, üretim riski düşük.
+5. **V06:** Glütensiz ürün önerisinde gluten içeren ürünü listeye ekliyor — halüsinasyon, C paketi kapsamında.
+6. **W11 kural revizyonu (wbot_v5 döngüsü):** Kanonik sistem promptundaki S12-öncesi kapanış kuralı ("afiyet olsun ile bitir, TOPLAM SÖYLEME") eğitim verisiyle çelişiyor — S12'nin ham modelde eksik kalmasının kök nedeni (görev #24 bulgusu). Guard üretimi koruyor; kalıcı hizalama prompt revizyonu ister (görev #16 ile birlikte).
+7. **Gürültülü ortam:** Henüz test edilmedi — Jetson'da gerçek restoran ortamı gerekiyor.
 
+~~`detect_order()` ekle+kapat bug'ı (görev #21)~~ — ✅ Çözüldü (5 Temmuz 2026, commit a82dcf3): `_CLOSING_NEG_RE` + `_ADD_MARKERS_RE`; 15 test `test_order_tracker.py`.
+~~S12/E24 runtime guard (görev #22)~~ — ✅ Uygulandı (5 Temmuz 2026, commit 69d60eb): TUR 1 özet+toplam+onay, TUR 2 toplamsız kapanış, saf veda kapsaması; 36 test `test_s12_guard.py`.
+~~Seed (görev #23)~~ — ✅ Uygulandı (6 Temmuz 2026): `seed=0xFFFFFFFF`, Jetson'da 32/32 bit-exact doğrulandı.
+~~gen_karmasik.py veri şüphesi (görev #24)~~ — ✅ Araştırıldı, veri doğruydu; kök neden W11 kuralı (yukarıda madde 6).
 ~~E19 / W15 (açıklama sonrası "Getireyim mi?")~~ — ✅ Çözüldü, hem post-processing hem wbot_v4 eğitimiyle; eval'de GEÇİYOR.
 ~~W16 (alerji + öneri kombinasyonu)~~ — ✅ B paketiyle büyük ölçüde çözüldü (V03, V05 geçiyor); V06'da kısmi halüsinasyon kaldı, C paketi kapsamında.
 
@@ -97,6 +100,6 @@ Ana dosya: `scripts/demo_usb.py`
 WSL2'de kod yaz → git push → Jetson'da git pull → python3 scripts/demo_usb.py
 ```
 
-Jetson SSH: `ssh emk@<jetson-ip>`
+Jetson SSH: `ssh emk@192.168.1.65` (geliştirme makinesinden anahtar tabanlı erişim kurulu — 6 Temmuz 2026)
 
 PROJE_DURUMU.md her önemli değişiklikten sonra güncellenir ve commit edilir.
