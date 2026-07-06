@@ -448,8 +448,17 @@ Python'da `"İ".lower()` → `"i̇"` (i + birleştirme noktası U+0307) üretir.
 t = user_text.lower().replace('̇', '')
 ```
 
-### Bilinen Sınırlama — Ekle+Kapat Çakışması (4 Temmuz 2026)
-**Sorun şüphesi (statik analiz, testle doğrulanmadı):** `detect_order()`
+### ~~Bilinen Sınırlama~~ ÇÖZÜLDÜ — Ekle+Kapat Çakışması (4 Temmuz 2026 → fix: 5 Temmuz 2026)
+**✅ ÇÖZÜM (5 Temmuz 2026, commit a82dcf3, görev #21):** Şüphe WSL2'de gerçek
+`OrderTracker` ile doğrulandı ve düzeltildi. Kapsam sanılandan genişti —
+`gen_karmasik.py`'nin 6 eğitilmiş ekle+kapat kalıbından 5'i etkileniyordu
+(cancel dalı bug'ı + fiilsiz kalıpların sessiz no-op'u). Fix: `_CLOSING_NEG_RE`
+("başka istemiyorum" kapanış kalıbı cancel sayılmaz) + `_ADD_MARKERS_RE`
+(fiilsiz ekleme kalıpları). "X olsun" modifikasyon çakışması da (S34/V02)
+test edilip kapsandı. 15 kalıcı test: `robot_waiter_ai/tests/test_order_tracker.py`.
+Aşağıdaki metin, orijinal analiz kaydıdır:
+
+**Sorun şüphesi (statik analiz — sonradan testle DOĞRULANDI):** `detect_order()`
 önce "İptal" dalını kontrol ediyor (`is_cancel = any(v in t for v in
 _CANCEL_VERBS)`), bu da "ekleme" dalından ÖNCE çalışıyor. "Bir de ayran,
 başka istemiyorum." gibi bir cümlede "istemiyorum" `_CANCEL_VERBS`
@@ -461,8 +470,9 @@ belirtilip hem de kapanış sinyali ("başka istemiyorum") verildiğinde,
 cancel dalı ekleme dalına hiç ulaşılmasını engelliyor.
 
 Bu, S12 (sipariş kapanışı özeti) runtime guard tasarımının önkoşulu
-olarak keşfedildi — henüz kod düzeltmesi yapılmadı, doğrulama ve
-düzeltme sırası: `claude_code_prompt_C_paketi_dataset.md` Bölüm 6.
+olarak keşfedildi. (Tarihsel not: keşif anında kod düzeltmesi yoktu;
+yukarıdaki ÇÖZÜM bloğunda anlatıldığı gibi 5 Temmuz'da düzeltildi, S12
+guard'ı da aynı gün uygulandı — görev #22.)
 
 ### Hesap + Sipariş Aynı Cümlede
 **Sorun:** "Bir köfte alayım, toplam ne kadar?" → LLM sistem promptunda "sipariş sırasında toplam söyleme" kuralı olduğu için toplam vermiyordu.
@@ -537,7 +547,7 @@ Aynı kod Jetson'da ve geliştirme PC'de çalışır.
 | STT latency (Whisper medium, CUDA float16) | ~1700-2100ms (ölçüldü, 7 Haziran 2026) |
 | TTS sentez (Piper, CPU) | ~500-800ms |
 | **Müşteriye ilk ses (TTFA)** | **~5-7 saniye** (VAD 1.5s + STT 1.7s + LLM+TTS ~2s) |
-| LLM eval başarı (GGUF, Jetson) | 31/32 (%96) |
+| LLM eval başarı (GGUF, Jetson, wbot_v4 — 6 Temmuz 2026 E24 revizyonlu baseline) | 29/32 (%90) — KALDI: E01, E24, E27; E24 bilinen boşluk (W11 kuralı), üretimde S12 guard karşılıyor |
 
 ---
 

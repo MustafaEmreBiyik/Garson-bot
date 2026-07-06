@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 4 Temmuz 2026 | **Sürüm:** 5.14
+**Son güncelleme:** 6 Temmuz 2026 | **Sürüm:** 5.15
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -19,11 +19,16 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 5. **Gürültülü ortam testi** — restoran müziği + kalabalık ortamda Jetson'da wake word + STT kalitesi
 
 > 📐 **Senaryo kararları (3 Temmuz 2026):** S19 alerji+öneri → filtrele+uyarı (Seçenek B),
-> S12 onay öncesi → her zaman özet+toplam (W11/E24 revizyonu gerekir), S29 küfür ve
+> S12 onay öncesi → her zaman özet+toplam (E24 revizyonu ✅ 6 Temmuz'da yapıldı; W11 kanonik prompt revizyonu wbot_v5 döngüsüne kaldı), S29 küfür ve
 > S03 sessizlik politikaları netleşti. Yeni eval hedefleri `eval_gguf.py --v4-targets`
 > (V01-V06). Tamamı: [SENARYO_PLANI_FAZ1.md](SENARYO_PLANI_FAZ1.md)
 
-> 🎯 **wbot_v4 eval sonuçları (4 Temmuz 2026):** GGUF Jetson'a deploy edildi
+> 🎯 **wbot_v4 eval sonuçları (4 Temmuz 2026 — ARŞİV KAYDI):** ⚠️ Bu not,
+> 4 Temmuz fotoğrafıdır. Aşağıda anlatılan S12/detect_order işleri o tarihten
+> sonra TAMAMLANDI (görev #21, #22 — 5 Temmuz) ve E24 revizyonuyla (görev
+> #16 — 6 Temmuz) güncel baseline 29/32'ye (KALDI: E01, E24, E27) döndü.
+> Güncel durum: "Sistem durumu" ve görev tablosu. Orijinal kayıt:
+> GGUF Jetson'a deploy edildi
 > (`/home/emk/models/Qwen3-4B-wbot_v4-Q4_K_M.gguf`), eval çalıştırıldı (2 kez,
 > birebir aynı sonuç — deterministik). 32 senaryo: 30/32 (%93), KALDI: E01,
 > E27. `--v4-targets` 38 senaryo: 32/38 (%84), KALDI: E01, E27, V01, V02, V04,
@@ -47,6 +52,9 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 > içeriyordu (`_is_closing_signal`'ın kendi ürün-eşleşme kontrolü, ekle+kapat
 > cümlesinde guard'ı yanlışlıkla devre dışı bırakıyordu). Düzeltilmiş
 > yaklaşım ve `detect_order()` ön koşulu: `claude_code_prompt_C_paketi_dataset.md`.
+> **[SONUÇ — 5-6 Temmuz]:** Ön koşul bug'ı doğrulandı ve düzeltildi (görev
+> #21), düzeltilmiş guard uygulandı (görev #22), E24 eval'i S12 kriterine
+> revize edildi (görev #16) — bu paragraf artık tarihsel bağlam.
 
 > 🔍 **Senaryo danışması (3 Temmuz 2026) — Codex 5.5, Gemini 2.5 Pro, Claude Fable:**
 > Üç model bağımsız olarak S01-S32 listesini değerlendirdi. Konsensüs: W16
@@ -198,7 +206,7 @@ Piper TTS → WAV → aplay subprocess (ALSA_OUTPUT_DEVICE ile)
 | n_ctx | **4096** (sistem prompt ~2100 tok olduğundan 1536 yetersizdi) |
 | max_tokens | **65** |
 | Decoding | temperature=0.55, top_p=0.9, top_k=40, repeat_penalty=1.2 |
-| Seed | ⚠️ **Ayarlanmamış** — `Llama()` çağrısında açık `seed=` parametresi yok; determinizm ampirik olarak gözlendi (2 eval koşusu birebir aynı sonucu verdi) ama koda yazılı değil. Öneri: `seed=42` sabitlensin. |
+| Seed | ✅ **`seed=0xFFFFFFFF`** (6 Temmuz 2026, görev #23) — örtük varsayılan (LLAMA_DEFAULT_SEED) açıkça yazıldı, davranış değişmedi; WSL2+Jetson'da 32/32 bit-exact doğrulandı. `seed=42` denendi ve REDDEDİLDİ (davranışı değiştiriyor). Detay: METODOLOJI.md "Seed" notu |
 | _MAX_HIST_CHARS | **4000** — aşılınca en eski user+assistant turu silinir |
 
 ### PC — qwen3_backend.py
@@ -327,8 +335,12 @@ aynı cümlede "sütlaç alayım + hesap" varsa sütlaç toplamda yer alır.
 | **GGUF eval — eval_gguf.py (32 senaryo, Jetson, wbot_v3, 22 Haziran 2026)** | **31/32 (%96)** | **1** | — | — | — |
 | **GGUF eval — eval_gguf.py (32 senaryo, Jetson, wbot_v4, 4 Temmuz 2026)** | **30/32 (%93)** | **2** | — | — | — |
 | **GGUF eval — eval_gguf.py --v4-targets (38 senaryo, Jetson, wbot_v4, 4 Temmuz 2026)** | **32/38 (%84)** | **6** | — | — | — |
+| **GGUF eval — eval_gguf.py (32 senaryo, Jetson, wbot_v4, 6 Temmuz 2026 — E24 revizyonu sonrası GÜNCEL baseline)** | **29/32 (%90)** | **3** | — | — | — |
+| **GGUF eval — eval_gguf.py --v4-targets (38 senaryo, Jetson, wbot_v4, 6 Temmuz 2026 — GÜNCEL)** | **31/38 (%81)** | **7** | — | — | — |
 
 *wbot_v3 GGUF eval başarısızları: E19 (açıklama sonrası soru yok — gerçek model hatası, wbot_v4'te düzeldi). E21 düzeltildi — artık geçiyor.*
+
+*6 Temmuz baseline'ındaki skor düşüşü (30→29) model regresyonu DEĞİL — E24 kriteri S12 Karar 2'ye revize edildi (görev #16); ham model W11 prompt kuralı nedeniyle E24'te bilerek kalıyor, üretimde S12 guard karşılıyor. KALDI: E01, E24, E27.*
 
 *wbot_v4 32-senaryo başarısızları: **E01, E27 — wbot_v3→v4 REGRESYONU** (wbot_v3'te ikisi de GEÇİYORDU, yeni bulgu değil). E19 artık GEÇİYOR (W15/A1 paketi hedefine ulaşıldı).*
 

@@ -126,7 +126,7 @@ hesap bölme, porsiyon soruları.
 
 ## Doğrulama
 
-- `python3 scripts/eval_gguf.py` → mevcut metrik korunur (31/32).
+- `python3 scripts/eval_gguf.py` → mevcut metrik korunur (yazıldığında wbot_v3: 31/32; güncel wbot_v4 baseline 6 Temmuz 2026: 29/32 — E24, Karar 2'ye göre revize edildi, bilinen boşluk).
 - `python3 scripts/eval_gguf.py --v4-targets` → V01-V06 dahil koşar; wbot_v3'te
   bir kısmının KALDI çıkması beklenir (bunlar wbot_v4 hedefleri).
 - wbot_v4 verisi üretilince S19-B kalıbı `scripts/audit_dataset.py` kesin-güvence

@@ -73,9 +73,9 @@ kaynağı, masa ayrımı. → PROJE_DURUMU Faz 2 + METODOLOJI §14/15.
 - Faz 1 teslim tarihi (toplantıda net değil).
 
 ## Durum notları (önemli)
-- Geliştirme: **Windows 11 WSL2 + RTX 4050** (`qwen3_backend` ile test). **Jetson şu an EVDE, erişilemiyor** → 3. Dalga (donanım) ertelendi.
+- Geliştirme: **Windows 11 WSL2 + RTX 4050** (`qwen3_backend` ile test). Jetson erişilebilir — SSH anahtar tabanlı erişim kurulu (`ssh emk@192.168.1.65`, 6 Temmuz 2026).
 - Persona **METNİ** çözüldü (W12/v4.9); açık olan ses **TINISI** (TTS motoru).
-- E19 fix kodda ✅ · ALSA kalıcı fix ⏳ · guard'lar ⏳.
+- E19 fix kodda ✅ · ALSA kalıcı fix ⏳ · guard'lar ✅ (Guard 1/2/3 + S12 guard, 5 Temmuz 2026 — görev #22).
 - "Her duruma hazır" = zarif fallback + guard + iteratif geri-bildirim (omniscience değil).
 - Barge-in (araya girme): tam çözüm ReSpeaker AEC (3. Dalga); şimdilik **kısa konuş + ekran kesme** ile %80 telafi.
 

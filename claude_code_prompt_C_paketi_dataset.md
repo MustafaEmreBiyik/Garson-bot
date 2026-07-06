@@ -21,6 +21,11 @@ davranışı.
 **32-senaryo (temel):** 30/32 (%93) — KALDI: E01, E27
 **38-senaryo (`--v4-targets`):** 32/38 (%84) — KALDI: E01, E27, V01, V02, V04, V06
 
+> ⚠️ **Güncelleme (6 Temmuz 2026):** Yukarıdaki skorlar revizyon-ÖNCESİ E24
+> kriteriyle ölçüldü. E24, S12 Karar 2'ye hizalandı (görev #16) — güncel
+> baseline: 32 senaryo **29/32** (KALDI: E01, E24, E27), 38 senaryo **31/38**.
+> E24 bilinen boşluk (W11 kuralı); üretimde S12 guard karşılıyor.
+
 **Kazanımlar:** E19 (W15 — açıklama + "Getireyim mi?") artık GEÇİYOR, A1
 paketinin asıl hedefiydi. V03 (S35/alerjen çakışması) ve V05 (S37/pratik
 soru) temiz geçti — B4/B5 işe yaradı.
@@ -107,9 +112,11 @@ sonuçlarıyla netleşen gerçek kapsam:
 | 5 | Alerji kalıp/doğruluk düzeltmesi | ~20-25 | E27 (regresyon) + V06 (kalıp-uyum, aşağıda reformüle) |
 | | **Toplam** | **~175-185** | |
 
-**+ 3 ayrı kod görevi (veri değil):** E01/V01 post-processing, V04 runtime
-guard, S12/E24 runtime guard (yukarıda ve aşağıda detaylı — S12 guard'ı
-`detect_order()` ön koşul testi tamamlanmadan uygulanmamalı, bkz. Bölüm 6).
+**+ 3 ayrı kod görevi (veri değil) — güncel durum (6 Temmuz 2026):**
+1. ~~S12/E24 runtime guard~~ — ✅ TAMAMLANDI (5 Temmuz, görev #21 ön koşul
+   fix'i + görev #22 guard; E24 eval'i de revize edildi — görev #16).
+2. E01/V01 post-processing — ⏳ bekliyor (sıradaki iş).
+3. V04 runtime guard — ⏳ bekliyor (madde 4-b).
 
 **Not — kapsam değişikliği:** Önceki taslakta "Alerji + öneri
 derinleştirmesi B'de zaten karşılandı, kapsam dışı" denmişti. Eval
@@ -314,6 +321,11 @@ alternatif soru formları hem de 3-öğe kalıbının pekiştirilmesi için.
 ---
 
 ## 6 — S12/E24: Runtime Guard (Kod, Veri Değil) — Düzeltilmiş Tasarım
+
+> ✅ **UYGULANDI (5-6 Temmuz 2026):** Bu bölümdeki tasarım hayata geçirildi —
+> ön koşul `detect_order()` fix'i (görev #21, commit a82dcf3), guard (görev
+> #22, commit 69d60eb; 36 test `test_s12_guard.py`) ve E24 eval revizyonu
+> (görev #16, commit 113136f). Aşağıdaki metin tasarım kaydı olarak korunuyor.
 
 **Manuel test bulgusu (4 Temmuz 2026, Jetson'da `llm.generate_reply()` ile):**
 İki ayrı tetikleyici denendi. (a) Saf kapanış ("Hayır, başka istemiyorum,
