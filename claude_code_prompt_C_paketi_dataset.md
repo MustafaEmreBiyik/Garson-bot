@@ -145,6 +145,10 @@ halüsinasyon) — bu madde kapsama **geri alındı**.
 
 ## 1 — S34/V02: Modifikasyon, Sipariş Sonrası (~20 kayıt)
 
+> ✅ **VERİ ÜRETİLDİ (7 Temmuz 2026, görev #27)** — `gen_modifikasyon_sonrasi.py`
+> → `wbot_c_modifikasyon_sonrasi.jsonl` (20 kayıt, audit 0 ihlal). Henüz
+> MERGE/RETRAIN edilmedi — wbot_v5 turuna ait.
+
 **Senaryo:** Ürün zaten sipariş edilip onaylandıktan SONRA (ayrı bir turda)
 müşteri değişiklik istiyor. S33/V01'den farkı: S33'te modifikasyon sipariş
 cümlesiyle AYNI mesajda ("bir şalgam alayım, acılı olsun"); S34'te sipariş
@@ -254,6 +258,13 @@ kaydı var (3605 kayıt içinde ~%0.14) — yetersiz kalmış.
 tecrübesi bunu gösterdi):
 
 ### a) Veri genişletme (~15-20 yeni kayıt)
+
+> ✅ **VERİ ÜRETİLDİ (7 Temmuz 2026, görev #27)** — `gen_kufur_genisletme.py`
+> → `wbot_c_kufur_genisletme.jsonl` (18 kayıt: 11 tek-seferlik + 7 ısrarlı,
+> S29 oranı korundu; audit 0 ihlal). `gen_kotu_niyet.py` yeniden
+> ÇALIŞTIRILMADI (çıktısı v4'e merge edilmişti — mükerrer riski). V04 eval
+> yasak listesine "kızarmak"/"sinirlen"/"bıktım" eklendi. Henüz MERGE/RETRAIN
+> edilmedi — wbot_v5 turuna ait.
 `gen_kotu_niyet.py`'nin küfür alt tipini genişlet: daha fazla kabalık
 varyasyonu (farklı hakaret kalıpları, farklı şiddet seviyeleri) + tek
 seferlik/ısrarlı oranını koru (S29: 1. seferde sakin yönlendirme, 2.
@@ -274,6 +285,14 @@ ikisi birlikte planlanmalı, yalnızca veri eklemek yeterli olmayabilir.
 ---
 
 ## 5 — V06/E27: Alerji Kalıp Uyumu (Madde Sayısı Değil, 3 Zorunlu Öğe) (~20-25 kayıt)
+
+> ✅ **VERİ ÜRETİLDİ + EVAL REFORMÜLE EDİLDİ (7 Temmuz 2026, görev #27)** —
+> `gen_alerji_kalip_genisletme.py` → `wbot_c_alerji_kalip.jsonl` (24 kayıt:
+> 12 "var mı" formu + 12 3-öğe pekiştirme; audit 0 ihlal). Aşağıdaki yeni
+> V06 PASS kriteri `eval_gguf.py`'ye uygulandı; reformülasyon sonrası koşu
+> (WSL2): 32/38, V06 doğru yapısal nedenle KALDI, tek delta E27→GEÇTİ
+> (platform farkı, detay PROJE_DURUMU.md görev #27). Henüz MERGE/RETRAIN
+> edilmedi — wbot_v5 turuna ait.
 
 **Mevcut V06 eval kriteri sorunlu:**
 ```python
