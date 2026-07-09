@@ -33,6 +33,8 @@ def _both(f1, f2):
 
 def _ends_question(r): return r.strip().endswith("?")
 
+def _not_ends_question(r): return not r.strip().endswith("?")
+
 
 # ── Eval senaryoları ───────────────────────────────────────────────────────────
 # (id, açıklama, kullanıcı_mesajı, kontrol_fn, önceki_geçmiş_ya_da_None)
@@ -288,6 +290,36 @@ _EVAL_CASES_V4 = [
              ),
          ),
      ), None),
+
+    # V07 (C paketi madde 2): S41 — iki ARDIŞIK anlaşılamama → doğrudan
+    # eskalasyon. Seed'de 1. anlaşılamama + netleştirici soru; test edilen
+    # girdi 2. anlaşılamama. PASS = SENARYO_PLANI_FAZ1.md S41 tanımının 3
+    # yapısal öğesi: (1) yanıt "personel" + çağırma/yönlendirme içerir,
+    # (2) YENİ netleştirme sorusu YOK ("?" ile bitmez + re-elicit kalıbı yok),
+    # (3) ton nötr (S29 ile tutarlı, V04 ile ilişkili). Ham wbot_v4'te S41
+    # verisi YOK — V02/V06 gibi "doğru YAPISAL nedenle KALDI" beklenir;
+    # gerçek PASS wbot_v5 (wbot_c_eskalasyon.jsonl merge + retrain) sonrası.
+    ("V07", "S41 — İki ardışık anlaşamama → doğrudan eskalasyon (çok-turlu)",
+     "Höğ mşş bır dğğ.",
+     _both(
+         # 1. personel + çağırma/yönlendirme ifadesi
+         _both(_contains("personel"),
+               _any_of("çağır", "yardımcı olacak", "yönlendir", "haber ver")),
+         _both(
+             # 2. yeni netleştirme sorusu yok
+             _both(_not_ends_question,
+                   _not_contains("ne almak istersiniz", "ne arzu edersiniz",
+                                 "tekrar eder misiniz", "tekrarlar mısınız",
+                                 "ne demek istediniz")),
+             # 3. nötr ton (S29 politikasıyla tutarlı)
+             _not_contains("aptal", "salak", "kızarmak", "sinirlen",
+                           "bıktım", "terbiyesiz", "kaba"),
+         ),
+     ),
+     [
+         {"role": "user",      "content": "Şğööl bır maa şşt."},
+         {"role": "assistant", "content": "Tam anlayamadım, ne almak istersiniz?"},
+     ]),
 ]
 
 

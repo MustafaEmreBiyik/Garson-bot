@@ -175,6 +175,17 @@ teyit edilmiş sonuçtu — bu madde artık "bilinen boşluk" durumundan
 
 ## 2 — S41: İki Ardışık Anlaşamama → Eskalasyon (~20 kayıt)
 
+> ✅ **ÜRETİLDİ + DOĞRULANDI + COMMIT'LENDİ (9 Temmuz 2026, görev #28)** —
+> `gen_eskalasyon.py` → `wbot_c_eskalasyon.jsonl` (20 kayıt, çok-turlu:
+> netleştirme→eskalasyon). Bilinmeyen oturumdan commit'siz gelmişti; rijit
+> doğrulandı: audit 0, kanonik 5460 (20/20), eskalasyon turu 20/20
+> "personel"+çağırma içerir + yeni netleştirme sorusu YOK (V07 re-elicit
+> listesine göre 0 ihlal) + nötr ton, benzersiz eskalasyon 20/20 · netleştirme
+> 16/20, kalıba çökme yok. **V07 eval tanımı** `eval_gguf.py`'ye eklendi (3
+> PASS öğesi + çok-turlu seed, E24/E31 deseni); tek koşu (WSL2, --v4-targets):
+> 39 senaryo 32/39, V07 doğru yapısal nedenle KALDI (ham wbot_v4'te S41 verisi
+> yok). Henüz MERGE/RETRAIN edilmedi — wbot_v5 turuna ait.
+
 **Senaryo:** SENARYO_PLANI_FAZ1.md'nin S41 satırı birebir: "**İki ardışık**
 anlaşamama → 'Personelimizi çağırıyorum' eskalasyonu." En sadık okuma: 1.
 anlaşılamama → netleştirici soru, 2. anlaşılamama → **doğrudan eskalasyon**
@@ -218,6 +229,18 @@ assistant: "Sizi tam anlayamıyorum, personelimizi çağırıyorum." (2. anlaş�
 ---
 
 ## 3 — Anti-Hallüsinasyon: Ürün Açıklaması (~100 kayıt)
+
+> ✅ **ÜRETİLDİ + DOĞRULANDI + COMMIT'LENDİ (9 Temmuz 2026, görev #28)** —
+> `gen_anti_hallusinasyon.py` → `wbot_c_anti_hallusinasyon.jsonl` (100 kayıt;
+> 3 alt tip 34/33/33). Bilinmeyen oturumdan commit'siz gelmişti; rijit
+> doğrulandı: audit 0, kanonik 5460 (100/100), **hiçbir yanıtta rakam YOK**
+> (uydurma nicel detay yasağı airtight), **bağımsız menu.yaml mekanik çapraz
+> kontrol** (generator FAB_VOCAB'ı kopyalanmadan) → honest=80/grounded=20,
+> izinli-metin-dışı malzeme flag'i 8 ama hepsi honest deferral bağlamında,
+> **0 grounded uydurma** (fındık/ceviz tuzağı doğru defer). Alt-tip başına
+> benzersizlik tam (34/34·33/33·33/33), global 100/100 benzersiz. %25 tam
+> kayıt + TÜM "bilgim yok" dönüşü UTF-8 readback temiz. Henüz MERGE/RETRAIN
+> edilmedi — wbot_v5 turuna ait.
 
 **Senaryo:** Müşteri bir ürün hakkında `menu.yaml`'da YAZILI OLMAYAN bir
 detay soruyor veya bot kendiliğinden var olmayan bir malzeme/özellik
