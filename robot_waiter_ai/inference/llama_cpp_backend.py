@@ -49,7 +49,7 @@ KURALLAR:
 - Kalori sorusu ("kaç kalori", "kalori", "kalorisi", "kcal" geçiyorsa): İlgili ürünün kalori bilgisini menüden söyle. Sayıdan sonra mutlaka "kalori" söyle, "kcal" kelimesini kullanma. TL söyleme. 1 cümle yeterli.
 - Eşleşme önerisi: Müşteri bir ürün sipariş ettiğinde "iyi gider" listesindeki 1 ürünü nazikçe önerebilirsin — "Yanında X de alır mısınız?" veya "X ile harika gider, tavsiye ederim." TL söyleme, 1 cümle. Zorunlu değil, konuşma akışında doğal geliyorsa ekle.
 - Sipariş sırasında ASLA toplam söyleme. Hesap isteği yalnızca "hesabı alabilir miyim", "hesap lütfen", "ödeyeceğim", "ödeyeyim" gibi doğrudan taleplere verilen yanıttır. Bu durumda "Toplam X TL." biçiminde net tutar ver ve afiyet/iyi günler kapanışı ekle. "Toplam" kelimesi ve sayısal değer zorunludur.
-- "Başka istemiyorum", "Bu kadar", "Yeter" veya benzeri sipariş kapanış ifadeleri: anladığını sıcak bir şekilde belirt ve mutlaka "afiyet olsun" ifadesiyle bitir. BU DURUMDA TOPLAM SÖYLEME — toplam yalnızca müşteri açıkça "hesap", "ödeyeyim", "ne kadar", "kaç TL" dediğinde söylenir.
+- Müşteri siparişi kapatmak istediğini belirttiğinde ("başka istemiyorum", "bu kadar" veya sepette ürün varken bir veda ifadesi) ÖNCE sipariş özeti + Toplam [X] TL + "Onaylıyor musunuz?" sorusuyla yanıt ver; bu turda toplamı SÖYLE. Müşteri onaylayınca (evet/tamam/olur vb.) yalnızca "Afiyet olsun!" de, toplamı TEKRAR SÖYLEME. Sepet boşken gelen saf vedada ("Güle güle") bu akış uygulanmaz, sade veda yeterli.
 - "Güle güle" yalnızca müşteri masadan kalkarken veya hesabı öderken söyle.
 - Sipariş iptali/değişikliği ("istemiyorum/iptal/yerine/çıkar" geçiyorsa): Anlayışla karşıla, hangi ürünün çıkarıldığını söyle; yeni sipariş varsa ekle. Cümleyi her turda farklı kur.
 - Vejetaryen/etsiz sorusu: Menüde [vejetaryen] etiketli ürünleri listele.
@@ -167,8 +167,15 @@ class LlamaCppBackend:
         parts.append("<|im_start|>assistant\n<think>\n\n</think>\n\n")
         return "".join(parts)
 
-    # n_ctx(4096) - sistem_prompt(~2100 tok) - max_tokens(80) ≈ 1916 tok → ~5700 karakter
-    _MAX_HIST_CHARS = 4000
+    # Görev wbot_v5 (10 Tem 2026) ölçümü: gerçek llama-cpp-python tokenizer'ıyla
+    # wrapped sistem promptu 2922 tok (eski "~2100 tok" varsayımı güncel değildi —
+    # menu.yaml + kural seti büyümüş). n_ctx(4096) - sistem(2922) - assistant
+    # primer(12) - max_tokens(65) - güvenlik tamponu(300) ≈ 797 tok geçmiş bütçesi;
+    # gerçek dataset diyaloglarıyla ölçülen oran (~1.41 karakter/wrapped-tok) ile
+    # ~1000 karakter. 4000 değeri (eski varsayımla hesaplanmış) n_ctx'i ~730 tok
+    # aşırıp ValueError fırlatabiliyordu (llama_cpp Llama.create_completion,
+    # prompt_tokens >= n_ctx kontrolü) — ampirik olarak doğrulandı.
+    _MAX_HIST_CHARS = 1000
 
     def _trim_history(self) -> None:
         """Bağlam penceresi dolmadan önce en eski user+assistant turlarını at."""

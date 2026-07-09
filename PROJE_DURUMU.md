@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 9 Temmuz 2026 | **Sürüm:** 5.19
+**Son güncelleme:** 10 Temmuz 2026 | **Sürüm:** 5.20
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -8,7 +8,7 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 
 ## Bir Sonraki Oturum — Hızlı Özet
 
-**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor. Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. **wbot_v4 eğitildi, GGUF'a dönüştürüldü, Jetson'a deploy edildi ve eval edildi (4 Temmuz 2026)** — güncel baseline (6 Temmuz 2026, E24 revizyonu sonrası): 32 senaryo 29/32 (%90, KALDI: E01, E24, E27), `--v4-targets` 38 senaryo 31/38 (%81); E24 bilinen boşluk, üretimde S12 guard karşılıyor. Görev #21-25 tamamlandı (detect_order fix, S12 guard, seed=0xFFFFFFFF, gen_karmasik incelemesi, E01/V01 post-processing) ve Jetson'a deploy edildi. Görev #25 sonucu: E01 üretimde ZATEN kapalı çıktı (kod yazılmadı), V01 fiyat enjeksiyonu eklendi. **C paketi script-tabanlı veri hazır (görev #27, 7 Temmuz 2026):** S34/V02 (20), V04 küfür (18), V06/E27 alerji kalıp (24) — 62 kayıt, 3 ayrı `wbot_c_*.jsonl`, audit 0 ihlal, MERGE EDİLMEDİ; V06 eval kriteri 3-öğe kalıbına reformüle edildi → yeni 38-senaryo baseline 32/38 (%84, WSL2; E27 bu koşuda geçti — platform notu görev #27'de). **C paketi LLM-API kalemleri DOĞRULANDI + commit'lendi (görev #28, 9 Temmuz 2026):** S41 eskalasyon (20) + anti-hallüsinasyon (100) = 120 kayıt + V07 eval tanımı; bilinmeyen oturumdan gelen commit'siz working-tree çıktısı rijit doğrulandı (audit 0, kanonik 5460, anti-hall'da bağımsız menu.yaml çapraz kontrol → 0 uydurma, alt-tip başına tam benzersizlik), V07 tek koşu 39 senaryo 32/39 (WSL2) V07 doğru yapısal nedenle KALDI. **TÜM C paketi verisi hazır: #27'nin 62 + #28'in 120 = 182 kayıt (hedef 175-185 içinde).** Kalan C paketi işi yalnız: **merge + W11 kanonik prompt revizyonu + wbot_v5 retrain**. Tüm yedekler GitHub + Drive'da.
+**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor. Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. **wbot_v4 eğitildi, GGUF'a dönüştürüldü, Jetson'a deploy edildi ve eval edildi (4 Temmuz 2026)** — güncel baseline (6 Temmuz 2026, E24 revizyonu sonrası): 32 senaryo 29/32 (%90, KALDI: E01, E24, E27), `--v4-targets` 38 senaryo 31/38 (%81); E24 bilinen boşluk, üretimde S12 guard karşılıyor. Görev #21-25 tamamlandı (detect_order fix, S12 guard, seed=0xFFFFFFFF, gen_karmasik incelemesi, E01/V01 post-processing) ve Jetson'a deploy edildi. Görev #25 sonucu: E01 üretimde ZATEN kapalı çıktı (kod yazılmadı), V01 fiyat enjeksiyonu eklendi. **C paketi script-tabanlı veri hazır (görev #27, 7 Temmuz 2026):** S34/V02 (20), V04 küfür (18), V06/E27 alerji kalıp (24) — 62 kayıt, 3 ayrı `wbot_c_*.jsonl`, audit 0 ihlal, MERGE EDİLMEDİ; V06 eval kriteri 3-öğe kalıbına reformüle edildi → yeni 38-senaryo baseline 32/38 (%84, WSL2; E27 bu koşuda geçti — platform notu görev #27'de). **C paketi LLM-API kalemleri DOĞRULANDI + commit'lendi (görev #28, 9 Temmuz 2026):** S41 eskalasyon (20) + anti-hallüsinasyon (100) = 120 kayıt + V07 eval tanımı; bilinmeyen oturumdan gelen commit'siz working-tree çıktısı rijit doğrulandı (audit 0, kanonik 5460, anti-hall'da bağımsız menu.yaml çapraz kontrol → 0 uydurma, alt-tip başına tam benzersizlik), V07 tek koşu 39 senaryo 32/39 (WSL2) V07 doğru yapısal nedenle KALDI. **TÜM C paketi verisi hazır: #27'nin 62 + #28'in 120 = 182 kayıt (hedef 175-185 içinde).** **W11 kanonik prompt revizyonu + wbot_v5 merge TAMAMLANDI (görev #29, 10 Temmuz 2026):** `_SYSTEM_TEMPLATE` kapanış kuralı S12 Karar 2'ye hizalandı (özet+toplam+onay → onay sonrası toplamsız "Afiyet olsun"); yan bulgu olarak `_MAX_HIST_CHARS=4000`'in context-overflow'a (n_ctx aşımı → ValueError çökmesi) yol açtığı ampirik olarak bulundu ve 1000'e düzeltildi (detay: "W11 Kanonik Prompt Revizyonu (wbot_v5)" bölümü). `wbot_v5_train.jsonl` (3787 kayıt) hazır, audit 0 ihlal, süit 490/490 PASS. **Kalan tek adım: Colab'da retrain** (bkz. ilgili bölüm) + sonrasında ayrı bir görevde GGUF dönüşümü/Jetson deploy. Tüm yedekler GitHub + Drive'da.
 
 **Sıradaki görevler (öncelik sırasıyla):**
 
@@ -826,6 +826,85 @@ sonuç verdiği için REDDEDİLDİ. Detay: METODOLOJI.md "Seed" notu.
 
 ---
 
+## W11 Kanonik Prompt Revizyonu (wbot_v5) — 10 Temmuz 2026
+
+**Kritik not — düzeltme training'e değil `_SYSTEM_TEMPLATE`'e uygulandı:**
+Faz A incelemesi, `train_wbot_v2.py::build_hf_dataset()`'in
+`short_prompt=True` (varsayılan, wbot_v4 eğitiminde kullanıldı) olduğunda
+dataset kayıtlarının `system` alanını tamamen yok sayıp kendi
+`_SYSTEM_SHORT` sabitiyle değiştirdiğini ortaya çıkardı. Bu yüzden W11'in
+gerçek hedefi hep `llama_cpp_backend.py::_SYSTEM_TEMPLATE` (+
+`qwen3_backend.py` eşleniği) oldu — dataset'in `system` alanı
+DEĞİŞTİRİLMEDİ (W1-W16'nın tamamı zaten aynı desenle, yalnızca bu
+template değiştirilerek düzeltildi ve eval'de doğrulandı; görev #24'ün kök
+neden analizi ile aynı emsal).
+
+**Kapanış kuralı değişikliği:** "Başka istemiyorum"/"Bu kadar" gibi kapanış
+ifadelerinde artık ÖNCE özet+toplam+"Onaylıyor musunuz?" (bu turda toplam
+SÖYLENİR), müşteri onayladıktan SONRA yalnızca "Afiyet olsun!" (toplam
+TEKRARLANMAZ) — S12 Karar 2 ile hizalandı, görev #24'ün kök nedenini
+giderir. `llama_cpp_backend.py::_SYSTEM_TEMPLATE` ve
+`qwen3_backend.py::_build_system_prompt()` aynı anda güncellendi. Gerçek
+ölçüm (menu.yaml çözülmüş, llama-cpp-python gerçek tokenizer): 7533
+karakter, **2909 token** (eski paragraf ~2850 tok idi, +59 tok).
+
+**Yan bulgu — `_MAX_HIST_CHARS` context-overflow bug'ı (bu görevde bulundu
+ve düzeltildi):** Token bütçesi doğrulaması, `_MAX_HIST_CHARS=4000`
+değerinin eski/yanlış bir varsayıma (kod yorumundaki "~2100 tok sistem
+promptu") dayandığını ortaya çıkardı. Ampirik doğrulama (gerçek dataset
+içeriği + gerçek tokenizer ile worst-case geçmiş inşa edilip tokenlendi):
+wrapped sistem promptu 2922 tok, worst-case tam prompt **4829 tok** —
+n_ctx(4096)'yı 733 tok aşıyor. `llama-cpp-python`'ın kurulu kaynak kodu
+(`llama.py`, `Llama.create_completion`: `if len(prompt_tokens) >=
+self._n_ctx: raise ValueError(...)`) bu durumda **sert bir çökmeye** yol
+açıyor — sessiz kalite düşüşü değil, `generate_reply()` çağrısının
+yakalanmamış bir `ValueError` ile patlaması. `_MAX_HIST_CHARS` **1000**'e
+çekildi; aynı ampirik testte (gerçek dataset içeriğiyle) tampon **+332
+tok** (200 tok risk eşiğinin üstünde, güvenli). Yalnızca
+`llama_cpp_backend.py` düzeltildi — `qwen3_backend.py`'deki ayrı
+`_MAX_HIST_CHARS=12000` (farklı backend, n_ctx=4096 kısıtına tabi değil)
+kapsam dışı bırakıldı.
+
+**wbot_v5_train.jsonl:** `wbot_v4_train.jsonl` (3605) + C paketi
+(`wbot_c_modifikasyon_sonrasi` 20, `wbot_c_kufur_genisletme` 18,
+`wbot_c_alerji_kalip` 24, `wbot_c_eskalasyon` 20,
+`wbot_c_anti_hallusinasyon` 100 = 182) = **3787 kayıt**,
+`scripts/rebuild_wbot_v5_train.py` (`random.Random(2028).shuffle`).
+Kayıtların `system` alanına dokunulmadı (short_prompt=True eğitiminde
+etkisiz, gereksiz risk alınmadı).
+
+**Doğrulama:** `audit_dataset.py` → 0 ihlal (3787/3787 temiz). Tam pytest
+süiti → **490/490 PASS** (WSL2, `.venv`; native Windows'ta 3 test —
+piper subprocess, shebang script Windows'ta çalıştırılamıyor — ortam
+kaynaklı, ilgisiz).
+
+**Retrain kapsam dışı** — kullanıcı Colab'da aşağıdaki komutu (birebir,
+`--full-prompt` YOK) çalıştıracak:
+
+```bash
+python robot_waiter_ai/training/train_wbot_v2.py \
+    --dataset wbot_v5_train.jsonl \
+    --output-dir <OUTPUT_DIR> \
+    --epochs 3 \
+    --run-eval
+```
+
+GGUF dönüşümü + Jetson deploy ayrı bir görevde — o görevde
+`_SYSTEM_TEMPLATE`'in (bu görevde güncellenmiş) hâli ile yeni GGUF AYNI
+ANDA senkronize edilecek. Jetson'a bu görevde `git pull` YAPILMADI (GGUF
+hâlâ wbot_v4, prompt+ağırlık uyumsuzluğunu önlemek için).
+
+**Backlog (düşük öncelik, ayrı görev):**
+- 4 farklı sistem promptu versiyonu tespit edildi (`_SYSTEM_TEMPLATE`,
+  `wbot_finetune_v1.jsonl`, `_SYSTEM_SHORT`, 1773-kr
+  `inject_system_and_merge.py` varyantı) — tekilleştirme ayrı görev.
+- `_SYSTEM_TEMPLATE` kalori/pairs_with/hitap-tekrarı/karşılama-soru-işareti
+  kuralları içeriyor ama dataset bunları örneklemiyor — ayrı görev.
+- 1231 kayıtlık kısa-varyant sistem promptu teknik borcu — training'e
+  etkisi yok (short_prompt=True), düzeltme ertelendi.
+
+---
+
 ## Kısa Vadede Yapılacaklar
 
 | # | Görev | Öncelik | Durum |
@@ -858,6 +937,7 @@ sonuç verdiği için REDDEDİLDİ. Detay: METODOLOJI.md "Seed" notu.
 | 26 | V04 runtime guard + görev #25'in iki yan bulgusu (üç dar kod düzeltmesi) | 🟡 Orta | ✅ Tamamlandı — 7 Temmuz 2026. **(1) "lütfen" sepet ikileme (yan bulgu b):** yeni saf fonksiyon `_is_polite_modification()` — tek sipariş tetikleyicisi "lütfen" + modifikasyon sinyali ("acısız", "X olsun"...) + `_ADD_MARKERS_RE` eşleşmesi yok → sepette ZATEN OLAN ürün ikilenmez; ürün sepette yoksa yine eklenir ("Bir köfte lütfen(, acısız olsun)" bozulmadı, "lütfen" `_ORDER_VERBS`'ten çıkarılmadı). 5 test → `test_order_tracker.py` (görev #21'in 15 testi korundu). **(2) "İyi günler" açılış/veda ayrımı (yan bulgu a):** yeni saf fonksiyon `_salutation_intent(text, in_convo)` — çift anlamlı kalıplar (`_AMBIGUOUS_SALUTATIONS` = `_FAREWELL_TRIGGERS ∩ _GREETING_TRIGGERS`: "iyi günler", "iyi akşamlar") taze açılışta (in_convo=False) selam, yerleşik konuşmada veda; tek anlamlı vedalar ("görüşürüz"...) her bağlamda veda. `_fast_path_reply(text, in_convo=...)` + ana döngüde oturum kapatma kararı da aynı fonksiyona bağlandı (`conversation_active` bağlamı). 10 test → yeni `test_fastpath_greeting.py`. **(3) V04 runtime guard (C paketi 4-b):** `_OFFENSIVE_TERMS` ~29 tek-anlamlı terimle genişletildi (gerzek/dangalak/beyinsiz..., kahpe/yavşak/pezevenk..., sikik/amına/yarrak..., "kes sesini"/"kapa çeneni"); substring eşleşme nedeniyle sınır kelimeler bilinçli DIŞARIDA ("hıyar", "adi"→adisyon, "sus"→susamlı, "lan"→olan, "mal"→malzeme, "hayvan", şikâyet dili) — set üstü yorumda belgeli. `_is_offensive()`/Guard 3 davranışı ve history'ye yazmama korundu. 44 test → yeni `test_offensive_guard.py`. Ana döngü sıralaması (Guard 1/2/3 → detect_order → TUR 2 → TUR 1 → fast-path → LLM) değişmedi. Tam süit 490/490 PASS (WSL2). **Yan bulgu (dokunulmadı):** mevcut "göt" terimi substring ile "götürür müsünüz"ü de yakalar — önceden var olan dar yanlış-pozitif, istenirse ayrı işte word-boundary eşleşmesiyle çözülür |
 | 27 | C paketi script-tabanlı veri (3 kalem, 62 kayıt) + V06 eval reformülasyonu | 🟡 Orta | ✅ Tamamlandı — 7 Temmuz 2026. **Veri (hepsi kanonik 5460 sistem promptu, audit 0 ihlal, ≥%10 elle örneklem; MERGE EDİLMEDİ — wbot_v5 turuna ait):** (1) S34/V02 `gen_modifikasyon_sonrasi.py` → `wbot_c_modifikasyon_sonrasi.jsonl` (20 kayıt, 7-mesajlı: sipariş+fiyatlı onay → AYRI turda modifikasyon → fiyat tekrarsız güncellenmiş onay); (2) V04 küfür `gen_kufur_genisletme.py` → `wbot_c_kufur_genisletme.jsonl` (18 kayıt, 11 tek-seferlik + 7 ısrarlı — S29 3:2 oranı korundu, hafif→ağır şiddet yelpazesi, self-check assert); (3) V06/E27 alerji `gen_alerji_kalip_genisletme.py` → `wbot_c_alerji_kalip.jsonl` (24 kayıt: 12 "var mı" formu E27 + 12 3-öğe pekiştirme, boş-kategori dürüstlüğü dahil, self-check = yeni V06 kriteri). Mevcut gen scriptleri YENİDEN ÇALIŞTIRILMADI (çıktıları v4'e merge edilmişti — mükerrer riski), genişletmeler ayrı script/dosyada. **Eval değişikliği (skoru etkiler):** V06 kriteri 3-öğe kalıbına reformüle edildi (kaynak atfı + "işaretli/işaretlenmiş" + personel/teyit + yasak-ifade katmanı — eski kriter alerjen halüsinasyonunu yakalamıyordu); V04 `_not_contains`'e "kızarmak"/"sinirlen"/"bıktım" eklendi. Reformülasyon sonrası tek koşu (WSL2): **32/38 (%84), KALDI: E01, E24, V01, V02, V04, V06** — V06 doğru yapısal nedenle düşüyor; tek delta E27→GEÇTİ (platform/bağlam farkı + içerikçe hâlâ sorunlu yanıt, dipnot: "LLM Eval Sonuçları"). Süit 490/490 PASS. Kalan C paketi: LLM-API kalemleri (S41+V07, anti-hallüsinasyon ~100) + merge + wbot_v5 retrain |
 | 28 | C paketi LLM-API kalemleri (S41 eskalasyon 20 + anti-hallüsinasyon 100 = **120 kayıt**) + V07 eval tanımı — DOĞRULANDI + commit'lendi | 🟡 Orta | ✅ Tamamlandı — 9 Temmuz 2026. Dosyalar bilinmeyen bir oturumdan working-tree'de commit'siz/untracked gelmişti (`git log --all` boş); üçüncü-taraf çıktısı gibi rijit doğrulandı, **veri üretilmedi/yeniden çalıştırılmadı**, sadece doğrula+commit. **S41 (`wbot_c_eskalasyon.jsonl`, 20, çok-turlu netleştirme→eskalasyon):** audit 0; sistem promptu 20/20 kanonik 5460; eskalasyon turu 20/20 "personel"+çağırma içerir, yeni netleştirme sorusu YOK (V07 birebir re-elicit listesine göre 0 ihlal), ton nötr; **benzersiz eskalasyon 20/20** (eşik ≥12), benzersiz netleştirme 16/20 (eşik ≥10), i-mod-N sabit eşleme yok; user girdileri 3 farklı anlaşılamama kök nedenine ayrık (STT-gürültü / alakasız kelime / muğlak konuşma); %25 tam kayıt UTF-8 readback temiz. **Anti-hallüsinasyon (`wbot_c_anti_hallusinasyon.jsonl`, 100, tek-turlu):** audit 0; sistem promptu 100/100 kanonik 5460; **hiçbir yanıtta rakam YOK** (uydurma nicel detay yasağı airtight); **bağımsız menu.yaml mekanik çapraz kontrol** (generator FAB_VOCAB'ı kopyalanmadan, menu.yaml doğrudan parse) → honest=80/grounded=20, izinli-metin-dışı malzeme flag'i 8 ama **hepsi honest deferral bağlamında, 0 grounded uydurma** (fındık/ceviz tuzağı doğru defer); alt-tip S1/S2/S3 = 34/33/33, **alt-tip başına benzersizlik 34/34·33/33·33/33**, global 100/100 benzersiz soru+yanıt, ürün dağılımı 7-14 dengeli; %25 tam kayıt + TÜM 8 "bilgim yok" dönüşü UTF-8 readback temiz. **V07 eval tanımı** (`eval_gguf.py`, working-tree diff): 3 PASS öğesi (personel+çağırma / yeni netleştirme yok / nötr ton) + çok-turlu seed (E24/E31 deseni) dokümandaki taslakla örtüşüyor. **Tek koşu (WSL2, --v4-targets): 39 senaryo 32/39 (%82), KALDI: E01, E24, V01, V02, V04, V06, V07** — #27 WSL2 baseline'ı (32/38) + V07; V07 doğru YAPISAL nedenle düşüyor (ham wbot_v4'te S41 verisi yok → model eskale etmek yerine 3. kez netleştiriyor: "Anlayamadım, hangi ürünü arzu edersiniz?"), gerçek PASS wbot_v5 sonrası. Süit 490/490 PASS. Kalan C paketi: **merge + W11 kanonik prompt revizyonu + wbot_v5 retrain** |
+| 29 | W11 kanonik prompt revizyonu (`_SYSTEM_TEMPLATE` kapanış kuralı) + wbot_v5 merge (C paketi 182 kayıt entegrasyonu) | 🔴 Kritik | ✅ Tamamlandı — 10 Temmuz 2026, detay yukarıda "W11 Kanonik Prompt Revizyonu (wbot_v5)" bölümünde. Kapanış kuralı `llama_cpp_backend.py::_SYSTEM_TEMPLATE` + `qwen3_backend.py`'de S12 Karar 2'ye hizalandı (training'e değil — `short_prompt=True` dataset `system` alanını yok sayıyor, W1-W16 emsali). **Yan bulgu:** `_MAX_HIST_CHARS=4000` context-overflow'a yol açıyordu (worst-case 4829 tok, n_ctx 4096'yı 733 tok aşıyor → `llama-cpp-python` `ValueError` fırlatıyor); ampirik doğrulamayla 1000'e düzeltildi (tampon +332 tok). `wbot_v5_train.jsonl`: 3787 kayıt (`scripts/rebuild_wbot_v5_train.py`, seed=2028), audit 0 ihlal, süit 490/490 PASS (WSL2). Retrain kapsam dışı — Colab'da ayrı çalıştırılacak |
 
 ---
 
