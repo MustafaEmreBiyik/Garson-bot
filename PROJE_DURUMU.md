@@ -902,6 +902,18 @@ hâlâ wbot_v4, prompt+ağırlık uyumsuzluğunu önlemek için).
   kuralları içeriyor ama dataset bunları örneklemiyor — ayrı görev.
 - 1231 kayıtlık kısa-varyant sistem promptu teknik borcu — training'e
   etkisi yok (short_prompt=True), düzeltme ertelendi.
+- **`_trim_history()` eval kapsamı dışı (10 Temmuz 2026 ölçümü):**
+  `eval_gguf.py`'deki tüm çok-turlu senaryolar kasıtlı kısa (en uzunu E33,
+  294 kr/7 mesaj) — hiçbiri `_MAX_HIST_CHARS=1000` sınırını zorlamıyor,
+  trim hiç egzersiz edilmiyor. Gerçek restoran diyaloglarında (10+ tur,
+  ör. uzun masa siparişi + değişiklik + iptal + tekrar sipariş + hesap) bu
+  sınıra ulaşılıp ulaşılmayacağı ve trim tetiklendiğinde hangi bilginin
+  (özet turu, alerji notu vb.) kaybolduğu test edilmiyor. Öneri:
+  `eval_gguf.py`'ye veya ayrı bir `test_trim_history.py`'ye, kasıtlı olarak
+  1000 karakteri aşan sentetik bir uzun-konuşma senaryosu eklenmeli — hem
+  trim'in doğru çalıştığını (crash yok) hem de neyin kesildiğini (ideal
+  olarak en eski, en az kritik tur) doğrulamak için. Gürültülü-ortam saha
+  testinden (görev #8) bağımsız, ayrı bir öncelik.
 
 ---
 
