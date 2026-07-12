@@ -225,9 +225,11 @@ _PIPER_BINARY_CANDIDATES: list[str] = [
 ]
 
 _PIPER_MODEL_CANDIDATES: list[Path] = [
-    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "tr_TR-fahrettin-medium.onnx",
-    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "tr_TR-fahrettin-high.onnx",
-    _PROJECT_ROOT / "models" / "tr_TR-fahrettin-medium.onnx",
+    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "wbot_tr.onnx",  # özel W-BOT sesi (varsa öncelikli)
+    # Stok fallback: dfki-medium (MIT, rhasspy/piper-voices'ta kalan tek tr_TR sesi).
+    # Eski fahrettin-medium/high HuggingFace'ten kaldırıldığı için artık indirilemiyor.
+    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "tr_TR-dfki-medium.onnx",
+    _PROJECT_ROOT / "models" / "tr_TR-dfki-medium.onnx",
 ]
 
 
@@ -276,7 +278,7 @@ class PiperTTS:
         if not resolved_model:
             raise RuntimeError(
                 "Piper Türkçe modeli bulunamadı. "
-                "robot_waiter_ai/models/tr_TR-fahrettin-medium.onnx bekleniyor."
+                "robot_waiter_ai/models/tr_TR-dfki-medium.onnx bekleniyor."
             )
         self._binary = resolved_binary
         self._model = resolved_model
@@ -292,6 +294,13 @@ class PiperTTS:
         fd, tmp = tempfile.mkstemp(suffix=".wav")
         os.close(fd)
         try:
+            # Üretim binary'si: <project>/piper/piper.exe = arşivlenmiş rhasspy/piper
+            # (MIT, 2023.11.14-2, piper-phonemize). Türkçe'yi doğru fonemliyor ve
+            # "--quiet"i destekler (espeak-ng-data'yı exe-göreli bulur, cwd bağımsız).
+            # DİKKAT: pip "piper-tts" 1.4.2 (GPL, OHF-voice) KULLANILMAMALI — Türkçe
+            # fonemizasyonu bozuk (İngilizce'ye düşüp garble üretiyor) ve "--quiet"i
+            # tanımayıp çıktıyı ~0.3s'ye kesiyor. Bu yüzden _PIPER_BINARY_CANDIDATES
+            # <project>/piper/ ikilisini PATH'teki "piper"dan ÖNCE dener.
             result = subprocess.run(
                 [self._binary, "--model", str(self._model),
                  "--output_file", tmp, "--quiet"],
