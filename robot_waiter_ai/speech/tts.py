@@ -38,6 +38,8 @@ import tempfile
 from pathlib import Path
 from typing import AsyncIterator
 
+from robot_waiter_ai.speech.pronunciation import apply_pronunciation
+
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
@@ -291,6 +293,11 @@ class PiperTTS:
         return stripped
 
     def _run_piper_blocking(self, text: str) -> bytes:
+        # Yabancı-yazımlı kelimeleri (cheesecake, cappuccino, latte…) sentezden
+        # HEMEN ÖNCE Türkçe fonetik yazıma çevir — espeak-tr bunları aksi hâlde
+        # Türkçe harf kurallarıyla yanlış okur. Yalnız TTS girdisi etkilenir;
+        # ekrana/loglara/OrderTracker'a giden metin değişmez.
+        text = apply_pronunciation(text)
         fd, tmp = tempfile.mkstemp(suffix=".wav")
         os.close(fd)
         try:
