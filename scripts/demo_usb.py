@@ -301,6 +301,32 @@ def _is_description_question(user_text: str, lookup: list) -> bool:
     return False
 
 
+def _apply_e19_word_pattern_guard(user_text: str, model_reply: str, lookup: list) -> str:
+    """E19 kelime-kalıbı düzeltmesi (METİN — log/history/eval için).
+
+    Ürün-açıklaması sorularında model kuralı ("Getireyim mi?"/"İster
+    misiniz?" ile bit) bazen kendi soru kalıbıyla (ör. "...edilir mi?")
+    çiğniyor — "?" ile bittiği için genel "?" kontrolü bunu yakalamaz.
+    Prompt güçlendirmesi tek başına yetersiz kaldı (WSL2 doğrulaması, görev
+    #29 sonrası); model RNG durumu çağrı pozisyonuna bağlı olduğundan aynı
+    girdi bazen doğru bazen yanlış kalıp üretebiliyor (bkz. PROJE_DURUMU.md
+    "determinizm kapsamı" notu) — bu yüzden kod katmanında sabitlenir.
+
+    Ses ZATEN _speak_streaming içinde cümle cümle çalındığından burada
+    DÜZELTİLEMEZ — yalnızca reply metni (LLM history + log + eval)
+    düzeltilir; model hâlâ anlamlı bir soru sorduğundan (yanlış kelime,
+    yanlış anlam değil) TTS'i tekrar tetiklemek gecikmeye değmez.
+    """
+    if not _is_description_question(user_text, lookup):
+        return model_reply
+    # Türkçe İ-fix: "İ".lower() → "i̇" (i + U+0307 birleştirme noktası) —
+    # temizlenmezse "İster misiniz?" içindeki "İster" "ister"le eşleşmez.
+    _reply_norm = model_reply.lower().replace('̇', '')
+    if any(k in _reply_norm for k in ("getireyim", "ister misiniz")):
+        return model_reply
+    return re.sub(r'\s*[^.!?]*\?\s*$', ' Getireyim mi?', model_reply.rstrip()).strip()
+
+
 # --- V01: modifikasyon onayında TL fiyat enjeksiyonu (S33, C paketi) ---
 # Sipariş + modifikasyon aynı cümlede ("Bir şalgam alayım, acılı olsun.")
 # geldiğinde onay yanıtı ürünün TL fiyatını içermeli; ham model bunu bazen
@@ -1323,6 +1349,11 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 # E19 "?" kontrolü modelin KENDİ yanıt sonuna bakmalı — V01
                 # fiyat eki sonu kaydırıp gereksiz ikinci soru eklettirmesin
                 _model_reply = reply
+                # E19 kelime-kalıbı guard'ı (bkz. _apply_e19_word_pattern_guard) —
+                # V01 fiyat enjeksiyonundan ÖNCE: ikisi de reply sonunu
+                # değiştirir, sıralama şart (E19 önce, sonra fiyat eklenir)
+                reply = _apply_e19_word_pattern_guard(
+                    user_text, _model_reply, order_tracker._lookup)
                 # V01: modifikasyonlu siparişte eksik TL fiyatını enjekte et
                 _price_add = _modification_price_addition(
                     user_text, reply, _added_this_turn)
@@ -1331,7 +1362,7 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                     reply = reply.rstrip() + " " + _price_add
                 # Post-processing: "?" ile bitmeyen yanıtlara soru ekle
                 # (veda, fallback ve "bilgim yok" yanıtları hariç)
-                if not _model_reply.rstrip().endswith("?"):
+                if reply == _model_reply and not _model_reply.rstrip().endswith("?"):
                     _rl = _model_reply.lower()
                     _is_farewell_reply = any(fw in _rl for fw in (
                         "afiyet", "güle güle", "iyi günler", "görüşürüz",
