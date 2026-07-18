@@ -1287,6 +1287,7 @@ Fiziksel robot (W-BOT) entegrasyonu
 |---|-------|----------|
 | 6 | Piper GPU (onnxruntime-gpu) | JetPack R36 aarch64 için pip'te yok — ertelenmiş |
 | 7 | systemd servis (otomatik başlatma) | Stabil olduktan sonra |
+| 8 | Barge-in (müşteri robot konuşurken araya girebilsin) | 18 Temmuz 2026 fizibilite incelemesi: teknik olarak mümkün ama riskli — mevcut kodda **echo'nun zaten gerçek bir sorun olduğuna dair kanıt var** (wake-word threshold 0.85→0.90'a çıkarılmış "TTS echo false positive görüldü" notuyla; TTS bitiminde 2sn'lik ek "echo hâlâ sürebilir" bekleme penceresi var). Mikrofon+hoparlör ayrı USB cihazlar (elektriksel değil akustik echo — mesafe/yönle kısmen azaltılabilir) ama mevcut basit VAD (webrtcvad + enerji eşiği) robotun kendi sesini müşteri konuşması sanabiliyor; gerçek AEC (speexdsp/webrtc-audio-processing) olmadan barge-in'in kendi kendini yanlışlıkla kesme riski yüksek. Kullanıcı kararıyla ertelendi — öncelik gürültülü ortam testi + wbot_v5 sonrası değerlendirme. Tekrar gündeme gelirse: önce ucuz bir enerji-eşiği prototipiyle gerçek Jetson donanımında saha testi yapılmalı, AEC'ye doğrudan atlanmamalı |
 
 ---
 
