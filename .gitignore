@@ -9,7 +9,13 @@ robot_waiter_ai/training/artifacts/
 piper/
 robot_waiter_ai/models/tr_TR-*.onnx
 robot_waiter_ai/models/tr_TR-*.onnx.json
+robot_waiter_ai/models/wbot_tr.onnx
+robot_waiter_ai/models/wbot_tr.onnx.json
 *.safetensors
+*.gguf
+
+# Oturum logları (görev #12) — müşteri ses/metin kaydı, git'e ASLA girmemeli
+data/sessions/
 
 # Wake word eğitim çıktıları (üretilebilir, büyük)
 scripts/wakeword_training_output/

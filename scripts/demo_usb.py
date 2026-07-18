@@ -1004,6 +1004,9 @@ async def run_demo(adapter_dir: str | None = None) -> None:
 
     from robot_waiter_ai.speech.stt import SpeechToText
     from robot_waiter_ai.speech.tts import PiperTTS
+    from robot_waiter_ai.session.session_logger import SessionLogger, cleanup_old_sessions
+
+    cleanup_old_sessions()  # eski oturum klasörlerini (varsayılan 30 gün) temizle
 
     # TTS
     try:
@@ -1134,6 +1137,7 @@ async def run_demo(adapter_dir: str | None = None) -> None:
     conversation_active = False  # Yanıttan sonra wake word'süz dinleme penceresi açık mı?
     pending_reset      = False  # Farewell tespit edildi mi (10s sessizlik sonrası uygulanır)
     awaiting_confirmation = False  # S12 TUR 1 özeti söylendi, onay bekleniyor
+    session = SessionLogger()  # oturum loglama — hukuki koruma + saha verisi (görev #12)
     while True:
         # Tetikleyici: conversation hold | wake word | ENTER
         if conversation_active:
@@ -1149,6 +1153,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                     order_tracker.reset()
                     new_customer = True
                     pending_reset = False
+                    await session.end()
+                    session = SessionLogger()
                     print("--- Yeni müşteri oturumu hazır ---", flush=True)
                 if ww_model:
                     ww_task = asyncio.create_task(_detect_wakeword(ww_model, tts_active, input_device))
@@ -1222,6 +1228,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 await _speak(tts, _guard1_msg, tts_active)
             except Exception as _g1e:
                 logger.warning("Guard1 TTS hatası: %s", _g1e)
+            await session.log_turn(user_text, _guard1_msg, wav_bytes,
+                                   order_tracker.items, order_tracker.total)
             conversation_active = True
             continue
 
@@ -1233,6 +1241,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 await _speak(tts, _guard2_msg, tts_active)
             except Exception as _g2e:
                 logger.warning("Guard2 TTS hatası: %s", _g2e)
+            await session.log_turn(user_text, _guard2_msg, wav_bytes,
+                                   order_tracker.items, order_tracker.total)
             conversation_active = True
             continue
 
@@ -1244,6 +1254,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 await _speak(tts, _guard3_msg, tts_active)
             except Exception as _g3e:
                 logger.warning("Guard3 TTS hatası: %s", _g3e)
+            await session.log_turn(user_text, _guard3_msg, wav_bytes,
+                                   order_tracker.items, order_tracker.total)
             conversation_active = True
             continue
 
@@ -1271,6 +1283,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                     await _speak(tts, _S12_CLOSING_REPLY, tts_active)
                 except Exception as _s12e:
                     logger.warning("S12 TUR2 TTS hatası: %s", _s12e)
+                await session.log_turn(user_text, _S12_CLOSING_REPLY, wav_bytes,
+                                       order_tracker.items, order_tracker.total)
                 order_tracker.reset()
                 pending_reset = True        # sessizlikte LLM history + oturum sıfırlanır
                 conversation_active = True  # müşteri hâlâ konuşabilir (fikir değişikliği)
@@ -1286,6 +1300,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 await _speak(tts, _s12_reply, tts_active)
             except Exception as _s12e:
                 logger.warning("S12 TUR1 TTS hatası: %s", _s12e)
+            await session.log_turn(user_text, _s12_reply, wav_bytes,
+                                   order_tracker.items, order_tracker.total)
             awaiting_confirmation = True
             conversation_active = True
             continue
@@ -1298,6 +1314,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
                 await _speak(tts, _fp, tts_active)
             except Exception as _fpe:
                 logger.warning("Fast-path TTS hatası: %s", _fpe)
+            await session.log_turn(user_text, _fp, wav_bytes,
+                                   order_tracker.items, order_tracker.total)
             # Veda → oturumu kapat; selam/onay → 10s pencere açık kalsın.
             # "İyi günler" açılışta selam sayılır, oturum KAPANMAZ (görev #25 a)
             _is_farewell_fp = _salutation_intent(user_text, conversation_active) == "farewell"
@@ -1387,6 +1405,8 @@ async def run_demo(adapter_dir: str | None = None) -> None:
 
         print(f"W-BOT:   {reply}")
         print(f"  ⏱  LLM+TTS: {_llm_ms:.0f}ms  |  Toplam: {_stt_ms + _llm_ms:.0f}ms")
+        await session.log_turn(user_text, reply, wav_bytes,
+                               order_tracker.items, order_tracker.total)
 
         # Oturum sonu tespiti — müşteri veya bot veda ediyorsa 10s sonra sıfırla
         farewell_phrases = ["güle güle", "görüşürüz", "hoşça kal", "iyi günler", "tekrar bekleriz"]
