@@ -1,5 +1,5 @@
 # Garson-bot — Proje Durumu ve Hedeflenen Hal
-**Son güncelleme:** 10 Temmuz 2026 | **Sürüm:** 5.21
+**Son güncelleme:** 13 Temmuz 2026 | **Sürüm:** 5.22
 
 Yeni bir sohbet başladığında bu dosyayı okuyarak projeyi baştan anlat.
 Kod tabanını tekrar incelemene gerek yok — her şey burada.
@@ -8,7 +8,7 @@ Kod tabanını tekrar incelemene gerek yok — her şey burada.
 
 ## Bir Sonraki Oturum — Hızlı Özet
 
-**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor. Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.65. **wbot_v4 eğitildi, GGUF'a dönüştürüldü, Jetson'a deploy edildi ve eval edildi (4 Temmuz 2026)** — güncel baseline (6 Temmuz 2026, E24 revizyonu sonrası): 32 senaryo 29/32 (%90, KALDI: E01, E24, E27), `--v4-targets` 38 senaryo 31/38 (%81); E24 bilinen boşluk, üretimde S12 guard karşılıyor. Görev #21-25 tamamlandı (detect_order fix, S12 guard, seed=0xFFFFFFFF, gen_karmasik incelemesi, E01/V01 post-processing) ve Jetson'a deploy edildi. Görev #25 sonucu: E01 üretimde ZATEN kapalı çıktı (kod yazılmadı), V01 fiyat enjeksiyonu eklendi. **C paketi script-tabanlı veri hazır (görev #27, 7 Temmuz 2026):** S34/V02 (20), V04 küfür (18), V06/E27 alerji kalıp (24) — 62 kayıt, 3 ayrı `wbot_c_*.jsonl`, audit 0 ihlal, MERGE EDİLMEDİ; V06 eval kriteri 3-öğe kalıbına reformüle edildi → yeni 38-senaryo baseline 32/38 (%84, WSL2; E27 bu koşuda geçti — platform notu görev #27'de). **C paketi LLM-API kalemleri DOĞRULANDI + commit'lendi (görev #28, 9 Temmuz 2026):** S41 eskalasyon (20) + anti-hallüsinasyon (100) = 120 kayıt + V07 eval tanımı; bilinmeyen oturumdan gelen commit'siz working-tree çıktısı rijit doğrulandı (audit 0, kanonik 5460, anti-hall'da bağımsız menu.yaml çapraz kontrol → 0 uydurma, alt-tip başına tam benzersizlik), V07 tek koşu 39 senaryo 32/39 (WSL2) V07 doğru yapısal nedenle KALDI. **TÜM C paketi verisi hazır: #27'nin 62 + #28'in 120 = 182 kayıt (hedef 175-185 içinde).** **W11 kanonik prompt revizyonu + wbot_v5 merge TAMAMLANDI (görev #29, 10 Temmuz 2026):** `_SYSTEM_TEMPLATE` kapanış kuralı S12 Karar 2'ye hizalandı (özet+toplam+onay → onay sonrası toplamsız "Afiyet olsun"); yan bulgu olarak `_MAX_HIST_CHARS=4000`'in context-overflow'a (n_ctx aşımı → ValueError çökmesi) yol açtığı ampirik olarak bulundu ve 1000'e düzeltildi (detay: "W11 Kanonik Prompt Revizyonu (wbot_v5)" bölümü). `wbot_v5_train.jsonl` (3787 kayıt) hazır, audit 0 ihlal, süit 490/490 PASS. **Jetson senkronize edildi (görev #30, 10 Temmuz 2026):** `18c429a`'ya
+**Neredeyiz:** Jetson'da uçtan uca demo çalışıyor. Whisper medium aktif (1.7s). Geliştirme ortamı Windows 11 WSL2'ye taşındı (Ubuntu dual-boot kaldırıldı). WSL2 kurulumu tamamlandı — PyTorch CUDA, faster-whisper, llama-cpp-python (GPU), Piper TTS model (24 Haziran 2026). Jetson SSH: 192.168.1.67 (⚠️ DHCP ile değişebilir — her Jetson işi öncesi teyit et; 12 Temmuz 2026'da .65 dev makinenin kendi IP'sine dönüşmüştü). **wbot_v4 eğitildi, GGUF'a dönüştürüldü, Jetson'a deploy edildi ve eval edildi (4 Temmuz 2026)** — güncel baseline (6 Temmuz 2026, E24 revizyonu sonrası): 32 senaryo 29/32 (%90, KALDI: E01, E24, E27), `--v4-targets` 38 senaryo 31/38 (%81); E24 bilinen boşluk, üretimde S12 guard karşılıyor. Görev #21-25 tamamlandı (detect_order fix, S12 guard, seed=0xFFFFFFFF, gen_karmasik incelemesi, E01/V01 post-processing) ve Jetson'a deploy edildi. Görev #25 sonucu: E01 üretimde ZATEN kapalı çıktı (kod yazılmadı), V01 fiyat enjeksiyonu eklendi. **C paketi script-tabanlı veri hazır (görev #27, 7 Temmuz 2026):** S34/V02 (20), V04 küfür (18), V06/E27 alerji kalıp (24) — 62 kayıt, 3 ayrı `wbot_c_*.jsonl`, audit 0 ihlal, MERGE EDİLMEDİ; V06 eval kriteri 3-öğe kalıbına reformüle edildi → yeni 38-senaryo baseline 32/38 (%84, WSL2; E27 bu koşuda geçti — platform notu görev #27'de). **C paketi LLM-API kalemleri DOĞRULANDI + commit'lendi (görev #28, 9 Temmuz 2026):** S41 eskalasyon (20) + anti-hallüsinasyon (100) = 120 kayıt + V07 eval tanımı; bilinmeyen oturumdan gelen commit'siz working-tree çıktısı rijit doğrulandı (audit 0, kanonik 5460, anti-hall'da bağımsız menu.yaml çapraz kontrol → 0 uydurma, alt-tip başına tam benzersizlik), V07 tek koşu 39 senaryo 32/39 (WSL2) V07 doğru yapısal nedenle KALDI. **TÜM C paketi verisi hazır: #27'nin 62 + #28'in 120 = 182 kayıt (hedef 175-185 içinde).** **W11 kanonik prompt revizyonu + wbot_v5 merge TAMAMLANDI (görev #29, 10 Temmuz 2026):** `_SYSTEM_TEMPLATE` kapanış kuralı S12 Karar 2'ye hizalandı (özet+toplam+onay → onay sonrası toplamsız "Afiyet olsun"); yan bulgu olarak `_MAX_HIST_CHARS=4000`'in context-overflow'a (n_ctx aşımı → ValueError çökmesi) yol açtığı ampirik olarak bulundu ve 1000'e düzeltildi (detay: "W11 Kanonik Prompt Revizyonu (wbot_v5)" bölümü). `wbot_v5_train.jsonl` (3787 kayıt) hazır, audit 0 ihlal, süit 490/490 PASS. **Jetson senkronize edildi (görev #30, 10 Temmuz 2026):** `18c429a`'ya
 pull edildi, içerik md5/git-blob ile doğrulandı, GGUF'a dokunulmadı. **Erken
 doğrulama (retrain-öncesi, mevcut wbot_v4 GGUF + YENİ prompt):** 32 senaryo
 29/32, 39 senaryo 32/39 — E01+E27+V04 iyileşti ama **E19 ve E16 önceden
@@ -16,6 +16,8 @@ GEÇEN'den KALDI'ya döndü** (E19 gerçek içerik kayması — W11 paragrafın�
 promptun başka bir bölümünü dolaylı etkilemesi, retrain'le kendiliğinden
 düzelmeyecek, ayrı görev gerekiyor; E16 muhtemelen check-tasarım yanlış
 alarmı). Detay: "Jetson Senkron + Erken Doğrulama" bölümü. `wbot_v5_colab_training.ipynb` hazır. **Kalan tek adım: Colab'da retrain** (bkz. ilgili bölüm) + sonrasında ayrı bir görevde GGUF dönüşümü/Jetson deploy. Tüm yedekler GitHub + Drive'da.
+
+**TTS hattı — Piper garble kök-neden bulundu + düzeltildi + telaffuz sözlüğü eklendi (11-13 Temmuz 2026):** `wbot_tr.onnx` (W-BOT özel sesi, Colab fine-tune, dfki-medium tabanından ~1120 epoch, deployed=epoch 6799) sesi bazı cümlelerde bulanık geliyordu; kök neden araştırmasında **iki ayrı sorun** bulundu ve ikisi de düzeltildi: (1) pip `piper-tts` 1.4.2 (GPL, OHF-voice fork) Türkçe fonemizasyonu bozuk — temiz UTF-8 girdide bile İngilizce'ye düşüp garble üretiyordu (model bağımsız — hem custom hem stok aynı çöp fonemi veriyordu); **çözüm: arşivlenmiş MIT rhasspy/piper binary'sine geçildi** (`<project>/piper/`, commit `18d1f25`), stok fallback fahrettin (HF'den kaldırıldı) → dfki-medium'a çevrildi, `scripts/setup_piper.sh` ile tekrar-üretilebilir kurulum eklendi; dev+Jetson'da doğrulandı. (2) espeak-tr, İngilizce-yazımlı kelimeleri (cheesecake, cappuccino, latte...) Türkçe harf kurallarıyla yanlış okuyor — **çözüm: `robot_waiter_ai/speech/pronunciation.py`** (30 girişlik telaffuz haritası, sentezden hemen önce uygulanır), commit `338ef7a`, 515 test yeşil, dev+Jetson'da doğrulandı. **Açık kalan iş — overfit hipotezi testi:** wbot_tr ~1120 epoch fine-tune aldı (320 cümle/13 dk için fazla olabilir), görülmemiş cümlelerdeki bulanıklık aşırı-öğrenme imzasına uyuyor; checkpoint kör A/B altyapısı hazır (`build_checkpoint_ab.py`, doğrulandı) ama **erken checkpoint'lerin (5799/6099/6399) ONNX export'u kullanıcı aksiyonu bekliyor** (Colab'da hazır export hücresiyle, private Drive checkpoint'leri yerelde indirilemediği için). Detay: aşağıdaki "TTS — Piper Garble Fix + Telaffuz Sözlüğü + Checkpoint Overfit Testi" bölümü.
 
 **Sıradaki görevler (öncelik sırasıyla):**
 
@@ -125,7 +127,8 @@ Garson-bot/
 │   ├── gen_oneri.py              ✅ wbot_v3 dataset üretim — öneri+TL yasağı (105 kayıt, kanonik sistem promptu + menü adı fix — 3 Temmuz 2026)
 │   ├── compare_models.py         ✅ Model karşılaştırma scripti (4B vs 1.7B)
 │   ├── train_wakeword.py         ✅ openWakeWord eğitim (MMS-TTS + gürültü)
-│   └── test_wakeword_usb.py      ✅ USB mikrofon ile gerçek zamanlı wake word testi
+│   ├── test_wakeword_usb.py      ✅ USB mikrofon ile gerçek zamanlı wake word testi
+│   └── setup_piper.sh            ✅ Piper runtime kurulumu (MIT binary + dfki-medium, arch algılar — 11 Temmuz 2026)
 └── robot_waiter_ai/
     ├── inference/
     │   ├── qwen3_backend.py      ✅ PC için — Qwen3-4B transformers 4-bit NF4
@@ -134,13 +137,15 @@ Garson-bot/
     ├── speech/
     │   ├── stt.py                ✅ faster-whisper STT wrapper (model: small)
     │   ├── tts.py                ✅ edge-tts + PiperTTS (Piper birincil, edge-tts fallback)
+    │   ├── pronunciation.py      ✅ Yabancı-yazımlı kelime → Türkçe telaffuz haritası (11 Temmuz 2026)
     │   └── mic.py                ✅ ReSpeaker Mic Array wrapper
     ├── data/
-    │   ├── menu.yaml             ✅ Menü tanımları (name, category, price, description, aliases)
+    │   ├── menu.yaml             ✅ Menü tanımları (name, category, price, description, aliases) — hepsi Türkçe yazımlı
     │   └── restaurant_info.yaml
     ├── models/
-    │   ├── hey_garson.onnx       ✅ Wake word modeli (openWakeWord, 789 KB)
-    │   └── tr_TR-fahrettin-medium.onnx  ✅ Piper TTS Türkçe sesi
+    │   ├── hey_garson.onnx           ✅ Wake word modeli (openWakeWord, 789 KB)
+    │   ├── wbot_tr.onnx               ✅ Özel W-BOT Piper sesi (gitignore'lu, ~60.6 MB — Colab fine-tune, dfki tabanı)
+    │   └── tr_TR-dfki-medium.onnx     ✅ Stok Piper fallback (MIT, gitignore'lu — fahrettin HF'den kaldırıldı)
     ├── training/
     │   ├── train_wbot_v2.py      ✅ QLoRA fine-tune scripti (wbot_v3 destekli, varsayılan dataset: wbot_v3_train.jsonl)
     │   ├── requirements_train.txt ✅ Colab bağımlılıkları (transformers>=4.43.0 zorunlu — Qwen3 chat template)
@@ -288,8 +293,12 @@ webrtcvad yoksa enerji tabanlı fallback devreye girer.
 
 | Motor | Durum |
 |-------|-------|
-| Piper (tr_TR-fahrettin-medium) | ✅ Birincil, offline |
+| Piper — model zinciri: `wbot_tr.onnx` (özel W-BOT sesi, öncelikli) → `tr_TR-dfki-medium.onnx` (stok fallback, MIT) | ✅ Birincil, offline |
 | edge-tts | Fallback (internet gerekli) |
+
+**Piper binary: MIT rhasspy/piper (arşivlenmiş, `2023.11.14-2`), `<project>/piper/` altında** — pip `piper-tts` 1.4.2 (GPL, OHF-voice fork) DEĞİL; 1.4.2'nin Türkçe fonemizasyonu bozuk (11 Temmuz 2026'da bulundu, detay aşağıda). Kurulum: `scripts/setup_piper.sh` (arch algılar, binary+dfki indirir, idempotent).
+Eski `tr_TR-fahrettin-medium` HuggingFace'ten kaldırıldığı için artık indirilemiyor — fallback dfki-medium'a çevrildi.
+Telaffuz sözlüğü: `robot_waiter_ai/speech/pronunciation.py` — İngilizce-yazımlı kelimeleri (cheesecake, cappuccino, latte...) sentezden önce Türkçe fonetik yazıma çevirir.
 
 Piper benchmark (Jetson, CPU): 494-779ms
 Playback: `aplay` subprocess (ALSA_OUTPUT_DEVICE ile yapılandırılabilir)
@@ -435,7 +444,7 @@ ALSA_OUTPUT_DEVICE = None   # None=sistem default, "plughw:2,0"=Jetson APE
 - faster-whisper + Whisper small modeli (~464MB)
 - sounddevice, portaudio
 - onnxruntime (GPU uyarısıyla çalışıyor)
-- Piper TTS (piper_linux_aarch64)
+- Piper TTS — MIT rhasspy/piper binary (`<project>/piper/`, aarch64, `scripts/setup_piper.sh` ile kurulu), wbot_tr.onnx + tr_TR-dfki-medium.onnx
 - llama-cpp-python 0.3.23 (CUDA SM87 ile derlendi)
 - Qwen3-4B-Q4_K_M.gguf (/home/emk/llama.cpp/)
 - webrtcvad ✅ (VAD için, aarch64 uyumlu)
@@ -1010,6 +1019,114 @@ commit edildi, henüz Colab'da çalıştırılmadı.
 
 ---
 
+## TTS — Piper Garble Fix + Telaffuz Sözlüğü + Checkpoint Overfit Testi (11-13 Temmuz 2026)
+
+**Bağlam:** Kullanıcı özel W-BOT sesinin (`wbot_tr.onnx`) bazı cümlelerde
+"bulanık/net anlaşılmıyor" geldiğini bildirdi. Araştırma **iki bağımsız
+sorun** ortaya çıkardı — ikisi de düzeltildi — ve üçüncü bir hipotez
+(overfit) test altyapısı hazırlandı ama kullanıcı aksiyonu bekliyor.
+
+### 1) Piper garble kök-nedeni — pip piper-tts 1.4.2 (GPL) fonemizasyon bozukluğu
+
+Faz A envanteri (salt-okunur, `WBOT_PIPER_SES_ENVANTERI_FAZA.md`) sesin
+eğitim hattının uçtan uca tamamlandığını doğruladıktan sonra, kalite A/B'si
+üretilirken **her iki ses de** (custom + stok) garble çıktı. `--debug`
+fonem logu kök nedeni netleştirdi: `.venv-llm`'deki pip paketi
+`piper-tts` **1.4.2** (proje: OHF-voice/piper1-gpl, **GPL-3.0**) Türkçe
+espeak fonemizasyonunu bozuyor — temiz UTF-8 girdide bile İngilizce'ye
+düşüyor (örnek: "Künefede fındık ve süt var." → `kwˈɔːtə/plˈʌs/mˈaɪnəs`
+gibi çöp fonem, ~120 fonem × normalin 4 katı süre). **Model/eğitim sorunu
+DEĞİL** — hem `wbot_tr` hem `dfki-medium` birebir aynı çöp fonemi üretti.
+
+**Fix (commit `18d1f25`, 12 Temmuz 2026):** Arşivlenmiş **MIT rhasspy/piper**
+binary'si (`2023.11.14-2`, piper-phonemize tabanlı) `<project>/piper/`
+altına kalıcı kuruldu. `tts.py`'nin `_PIPER_BINARY_CANDIDATES`'ı zaten bu
+yolu PATH'teki "piper"dan (1.4.2) önce deniyordu — kod değişikliği
+gerekmedi, yalnızca binary'yi kurmak yetti. **Karar gerekçesi (Option B —
+binary, Option A — pip pinleme yerine):** (1) **Lisans:** MIT vs GPL-3.0,
+ticari ürün için belirleyici; (2) 1.4 öncesi piper-tts `piper-phonemize`
+gerektirir, **Windows wheel'i yok** → pip pinleme dev makinede imkânsız;
+(3) binary kendi espeak-ng-data + onnxruntime'ını taşır, sürüm sabit,
+exe-göreli espeak bulur (cwd bağımsız — test edildi).
+
+**Model fallback zinciri değişti:** `tr_TR-fahrettin-medium/high` artık
+HuggingFace'ten kaldırılmış (indirilemiyor) → **`tr_TR-dfki-medium`** (MIT,
+`rhasspy/piper-voices`'ta kalan tek tr_TR stok ses) — zaten `wbot_tr`'nin
+fine-tune tabanı olduğundan "custom vs stok" kıyası doğrudan anlamlı.
+`scripts/setup_piper.sh` eklendi: arch algılar (aarch64/x86_64), binary+dfki
+indirir, idempotent, `Jetson`'da da doğrulandı.
+
+**Doğrulama:** Dev'de `PiperTTS()` → binary=`<project>/piper/piper.exe`,
+model=`wbot_tr.onnx`, sentez ~1.85sn (eskiden bozukta ~8sn) doğru fonem.
+Jetson'da (`192.168.1.67`) `git pull` + `setup_piper.sh` sonrası aynı
+doğrulama tekrarlandı — MIT binary zaten Jetson'da mevcuttu (Kas 2023'ten
+kalma), production TTS'i **hiç garble olmamıştı** (yalnızca dev'de bozuktu,
+1.4.2'ye düşüyordu); Jetson'a `wbot_tr.onnx` (60.6 MB) ayrıca scp'lendi.
+`tts_ab_out/wbot_custom/` (10 cümlelik kör A/B) düzeltilmiş binary ile
+yeniden üretildi — artık geçerli.
+
+### 2) Yabancı-yazımlı kelime telaffuz sözlüğü
+
+Fix'ten bağımsız ikinci sorun: espeak-tr, İngilizce YAZIMLI kelimeleri
+Türkçe harf kurallarıyla okuyor (`cheesecake` → `dʒheesedʒakˈɛ` "cihiyseceyke",
+`cappuccino` → `dʒapːudʒːinˈɔ`). Menü taraması (`menu.yaml`, 10 ürün)
+**hepsinin Türkçe yazımlı** olduğunu doğruladı (mercimek çorbası, künefe,
+lazanya, tiramisu — sorunsuz) → sözlüğün değeri menüde değil, LLM'in serbest
+konuşmasında/önerisinde geçebilecek kafe terimlerinde.
+
+**Uygulama (commit `338ef7a`, 13 Temmuz 2026):** `robot_waiter_ai/speech/pronunciation.py`
+— 30 girişlik İngilizce/yabancı-yazım → Türkçe-fonetik-yazım haritası
+(cheesecake→çizkeyk, cappuccino→kapuçino, latte→late, croissant→kruvasan...),
+her hedef `piper --debug` ile doğru fonemlediği teyit edildi. Kelime-sınırı
+regex `(?<!\w)(KEY)(['’]\w+)?(?!\w)` — yalnız tam kelime eşleşir (geçmişteki
+`_OFFENSIVE_TERMS` "göt"/"götürür" substring hatasının tekrarı önlendi),
+Türkçe ek kesme-işaretiyle korunur (cheesecake'i→çizkeyk'i), uzun-önce sıra
+(Coca-Cola>cola). `tts.py`'de `PiperTTS._run_piper_blocking` başında —
+sentezden hemen önce, kaynağı ne olursa olsun (LLM/fast-path/guard) her TTS
+çıktısı kapsanır; yalnız TTS girdisi değişir, ekrana/loglara/OrderTracker'a
+giden metin değişmez. 25 yeni test (`test_pronunciation.py`) + **WSL tam
+süit 515/515 PASS** (regresyon yok). Dev+Jetson'da doğrulandı.
+
+### 3) wbot_tr overfit hipotezi — checkpoint kör A/B (⏳ kullanıcı aksiyonu bekliyor)
+
+Google Drive araştırması (`wbot-tts/checkpoints/`) kesin epoch bilgisini
+ortaya çıkardı: dfki tabanı **epoch 5679** → deployed `wbot_tr.onnx`
+**epoch 6799** (~1120 fine-tune epoch, ~11 saat T4, 320 cümle/13 dk ses
+üstüne). Bu, kullanıcının "bazen bulanık" şikâyetiyle örtüşen klasik
+aşırı-öğrenme imzası olabilir (korpus cümlelerinde net, görülmemiş
+cümlelerde bulanık). Kıyas için yerel terk edilmiş CPU denemesi de
+incelendi: `lightning_logs/version_2`, sıfırdan, batch 4, **epoch 134'te
+bırakılmış**, loss yakınsamamış — gerçek modelle karıştırılmamalı.
+
+**Colab loss eğrisi kayıp:** notebook Drive'a yalnız checkpoint kopyalıyor,
+`lightning_logs/tfevents`'i değil — val_loss'un epoch 6799'da platoya
+varıp varmadığı doğrulanamıyor. Bir sonraki eğitim için plan (kod
+yazılmadı, salt öneri): (1) tfevents'i de periyodik Drive'a kopyala, (2)
+val_loss'u düz metne append et (epoch,val_loss,loss_gen_all), (3) export
+edilen epoch'u `onnx.json`'a/yan dosyaya yaz, (4) max-epoch yerine best-val
+checkpoint export'unu değerlendir.
+
+**Test altyapısı hazır, kullanıcı aksiyonu bekliyor:** Yerel checkpoint
+export'u **imkânsız** (845 MB × 4 checkpoint private Drive'da, MCP indirme
+kanalı yalnız base64 döndürüyor — tool sınırının kat kat üstünde; ayrıca
+`piper_train`/`pytorch-lightning` yerelde kurulu değil). Bunun yerine:
+- **Colab export hücresi** hazırlandı — `epoch=5799/6099/6399/6799`
+  checkpoint'lerini ONNX'e export edip zip olarak indirir (kullanıcının
+  Colab oturumunda Hücre 1-2-3 çalıştıktan sonra yapıştırıp koşması yeterli).
+- **Yerel A/B üretici** (`build_checkpoint_ab.py`) yazıldı ve mevcut
+  modellerle (deployed=e6799 + dfki + insan referans) **doğrulandı**: 12
+  görülmemiş cümleyi (aynı `tts_ab_out/wbot_unseen/` seti, telaffuz sözlüğü
+  uygulanmış üretim yoluyla) her mevcut checkpoint'le sentezler, kör N'li
+  A/B (Aday 1..N karışık, cevap anahtarı altta) + süre/RMS/hız sağlık
+  tablosu üretir. Eksik checkpoint'ler sayfa başlığında otomatik işaretlenir.
+
+**Sıradaki adım (kullanıcı):** Colab hücresini çalıştır → zip'i
+`tts_ab_out/_ckpt_models/`'e aç → generator'ı tekrar koştur → tam kör 4'lü
+sayfa (5799/6099/6399/6799 yan yana) hazır olur. Kalite yorumu
+yapılmayacak — karar kulakla.
+
+---
+
 ## Kısa Vadede Yapılacaklar
 
 | # | Görev | Öncelik | Durum |
@@ -1025,7 +1142,7 @@ commit edildi, henüz Colab'da çalıştırılmadı.
 | 9 | wbot_v4 dataset üretimi — A paketi (490) + B paketi (115) = 605 yeni kayıt | 🟢 Düşük | ✅ Tamamlandı — 3 Temmuz 2026 |
 | 10 | wbot_v4 eğitimi — Dataset: `wbot_v4_train.jsonl` (3605 kayıt), Notebook: `wbot_v4_colab_training.ipynb`, Script: `train_wbot_v2.py`, Çıktı: `Qwen3-4B-wbot_v4-Q4_K_M.gguf` (Colab A100, 3 epoch) | 🔴 Kritik | ✅ Tamamlandı — 4 Temmuz 2026, adapter+GGUF Drive metadata ile byte-exact doğrulandı |
 | 11 | Sistem promptu tutarsızlığı fix (audit_dataset.py 2 yeni kural + 4 gen script + 455 kayıt) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
-| 12 | Loglama sistemi — demo_usb.py'e oturum loglama (ses + metin + sipariş geçmişi); amaç: hukuki koruma (müşteri itirazları) + gelecekteki yeniden eğitim verisi; kapsam: session JSON (masa no, timestamp, konuşma, sipariş snapshot) + WAV kaydı | 🟡 Orta | ⏳ Tasarım aşamasında, henüz kod yok |
+| 12 | Loglama sistemi — demo_usb.py'e oturum loglama (ses + metin + sipariş geçmişi); amaç: hukuki koruma (müşteri itirazları) + gelecekteki yeniden eğitim verisi; kapsam: session JSON (masa no, timestamp, konuşma, sipariş snapshot) + WAV kaydı | 🟡 Orta | ✅ Tamamlandı — 18 Temmuz 2026, commit `7fec6be`. `robot_waiter_ai/session/session_logger.py` (SessionLogger, append-only + crash-safe). Disk düzeni: `data/sessions/<YYYY-MM-DD>/<session_id>/session.json` + `turn_NNN_user.wav`. Ana döngüdeki TÜM yanıt yolları kapsandı (Guard 1/2/3, S12 TUR1/TUR2, fast-path, hesap, ana LLM akışı). 30 gün retention (`cleanup_old_sessions`, run_demo başlangıcında). `data/sessions/` gitignore'lu. Manuel doğrulama + tam süit 525/525 PASS |
 | 13 | Senaryo planlaması tamamlandı (S01-S41, SENARYO_PLANI_FAZ1.md) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
 | 14 | eval_gguf.py — V01-V06 hedef senaryoları eklendi (--v4-targets) | 🔴 Kritik | ✅ Tamamlandı — 3 Temmuz 2026 |
 | 15 | W16 ve S12 davranış kararları verildi | 🟡 Orta | ✅ Tamamlandı — 3 Temmuz 2026 |
@@ -1044,6 +1161,9 @@ commit edildi, henüz Colab'da çalıştırılmadı.
 | 28 | C paketi LLM-API kalemleri (S41 eskalasyon 20 + anti-hallüsinasyon 100 = **120 kayıt**) + V07 eval tanımı — DOĞRULANDI + commit'lendi | 🟡 Orta | ✅ Tamamlandı — 9 Temmuz 2026. Dosyalar bilinmeyen bir oturumdan working-tree'de commit'siz/untracked gelmişti (`git log --all` boş); üçüncü-taraf çıktısı gibi rijit doğrulandı, **veri üretilmedi/yeniden çalıştırılmadı**, sadece doğrula+commit. **S41 (`wbot_c_eskalasyon.jsonl`, 20, çok-turlu netleştirme→eskalasyon):** audit 0; sistem promptu 20/20 kanonik 5460; eskalasyon turu 20/20 "personel"+çağırma içerir, yeni netleştirme sorusu YOK (V07 birebir re-elicit listesine göre 0 ihlal), ton nötr; **benzersiz eskalasyon 20/20** (eşik ≥12), benzersiz netleştirme 16/20 (eşik ≥10), i-mod-N sabit eşleme yok; user girdileri 3 farklı anlaşılamama kök nedenine ayrık (STT-gürültü / alakasız kelime / muğlak konuşma); %25 tam kayıt UTF-8 readback temiz. **Anti-hallüsinasyon (`wbot_c_anti_hallusinasyon.jsonl`, 100, tek-turlu):** audit 0; sistem promptu 100/100 kanonik 5460; **hiçbir yanıtta rakam YOK** (uydurma nicel detay yasağı airtight); **bağımsız menu.yaml mekanik çapraz kontrol** (generator FAB_VOCAB'ı kopyalanmadan, menu.yaml doğrudan parse) → honest=80/grounded=20, izinli-metin-dışı malzeme flag'i 8 ama **hepsi honest deferral bağlamında, 0 grounded uydurma** (fındık/ceviz tuzağı doğru defer); alt-tip S1/S2/S3 = 34/33/33, **alt-tip başına benzersizlik 34/34·33/33·33/33**, global 100/100 benzersiz soru+yanıt, ürün dağılımı 7-14 dengeli; %25 tam kayıt + TÜM 8 "bilgim yok" dönüşü UTF-8 readback temiz. **V07 eval tanımı** (`eval_gguf.py`, working-tree diff): 3 PASS öğesi (personel+çağırma / yeni netleştirme yok / nötr ton) + çok-turlu seed (E24/E31 deseni) dokümandaki taslakla örtüşüyor. **Tek koşu (WSL2, --v4-targets): 39 senaryo 32/39 (%82), KALDI: E01, E24, V01, V02, V04, V06, V07** — #27 WSL2 baseline'ı (32/38) + V07; V07 doğru YAPISAL nedenle düşüyor (ham wbot_v4'te S41 verisi yok → model eskale etmek yerine 3. kez netleştiriyor: "Anlayamadım, hangi ürünü arzu edersiniz?"), gerçek PASS wbot_v5 sonrası. Süit 490/490 PASS. Kalan C paketi: **merge + W11 kanonik prompt revizyonu + wbot_v5 retrain** |
 | 29 | W11 kanonik prompt revizyonu (`_SYSTEM_TEMPLATE` kapanış kuralı) + wbot_v5 merge (C paketi 182 kayıt entegrasyonu) | 🔴 Kritik | ✅ Tamamlandı — 10 Temmuz 2026, detay yukarıda "W11 Kanonik Prompt Revizyonu (wbot_v5)" bölümünde. Kapanış kuralı `llama_cpp_backend.py::_SYSTEM_TEMPLATE` + `qwen3_backend.py`'de S12 Karar 2'ye hizalandı (training'e değil — `short_prompt=True` dataset `system` alanını yok sayıyor, W1-W16 emsali). **Yan bulgu:** `_MAX_HIST_CHARS=4000` context-overflow'a yol açıyordu (worst-case 4829 tok, n_ctx 4096'yı 733 tok aşıyor → `llama-cpp-python` `ValueError` fırlatıyor); ampirik doğrulamayla 1000'e düzeltildi (tampon +332 tok). `wbot_v5_train.jsonl`: 3787 kayıt (`scripts/rebuild_wbot_v5_train.py`, seed=2028), audit 0 ihlal, süit 490/490 PASS (WSL2). Retrain kapsam dışı — Colab'da ayrı çalıştırılacak |
 | 30 | Jetson senkron + erken doğrulama (retrain-öncesi, mevcut wbot_v4 GGUF + yeni prompt) + wbot_v5 Colab hazırlığı | 🔴 Kritik | ✅ Tamamlandı — 10 Temmuz 2026, detay yukarıda "Jetson Senkron + Erken Doğrulama" bölümünde. Jetson `18c429a`'ya pull edildi, içerik md5/git-blob ile doğrulandı, GGUF'a dokunulmadı. Erken eval: 32 senaryo 29/32 (E01+E27 iyileşti, **E19+E16 yeni regresyon**), 39 senaryo 32/39 (V04 iyileşti, V serisinde yeni regresyon YOK). **E19 aktif/düzeltilmedi** — W11 paragrafının promptun başka bölümünü dolaylı etkilemesi, retrain'le düzelmeyecek, ayrı görev gerekiyor; **E16 muhtemelen check-tasarım yanlış alarmı** (`eval_gguf.py` word-boundary eksik). Metodoloji notu: seed determinizmi tam-dizi tekrarına özgü, izole tekil senaryo karşılaştırması bu garantinin kapsamında değil. `wbot_v5_colab_training.ipynb` oluşturuldu (v4 şablonunun birebir kopyası, dataset/çıktı yolları güncellendi), henüz Colab'da çalıştırılmadı |
+| 31 | Piper garble kök-neden + fix — pip piper-tts 1.4.2 (GPL) Türkçe fonemizasyonu bozuk (İngilizce'ye düşüyor), MIT rhasspy/piper binary'sine geçildi | 🔴 Kritik | ✅ Tamamlandı — 11-12 Temmuz 2026, commit `18d1f25`. `<project>/piper/` altına arşivlenmiş MIT binary (`2023.11.14-2`) kalıcı kuruldu (lisans: MIT ticari kullanım için GPL yerine tercih edildi; Windows'ta piper-phonemize wheel'i olmadığından pip-pinleme seçeneği elenmiş). Model fallback: fahrettin (HF'den kaldırıldı) → dfki-medium (MIT). `scripts/setup_piper.sh` ile tekrar-üretilebilir kurulum (arch algılar). Dev + Jetson'da doğrulandı: doğru Türkçe fonem, ~2sn (eskiden bozukta ~8sn) |
+| 32 | Yabancı-yazımlı kelime telaffuz sözlüğü — espeak-tr İngilizce yazımlı kelimeleri (cheesecake, cappuccino...) yanlış okuyor | 🟡 Orta | ✅ Tamamlandı — 12-13 Temmuz 2026, commit `338ef7a`. `robot_waiter_ai/speech/pronunciation.py` (30 girişlik harita, kelime-sınırı + Türkçe ek toleranslı regex), `tts.py`'de sentezden hemen önce uygulanıyor (yalnız TTS girdisi, ekrana/loglara dokunmaz). Menü ürünleri hepsi Türkçe yazımlı olduğundan kapsam dışı — sözlük garson sohbetinde geçebilecek kafe terimlerini kapsıyor. 25 yeni test + WSL tam süit 515/515 PASS. Dev+Jetson'da doğrulandı |
+| 33 | wbot_tr overfit hipotezi testi (checkpoint kör A/B) — dfki tabanı epoch 5679 → deployed epoch 6799 (~1120 fine-tune epoch, 320 cümle/13 dk), görülmemiş cümlelerdeki bulanıklık aşırı-öğrenme imzasına uyuyor | 🟡 Orta | ⏳ **Kullanıcı aksiyonu bekliyor.** Yerel checkpoint export'u imkânsız (845 MB×4 private Drive, MCP kanalı yalnız base64 döndürüyor — tool sınırını aşıyor); Colab export hücresi hazırlandı (5799/6099/6399 checkpoint'lerini ONNX'e export eder). A/B üretici (`build_checkpoint_ab.py`) yazıldı ve mevcut modellerle (e6799+dfki+insan referans) doğrulandı — 12 görülmemiş cümle, kör N'li, sağlık tablosu. Kullanıcı Colab'da export'u çalıştırıp ONNX'leri `tts_ab_out/_ckpt_models/`'e koyunca tek komutla tam kör 4'lü sayfa üretilecek |
 
 ---
 
