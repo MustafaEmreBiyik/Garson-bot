@@ -1,0 +1,314 @@
+# W-BOT TTS Corpus v2 — EK BÖLÜM, ~360 cümle, EKSİK TON/DURUM TÜRLERİ
+# Piper/VITS eğitimi için referans ses kaydı — wbot_v5 devamı (694 cümlenin üstüne)
+# Format: tek cümle/satır | # = kategori başlığı (kayıt edilmez)
+#
+# ★★★ Bu dosya tts_corpus_v2.txt'in DEVAMI — record_corpus.py ile AYRI bir
+# --out klasörüne (data/recordings_v2_ek) kaydedilecek, sonra iki klasör
+# birleştirilip tek bir dataset'e dönüştürülecek. Cümleler v2 ile ÖRTÜŞMÜYOR
+# (yeni içerik) — amaç eksik ton/durum türlerini eklemek: şaşkınlık/eğlenceli
+# tepki, ısrarlı-sabırlı tekrar, kısa tek-kelime yanıtlar, mahrem/alçak-ses
+# bilgi verme, hızlı doğal diyalog parçaları.
+#
+# ★★★ OKURKEN NASIL SESLENDİRECEĞİN, KATEGORİ BAŞLIĞINDA PARANTEZ İÇİNDE ★★★
+# Hedef: ~30-40 dk toplam okuma (v2'nin 694'üne ek). Her ~60-70 cümlede bir
+# "MOLA NOKTASI" var — orada gerçekten dur, su iç, sesini dinlendir.
+
+# ── 12. ŞAŞKINLIK / EĞLENCELİ TEPKİ (gerçekten şaşırmış, keyifli bir sürpriz yaşamış gibi — hafif gülümseyerek) (45 cümle) ──
+Vay canına, bu siparişi hiç beklemiyordum, harika!
+Aa, gerçekten mi? Ne güzel bir tesadüf!
+Vay be, bugün ilk kez böyle bir istek duyuyorum!
+Aa, doğum gününüz mü? Bunu bilseydik özel bir şey hazırlardık!
+Vay, bu kadar çok sipariş mi? Bugün açsınız galiba!
+Aa, gerçekten mi öyle dediniz? Çok ilginç!
+Vay canına, bu kombinasyonu ilk kez duyuyorum, denemeliyim!
+Aa, siz de mi buradan biliyorsunuz? Ne tesadüf!
+Vay be, bu masadaki en hızlı sipariş bu oldu galiba!
+Aa, gerçekten çok hızlı karar verdiniz, harika!
+Vay canına, hiç beklemiyordum böyle bir soru!
+Aa, bunu ilk kez bugün duyuyorum, çok hoş!
+Vay, bu tarifi bu kadar merak edeceğinizi düşünmemiştim!
+Aa, gerçekten mi? Bu haber beni çok şaşırttı!
+Vay canına, böyle bir talep gerçekten nadir görülür!
+Aa, siz de mi aynı şeyi düşündünüz? İnanılmaz!
+Vay be, bu akşam sürprizlerle dolu galiba!
+Aa, gerçekten bu kadar erken mi geldiniz?
+Vay canına, bu ikram fikrini çok sevdim!
+Aa, bunu duyunca gerçekten şaşırdım açıkçası!
+Vay be, aynı anda iki farklı istek, ilk kez oluyor!
+Aa, gerçekten mi bu kadar sevdiniz? Çok mutlu oldum!
+Vay canına, bu kadar detaylı sorular ilk kez soruluyor!
+Aa, siz de mi burayı arkadaşınızdan duydunuz?
+Vay be, bu masanın siparişi gerçekten farklı bugün!
+Aa, gerçekten mi o kadar uzak yoldan geldiniz?
+Vay canına, bu tesadüfe inanamıyorum doğrusu!
+Aa, bu şekilde bir istek ilk kez geliyor bize!
+Vay be, gerçekten çok hoş bir sürpriz bu!
+Aa, o kadar çok mu beğendiniz? Ne güzel haber!
+Vay canına, bu kadar hızlı bitirdiniz, harikasınız!
+Aa, gerçekten mi bugün özel bir gün sizin için?
+Vay be, bu ikisini birlikte ilk kez duyuyorum!
+Aa, siz de mi aynı masada oturmak istediniz?
+Vay canına, bu soruyu bu şekilde ilk kez alıyorum!
+Aa, gerçekten mi böyle düşünmüştünüz, ilginç!
+Vay be, bu akşam gerçekten farklı geçiyor!
+Aa, o kadar sürpriz mi oldu? Çok sevindim!
+Vay canına, bu detayı fark etmeniz beni şaşırttı!
+Aa, gerçekten mi hiç denemediniz bugüne kadar?
+Vay be, bu kadar çeşit istemek gerçekten nadir!
+Aa, siz de mi bu tarifi merak ediyordunuz?
+Vay canına, bu kadar çabuk karar verdiniz, süper!
+Aa, gerçekten mi o kadar beğendiniz, ne güzel!
+Vay be, bu sürpriz doğum günü kutlaması harikaymış!
+Aa, gerçekten bu kadar mı acele ediyorsunuz bugün?
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 13. ISRARLI / SABIRLI TEKRAR (müşteri anlamadı, sabırla ve nazikçe tekrar et — asla sinirlenme) (45 cümle) ──
+Tabii, tekrar söyleyeyim: mercimek çorbası seksen beş lira.
+Elbette, bir daha anlatayım, hiç sorun değil.
+Tabii ki, sabırla tekrar edebilirim, merak etmeyin.
+Anlıyorum, biraz daha yavaş anlatayım o zaman.
+Tabii efendim, isterseniz baştan başlayalım.
+Elbette, aynı şeyi tekrar söylemekten mutluluk duyarım.
+Tabii, belki daha net anlatırsam yardımcı olur.
+Anlıyorum, üzülmeyin, tekrar açıklayayım.
+Tabii ki, bu konuda acele etmenize gerek yok.
+Elbette, isterseniz yazılı olarak da gösterebilirim.
+Tabii, bir kez daha, dikkatlice dinleyin lütfen.
+Anlıyorum, karıştırmış olabilirsiniz, tekrar edeyim.
+Tabii efendim, sabırla anlatmaya devam ederim.
+Elbette, bu bilgiyi tekrar tekrar söyleyebilirim.
+Tabii, hiç sorun değil, tekrar açıklayayım hemen.
+Anlıyorum, bu konuda emin olmak istiyorsunuz, doğru.
+Tabii ki, isterseniz bir örnekle anlatayım.
+Elbette, bu sefer daha yavaş söyleyeceğim.
+Tabii, anlamadıysanız lütfen çekinmeden sorun.
+Anlıyorum, bazen karıştırılabilir, tekrar edelim.
+Tabii efendim, aynı bilgiyi bir kez daha veriyorum.
+Elbette, sabrınız için teşekkür ederim, tekrar anlatayım.
+Tabii, bu noktayı daha açık hâle getireyim.
+Anlıyorum sizi, bu detayı tekrar netleştirelim.
+Tabii ki, isterseniz farklı kelimelerle anlatayım.
+Elbette, üçüncü kez de olsa tekrar ederim.
+Tabii, bu konuda hiç acele etmeyin lütfen.
+Anlıyorum, biraz karışık geldi galiba, sadeleştireyim.
+Tabii efendim, isterseniz adım adım gidelim.
+Elbette, bu bilgiyi bir daha tekrarlıyorum.
+Tabii, endişelenmeyin, tekrar tekrar anlatabilirim.
+Anlıyorum, net olmadı sanırım, tekrar deneyeyim.
+Tabii ki, isterseniz yavaşça tekrar edeyim.
+Elbette, bu konuda sabırlıyım, merak etmeyin.
+Tabii, aynı şeyi başka türlü ifade edeyim.
+Anlıyorum sizi, bu bilgiyi tekrar vereyim.
+Tabii efendim, isterseniz tekrar başa dönelim.
+Elbette, bu detayı bir kez daha açıklayayım.
+Tabii, hiç mesele değil, tekrar ediyorum.
+Anlıyorum, karışıklık olmuş olabilir, düzelteyim.
+Tabii ki, sabırla dinlemeye devam ediyorum.
+Elbette, bu konuyu tekrar ele alalım isterseniz.
+Tabii, net anlaşılana kadar tekrar ederim.
+Anlıyorum sizi, üzülmeyin, tekrar anlatırım.
+Tabii efendim, bu bilgiyi bir daha söylüyorum.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 14. KISA TEK/İKİ KELİME YANITLAR (doğal, günlük konuşma tonu — kısa ve net, farklı vurgularla oku) (50 cümle) ──
+Evet.
+Hayır.
+Tabii.
+Elbette.
+Tamam.
+Peki.
+Olur.
+Anladım.
+Tabii ki.
+Hemen.
+Buyurun.
+Rica ederim.
+Teşekkürler.
+Afiyet olsun.
+Görüşürüz.
+Memnuniyetle.
+Kesinlikle.
+Doğru.
+Maalesef.
+Üzgünüm.
+Harika.
+Süper.
+Mükemmel.
+Anlaşıldı.
+Tamamdır.
+Elbette efendim.
+Hemen bakıyorum.
+Bir saniye.
+Hemen geliyor.
+Rica ederim efendim.
+Ne demek.
+Estağfurullah.
+Güle güle.
+İyi günler.
+Hoş geldiniz.
+Buyurun efendim.
+Evet efendim.
+Hayır maalesef.
+Tabii efendim.
+Peki efendim.
+Olur efendim.
+Anladım efendim.
+Hemen efendim.
+Kesinlikle efendim.
+Doğru efendim.
+Üzgünüm efendim.
+Harika efendim.
+Süper efendim.
+Mükemmel efendim.
+Anlaşıldı efendim.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 15. MAHREM / ALÇAK SES BİLGİ VERME (yavaş, alçak sesle, sanki sadece o masaya özel bir sır paylaşıyormuş gibi) (40 cümle) ──
+Aramızda kalsın ama bu tarif çok özel hazırlanıyor.
+Size özel bir şey söyleyeyim, bu tatlı henüz menüde değil.
+Sessizce söyleyeyim, bu şarap çok sınırlı sayıda var.
+Aramızda, bu masanın manzarası en güzeli burada.
+Size bir sır vereyim, şef bu tarifi yeni denemeye başladı.
+Alçak sesle söylüyorum, bu porsiyon aslında biraz daha büyük.
+Kimseye söylemeyin ama bu tatlı çok özel bir günde hazırlandı.
+Size özel, bu şaraptan sadece birkaç şişe kaldı.
+Aramızda kalsın, bu tarif ailemizin özel sırrı.
+Sessizce belirteyim, bu masanın hizmeti biraz daha özenli olacak.
+Size bir şey fısıldayayım, bu tatlı bugün taze çıktı.
+Alçak sesle söyleyeyim, bu içecek aslında az bilinen bir lezzet.
+Kimseye söylemeyin ama şef bu akşam özel bir şey hazırlıyor.
+Size özel bir bilgi vereyim, bu ürün yakında menüden kalkacak.
+Aramızda, bu masayı özellikle sizin için ayırdım.
+Sessizce söylüyorum, bu tarif dışarıya pek anlatılmaz.
+Size bir sır paylaşayım, bu lezzeti çok az kişi biliyor.
+Alçak sesle belirteyim, bu porsiyon bugün özellikle bol.
+Kimseye söylemeyin, bu tatlı yarın menüden kalkabilir.
+Size özel, bu şarabı sadece tanıdıklarımıza öneriyoruz.
+Aramızda kalsın, bu masanın servisi biraz daha hızlı olacak.
+Sessizce söyleyeyim, bu tarif aslında çok emek istiyor.
+Size bir şey fısıldayayım, bu ürün çok yakında gelecek.
+Alçak sesle söylüyorum, bu lezzeti herkes bilmiyor henüz.
+Kimseye söylemeyin ama bu akşam özel bir indirim var.
+Size özel bir bilgi, bu masanın hizmeti bugün farklı olacak.
+Aramızda, bu tarif şefin en gizli sırrı sayılır.
+Sessizce belirteyim, bu içecek çok taze hazırlandı demin.
+Size bir sır vereyim, bu tatlı özel sipariş üzerine yapılıyor.
+Alçak sesle söyleyeyim, bu masanın manzarası gerçekten eşsiz.
+Kimseye söylemeyin, bu ürün stoklarımızda çok az kaldı.
+Size özel, bu tarifi sadece düzenli müşterilerimize anlatırız.
+Aramızda kalsın, bu akşam mutfak gerçekten özel çalışıyor.
+Sessizce söylüyorum, bu lezzeti deneyenler bir daha geliyor.
+Size bir şey fısıldayayım, bu şarap çok özel bir bölgeden.
+Alçak sesle belirteyim, bu tatlı bugün ilk kez servis ediliyor.
+Kimseye söylemeyin ama bu tarif yakında değişecek.
+Size özel bir bilgi vereyim, bu porsiyon normalde daha küçük.
+Aramızda, bu masanın hizmeti özellikle sizin için ayarlandı.
+Sessizce söyleyeyim, bu lezzet çok kısıtlı zamanlarda hazırlanıyor.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 16. HIZLI DOĞAL DİYALOG PARÇALARI (doğal konuşma temposu, günlük hayattaki gibi hızlı ama net — duraksama az) (50 cümle) ──
+Tamam, hemen hallediyorum, bir saniye lütfen.
+Evet efendim, buyurun, dinliyorum sizi.
+Peki, anladım, hemen not ediyorum şimdi.
+Tamam o zaman, başka bir isteğiniz var mı?
+Evet, doğru, tam olarak öyle, devam edelim.
+Peki efendim, hemen mutfağa iletiyorum bunu.
+Tamam, anlaşıldı, birazdan hazır olur bu.
+Evet, kesinlikle, hemen bakıyorum durumuna.
+Peki, sorun değil, hemen düzeltiyorum hatayı.
+Tamam efendim, not aldım, devam edebiliriz.
+Evet, öyle, doğru hatırlıyorsunuz, aynen böyle.
+Peki, tamam, şimdi hallediyorum hemen bunu.
+Tamam, anladım, başka bir şey var mı?
+Evet efendim, hemen geliyor, bir dakika.
+Peki, doğru, öyle yapalım o zaman hemen.
+Tamam, sorun yok, hemen çözüyorum bunu.
+Evet, tabii, hemen ilgileniyorum, bekleyin.
+Peki efendim, anlaşıldı, notu aldım hemen.
+Tamam, öyleyse devam edelim, hazır mısınız?
+Evet, doğru söylüyorsunuz, hemen düzeltiyorum.
+Peki, tamam, bir saniye, kontrol ediyorum.
+Tamam efendim, hemen oluyor, merak etmeyin.
+Evet, anladım, tam istediğiniz gibi olacak.
+Peki, doğru, hemen hallediyorum şimdi bunu.
+Tamam, sorun değil, hemen bakıyorum ona.
+Evet efendim, hemen geliyorum, bir dakika sürer.
+Peki, tamam, anlaşıldı, devam edebiliriz şimdi.
+Tamam, öyle yapalım, hemen düzenliyorum.
+Evet, doğru, aynen öyle, hemen ilgileniyorum.
+Peki efendim, hemen not ediyorum, bekleyin.
+Tamam, anladım, şimdi hallediyorum bunu hemen.
+Evet, tabii ki, hemen bakıyorum duruma.
+Peki, doğru, sorun yok, devam ediyoruz.
+Tamam efendim, hemen oluyor, bir saniye.
+Evet, anlaşıldı, tam öyle yapıyorum şimdi.
+Peki, tamam, hemen ilgileniyorum bununla.
+Tamam, sorun değil, hemen çözüyorum hemen.
+Evet efendim, doğru, hemen hallediyorum bunu.
+Peki, anladım, bir dakika, kontrol ediyorum.
+Tamam, öyleyse hemen düzeltiyorum durumu.
+Evet, tabii, hemen bakıyorum, bekleyin lütfen.
+Peki efendim, tamam, anlaşıldı, devam ediyoruz.
+Tamam, hemen oluyor, merak etmeyin hiç.
+Evet, doğru, aynen böyle, hemen geliyor.
+Peki, tamam, sorun yok, hemen ilgileniyorum.
+Tamam efendim, anladım, şimdi hallediyorum.
+Evet, kesinlikle, hemen düzeltiyorum bunu hemen.
+Peki, doğru, bir saniye, bakıyorum hemen.
+Tamam, öyle yapalım, devam edelim şimdi.
+Evet efendim, hemen oluyor, bir dakika sürer.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 17. UZUN AÇIKLAMA + DUYGU KARIŞIK (aynı cümle içinde ton değişimi — bilgilendirici başla, sonunda sıcak/samimi bitir) (45 cümle) ──
+Bu çorba günlük taze hazırlanıyor, hem de annemin tarifiyle yapılıyor, gerçekten çok severim.
+Bu tatlının hazırlanması iki saat sürüyor ama inanın buna değer, bayılacaksınız.
+Bu et özel olarak seçiliyor, kasabımızla yıllardır çalışıyoruz, güvenebilirsiniz.
+Bu tarif Hatay'dan geliyor, aile geleneğimizden, sizinle paylaşmak gurur verici.
+Bu içecek taze sıkılıyor, hiç şeker eklemiyoruz, doğallığı çok seviyorum.
+Bu salata zeytinyağıyla hazırlanıyor, hafif ama doyurucu, ben de sık sık yerim.
+Bu çorbanın malzemeleri her sabah pazardan geliyor, taze olması çok önemli bizim için.
+Bu tatlının şerbeti özel bir oranla hazırlanıyor, tarif nesilden nesile geçiyor.
+Bu yemek geleneksel yöntemle pişiyor, saatlerce, ama sonuç muhteşem oluyor.
+Bu içecek yaz aylarında en çok tercih edilen, ben de sıcak günlerde severim.
+Bu tabak hem hafif hem lezzetli, diyet yapanlar için bile uygun, deneyin derim.
+Bu tarif büyükannemden kalma, her lokmasında o sıcaklığı hissedersiniz.
+Bu çorba kışın vazgeçilmezimiz, içiminde insanı ısıtan bir şey var.
+Bu tatlı özel günler için hazırlanır ama bugün sizin için de yaptık.
+Bu yemek uzun pişer ama bu bekleyiş kesinlikle değer, göreceksiniz.
+Bu içecek doğal malzemelerle yapılıyor, hiç katkı maddesi yok, güvenle için.
+Bu salata mevsiminde en taze haliyle geliyor, renk cümbüşü gibi olur.
+Bu çorba hem doyurucu hem hafif, akşam yemeği için ideal bence.
+Bu tatlının kokusu bile insanı mutlu ediyor, tadını alınca bayılacaksınız.
+Bu yemek ailece yıllardır aynı tarifle yapılıyor, değişmeyen bir lezzet.
+Bu içecek serinletici ve ferahlatıcı, sıcak günlerde tam kurtarıcı oluyor.
+Bu tabak özenle hazırlanıyor, her adımı elle yapılıyor, emek var içinde.
+Bu tarif çok eski, ama hâlâ en çok sevilenlerden, hiç eskimiyor.
+Bu çorba günün yorgunluğunu alıyor sanki, içince insan rahatlıyor.
+Bu tatlı sıcak servis edilince en güzel hâlini alıyor, mutlaka deneyin.
+Bu yemek hem lezzetli hem sağlıklı, ailece yiyebileceğiniz bir seçenek.
+Bu içecek taze meyvelerle hazırlanıyor, doğallığı damağınızda hissedeceksiniz.
+Bu salata hafif bir başlangıç için mükemmel, ben de hep bunu tercih ederim.
+Bu çorba özel baharatlarla zenginleştiriliyor, tadı unutulmaz oluyor.
+Bu tatlı geleneksel fırında pişiyor, o kokusu bile insanı mutlu ediyor.
+Bu yemek aile sofralarının vazgeçilmezi, bizim de gurur kaynağımız.
+Bu içecek doğal tatlılığıyla öne çıkıyor, şeker eklemeye gerek kalmıyor.
+Bu tabak renkli ve canlı, hem göze hem damağa hitap ediyor gerçekten.
+Bu tarif yıllar içinde ustalaşarak bugünkü hâlini aldı, emek ürünü.
+Bu çorba soğuk günlerde tam kurtarıcı, içiminde huzur buluyorsunuz.
+Bu tatlı özel bir kremayla hazırlanıyor, dokusu ağızda eriyor adeta.
+Bu yemek geleneksel ama modern dokunuşlarla zenginleştirilmiş, deneyin.
+Bu içecek hem lezzetli hem sağlıklı, günün her saatinde içilebilir.
+Bu salata mevsim sebzeleriyle hazırlanıyor, tazeliği ilk lokmada hissedilir.
+Bu çorba ustalıkla pişiriliyor, her kaşığında emek olduğunu hissedersiniz.
+Bu tatlı özenle süsleniyor, hem lezzeti hem görünüşü göz kamaştırıyor.
+Bu yemek bizim mutfağımızın kalbi sayılır, herkes bayılıyor buna.
+Bu içecek taze ve doğal, hiçbir yapay tat içermiyor, güvenle için.
+Bu tabak hem doyurucu hem hafif, her yaştan misafirimiz seviyor bunu.
+Bu tarif yıllardır değişmeden geliyor, o yüzden bu kadar özel bizim için.
+
+# ═══ KAYIT TAMAMLANDI — teşekkürler! ═══
