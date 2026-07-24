@@ -227,7 +227,8 @@ _PIPER_BINARY_CANDIDATES: list[str] = [
 ]
 
 _PIPER_MODEL_CANDIDATES: list[Path] = [
-    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "wbot_tr.onnx",  # özel W-BOT sesi (varsa öncelikli)
+    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "wbot_tr_v2.onnx",  # W-BOT sesi v2 (970 cümle retrain, 24 Tem 2026 — öncelikli)
+    _PROJECT_ROOT / "robot_waiter_ai" / "models" / "wbot_tr.onnx",  # v1 özel W-BOT sesi (v2 yoksa yedek)
     # Stok fallback: dfki-medium (MIT, rhasspy/piper-voices'ta kalan tek tr_TR sesi).
     # Eski fahrettin-medium/high HuggingFace'ten kaldırıldığı için artık indirilemiyor.
     _PROJECT_ROOT / "robot_waiter_ai" / "models" / "tr_TR-dfki-medium.onnx",

@@ -15,7 +15,7 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-_GGUF_FILENAME = "Qwen3-4B-wbot_v4-Q4_K_M.gguf"
+_GGUF_FILENAME = "Qwen3-4B-wbot_v5-Q4_K_M.gguf"
 _JETSON_GGUF   = Path("/home/emk/models") / _GGUF_FILENAME
 _REPO_GGUF     = Path(__file__).resolve().parent.parent / "models" / _GGUF_FILENAME
 
