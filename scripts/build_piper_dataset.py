@@ -43,6 +43,13 @@ def main():
                         help="Kayıt WAV'larının bulunduğu dizin")
     parser.add_argument("--out", type=Path, default=PROJECT_ROOT / "data" / "piper_dataset",
                         help="Çıktı dizini")
+    parser.add_argument("--prefix", type=str, default="",
+                        help="file_id/WAV adına eklenecek önek (birden fazla kayıt "
+                             "setini aynı dizinde birleştirirken corpus_0001.wav "
+                             "çakışmasını önlemek için, örn. 'ek_')")
+    parser.add_argument("--append", action="store_true",
+                        help="metadata.csv'yi üzerine yazmak yerine sonuna ekle "
+                             "(--out zaten dolu bir dataset dizini gösteriyorsa)")
     args = parser.parse_args()
 
     recordings = args.recordings
@@ -78,15 +85,17 @@ def main():
             skipped.append(wav.name)
             continue
 
-        text    = sentences[num]
-        file_id = wav.stem                   # corpus_0001
-        dst     = wavs_dir / wav.name
+        text     = sentences[num]
+        file_id  = f"{args.prefix}{wav.stem}"     # örn. ek_corpus_0001
+        dst_name = f"{args.prefix}{wav.name}"
+        dst      = wavs_dir / dst_name
 
         shutil.copy2(wav, dst)
         entries.append((file_id, text, text))
 
-    # metadata.csv yaz
-    with open(metadata, "w", encoding="utf-8") as f:
+    # metadata.csv yaz (--append: sonuna ekle, yoksa üzerine yaz)
+    mode = "a" if args.append else "w"
+    with open(metadata, mode, encoding="utf-8") as f:
         for file_id, text, norm_text in entries:
             f.write(f"{file_id}|{text}|{norm_text}\n")
 

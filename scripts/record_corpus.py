@@ -121,12 +121,34 @@ def save_wav(audio: np.ndarray, path: Path):
         wf.writeframes(audio.tobytes())
 
 
+def _find_record_rate(device) -> int:
+    """Cihazın desteklediği ilk sample rate'i döner (22050 öncelikli)."""
+    for rate in [22050, 44100, 48000, 96000]:
+        try:
+            with sd.InputStream(samplerate=rate, channels=CHANNELS, dtype=DTYPE,
+                                device=device, blocksize=BLOCKSIZE):
+                return rate
+        except sd.PortAudioError:
+            continue
+    raise RuntimeError("Desteklenen sample rate bulunamadı.")
+
+
+def _resample(audio: np.ndarray, from_rate: int, to_rate: int) -> np.ndarray:
+    """Linear interpolation ile yeniden örnekleme (speech için yeterli)."""
+    if from_rate == to_rate:
+        return audio
+    n = int(len(audio) * to_rate / from_rate)
+    return np.interp(np.linspace(0, len(audio) - 1, n),
+                     np.arange(len(audio)), audio).astype(np.int16)
+
+
 # ── Kayıt ─────────────────────────────────────────────────────────────────────
-def record_until_enter(device=None) -> np.ndarray | None:
+def record_until_enter(device=None) -> tuple:
     """
-    sounddevice.InputStream callback'i arka planda toplar;
-    ana thread ENTER bekler, sonra durdurur.
+    Native sample rate'de kayıt edip (audio, record_rate) döner.
+    Çağıran SAMPLE_RATE'e resample eder.
     """
+    record_rate = _find_record_rate(device)
     chunks: list[np.ndarray] = []
     stop_flag = [False]
 
@@ -135,7 +157,7 @@ def record_until_enter(device=None) -> np.ndarray | None:
             chunks.append(indata.copy())
 
     stream = sd.InputStream(
-        samplerate=SAMPLE_RATE,
+        samplerate=record_rate,
         channels=CHANNELS,
         dtype=DTYPE,
         device=device,
@@ -143,13 +165,16 @@ def record_until_enter(device=None) -> np.ndarray | None:
         callback=_cb,
     )
     with stream:
-        print("  \033[91m●\033[0m KAYIT  — ENTER ile durdur", flush=True)
+        if record_rate != SAMPLE_RATE:
+            print(f"  \033[91m●\033[0m KAYIT ({record_rate} Hz → {SAMPLE_RATE} Hz)  — ENTER ile durdur", flush=True)
+        else:
+            print("  \033[91m●\033[0m KAYIT  — ENTER ile durdur", flush=True)
         _wait_for_enter()
         stop_flag[0] = True
 
     if not chunks:
-        return None
-    return np.concatenate(chunks, axis=0).flatten()
+        return None, record_rate
+    return np.concatenate(chunks, axis=0).flatten(), record_rate
 
 
 # ── Ekran ─────────────────────────────────────────────────────────────────────
@@ -234,14 +259,17 @@ def run(corpus_path: Path, out_dir: Path, device=None):
                 break
             elif key == " ":
                 # Kayda başla
-                audio = record_until_enter(device=device)
+                audio, rec_rate = record_until_enter(device=device)
 
-                if audio is None or len(audio) < SAMPLE_RATE * 0.3:
+                if audio is None or len(audio) < rec_rate * 0.3:
                     print("  \033[93m⚠\033[0m  Çok kısa kayıt (< 0.3 sn), tekrar deneyin.")
                     print("  ENTER ile devam...", end="", flush=True)
                     _wait_for_enter()
                     show_sentence_screen(i, total, cat, sentence)
                     continue
+
+                if rec_rate != SAMPLE_RATE:
+                    audio = _resample(audio, rec_rate, SAMPLE_RATE)
 
                 duration = len(audio) / SAMPLE_RATE
                 filename = out_dir / f"{FILE_PREFIX}{i + 1:04d}.wav"

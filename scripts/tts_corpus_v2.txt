@@ -1,0 +1,748 @@
+# W-BOT TTS Corpus v2 — Türkçe, ~850 cümle, DUYGU/PROZODİ ÇEŞİTLİLİĞİ hedefli
+# Piper/VITS eğitimi için referans ses kaydı — wbot_v5 (overfit + düz-ton fix)
+# Format: tek cümle/satır | # = kategori başlığı (kayıt edilmez)
+#
+# ★★★ OKURKEN NASIL SESLENDİRECEĞİN, KATEGORİ BAŞLIĞINDA PARANTEZ İÇİNDE ★★★
+# Her kategori tek bir DUYGU/TON hedefler — o tona göre oku (metne değil,
+# TONA dikkat et). Model bunu ses özelliklerinden öğrenir, kelimeden değil.
+# Hedef: ~45-60 dk toplam okuma. Her ~80-100 cümlede bir "MOLA NOKTASI" var —
+# orada gerçekten dur, su iç, sesini dinlendir. Yorgun/monoton ses kaydetme;
+# o gün olmuyor gibiyse script "S" ile atlayıp devam ettirir, ilerleme kaybolmaz.
+
+# ── 1. SICAK KARŞILAMA (gülümseyerek, sıcak ve içten — müşteriyi gerçekten mutlu görmüş gibi) (60 cümle) ─────
+Merhaba, hoş geldiniz! Sizi burada görmek çok güzel.
+Aa, hoş geldiniz! Bugün buradasınız, ne güzel.
+Merhaba! Buyurun, size en güzel masayı ayırdım.
+Hoş geldiniz, çok özlemiştik sizi!
+İyi akşamlar! Bu akşam buradasınız, harika.
+Merhaba, gülümsemeniz her şeyi anlatıyor, buyurun.
+Hoş geldiniz efendim, bugün moraliniz çok iyi görünüyor.
+Merhaba, sizi ağırlamak bizim için gerçek bir mutluluk.
+Buyurun, buyurun! Tam vaktinde geldiniz.
+Merhaba, bugün hava da güzel, siz de güzelsiniz gelmenizle.
+Hoş geldiniz! Uzun zamandır bekliyordum böyle bir misafiri.
+Aa, merhaba! Ne güzel oldu gelmeniz.
+Buyurun efendim, sizi burada ağırlamak büyük keyif.
+Merhaba! Bugün çok özel bir gün olacak hissediyorum.
+Hoş geldiniz, içeri buyurun, sizi bekliyorduk zaten.
+Merhaba, yüzünüzdeki o gülümseme günümü güzelleştirdi.
+Hoş geldiniz, masanız hazır, buyurun oturun rahatça.
+İyi akşamlar, bu akşam çok keyifli geçecek galiba.
+Merhaba! Sizi tekrar görmek harika bir sürpriz.
+Buyurun, kapıdan girer girmez fark ettim, bugün enerjiniz güzel.
+Hoş geldiniz, sizinle tanışmak büyük keyif.
+Merhaba, bu güzel günde bizi seçtiğiniz için teşekkürler.
+Aa, hoş geldiniz! Tam da sizi düşünüyordum.
+Buyurun canım, en güzel köşeyi size ayırdım.
+Merhaba! Gülüşünüz bulaşıcı, ben de gülümsedim şimdi.
+Hoş geldiniz, bugün burada olmanız beni çok mutlu etti.
+İyi günler, ne güzel bir sürpriz bu ziyaret!
+Merhaba, sizi görünce günüm aydınlandı resmen.
+Buyurun içeri, dışarısı soğuk, burası sıcacık.
+Hoş geldiniz efendim, bugün özellikle mutlu görünüyorsunuz.
+Merhaba! Sizi tekrar ağırlamak ne güzel.
+Aa, buyurun buyurun, tam zamanında geldiniz.
+Hoş geldiniz, bu akşam sizinle çok güzel geçecek.
+Merhaba, bu sıcak gülüşünüzle içeri girmeniz harika oldu.
+Buyurun efendim, sizi bekleyen özel bir masamız var.
+Hoş geldiniz, bugün burada olduğunuz için teşekkür ederim.
+Merhaba! Ne kadar güzel bir tesadüf, tam sizi düşünüyordum.
+İyi akşamlar, bu güzel akşamda sizi ağırlamak keyifli.
+Buyurun, gülümseyerek gelen misafirler günümü güzelleştiriyor.
+Hoş geldiniz, sizi burada görmek gerçekten çok güzel.
+Merhaba, bugün moraliniz yerinde görünüyor, ne güzel.
+Aa, hoş geldiniz! Sizi çok özlemişim meğer.
+Buyurun canım, içeri buyurun, sıcacık bir masa hazırladım.
+Hoş geldiniz efendim, bugün özel bir gün gibi hissediyorum.
+Merhaba! Kapıdan girişiniz bile enerji dolu.
+İyi günler, sizi ağırlamak bugün için en güzel şey.
+Buyurun, sizi bekleyen sıcak bir karşılama var.
+Hoş geldiniz, gülümsemeniz bulaşıcı, teşekkür ederim.
+Merhaba, bu güzel havada gelmeniz beni çok sevindirdi.
+Aa, buyurun! Sizi tekrar görmek büyük mutluluk.
+Hoş geldiniz efendim, bugün çok keyifli bir gün olacak.
+Merhaba! Sizinle geçirdiğimiz her an değerli.
+Buyurun, bu akşam en güzel köşeyi size sakladım.
+Hoş geldiniz, sizi burada ağırlamak onur bizim için.
+Merhaba, bugün buraya gelmeniz beni gerçekten sevindirdi.
+İyi akşamlar, o güzel gülüşünüzle içeri buyurun.
+Buyurun efendim, sizi bekleyen sıcacık bir masa var.
+Hoş geldiniz, bu akşam sizinle çok güzel anlar yaşayacağız.
+Merhaba! Sizi tekrar ağırlamak büyük keyif bizim için.
+Hoş geldiniz canım, buyurun, kendinizi evinizde hissedin.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 2. HEYECANLI ÖNERİ (gerçekten heyecanlı, enerjik, hızlıca ama net konuş — sanki en sevdiğin yemeği anlatıyorsun) (70 cümle) ──
+Harika seçim! Bu gerçekten en sevdiğim yemeklerden biri!
+Vay canına, mükemmel bir tercih yaptınız!
+Aa, bu çok iyi bir seçim, kesinlikle beğeneceksiniz!
+İnanın bana, bu tabağı deneyen herkes bayılıyor!
+Bu gerçekten harika bir fikir, hemen söylüyorum mutfağa!
+Vay, bu akşamın en güzel siparişlerinden biri bu!
+Kesinlikle doğru yerdesiniz, bu tam size göre!
+Aman ne güzel, ben de tam bunu önerecektim!
+Bu tabak gerçekten muhteşem, iç açan bir lezzet!
+Harika, bu seçimle asla pişman olmayacaksınız!
+Vay be, bugün ilk kez bu kadar heyecanlandım siparişe!
+Bu, şefimizin en gurur duyduğu tarifi, harika seçtiniz!
+İnanılmaz bir kombinasyon olacak bu, emin olun!
+Aa harika, tam da bugün en taze halini hazırladık!
+Bu gerçekten favorim, siz de seveceksiniz eminim!
+Vay canına, damak zevkiniz gerçekten mükemmel!
+Bu seçimle bugünün en şanslı müşterisi sizsiniz!
+Kesinlikle en doğru kararı verdiniz, tebrikler!
+Harika, bu tarifi anlatırken bile ağzım sulanıyor!
+Bu gerçekten muhteşem bir lezzet, göreceksiniz!
+Vay, bu kombinasyonu düşünen herkes bayılır!
+Aman Allah'ım, ne güzel bir seçim yaptınız böyle!
+Bu tabak resmen bugünün yıldızı, harika seçim!
+İnanın, bu lezzeti tarif etmek bile zor, denemelisiniz!
+Vay be, tam da en sevdiğim tarifi seçtiniz!
+Harika, bu seçimle akşamınızı unutulmaz yapacağız!
+Bu gerçekten şahane bir tercih, hiç pişman olmayacaksınız!
+Aa süper, bu tam da bugün önerecektim size!
+Vay canına, bu kombinasyon inanılmaz güzel olacak!
+Kesinlikle en iyi seçimlerden biri, çok mutlu oldum!
+Bu tarifi her anlatışımda heyecanlanıyorum, harika seçtiniz!
+İnanılmaz, tam da bu akşam için mükemmel bir seçim!
+Vay, bu lezzeti tarif etmek gerçekten zor, muhteşem!
+Harika bir karar, bu tabağı herkes seviyor burada!
+Bu gerçekten en özel tariflerimizden biri, harika seçim!
+Aman ne güzel, bugünün en iyi siparişi bu olabilir!
+Vay canına, bu kombinasyonu düşünen dahi biri olmalı!
+Kesinlikle doğru seçim, bu tarif gerçekten muhteşem!
+Bu, mutfağımızın en çok konuşulan tabağı, harika!
+İnanın bu tadı unutamayacaksınız, harika bir seçim!
+Vay be, bu seçimle akşamınız tam olacak, göreceksiniz!
+Harika, bu tarif tam da bugün en taze haliyle hazır!
+Bu gerçekten muhteşem bir lezzet deneyimi olacak!
+Aa süper seçim, ben de aynısını tercih ederdim!
+Vay canına, bu kombinasyon gerçekten harika bir fikir!
+Kesinlikle en güzel tercih, bayılacaksınız buna!
+Bu tabak bugünün favorisi, harika bir seçim yaptınız!
+İnanılmaz, bu lezzeti tarif ederken bile heyecanlanıyorum!
+Vay, bu seçim akşamınızı gerçekten güzelleştirecek!
+Harika bir karar verdiniz, bu tarif gerçekten özel!
+Bu gerçekten en sevilen tariflerimizden, harika seçim!
+Aman ne güzel bir tercih, hiç pişman olmayacaksınız!
+Vay canına, bu kombinasyon bugünün en iyisi olabilir!
+Kesinlikle doğru yerdesiniz, bu tarif muhteşem olacak!
+Bu tabak gerçekten şahane, harika bir seçim yaptınız!
+İnanın bu tadı deneyen herkes bir daha geliyor!
+Vay be, bu seçimle bugün çok güzel geçecek!
+Harika, bu tarifi anlatmak bile beni heyecanlandırıyor!
+Bu gerçekten muhteşem bir lezzet, kesinlikle seveceksiniz!
+Aa süper, tam da bu akşam için mükemmel bir seçim!
+Vay canına, damak zevkiniz gerçekten harika!
+Kesinlikle en iyi tercihlerden biri, tebrik ederim!
+Bu tarifi her seferinde heyecanla anlatıyorum, harika seçim!
+İnanılmaz bir lezzet olacak bu, emin olabilirsiniz!
+Vay, bu kombinasyon gerçekten akıllıca bir seçim!
+Harika bir karar, bu tabak bugünün yıldızı olacak!
+Bu gerçekten en özel tariflerden, harika seçim yaptınız!
+Aman ne güzel, bugünün en şanslı siparişi bu olabilir!
+Vay canına, bu tercih gerçekten muhteşem bir fikir!
+Kesinlikle doğru seçim yaptınız, bayılacaksınız!
+Bu tabak resmen bugünün favorisi, harika bir karar!
+İnanın bu lezzeti tarif etmek bile zor, muhteşem olacak!
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 3. NET / KARARLI SİPARİŞ ONAYI (kendinden emin, net, hızlı ve profesyonel — tereddütsüz konuş) (90 cümle) ────
+Elbette, mercimek çorbası eklendi siparişinize.
+Anlaşıldı, hemen not ediyorum.
+Tamam, iki adet köfte, kayıt altına alındı.
+Kesinlikle, siparişiniz hazırlanmaya başlıyor.
+Anladım, ekliyorum hemen.
+Tamamdır, bu siparişi mutfağa iletiyorum şimdi.
+Elbette efendim, hemen hallediyorum.
+Doğru, sepetinize eklendi bu ürün.
+Anlaşıldı, sipariş tamamlandı bu şekilde.
+Kesinlikle doğru, kaydettim şimdi.
+Tamam, ikinci ürün de eklendi listeye.
+Elbette, hemen mutfağa bildiriyorum.
+Net olarak anladım, işleme alıyorum.
+Tamamdır, sipariş kaydı yapıldı.
+Doğru anladım, ekliyorum şimdi.
+Anlaşıldı efendim, hazırlanıyor.
+Kesinlikle, bu ürün sepete girdi.
+Elbette, üç adet olarak not ettim.
+Tamam, sipariş listesi güncellendi.
+Anladım, hemen kaydediyorum.
+Doğru, bu şekilde devam ediyoruz.
+Kesinlikle net, siparişiniz alındı.
+Tamamdır, mutfağa iletildi bu bilgi.
+Elbette efendim, işlem tamamlandı.
+Anlaşıldı, bu ürün de eklendi.
+Doğru kaydettim, devam edelim.
+Kesinlikle, hazırlanmaya başlandı bile.
+Tamam, sipariş onaylandı bu haliyle.
+Anladım net olarak, ekliyorum.
+Elbette, bu bilgiyi kaydettim şimdi.
+Doğru anlaşıldı, işleme geçiyorum.
+Kesinlikle doğru, sepete eklendi.
+Tamamdır efendim, mutfak haberdar.
+Anlaşıldı, bu şekilde not edildi.
+Elbette, hemen kayda geçiyorum.
+Doğru, üç ürün de sepette şimdi.
+Kesinlikle net anladım, tamamdır.
+Tamam, siparişiniz işleme alındı.
+Anladım, bu bilgi kaydedildi.
+Elbette efendim, hazırlık başlıyor.
+Doğru kaydettim, mutfağa iletiyorum.
+Kesinlikle, bu ürün listeye eklendi.
+Tamamdır, sipariş net olarak alındı.
+Anlaşıldı, devam ediyoruz bu şekilde.
+Elbette, ikinci siparişiniz de kaydedildi.
+Doğru anladım, işlem tamamlanıyor.
+Kesinlikle net, mutfağa bildirildi.
+Tamam efendim, sipariş onaylandı.
+Anladım, bu ürünü de ekliyorum.
+Elbette, kayıt tamamlandı bu haliyle.
+Doğru, sepetiniz güncellendi şimdi.
+Kesinlikle, hazırlık aşamasına geçildi.
+Tamamdır, bu bilgi net olarak alındı.
+Anlaşıldı efendim, mutfak bilgilendirildi.
+Elbette, üç ürün sepete eklendi.
+Doğru kaydettim, devam ediyoruz.
+Kesinlikle net, siparişiniz işlemde.
+Tamam, bu şekilde onaylıyorum.
+Anladım, hemen kayıt altına alıyorum.
+Elbette efendim, sipariş tamamlandı.
+Doğru, bu ürün de listede şimdi.
+Kesinlikle, mutfağa iletim yapıldı.
+Tamamdır, net olarak anladım.
+Anlaşıldı, işlem başladı bile.
+Elbette, bu bilgiyi kaydettim.
+Doğru anladım, sepete ekliyorum.
+Kesinlikle net, sipariş onaylı.
+Tamam efendim, mutfak haberdar edildi.
+Anladım, bu ürünü kaydediyorum.
+Elbette, işlem tamamlandı net olarak.
+Doğru, üç adet sepette şimdi.
+Kesinlikle, hazırlık süreci başladı.
+Tamamdır, bu şekilde devam ediyoruz.
+Anlaşıldı efendim, sipariş net.
+Elbette, kayıt işlemi tamamlandı.
+Doğru kaydettim, mutfağa bildiriyorum.
+Kesinlikle net anladım, ekliyorum.
+Tamam, bu ürün de sepete girdi.
+Anladım, işlem devam ediyor.
+Elbette efendim, net olarak kaydettim.
+Doğru, sipariş onaylandı bu haliyle.
+Kesinlikle, mutfak bilgilendirildi şimdi.
+Tamamdır, üç ürün de eklendi.
+Anlaşıldı, hazırlık başlıyor hemen.
+Elbette, bu bilgi net olarak alındı.
+Doğru anladım, kayıt tamamlandı.
+Kesinlikle net, sipariş işlemde şimdi.
+Tamam efendim, mutfağa iletildi.
+Anladım, bu ürünü ekliyorum sepete.
+Elbette, işlem net olarak tamamlandı.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 4. YUMUŞAK / ÖZÜR + EMPATİK (yavaş, yumuşak, gerçekten üzgün ve anlayışlı bir ton — özür dilercesine) (60 cümle) ─────
+Çok özür dilerim, biraz gecikme oldu bugün.
+Üzgünüm, bu konuda elimizden geleni yapıyoruz.
+Gerçekten özür dilerim, hemen ilgileniyorum.
+Çok üzgünüm bu durumdan, düzeltelim hemen.
+Anlıyorum sizi, haklısınız, özür dilerim.
+Bu gecikme için gerçekten üzgünüm.
+Özür dilerim, biraz daha sabır rica edeceğim.
+Anlıyorum, bu hoş olmadı, çok üzgünüm.
+Gerçekten özür dileriz, telafi edeceğiz.
+Üzgünüm, bu bekleyiş sizi yordu biliyorum.
+Çok özür dilerim, hemen çözüyoruz bunu.
+Anlıyorum haklısınız, kusura bakmayın.
+Bu durumdan gerçekten üzgünüm, düzelteceğiz.
+Özür dilerim, biraz karışıklık oldu galiba.
+Anlıyorum sizi, bu hoş bir durum değildi.
+Çok üzgünüm, hemen ilgileniyorum bununla.
+Gerçekten özür dilerim bu gecikme için.
+Üzgünüm, sizi bu kadar bekletmek istemezdik.
+Anlıyorum, haklı olarak rahatsız oldunuz.
+Özür dilerim, telafi etmeye çalışacağım.
+Çok özür dileriz, bu bizim hatamız.
+Anlıyorum sizi, bu durumu düzeltelim hemen.
+Gerçekten üzgünüm, biraz daha zaman lazım.
+Özür dilerim, sizi yanlış anlamış olabilirim.
+Anlıyorum, bu hoş olmadı gerçekten.
+Çok özür dilerim, hemen hallediyorum.
+Üzgünüm bu karışıklık için, düzeltiyoruz.
+Anlıyorum haklısınız, kusuruma bakmayın.
+Özür dilerim, biraz gecikme yaşandı mutfakta.
+Gerçekten üzgünüm, bu sizi rahatsız etmiş.
+Çok özür dilerim, telafi edelim hemen.
+Anlıyorum sizi, bu bekleyiş uzun sürdü.
+Üzgünüm, hemen ilgileniyorum bu konuyla.
+Özür dilerim, sizi yanlış yönlendirmişim.
+Anlıyorum, haklı olarak sabırsızlandınız.
+Çok özür dileriz bu durumdan.
+Gerçekten üzgünüm, çözümü hemen buluyoruz.
+Özür dilerim, biraz daha bekletiyoruz sizi.
+Anlıyorum sizi, bu hoş bir deneyim değildi.
+Üzgünüm, telafi etmek için elimizden geleni yapacağız.
+Çok özür dilerim, bu gecikme normal değil.
+Anlıyorum haklısınız, düzeltiyoruz hemen.
+Gerçekten üzgünüm, sizi bu kadar bekletmemeliydik.
+Özür dilerim, karışıklık için gerçekten üzgünüm.
+Anlıyorum sizi, bu durumu ciddiye alıyoruz.
+Çok özür dilerim, hemen çözüme kavuşturuyoruz.
+Üzgünüm bu bekleyiş için, sabrınız için teşekkürler.
+Anlıyorum haklısınız, kusura bakmayın lütfen.
+Özür dilerim, sizi yanlış bilgilendirmişim galiba.
+Gerçekten üzgünüm, telafi etmeye çalışıyoruz.
+Çok özür dileriz, bu bizim eksikliğimiz.
+Anlıyorum sizi, hemen ilgileniyorum bununla.
+Üzgünüm, biraz daha zaman alacak galiba.
+Özür dilerim, bu hoş olmayan durum için.
+Anlıyorum haklı olarak üzüldünüz, çok üzgünüm.
+Gerçekten özür dilerim, düzeltiyoruz hemen şimdi.
+Çok üzgünüm bu gecikme için, teşekkür ederim sabrınıza.
+Anlıyorum sizi, bu durumu telafi edeceğiz.
+Özür dilerim, sizi bu kadar bekletmek istemezdik hiç.
+Gerçekten üzgünüm, hemen çözüyoruz bu meseleyi.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 5. SORU / MERAK (yükselen tonlama, gerçekten merak ederek sor, cümle sonunda ses yükselsin) (70 cümle) ──────────
+Başka bir arzunuz var mı acaba?
+Size nasıl yardımcı olabilirim şu an?
+Bu tabağı daha önce denediniz mi hiç?
+Acaba hangi içeceği tercih edersiniz?
+Yanına bir şeyler eklemek ister misiniz?
+Baharatlı mı yoksa hafif mi olsun?
+Sıcak mı soğuk mu tercih edersiniz?
+Bu porsiyon size yeterli olur mu acaba?
+Masanızda kaç kişi olacaksınız bu akşam?
+Herhangi bir alerjiniz var mı acaba?
+Tatlı olarak ne düşünüyorsunuz şu an?
+Bu lezzeti daha önce tatmış mıydınız?
+Acele mi ediyorsunuz yoksa vaktiniz var mı?
+Masanızı pencere kenarına mı alalım?
+Sizce hangisi daha çok hoşunuza gider?
+Bu akşam özel bir kutlama mı var acaba?
+Yemeğinizi nasıl pişirmemizi istersiniz?
+Baharatı azaltalım mı yoksa böyle mi kalsın?
+Ekstra sos ister misiniz yanında?
+Bu ürün hakkında bilgi almak ister misiniz?
+Sizin için başka ne yapabilirim acaba?
+Rezervasyonunuz var mıydı bu akşam için?
+Kaç kişilik bir masa lazım size?
+İçeceğinizi şimdi mi getireyim yoksa sonra mı?
+Bu tarif size uygun mu acaba?
+Vejetaryen bir seçenek mi arıyorsunuz?
+Glutensiz bir alternatif ister misiniz?
+Bu akşam ne kadar vaktiniz var acaba?
+Masanızı değiştirmek ister misiniz belki?
+Sizin için müzik sesini kısayım mı?
+Bu ürünün fiyatı hakkında bilgi ister misiniz?
+Yemeğinizin yanına ekstra bir şey koyalım mı?
+Bu tatlıyı paylaşmak mı istersiniz yoksa tek mi?
+Acaba hangi masada oturmak istersiniz?
+Sizin için ışıkları biraz kısabilir miyim?
+Bu içecek size uygun mudur acaba?
+Ne zaman servis etmemi istersiniz yemeğinizi?
+Masanıza ekstra bir sandalye lazım mı?
+Bu tabağın baharat seviyesi size uygun mu?
+Sizce başka neler eklemeli menümüze?
+Bu akşam özel bir tercihiniz var mı?
+Yemeğinizi paket mi yapalım yoksa burada mı?
+Kartla mı yoksa nakit mi ödeyeceksiniz?
+Faturanızı ayrı mı yoksa birlikte mi isterseniz?
+Bu ürünün stoku hakkında bilgi ister misiniz?
+Sizin için başka bir öneri yapabilir miyim?
+Masanızın konumu size uygun mu acaba?
+Bu tarif hakkında merak ettiğiniz bir şey var mı?
+Yemeğinize eşlik edecek bir içecek ister misiniz?
+Sizce bu porsiyon yeterli olur mu?
+Bu akşam kutlama mı yoksa sıradan bir akşam mı?
+Acaba hangi tatlıyı tercih edersiniz?
+Bu ürünün içeriği hakkında bilgi ister misiniz?
+Sizin için sıcaklığı ayarlayayım mı ortamın?
+Masanıza ek bir şey getirmemi ister misiniz?
+Bu akşam yalnız mı yoksa arkadaşlarınızla mı?
+Yemeğinizi ne zaman servis etmemi istersiniz?
+Bu tabağın yanına salata ister misiniz?
+Sizce hangi seçenek daha cazip görünüyor?
+Bu içeceğin buzlu mu yoksa buzsuz mu olsun?
+Acaba bu masa size yeterince rahat mı?
+Sizin için ekstra peçete getireyim mi?
+Bu tarif konusunda bir sorunuz var mı?
+Yemeğinizin yanına ekmek ister misiniz?
+Sizce bu fiyat uygun mu bütçenize?
+Bu akşam için özel bir isteğiniz var mı?
+Masanızı hemen mi yoksa biraz sonra mı hazırlayayım?
+Bu ürünü daha önce hiç duymuş muydunuz?
+Sizin için başka nasıl bir yardım yapabilirim?
+Yemeğinizin lezzetini nasıl buldunuz acaba?
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 6. NAZİK KAPANIŞ / VEDA (sıcak, samimi, gerçekten teşekkür ederek — hafif hüzünlü ayrılık tonu) (60 cümle) ─────────
+Afiyet olsun, sizi tekrar ağırlamak dileğiyle.
+Teşekkür ederim, bugün burada olduğunuz için.
+Güle güle, kendinize çok iyi bakın.
+Umarım tekrar görüşürüz yakın zamanda.
+Sizinle geçirdiğimiz an çok değerliydi, teşekkürler.
+İyi akşamlar, sizi görmek çok güzeldi bugün.
+Afiyet olsun, umarım beğenmişsinizdir her şeyi.
+Teşekkürler, tekrar bekleriz sizi burada.
+Güle güle, yolunuz açık olsun.
+Sizinle sohbet etmek keyifliydi, teşekkür ederim.
+İyi geceler, kendinize iyi bakın lütfen.
+Afiyet olsun, bu akşam çok güzeldi gerçekten.
+Teşekkür ederim, sizi tekrar bekliyoruz burada.
+Güle güle, umarım yine gelirsiniz yakında.
+Sizinle geçirdiğimiz vakit çok anlamlıydı.
+İyi akşamlar dilerim, kendinize dikkat edin.
+Afiyet olsun efendim, teşekkür ederiz geldiğiniz için.
+Güle güle, sizi özleyeceğiz burada.
+Teşekkürler, bu akşamı unutmayacağız sizinle.
+İyi yolculuklar, tekrar görüşmek dileğiyle.
+Afiyet olsun, umarım her şey gönlünüzce olmuştur.
+Güle güle canım, kendinize iyi bakın lütfen.
+Teşekkür ederim, sizi ağırlamak büyük mutluluktu.
+İyi geceler, sağlıcakla kalın lütfen.
+Afiyet olsun, bu güzel akşam için teşekkürler.
+Güle güle, yolunuz her zaman açık olsun.
+Teşekkürler, sizinle geçirdiğimiz zaman değerliydi.
+İyi akşamlar, tekrar bekleriz sizi burada.
+Afiyet olsun efendim, umarım memnun kalmışsınızdır.
+Güle güle, kendinize çok iyi bakın lütfen.
+Teşekkür ederim, bu akşam çok güzeldi sizinle.
+İyi geceler dilerim, sağlıcakla kalın.
+Afiyet olsun, sizi tekrar görmek isteriz burada.
+Güle güle, umarım yakında yine gelirsiniz.
+Teşekkürler, sizi ağırlamak onurdu bizim için.
+İyi yolculuklar dilerim, kendinize dikkat edin.
+Afiyet olsun, bu akşamı unutmayacağız gerçekten.
+Güle güle canım, yolunuz açık olsun her zaman.
+Teşekkür ederim, sizinle sohbet etmek keyifliydi.
+İyi akşamlar, tekrar görüşmek dileğiyle veda ediyorum.
+Afiyet olsun efendim, umarım her şey güzeldi.
+Güle güle, sizi özleyeceğiz burada gerçekten.
+Teşekkürler, bu güzel anı için minnettarız.
+İyi geceler, kendinize iyi bakın lütfen sizde.
+Afiyet olsun, sizi tekrar ağırlamayı dileriz.
+Güle güle, umarım yakında tekrar buluşuruz.
+Teşekkür ederim, sizinle geçirdiğimiz vakit çok değerliydi.
+İyi yolculuklar, sağlıcakla kalın lütfen sizde.
+Afiyet olsun, bu akşam çok anlamlıydı bizim için.
+Güle güle canım, kendinize çok iyi bakın.
+Teşekkürler, sizi tekrar bekliyoruz burada her zaman.
+İyi akşamlar dilerim, umarım her şey gönlünüzce.
+Afiyet olsun efendim, teşekkür ederiz geldiğiniz için gerçekten.
+Güle güle, yolunuz her daim açık olsun.
+Teşekkür ederim, bu akşamı hiç unutmayacağız.
+İyi geceler, sağlıcakla kalın canım.
+Afiyet olsun, sizi tekrar görmek dileğiyle veda ediyorum.
+Güle güle, umarım yakın zamanda yine gelirsiniz.
+Teşekkürler, sizinle geçirdiğimiz her an değerliydi.
+İyi yolculuklar dilerim, kendinize çok iyi bakın.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 7. ALERJİ / UYARI (ciddi, net, biraz yavaş — önemli bir bilgi verdiğini hissettirerek) (50 cümle) ────────────────
+Bu tatlıda fındık ve süt bulunuyor, alerjiniz varsa lütfen belirtin.
+Dikkat edin, bu yemek gluten içeriyor.
+Bu tarifte yumurta var, lütfen dikkatli olun.
+Alerjiniz varsa, bu ürünü tercih etmemenizi öneririm.
+Bu tabakta fıstık bulunuyor, bilginiz olsun.
+Süt ürünü içeriyor bu tatlı, lütfen dikkat edin.
+Bu yemekte gluten var, hassasiyetiniz varsa söyleyin.
+Alerjik reaksiyon riski var, lütfen içeriği kontrol edin.
+Bu tarifte badem bulunuyor, dikkatli olmanızı rica ederim.
+Bu üründe süt ve yumurta var, bilginiz olsun lütfen.
+Fındık alerjiniz varsa, bu tatlıyı önermem.
+Bu yemekte gluten içeriği yüksek, dikkat edin lütfen.
+Alerjiniz olabilir, bu ürünün içeriğini kontrol edelim.
+Bu tarifte fıstık ve badem bulunuyor, bilginiz olsun.
+Süt alerjisi olanlar için bu ürün uygun değil.
+Bu tabakta yumurta var, hassasiyetiniz varsa belirtin lütfen.
+Gluten içeriyor bu yemek, dikkatli olmanızı öneririm.
+Alerjik durumunuz varsa, lütfen bu bilgiyi paylaşın.
+Bu tatlıda fındık ezmesi var, bilginiz olsun.
+Süt ürünleri içeriyor, hassasiyetiniz varsa söyleyin lütfen.
+Bu yemekte gluten ve süt var, dikkat etmenizi rica ederim.
+Fıstık alerjiniz varsa, kesinlikle bu ürünü önermem.
+Bu tarifte badem unu kullanılıyor, bilginiz olsun lütfen.
+Alerjik reaksiyon olabilir, içeriği dikkatle inceleyin.
+Bu tabakta yumurta akı var, hassasiyetiniz varsa belirtin.
+Süt alerjisi olanlar için alternatif önerebilirim.
+Bu yemekte gluten oranı yüksek, dikkatli olun lütfen.
+Fındık içeriyor bu tatlı, alerjiniz varsa söyleyin.
+Bu tarifte süt ve yumurta birlikte kullanılıyor.
+Alerjiniz olabilir diye bu bilgiyi paylaşmak istedim.
+Bu tabakta badem ve fıstık bulunuyor, dikkat edin.
+Gluten hassasiyetiniz varsa, bu ürünü önermiyorum.
+Bu yemekte süt ürünü yoğun, bilginiz olsun lütfen.
+Alerjik durumdaysanız, lütfen içeriği benimle paylaşın.
+Bu tatlıda yumurta ve fındık birlikte var.
+Süt alerjiniz varsa, kesinlikle dikkatli olmalısınız.
+Bu tarifte gluten içeren un kullanılıyor, bilginiz olsun.
+Fıstık ve badem alerjiniz varsa, bu tabağı önermem.
+Bu yemekte yumurta akı ve sarısı kullanılıyor.
+Alerjik reaksiyon riski taşıyor bu ürün, dikkat edin.
+Bu tarifte süt tozu bulunuyor, hassasiyetiniz varsa belirtin.
+Gluten içeriyor bu tabak, dikkatli olmanızı rica ederim.
+Bu tatlıda fındık parçacıkları var, bilginiz olsun lütfen.
+Alerjiniz varsa, bu ürünün içeriğini birlikte gözden geçirelim.
+Bu yemekte süt ve gluten birlikte bulunuyor.
+Fıstık alerjisi olanlar için bu tabağı önermiyorum.
+Bu tarifte badem sütü kullanılıyor, dikkat edin lütfen.
+Alerjik durumunuz varsa, lütfen şimdi belirtin.
+Bu tabakta yumurta ve süt ürünü birlikte var.
+Gluten hassasiyeti olanlar için alternatif sunabilirim.
+Bu tatlıda fındık ve süt ürünü bulunuyor, bilginiz olsun.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 8. FİYAT / SAYI (net, kararlı, rakamları tane tane söyle — kesinlik hissi ver) (60 cümle) ─────────────────────
+Mercimek çorbası seksen beş lira tutuyor.
+Toplam hesabınız dört yüz elli lira.
+İki yüz otuz yedi lira elli kuruş ediyor.
+Izgara köfte iki yüz kırk lira.
+Bu tabak yüz on beş lira olacak.
+Toplam üç yüz seksen iki lira tutuyor.
+Bir porsiyon yüz elli lira ediyor.
+İki adet birlikte üç yüz lira olacak.
+Hesabınız beş yüz yirmi beş lira.
+Bu tatlı doksan lira ediyor.
+Toplam altı yüz yetmiş beş lira tutuyor.
+Bir adet yüz seksen lira olacak.
+İki yüz on lira ediyor bu ürün.
+Toplam yedi yüz lira tutuyor bu akşam.
+Yüz otuz beş lira ediyor bu tabak.
+Bir porsiyon iki yüz elli lira olacak.
+Toplam üç yüz on beş lira ediyor.
+Bu içecek altmış beş lira tutuyor.
+İki yüz seksen lira ediyor bu ürün.
+Toplam beş yüz kırk lira olacak.
+Yüz yetmiş beş lira ediyor bu tabak.
+Bir adet iki yüz lira tutuyor.
+Toplam dört yüz doksan beş lira ediyor.
+Bu tatlı yüz on lira olacak.
+İki yüz altmış lira tutuyor bu porsiyon.
+Toplam sekiz yüz yirmi lira ediyor.
+Yüz kırk beş lira olacak bu ürün.
+Bir porsiyon üç yüz on lira tutuyor.
+Toplam altı yüz lira ediyor bu akşam.
+Bu içecek yetmiş lira olacak.
+İki yüz doksan lira tutuyor bu tabak.
+Toplam yedi yüz elli lira ediyor.
+Yüz yirmi lira olacak bu adet.
+Bir porsiyon iki yüz yetmiş lira tutuyor.
+Toplam dört yüz on beş lira ediyor.
+Bu tatlı seksen lira olacak.
+İki yüz kırk beş lira tutuyor bu ürün.
+Toplam beş yüz seksen lira ediyor.
+Yüz elli beş lira olacak bu tabak.
+Bir adet üç yüz kırk lira tutuyor.
+Toplam altı yüz kırk beş lira ediyor.
+Bu içecek elli beş lira olacak.
+İki yüz yirmi lira tutuyor bu porsiyon.
+Toplam sekiz yüz yetmiş lira ediyor.
+Yüz doksan lira olacak bu ürün.
+Bir porsiyon iki yüz altmış beş lira tutuyor.
+Toplam üç yüz doksan lira ediyor.
+Bu tatlı yüz lira olacak.
+İki yüz yetmiş beş lira tutuyor bu tabak.
+Toplam yedi yüz kırk lira ediyor.
+Yüz altmış beş lira olacak bu adet.
+Bir porsiyon üç yüz yirmi lira tutuyor.
+Toplam beş yüz doksan beş lira ediyor.
+Bu içecek kırk beş lira olacak.
+İki yüz elli beş lira tutuyor bu ürün.
+Toplam altı yüz seksen lira ediyor.
+Yüz on lira olacak bu tabak.
+Bir adet iki yüz doksan beş lira tutuyor.
+Toplam dört yüz altmış lira ediyor bu akşam.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 9. FONETİK DENGE (nötr, net telaffuz — tüm Türkçe seslerin doğru çıkması önemli, hızlanma) (60 cümle) ──────
+Şefin özel çorbasını hiç denediniz mi bugün?
+Zeytinyağlı yemeklerimiz oldukça sağlıklı ve lezzetli.
+Küçük çocuklar için özel bir menümüz de var.
+Güzel bir akşam geçirmenizi dilerim gerçekten.
+Şalgam suyu sindirimi kolaylaştırıyor, biliyor muydunuz?
+Özel künefemiz için şefimiz bugün çok uğraştı.
+Yeni menümüzde çok çeşitli yemekler bulunuyor.
+Güçlü bir çorbayla güne başlamak gerçekten iyi geliyor.
+Tüm malzemelerimiz her gün taze olarak geliyor.
+Sizi ağırlamaktan büyük bir memnuniyet duyuyoruz.
+Fiyatlarımız makul, kalitemiz ise oldukça yüksek.
+Özenle hazırlanan yemekler sizi burada bekliyor.
+Şubemiz her gün sabah dokuzda açılıyor düzenli olarak.
+Güzel tatlar ve iyi bir servis bizim önceliğimiz.
+Taze malzeme, özenli hazırlık, iyi bir sunum sunuyoruz.
+Öğle ve akşam menülerimiz birbirinden oldukça farklıdır.
+Güzel bir akşam yemeği için doğru yerdesiniz bugün.
+Tüm çorbalarımız günde iki kez taze olarak yapılır.
+Sizi memnun etmek bizim en büyük önceliğimiz.
+Özenle seçilmiş malzemeler kullanıyoruz her zaman.
+Güzel bir deneyim yaşamanızı umuyoruz bu akşam.
+Yemeklerimiz geleneksel Türk mutfağından ilham alıyor.
+Şeflerimiz her sabah özenle taze hazırlık yapıyor.
+Tatlılarımız günlük olarak yapılıyor, asla bayat değil.
+Sizi en iyi şekilde ağırlamak istiyoruz her zaman.
+Özel gün ve kutlamalar için rezervasyon alıyoruz düzenli.
+Güzel lezzetler için gerçekten doğru adrese geldiniz.
+Yemeklerimizden memnun kalacağınıza inanıyorum yürekten.
+Her cümleyi doğal ve akıcı söylemeye çalışıyorum bugün.
+Şükranlarımızla, iyi akşamlar dilerim size şimdiden.
+Çeşitli baharatlarımızla yemeklerimizi zenginleştiriyoruz sürekli.
+Zengin bir menü çeşitliliği sunuyoruz misafirlerimize her gün.
+Şefimizin özel dokunuşu her tabakta hissediliyor.
+Güneşli bir günde bahçemizde oturmak keyifli oluyor.
+Küçük detaylar büyük farklar yaratıyor mutfağımızda.
+Özgün tariflerimizle fark yaratmaya çalışıyoruz her zaman.
+Şaşırtıcı derecede lezzetli bir menümüz var bu sezon.
+Güler yüzlü hizmet bizim vazgeçilmez ilkemiz.
+Zarif bir sunumla yemeklerimizi servis ediyoruz özenle.
+Özenli bir çalışma her tabakta kendini gösteriyor.
+Şeflerimiz uzun yıllardır bu mutfakta emek veriyor.
+Güvenilir kaynaklardan taze malzeme temin ediyoruz sürekli.
+Zengin içerikli tatlılarımız damak zevkinize hitap ediyor.
+Özel günlerinizde yanınızda olmak isteriz her zaman.
+Şıklık ve lezzeti bir arada sunuyoruz misafirlerimize.
+Güzel bir ortamda huzurlu bir yemek deneyimi yaşayın.
+Zevkli bir dekorasyonla mekanımızı süslüyoruz sürekli.
+Özenli servis anlayışımızla fark yaratmaya çalışıyoruz.
+Şükranla karşılıyoruz her misafirimizi kapımızda.
+Güzel anılar biriktirmenizi diliyoruz bu mekanda.
+Zengin bir tatlı çeşitliliğimiz sizi bekliyor burada.
+Özgün lezzetlerimizle sizi şaşırtmayı umuyoruz bu akşam.
+Şefimizin imza tarifi bugün menümüzde yer alıyor.
+Güzel bir sohbetle yemeğinizin tadını çıkarın lütfen.
+Zarafetle sunulan her tabak bir sanat eseri gibi.
+Özel olarak seçilmiş şaraplarımız da mevcuttur burada.
+Şıklıkla döşenmiş masalarımızda keyifli vakit geçirin.
+Güzel müzikler eşliğinde yemeğinizin tadını çıkarın.
+Zengin lezzet dünyamıza hoş geldiniz diyoruz sizlere.
+Özenle hazırlanan her detay sizin için düşünüldü.
+Şükranlarımızı sunuyoruz bizi tercih ettiğiniz için.
+
+# ═══ MOLA NOKTASI — su iç, 2-3 dk dinlen, sonra devam et ═══
+
+# ── 10. UZUN / KARMAŞIK CÜMLELER (sakin, akıcı, nefes al gerektiğinde — doğal konuşma ritmi) (60 cümle) ────
+Bugün mutfağımız oldukça yoğun olduğu için siparişiniz normalden birkaç dakika daha geç gelebilir, anlayışınız için şimdiden teşekkür ederim.
+Eğer isterseniz, önce çorbanızı getirebilirim, ana yemeğinizi de biraz sonra servis edelim, böylece sıcak sıcak yersiniz.
+Masanızın hemen yanındaki pencereden gün batımını izleyebilirsiniz, isterseniz oraya geçelim birlikte.
+Şefimiz bu tarifi yıllar önce ailesinden öğrenmiş, sonra kendi dokunuşlarını da katarak bugünkü haline getirmiş.
+Bu yemeğin hazırlanması biraz zaman alıyor çünkü her adımı elle ve özenle yapılıyor, ama sonuç gerçekten değiyor.
+Menümüzdeki tatlılar günlük olarak hazırlanıyor, bu yüzden bazı günler belirli çeşitler tükenebiliyor, anlayışınız için teşekkürler.
+Sizin için hem hafif hem de doyurucu bir seçenek düşünüyorsanız, şu iki tabaktan birini önerebilirim size.
+Bu bölgede yetişen özel bir çeşit domates kullanıyoruz salatalarımızda, tadı gerçekten farklı, mutlaka deneyin.
+Eğer zamanınız kısıtlıysa, hızlı hazırlanan ve yine de lezzetli olan şu seçenekleri önerebilirim size hemen.
+Masanızı hazırlarken hem manzarayı hem de sessiz bir köşeyi düşünerek seçtik, umarım beğenirsiniz.
+Bu tarif aslında çok eski bir gelenekten geliyor, nesilden nesile aktarılarak bugüne kadar ulaşmış.
+Sizin damak tadınıza göre baharat seviyesini ayarlayabiliriz, ister hafif ister acılı olsun, tercih sizin.
+Bu akşam özel bir menümüz var, isterseniz size kısaca anlatabilirim neler olduğunu.
+Yemeğinizin yanına hem sıcak hem soğuk içecek seçenekleri sunabiliriz, hangisini tercih edersiniz acaba.
+Şefimiz bu tabağı hazırlarken üç farklı pişirme tekniğini bir arada kullanıyor, bu yüzden lezzeti çok katmanlı.
+Eğer alerjik bir durumunuz varsa, lütfen şimdi söyleyin, ona göre alternatif bir tarif önerebilirim.
+Bu mevsimde en taze sebzeler pazardan doğrudan mutfağımıza geliyor, bu yüzden lezzet gerçekten farklı oluyor.
+Sizin için hazırladığımız bu özel menü, hem geleneksel hem de modern dokunuşları bir arada barındırıyor.
+Masanıza yakın olan mumu yakmamı ister misiniz, akşam biraz daha romantik olsun diye.
+Bu tatlının içindeki karamel, saatlerce yavaş ateşte pişirilerek elde ediliyor, bu yüzden bu kadar özel.
+Eğer bugün özel bir günse, isterseniz mumlu bir tatlı da hazırlayabiliriz sizin için.
+Şu anda mutfakta hazırlanan yemek, tam kırk beş dakika önce sipariş edilmişti, birazdan hazır olur.
+Bu şarabın yanına hangi tabağı önerirsiniz diye sorarsanız, size en uygun eşleşmeyi anlatabilirim.
+Sizin için hazırladığımız bu özel tabak, aslında şefimizin yıllardır geliştirdiği bir tarifin son hali.
+Eğer yemeğinizi paylaşmak isterseniz, iki tabak halinde de servis edebiliriz, tercihiniz nasıl olur.
+Bu bölgenin en eski tariflerinden biri olan bu yemeği, özellikle sizin için bugün taze hazırladık.
+Masanızın arkasındaki o eski fotoğraf, mekanımızın ilk açıldığı günden kalma bir hatıra aslında.
+Sizin için önerdiğim bu iki tatlı arasında seçim yapmakta zorlanırsanız, ikisinden de küçük bir tat verebilirim.
+Bu yemeğin pişme süresi biraz uzun olduğu için, dilerseniz önce bir başlangıç tabağı getirebilirim size.
+Eğer bu akşam özel bir kutlamanız varsa, masanızı biraz daha özel bir şekilde hazırlayabiliriz.
+Şu anda mutfakta üç farklı şef aynı anda çalışıyor, bu yüzden her tabak özenle hazırlanıyor.
+Bu tarif, aslında bir Akdeniz geleneğinden esinlenerek bizim mutfağımıza uyarlanmış özel bir versiyon.
+Sizin için hazırladığımız bu menüde hem et hem de sebze ağırlıklı seçenekler bulunuyor, tercihiniz hangisi olur.
+Eğer zamanınız varsa, mutfağımızı gezip şeflerimizle tanışabilirsiniz, bu tecrübeyi çok seven misafirlerimiz oluyor.
+Bu akşam servis ettiğimiz balık, sabah erkenden doğrudan limandan gelmiş, gerçekten çok taze.
+Sizin için hazırladığımız bu özel tatlı, aslında üç farklı aşamada pişiriliyor, bu yüzden bu kadar lezzetli.
+Eğer bu yemeği daha önce denediyseniz, bugünkü versiyonunun biraz farklı olduğunu fark edebilirsiniz.
+Masanıza servis edeceğimiz bu şarap, bölgenin en eski bağlarından birinden geliyor, tadı gerçekten özel.
+Bu tarif, şefimizin çocukluğunda büyükannesinden öğrendiği bir yemeğin bugüne uyarlanmış hali aslında.
+Sizin için önerdiğim bu kombinasyon, hem lezzet hem de görsel açıdan gerçekten etkileyici olacak.
+Eğer bu akşam aceleniz yoksa, yemeğinizi yavaş yavaş, tadını çıkararak yemenizi öneririm gerçekten.
+Bu tabakta kullanılan baharatlar, doğrudan Güneydoğu'dan özel olarak getiriliyor her ay düzenli olarak.
+Sizin için hazırladığımız bu özel menü, mevsimsel değişikliklere göre her ay güncelleniyor aslında.
+Eğer yemeğinizi beğendiyseniz, şefimize iletmek isterseniz, kendisi bizzat gelip sizinle tanışabilir.
+Bu akşam mutfağımızda hazırlanan her tabak, en az iki saat önceden planlanarak hazırlanıyor özenle.
+Sizin için önerdiğim bu tatlı, aslında çok az kişinin bildiği gizli bir tarifle yapılıyor.
+Eğer bu bölgeyi ilk kez ziyaret ediyorsanız, size yerel lezzetlerden birkaçını tanıtmak isterim.
+Bu yemeğin en özel yanı, kullanılan zeytinyağının doğrudan aile bahçemizden gelmesi aslında.
+Sizin için hazırladığımız bu özel içecek, hem serinletici hem de oldukça besleyici bir karışım.
+Eğer bu akşam biraz daha fazla vaktiniz varsa, size mutfağımızın hikayesini anlatmak isterim.
+Bu tarif, aslında yıllar önce bir yolculukta keşfedilmiş, sonra mutfağımıza kazandırılmış özel bir lezzet.
+Sizin için önerdiğim bu şarabın yanında, hafif bir peynir tabağı da gerçekten çok güzel gider.
+Eğer bugün burada özel bir anınız olacaksa, bunu sizin için unutulmaz kılmak isteriz gerçekten.
+Bu akşam servis edeceğimiz tatlı, aslında üç günlük bir hazırlık sürecinin sonunda ortaya çıkıyor.
+Sizin için hazırladığımız bu özel tabak, hem geleneksel hem de yenilikçi teknikleri bir arada kullanıyor.
+Eğer bu yemeği daha hafif bir versiyonda tercih ederseniz, size alternatif bir sunum önerebilirim.
+Bu bölgenin iklimi, kullandığımız sebzelerin lezzetini gerçekten çok farklı ve özel kılıyor.
+Sizin için önerdiğim bu kombinasyon, hem damak tadınıza hem de bütçenize uygun olacaktır sanırım.
+Eğer bu akşam yalnız yemek yiyorsanız, size en sevdiğimiz köşelerden birini gösterebilirim.
+Bu tarif, mutfağımızın kurucusunun en sevdiği yemeklerden biri olarak bugüne kadar korunmuş.
+
+# ═══ MOLA NOKTASI — son bölüm, neredeyse bitti ═══
+
+# ── 11. YABANCI-YAZIMLI KELİMELER (Türkçe fonetik yazımıyla oku, doğal bir cümle içinde geç) (50 cümle) ──────
+Tatlı olarak çizkeyk, tiramisu veya profiterol önerebilirim size.
+Yanına kapuçino, late ya da sıcak çikolata alır mısınız?
+Bugünün spesiyali fırında lazanya ve ızgara somon.
+Kahvaltıda kruvasan ve tereyağlı ekmek de bulunuyor.
+İçecek olarak espreso, amerikano ya da moka tercih edebilirsiniz.
+Tatlı vitrininde brauni, kuki ve mafin çeşitleri var.
+Bu akşam menümüzde klap sendviç ve steyk de bulunuyor.
+Soğuk içeceklerde ismuti ve milkşeyk seçenekleri mevcut.
+Çocuk menüsünde pankek ve vofıl da yer alıyor.
+İçeceğinizin yanına naget ve keçap servis edebiliriz.
+Kahve çeşitlerimiz arasında makiyato ve frape de var.
+Tatlı olarak sanday da önerebilirim, çok seviliyor.
+Bu tabakta suşi ve vırap seçenekleri de bulunuyor.
+İçecek olarak ays ti ya da kola tercih edebilirsiniz.
+Koka kola veya sprayt, hangisini tercih edersiniz acaba?
+Kahvaltıda neskafe de servis ediyoruz isteyenlere.
+Tatlı vitrininde çizkeyk bugün özellikle taze hazırlandı.
+Kapuçino köpüğü bugün gerçekten çok güzel oldu.
+Late içerken yanında kuki almanızı öneririm.
+Bu akşam lazanya çok talep gördü, hâlâ mevcut.
+Kruvasanlarımız her sabah taze olarak fırınlanıyor.
+Espreso sevenler için özel bir demlemeimiz var bugün.
+Steyk pişirme derecenizi nasıl istersiniz acaba?
+Klap sendviç yanına patates de eklemek ister misiniz?
+Milkşeyk çilekli mi yoksa çikolatalı mı olsun?
+Pankek üzerine bal mı yoksa reçel mi istersiniz?
+Naget çocuklar arasında en çok tercih edilen ürün.
+Makiyato biraz daha tatlı bir kahve tercih edenlere uygun.
+Sanday üzerine çikolata sosu ekleyelim mi?
+Suşi setimiz bugün özellikle taze balıkla hazırlandı.
+Vırap içine hangi malzemeleri tercih edersiniz?
+Ays ti limonlu mu yoksa şeftalili mi olsun?
+Koka kola buzlu servis edilir, tercihiniz nedir?
+Neskafe sütlü mü yoksa sade mi tercih edersiniz?
+Frape yaz aylarında en çok tercih edilen içeceğimiz.
+Moka hem kahve hem çikolata severler için ideal.
+Brauni sıcak servis edilince yanında dondurma çok yakışır.
+Kuki çeşitlerimiz arasında çikolatalı en çok seveni.
+Mafin taze fırından çıktı, hâlâ sıcak.
+Vofıl üzerine meyve ekleyelim mi yoksa sade mi kalsın?
+Bu tatlıda cheesecake yazımı yerine çizkeyk diyoruz artık.
+Kapuçino ve late arasında fark sormak isteyenler oluyor sıkça.
+Steyk ve klap sendviç bugünün en çok satan ürünleri.
+Ismuti meyveli bir içecek arayanlar için harika bir seçenek.
+Milkşeyk çocuklar için özellikle sevilen bir tatlı içecek.
+Bu masada suşi ve vırap birlikte sipariş edildi.
+Neskafe içen misafirlerimiz genelde sade tercih ediyor.
+Frape ve moka arasında seçim yapmak zor olabiliyor.
+Brauni ve kuki birlikte gelen bir tatlı tabağımız var.
+Mafin ve vofıl kahvaltı menümüzün favorileri arasında.
+Çizkeyk, kapuçino ve late bu akşamın en çok tercih edilenleri.
+
+# ═══ KAYIT TAMAMLANDI — teşekkürler! ═══
